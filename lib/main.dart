@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/pages/root_page.dart';
-import 'package:smart_case/pages/widget_test_page.dart';
 
 void main() {
   runApp(const MyApp());

@@ -8,7 +8,23 @@ List modules = [
   {'icon': Icons.handshake_outlined, 'name': 'Engagements'},
   {'icon': Icons.bar_chart_rounded, 'name': 'Reports'},
 ];
-List files = [];
-List activities = [];
+
+List files = [
+  {
+    'name': 'Test name',
+    'number': 'Test number',
+    'date': '10/02/2023',
+    'client': 'Test Client',
+  },
+];
+
+List activities = [
+  {
+    'name': 'Test name',
+    'date': '10/02/2023',
+    'doneBy': 'Test Client',
+  },
+];
+
 List notifications = [];
 List locations = [];

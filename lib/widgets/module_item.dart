@@ -8,12 +8,14 @@ class ModuleItem extends StatelessWidget {
       required this.name,
       required this.color,
       required this.padding,
-      required this.icon});
+      required this.icon,
+      this.onTap});
 
   final String name;
   final Color color;
   final double padding;
   final IconData icon;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -21,42 +23,45 @@ class ModuleItem extends StatelessWidget {
   }
 
   _buildBody() {
-    return Container(
-      padding: EdgeInsets.all(padding),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(8),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withOpacity(.1),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: const Offset(0, 1), // changes position of shadow
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(padding),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(8),
           ),
-        ],
-        color: color,
-      ),
-      child: Column(
-        children: [
-          ModuleItemIcon(
-            icon: icon,
-            iconSize: 40,
-            radius: 50,
-            padding: 20,
-            color: Colors.black12,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            name,
-            style: const TextStyle(
-              fontSize: 20,
-              color: AppColors.darker,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.shadowColor.withOpacity(.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 1), // changes position of shadow
             ),
-          )
-        ],
+          ],
+          color: color,
+        ),
+        child: Column(
+          children: [
+            ModuleItemIcon(
+              icon: icon,
+              iconSize: 40,
+              radius: 50,
+              padding: 20,
+              color: Colors.black12,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              name,
+              style: const TextStyle(
+                fontSize: 20,
+                color: AppColors.darker,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

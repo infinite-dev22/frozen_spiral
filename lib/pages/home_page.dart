@@ -25,15 +25,22 @@ class HomePage extends StatelessWidget {
         mainAxisSpacing: 20, // spacing between rows
         crossAxisSpacing: 20, // spacing between columns
       ),
-      padding: const EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 80),
+      padding: const EdgeInsets.only(
+        left: 16,
+        top: 16,
+        right: 16,
+        bottom: 80,
+      ),
       // padding around the grid
       itemCount: modules.length,
       itemBuilder: (context, index) {
         return ModuleItem(
-            name: modules[index]['name'],
-            color: Colors.white,
-            padding: 20,
-            icon: modules[index]['icon']);
+          name: modules[index]['name'],
+          color: Colors.white,
+          padding: 20,
+          icon: modules[index]['icon'],
+          onTap: () => print('Tapped'),
+        );
       },
     );
   }

@@ -6,11 +6,15 @@ class ActivityItem extends StatelessWidget {
   const ActivityItem(
       {super.key,
       required this.name,
+      required this.date,
+      required this.doneBy,
       required this.color,
       required this.padding,
       this.onPressed});
 
   final String name;
+  final String date;
+  final String doneBy;
   final Color color;
   final double padding;
   final Function()? onPressed;
@@ -42,7 +46,7 @@ class ActivityItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildStringItem('Activity Name', 'Test data name'),
+              _buildStringItem('Activity Name', name),
               const SizedBox(
                 height: 10,
               ),
@@ -50,8 +54,8 @@ class ActivityItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildStringItem('Activity date', 'Test/data/date'),
-                  _buildStringItem('Done by', 'Test data done by'),
+                  _buildStringItem('Activity date', date),
+                  _buildStringItem('Done by', doneBy),
                 ],
               ),
             ],
