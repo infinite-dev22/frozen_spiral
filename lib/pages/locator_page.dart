@@ -12,6 +12,17 @@ class LocatorPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         title: AppBarContent(),
-      ),);
+      ),
+      body: _buildBody(),
+    );
+  }
+
+  _buildBody() {
+    return const Center(
+      child: Text(
+        "Your locator appears here",
+        style: TextStyle(color: AppColors.inActiveColor),
+      ),
+    );
   }
 }

@@ -7,4 +7,5 @@ class AppColors {
   static const textBoxColor = Colors.white;
   static const inActiveColor = Colors.grey;
   static const darker = Color(0xFF3E4249);
+  static const red = Color(0xFFff4b60);
 }

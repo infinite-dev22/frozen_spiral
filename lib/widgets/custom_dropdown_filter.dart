@@ -5,7 +5,10 @@ import 'custom_icon_holder.dart';
 
 class CustomDropdownFilter extends StatelessWidget {
   const CustomDropdownFilter(
-      {super.key, required this.menuItems, this.onChanged, required this.bgColor});
+      {super.key,
+      required this.menuItems,
+      this.onChanged,
+      required this.bgColor});
 
   final List<String> menuItems;
   final Function(dynamic)? onChanged;
@@ -19,35 +22,34 @@ class CustomDropdownFilter extends StatelessWidget {
   _buildBody() {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
-          customButton: CustomIconHolder(
-            width: 35,
-            height: 35,
-            radius: 10,
-            bgColor: bgColor,
-            icon: Icons.filter_list,
-          ),
-          items: menuItems
-              .map((item) =>
-              DropdownMenuItem<String>(
-                value: item,
-                child: Text(
-                  item,
-                  style: const TextStyle(
-                    fontSize: 14,
+        customButton: CustomIconHolder(
+          width: 35,
+          height: 35,
+          radius: 10,
+          bgColor: bgColor,
+          icon: Icons.filter_list,
+        ),
+        items: menuItems
+            .map((item) => DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              ))
-              .toList(),
-          onChanged: onChanged,
-          dropdownStyleData: DropdownStyleData(
-          width: 160,
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
+                ))
+            .toList(),
+        onChanged: (value){},
+        dropdownStyleData: DropdownStyleData(
+          width: 100,
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          offset: const Offset(-60, -6),
+        ),
       ),
-      offset: const Offset(0, 8),
-    ),)
-    ,
     );
   }
 }

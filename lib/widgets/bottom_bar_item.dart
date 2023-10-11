@@ -30,7 +30,7 @@ class BottomBarItem extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 8),
               decoration: const BoxDecoration(
                 color: Colors.transparent,
               ),
@@ -44,7 +44,7 @@ class BottomBarItem extends StatelessWidget {
               name,
               style: TextStyle(
                 color: isActive ? activeColor : color,
-                fontSize: 12,
+                fontSize: 9,
               ),
             ),
           ],

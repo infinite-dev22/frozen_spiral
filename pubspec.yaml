@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   dropdown_button2: ^2.3.9
   double_back_to_close: ^2.0.0
+  draggable_bottom_sheet: ^1.0.2
 
 dev_dependencies:
   flutter_test:
