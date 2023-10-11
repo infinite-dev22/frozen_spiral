@@ -20,6 +20,19 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController otherNameController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController dateOfBirthController = TextEditingController();
+  TextEditingController personalEmailController = TextEditingController();
+  TextEditingController telephoneController = TextEditingController();
+  TextEditingController socialSecurityNumberController =
+      TextEditingController();
+  TextEditingController tinNumberController = TextEditingController();
+  TextEditingController roleController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -214,17 +227,18 @@ class _ProfilePageState extends State<ProfilePage> {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildEditTextFormField('First name'),
-          _buildEditTextFormField('Last name'),
-          _buildEditTextFormField('Other name'),
-          _buildEditTextFormField('Gender'),
-          _buildEditTextFormField('Title'),
-          _buildEditTextFormField('Date of birth'),
-          _buildEditTextFormField('Personal email'),
-          _buildEditTextFormField('Telephone'),
-          _buildEditTextFormField('Social Security Number'),
-          _buildEditTextFormField('Tin number'),
-          _buildEditTextFormField('Role'),
+          _buildEditTextFormField('First name', firstNameController),
+          _buildEditTextFormField('Last name', lastNameController),
+          _buildEditTextFormField('Other name', otherNameController),
+          _buildEditTextFormField('Gender', genderController),
+          _buildEditTextFormField('Title', titleController),
+          _buildEditTextFormField('Date of birth', dateOfBirthController),
+          _buildEditTextFormField('Personal email', personalEmailController),
+          _buildEditTextFormField('Telephone', telephoneController),
+          _buildEditTextFormField(
+              'Social Security Number', socialSecurityNumberController),
+          _buildEditTextFormField('Tin number', tinNumberController),
+          _buildEditTextFormField('Role', roleController),
           WideButton(
             name: 'Save',
             onPressed: () =>
@@ -237,20 +251,24 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  _buildEditTextFormField(String hint) {
+  _buildEditTextFormField(String hint, TextEditingController controller) {
     return Column(
       children: [
         TextFormField(
+          controller: controller,
           decoration: InputDecoration(
+            filled: true,
+            fillColor: AppColors.textBoxColor,
             hintText: hint,
             hintStyle: const TextStyle(color: AppColors.inActiveColor),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(20),
             ),
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 20,
         ),
       ],
     );
