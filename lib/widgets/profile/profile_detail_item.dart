@@ -16,7 +16,8 @@ class ProfileDetailItem extends StatelessWidget {
       required this.idNumber,
       required this.nssfNumber,
       required this.color,
-      required this.padding});
+      required this.padding,
+      this.onPressed});
 
   final String gender;
   final String email;
@@ -29,6 +30,7 @@ class ProfileDetailItem extends StatelessWidget {
   final String nssfNumber;
   final Color color;
   final double padding;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -61,17 +63,17 @@ class ProfileDetailItem extends StatelessWidget {
   }
 
   _buildTitle() {
-    return const Row(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
+        const Text(
           'Details',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
-        CustomIconButton(),
+        CustomIconButton(onPressed: onPressed),
       ],
     );
   }

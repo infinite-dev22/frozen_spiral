@@ -10,6 +10,8 @@ class ProfileMasterItem extends StatelessWidget {
     required this.isNetwork,
     required this.color,
     required this.padding,
+    this.changePhotoTap,
+    this.changePasswordTap,
   });
 
   final image;
@@ -17,6 +19,8 @@ class ProfileMasterItem extends StatelessWidget {
   final bool isNetwork;
   final Color color;
   final double padding;
+  final Function()? changePhotoTap;
+  final Function()? changePasswordTap;
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +92,7 @@ class ProfileMasterItem extends StatelessWidget {
         _buildProfileFunctionItem(
           Icons.image_rounded,
           "Change photo",
+          changePhotoTap,
         ),
         const SizedBox(
           height: 20,
@@ -95,23 +100,27 @@ class ProfileMasterItem extends StatelessWidget {
         _buildProfileFunctionItem(
           Icons.lock_rounded,
           "Change password",
+          changePasswordTap,
         ),
       ],
     );
   }
 
-  _buildProfileFunctionItem(IconData icon, String name) {
-    return Row(
-      children: [
-        Icon(icon),
-        const SizedBox(
-          width: 5,
-        ),
-        Text(
-          name,
-          style: const TextStyle(color: AppColors.primary),
-        ),
-      ],
+  _buildProfileFunctionItem(IconData icon, String name, Function()? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(icon),
+          const SizedBox(
+            width: 5,
+          ),
+          Text(
+            name,
+            style: const TextStyle(color: AppColors.primary),
+          ),
+        ],
+      ),
     );
   }
 }

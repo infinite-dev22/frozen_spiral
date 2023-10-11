@@ -6,12 +6,12 @@ class CustomIconButton extends StatelessWidget {
     super.key,
     this.icon = Icons.mode_edit_rounded,
     this.title = 'Edit',
-    this.onTap,
+    this.onPressed,
   });
 
   final IconData? icon;
   final String title;
-  final Function()? onTap;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +19,8 @@ class CustomIconButton extends StatelessWidget {
   }
 
   _buildBody() {
-    return GestureDetector(
-      onTap: onTap,
+    return TextButton(
+      onPressed: onPressed,
       child: Row(
         children: [
           Icon(
