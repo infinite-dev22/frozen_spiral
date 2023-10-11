@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/color.dart';
+import 'custom_icon_bottom.dart';
 
 class ActivityItem extends StatelessWidget {
   const ActivityItem(
@@ -66,7 +67,7 @@ class ActivityItem extends StatelessWidget {
           top: 0,
           child: MaterialButton(
             onPressed: onPressed,
-            child: _buildButtonData(),
+            child: const CustomIconButton(),
           ),
         ),
       ],
@@ -89,25 +90,6 @@ class ActivityItem extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-      ],
-    );
-  }
-
-  _buildButtonData() {
-    return const Row(
-      children: [
-        Icon(
-          Icons.mode_edit_rounded,
-          size: 15,
-          color: AppColors.darker,
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        Text(
-          'Edit',
-          style: TextStyle(color: AppColors.darker),
-        )
       ],
     );
   }

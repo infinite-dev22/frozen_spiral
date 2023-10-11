@@ -83,13 +83,13 @@ class _RootPageState extends State<RootPage> {
       height: 55,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
-      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
+      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5,),
       decoration: BoxDecoration(
         color: AppColors.appBgColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor.withOpacity(0.1),
+            color: AppColors.shadowColor.withOpacity(.1),
             blurRadius: 1,
             spreadRadius: 1,
             offset: const Offset(0, 1),
@@ -97,7 +97,7 @@ class _RootPageState extends State<RootPage> {
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: List.generate(
           _barItems().length,

@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/data/data.dart';
+import 'package:smart_case/pages/profile_page.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/module_item.dart';
@@ -12,7 +14,10 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: AppBarContent(),
+        title: AppBarContent(
+            profile: () => Navigator.of(context).push(CupertinoPageRoute(
+                  builder: (context) => const ProfilePage(),
+                ))),
       ),
       body: _buildBody(),
     );

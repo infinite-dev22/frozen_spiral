@@ -13,6 +13,16 @@ class NotificationsPage extends StatelessWidget {
         backgroundColor: AppColors.primary,
         title: AppBarContent(),
       ),
+      body: _buildBody(),
+    );
+  }
+
+  _buildBody() {
+    return const Center(
+      child: Text(
+        "Your notifications appear here",
+        style: TextStyle(color: AppColors.inActiveColor),
+      ),
     );
   }
 }
