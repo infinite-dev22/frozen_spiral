@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
         left: 16,
         top: 16,
         right: 16,
-        bottom: 80,
+        bottom: 16,
       ),
       // padding around the grid
       itemCount: modules.length,
