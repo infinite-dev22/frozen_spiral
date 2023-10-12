@@ -1,5 +1,6 @@
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:smart_case/theme/color.dart';
 
 import '../widgets/bottom_bar_item.dart';
@@ -42,7 +43,7 @@ class _RootPageState extends State<RootPage> {
       {
         "icon": Icons.notifications_none_rounded,
         "active_icon": Icons.notifications_rounded,
-        "name": "Notifications",
+        "name": "Alerts",
         "page": const NotificationsPage(),
       },
       {
@@ -62,9 +63,68 @@ class _RootPageState extends State<RootPage> {
         message: 'Tap back again to exit',
         child: _buildPage(),
       ),
-      floatingActionButton: _buildBottomBar(),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButtonLocation: ExpandableFab.location,
+      floatingActionButton: _buildFab(),
+      bottomNavigationBar: _buildBottomBar(),
+    );
+  }
+
+  _buildFab() {
+    return ExpandableFab(
+      type: ExpandableFabType.up,
+      duration: const Duration(milliseconds: 500),
+      distance: 65.0,
+      pos: ExpandableFabPos.right,
+      childrenOffset: const Offset(0, 20),
+      overlayStyle: ExpandableFabOverlayStyle(
+        // color: Colors.black.withOpacity(0.5),
+        blur: 5,
+      ),
+      openButtonBuilder: RotateFloatingActionButtonBuilder(
+        child: const Icon(Icons.add),
+        fabSize: ExpandableFabSize.regular,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.primary,
+        angle: 3.14 * 2,
+      ),
+      closeButtonBuilder: DefaultFloatingActionButtonBuilder(
+        child: const Icon(Icons.close),
+        fabSize: ExpandableFabSize.regular,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.primary,
+      ),
+      children: [
+        FloatingActionButton.extended(
+          heroTag: null,
+          icon: const Icon(Icons.list_rounded),
+          onPressed: () {},
+          label: const Text("Requisitions"),
+        ),
+        FloatingActionButton.extended(
+          heroTag: null,
+          icon: const Icon(Icons.handshake_outlined),
+          onPressed: () {},
+          label: const Text("Engagements"),
+        ),
+        FloatingActionButton.extended(
+          heroTag: null,
+          icon: const Icon(Icons.local_activity_outlined),
+          onPressed: () {},
+          label: const Text("Activity"),
+        ),
+        FloatingActionButton.extended(
+          heroTag: null,
+          icon: const Icon(Icons.calendar_month_rounded),
+          onPressed: () {},
+          label: const Text("Diary"),
+        ),
+        FloatingActionButton.extended(
+          heroTag: null,
+          icon: const Icon(Icons.task_outlined),
+          onPressed: () {},
+          label: const Text("Tasks"),
+        ),
+      ],
     );
   }
 
@@ -83,37 +143,60 @@ class _RootPageState extends State<RootPage> {
       height: 55,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
-      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5,),
-      decoration: BoxDecoration(
-        color: AppColors.appBgColor,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withOpacity(.1),
-            blurRadius: 1,
-            spreadRadius: 1,
-            offset: const Offset(0, 1),
-          )
-        ],
-      ),
+      // margin: const EdgeInsets.only(
+      //   left: 15,
+      //   right: 15,
+      //   bottom: 5,
+      //   top: 5,
+      // ),
+      // decoration: BoxDecoration(
+      //   color: AppColors.appBgColor,
+      //   borderRadius: BorderRadius.circular(20),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: AppColors.shadowColor.withOpacity(.1),
+      //       blurRadius: 1,
+      //       spreadRadius: 1,
+      //       offset: const Offset(0, 1),
+      //     )
+      //   ],
+      // ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: List.generate(
           _barItems().length,
-          (index) => BottomBarItem(
-            _activeTab == index
-                ? _barItems()[index]["active_icon"]
-                : _barItems()[index]["icon"],
-            _barItems()[index]["name"],
-            isActive: _activeTab == index,
-            activeColor: AppColors.primary,
-            onTap: () {
-              setState(() {
-                _activeTab = index;
-              });
-            },
-          ),
+          (index) {
+            if (index == 2) {
+              return BottomBarItem(
+                _activeTab == index
+                    ? _barItems()[index]["active_icon"]
+                    : _barItems()[index]["icon"],
+                _barItems()[index]["name"],
+                isActive: _activeTab == index,
+                activeColor: AppColors.primary,
+                onTap: () {
+                  setState(() {
+                    _activeTab = index;
+                  });
+                },
+              );
+            } else {
+              return BottomBarItem(
+                _activeTab == index
+                    ? _barItems()[index]["active_icon"]
+                    : _barItems()[index]["icon"],
+                _barItems()[index]["name"],
+                isActive: _activeTab == index,
+                activeColor: AppColors.primary,
+                onTap: () {
+                  setState(() {
+                    _activeTab = index;
+                  });
+                },
+              );
+            }
+          },
         ),
       ),
     );

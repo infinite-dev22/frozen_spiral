@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_case/pages/profile_page.dart';
 
 import 'custom_dropdown_filter.dart';
 import 'custom_images/custom_elevated_image.dart';
@@ -28,11 +26,6 @@ class AppBarContent extends StatelessWidget {
     "Type",
     "Location",
     "Date Added",
-  ];
-
-  final List<String> actions = [
-    "Log out",
-    "Profile",
   ];
 
   @override
@@ -83,7 +76,7 @@ class AppBarContent extends StatelessWidget {
   }
 
   _buildProfileDropDown(BuildContext context) {
-    return PopupMenuButton(
+    return PopupMenuButton(offset: const Offset(0, 8),
       icon: const CustomElevatedImage(
         "assets/images/user_profile.jpg",
         width: 35,
@@ -94,18 +87,18 @@ class AppBarContent extends StatelessWidget {
       itemBuilder: (context) {
         return [
           PopupMenuItem<String>(
-            onTap: signOut,
+            onTap: profile,
             child: const Text(
-              'Sign out',
+              'Profile',
               style: TextStyle(
                 fontSize: 14,
               ),
             ),
           ),
           PopupMenuItem<String>(
-            onTap: profile,
+            onTap: signOut,
             child: const Text(
-              'Profile',
+              'Sign out',
               style: TextStyle(
                 fontSize: 14,
               ),
@@ -118,14 +111,6 @@ class AppBarContent extends StatelessWidget {
           if (kDebugMode) {
             print('User clicked sign out');
           }
-        }
-
-        if (value == 'Profile') {
-          Navigator.of(context).push(
-            CupertinoPageRoute(
-              builder: (context) => const ProfilePage(),
-            ),
-          );
         }
       },
     );
