@@ -23,6 +23,11 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   int _activeTab = 0;
 
+  final TextEditingController activitySearchController =
+      TextEditingController();
+  final TextEditingController fileSearchController = TextEditingController();
+
+  final TextEditingController descriptionController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController otherNameController = TextEditingController();
@@ -235,17 +240,12 @@ class _RootPageState extends State<RootPage> {
             height: 20,
           ),
           ActivityForm(
-            firstNameController: firstNameController,
-            lastNameController: lastNameController,
-            otherNameController: otherNameController,
-            genderController: genderController,
-            titleController: titleController,
             dateOfBirthController: dateOfBirthController,
-            personalEmailController: personalEmailController,
-            telephoneController: telephoneController,
-            socialSecurityNumberController: socialSecurityNumberController,
-            tinNumberController: tinNumberController,
-            roleController: roleController,
+            descriptionController: descriptionController,
+            activitySearchController: activitySearchController,
+            fileSearchController: fileSearchController,
+            onActivityChange: (value) {},  // When not available the drop downs won't work.
+            onFileChange: (value) {},  // When not available the drop downs won't work.
           ),
         ],
       ),

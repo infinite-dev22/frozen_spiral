@@ -26,6 +26,21 @@ List activities = [
   },
 ];
 
+List activityList = [
+  "Test name 0",
+  "Test name 1",
+  "Test name 2",
+  "Test name 3",
+  "Test name 4",
+  "Test name 5",
+  "Test name 6",
+  "Test name 7",
+  "Test name 8",
+  "Test name 9",
+  "Test name 10",
+  "Test name 11",
+];
+
 List notifications = [];
 List locations = [];
 
