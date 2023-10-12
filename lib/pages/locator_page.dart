@@ -11,7 +11,9 @@ class LocatorPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: AppBarContent(),
+        title: AppBarContent(
+          profile: () => Navigator.pushNamed(context, '/profile'),
+        ),
       ),
       body: _buildBody(),
     );

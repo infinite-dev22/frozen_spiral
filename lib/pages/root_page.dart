@@ -74,7 +74,6 @@ class _RootPageState extends State<RootPage> {
       type: ExpandableFabType.up,
       duration: const Duration(milliseconds: 500),
       distance: 65.0,
-      fanAngle: 40,
       pos: ExpandableFabPos.right,
       childrenOffset: const Offset(0, 20),
       overlayStyle: ExpandableFabOverlayStyle(
