@@ -15,9 +15,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         title: AppBarContent(
-            profile: () => Navigator.of(context).push(CupertinoPageRoute(
-                  builder: (context) => const ProfilePage(),
-                ))),
+            profile: () => Navigator.pushNamed(context, '/profile')),
       ),
       body: _buildBody(),
     );

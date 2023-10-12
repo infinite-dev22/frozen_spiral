@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_case/pages/profile_page.dart';
 import 'package:smart_case/pages/root_page.dart';
 import 'package:smart_case/theme/color.dart';
 
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
       /* ThemeMode.system to follow system theme,
          ThemeMode.light for light theme,
          ThemeMode.dark for dark theme */
+      routes: {
+        '/profile': (context) => const ProfilePage(),
+      },
       home: const RootPage(),
     );
   }

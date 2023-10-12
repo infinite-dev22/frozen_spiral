@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_case/pages/profile_page.dart';
 
 import 'custom_dropdown_filter.dart';
 import 'custom_images/custom_elevated_image.dart';
@@ -113,14 +111,6 @@ class AppBarContent extends StatelessWidget {
           if (kDebugMode) {
             print('User clicked sign out');
           }
-        }
-
-        if (value == 'Profile') {
-          Navigator.of(context).push(
-            CupertinoPageRoute(
-              builder: (context) => const ProfilePage(),
-            ),
-          );
         }
       },
     );
