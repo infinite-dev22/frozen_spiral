@@ -2,10 +2,12 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/form_title.dart';
 
 import '../widgets/bottom_bar_item.dart';
 import 'activities_page.dart';
 import 'files_page.dart';
+import 'forms/activity_form.dart';
 import 'home_page.dart';
 import 'locator_page.dart';
 import 'notifications_page.dart';
@@ -19,6 +21,19 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   int _activeTab = 0;
+
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController otherNameController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController dateOfBirthController = TextEditingController();
+  final TextEditingController personalEmailController = TextEditingController();
+  final TextEditingController telephoneController = TextEditingController();
+  final TextEditingController socialSecurityNumberController =
+      TextEditingController();
+  final TextEditingController tinNumberController = TextEditingController();
+  final TextEditingController roleController = TextEditingController();
 
   _barItems() {
     return [
@@ -109,7 +124,40 @@ class _RootPageState extends State<RootPage> {
         FloatingActionButton.extended(
           heroTag: null,
           icon: const Icon(Icons.local_activity_outlined),
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+              showDragHandle: true,
+              enableDrag: true,
+              isScrollControlled: true,
+              useSafeArea: true,
+              context: context,
+              builder: (context) => Column(
+                children: [
+                  FormTitle(
+                    name: 'Edit your details',
+                    onSave: () {},
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ActivityForm(
+                    firstNameController: firstNameController,
+                    lastNameController: lastNameController,
+                    otherNameController: otherNameController,
+                    genderController: genderController,
+                    titleController: titleController,
+                    dateOfBirthController: dateOfBirthController,
+                    personalEmailController: personalEmailController,
+                    telephoneController: telephoneController,
+                    socialSecurityNumberController:
+                        socialSecurityNumberController,
+                    tinNumberController: tinNumberController,
+                    roleController: roleController,
+                  ),
+                ],
+              ),
+            );
+          },
           label: const Text("Activity"),
         ),
         FloatingActionButton.extended(

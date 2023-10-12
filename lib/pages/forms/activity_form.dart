@@ -34,64 +34,10 @@ class ActivityForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildBody(context);
+    return _buildBody();
   }
 
-  _buildBody(BuildContext context) {
-    return showModalBottomSheet(
-      showDragHandle: true,
-      enableDrag: true,
-      isScrollControlled: true,
-      useSafeArea: true,
-      context: context,
-      builder: (context) => Column(
-        children: [
-          _buildBottomSheetTitle('Edit your details', context),
-          const SizedBox(
-            height: 20,
-          ),
-          _buildEditBottomSheetForm(),
-        ],
-      ),
-    );
-  }
-
-  _buildBottomSheetTitle(String name, BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text(
-            'Cancel',
-            style: TextStyle(
-              color: AppColors.red,
-              fontSize: 16,
-            ),
-          ),
-        ),
-        Text(
-          name,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        TextButton(
-          onPressed: onSave,
-          child: const Text(
-            'Save',
-            style: TextStyle(
-              color: AppColors.primary,
-              fontSize: 16,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  _buildEditBottomSheetForm() {
+  _buildBody() {
     return Expanded(
       child: ListView(
         padding: const EdgeInsets.all(16),
