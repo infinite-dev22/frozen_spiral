@@ -131,7 +131,7 @@ class _RootPageState extends State<RootPage> {
         FloatingActionButton.extended(
           heroTag: null,
           icon: const Icon(Icons.task_outlined),
-          onPressed: () {},
+          onPressed: _buildTaskForm,
           label: const Text("Tasks"),
         ),
         FloatingActionButton.extended(
@@ -263,6 +263,40 @@ class _RootPageState extends State<RootPage> {
         children: [
           FormTitle(
             name: 'New Requisition',
+            onSave: () {},
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          RequisitionForm(
+            firstNameController: firstNameController,
+            lastNameController: lastNameController,
+            otherNameController: otherNameController,
+            genderController: genderController,
+            titleController: titleController,
+            dateOfBirthController: dateOfBirthController,
+            personalEmailController: personalEmailController,
+            telephoneController: telephoneController,
+            socialSecurityNumberController: socialSecurityNumberController,
+            tinNumberController: tinNumberController,
+            roleController: roleController,
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildTaskForm() {
+    return showModalBottomSheet(
+      showDragHandle: true,
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => Column(
+        children: [
+          FormTitle(
+            name: 'New Task',
             onSave: () {},
           ),
           const SizedBox(
