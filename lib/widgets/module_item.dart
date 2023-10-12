@@ -56,7 +56,7 @@ class ModuleItem extends StatelessWidget {
             Text(
               name,
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 16,
                 color: AppColors.darker,
               ),
             )
