@@ -28,11 +28,7 @@ class HomePage extends StatelessWidget {
         mainAxisSpacing: 20, // spacing between rows
         crossAxisSpacing: 20, // spacing between columns
       ),
-      padding: const EdgeInsets.only(
-        left: 16,
-        top: 16,
-        right: 16,
-        bottom: 80,
+      padding: const EdgeInsets.all(16
       ),
       // padding around the grid
       itemCount: modules.length,
