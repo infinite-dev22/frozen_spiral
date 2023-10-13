@@ -12,10 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var appbarPresent = true;
-  var bottomBarPresent = true;
-  var columnCount = 2;
-  var minRowCountOnScreen = 2;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,26 +20,19 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: AppColors.primary,
         title: AppBarContent(),
       ),
-      body: _buildBody(),
+      body: _buildGridColumns(),
     );
   }
 
   _buildBody() {
-    var size = MediaQuery.of(context).size;
-    var width = size.width;
-    var height = size.height;
-    if(appbarPresent){
-      height -= kToolbarHeight;
-    }
-    if(bottomBarPresent){
-      height -= kBottomNavigationBarHeight;
-    }
     return GridView.count(
       shrinkWrap: true,
-      crossAxisCount: 2, // number of items in each row
-      mainAxisSpacing: 20, // spacing between rows
-      crossAxisSpacing: 20, // spacing between columns
-      childAspectRatio: (width / columnCount) / (height / minRowCountOnScreen),
+      crossAxisCount: 2,
+      // number of items in each row
+      mainAxisSpacing: 20,
+      // spacing between rows
+      crossAxisSpacing: 20,
+      // spacing between columns
       padding: const EdgeInsets.only(
         left: 16,
         top: 16,
@@ -60,6 +50,82 @@ class _HomePageState extends State<HomePage> {
                 onTap: () => print('Tapped')),
           )
           .toList(),
+    );
+  }
+
+  _buildGridColumns() {
+    double cardPadding = MediaQuery.of(context).size.height * .012;
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: ModuleItem(
+                    name: 'Activities',
+                    color: Colors.white,
+                    padding: cardPadding,
+                    icon: Icons.local_activity_outlined,
+                    onTap: () => print('Tapped')),
+              ),
+              const SizedBox(width: 20,),
+              Expanded(
+                child: ModuleItem(
+                    name: 'Requisitions',
+                    color: Colors.white,
+                    padding: cardPadding,
+                    icon: Icons.list_rounded,
+                    onTap: () => print('Tapped')),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20,),
+          Row(
+            children: [
+              Expanded(
+                child: ModuleItem(
+                    name: 'Diary',
+                    color: Colors.white,
+                    padding: cardPadding,
+                    icon: Icons.calendar_month_rounded,
+                    onTap: () => print('Tapped')),
+              ),
+              const SizedBox(width: 20,),
+              Expanded(
+                child: ModuleItem(
+                    name: 'Tasks',
+                    color: Colors.white,
+                    padding: cardPadding,
+                    icon: Icons.task_outlined,
+                    onTap: () => print('Tapped')),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20,),
+          Row(
+            children: [
+              Expanded(
+                child: ModuleItem(
+                    name: 'Engagements',
+                    color: Colors.white,
+                    padding: cardPadding,
+                    icon: Icons.handshake_outlined,
+                    onTap: () => print('Tapped')),
+              ),
+              const SizedBox(width: 20,),
+              Expanded(
+                child: ModuleItem(
+                    name: 'Reports',
+                    color: Colors.white,
+                    padding: cardPadding,
+                    icon: Icons.bar_chart_rounded,
+                    onTap: () => print('Tapped')),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
