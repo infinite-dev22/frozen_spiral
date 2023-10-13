@@ -161,7 +161,7 @@ class _RootPageState extends State<RootPage> {
 
   Widget _buildBottomBar() {
     return Container(
-      height: 70,
+      height: 80,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
       // margin: const EdgeInsets.only(
