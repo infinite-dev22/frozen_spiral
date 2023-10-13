@@ -40,6 +40,9 @@ dependencies:
   draggable_bottom_sheet: ^1.0.2
   flutter_expandable_fab: ^2.0.0
   flutter_native_splash: ^2.3.3
+  custom_radio_grouped_button: ^2.2.1
+  reactive_dropdown_search: ^3.0.0
+  reactive_forms: ^16.1.0
 
 dev_dependencies:
   flutter_test:

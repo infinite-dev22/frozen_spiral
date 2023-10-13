@@ -103,3 +103,51 @@ class CustomTextBox extends StatelessWidget {
         ));
   }
 }
+
+class CustomTextArea extends StatelessWidget {
+  const CustomTextArea(
+      {super.key,
+      this.hint = '',
+      this.readOnly = false,
+      this.autoFocus = false,
+      this.controller,
+      this.onChanged,
+      this.minLines = 5});
+
+  final String hint;
+  final bool readOnly;
+  final bool autoFocus;
+  final TextEditingController? controller;
+  final Function(String)? onChanged;
+  final int minLines;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Column(
+      children: [
+        TextFormField(
+          controller: controller,
+          readOnly: readOnly,
+          autofocus: autoFocus,
+          onChanged: onChanged,
+          minLines: minLines,
+          maxLines: 500,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: AppColors.textBoxColor,
+            hintText: hint,
+            hintStyle: const TextStyle(color: AppColors.inActiveColor),
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

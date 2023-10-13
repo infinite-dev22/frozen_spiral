@@ -2,10 +2,13 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/form_title.dart';
 
 import '../widgets/bottom_bar_item.dart';
 import 'activities_page.dart';
 import 'files_page.dart';
+import 'forms/activity_form.dart';
+import 'forms/requisition_form.dart';
 import 'home_page.dart';
 import 'locator_page.dart';
 import 'notifications_page.dart';
@@ -19,6 +22,24 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   int _activeTab = 0;
+
+  final TextEditingController activitySearchController =
+      TextEditingController();
+  final TextEditingController fileSearchController = TextEditingController();
+
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController otherNameController = TextEditingController();
+  final TextEditingController genderController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController dateOfBirthController = TextEditingController();
+  final TextEditingController personalEmailController = TextEditingController();
+  final TextEditingController telephoneController = TextEditingController();
+  final TextEditingController socialSecurityNumberController =
+      TextEditingController();
+  final TextEditingController tinNumberController = TextEditingController();
+  final TextEditingController roleController = TextEditingController();
 
   _barItems() {
     return [
@@ -85,7 +106,7 @@ class _RootPageState extends State<RootPage> {
         fabSize: ExpandableFabSize.regular,
         foregroundColor: AppColors.white,
         backgroundColor: AppColors.primary,
-        angle: 3.14 * 2,
+        // angle: 3.14 * 2,
       ),
       closeButtonBuilder: DefaultFloatingActionButtonBuilder(
         child: const Icon(Icons.close),
@@ -96,33 +117,33 @@ class _RootPageState extends State<RootPage> {
       children: [
         FloatingActionButton.extended(
           heroTag: null,
-          icon: const Icon(Icons.list_rounded),
-          onPressed: () {},
-          label: const Text("Requisitions"),
-        ),
-        FloatingActionButton.extended(
-          heroTag: null,
           icon: const Icon(Icons.handshake_outlined),
-          onPressed: () {},
+          onPressed: _buildEngagementForm,
           label: const Text("Engagements"),
         ),
         FloatingActionButton.extended(
           heroTag: null,
+          icon: const Icon(Icons.list_rounded),
+          onPressed: _buildRequisitionForm,
+          label: const Text("Requisitions"),
+        ),
+        FloatingActionButton.extended(
+          heroTag: null,
           icon: const Icon(Icons.local_activity_outlined),
-          onPressed: () {},
+          onPressed: _buildActivityForm,
           label: const Text("Activity"),
+        ),
+        FloatingActionButton.extended(
+          heroTag: null,
+          icon: const Icon(Icons.task_outlined),
+          onPressed: _buildTaskForm,
+          label: const Text("Tasks"),
         ),
         FloatingActionButton.extended(
           heroTag: null,
           icon: const Icon(Icons.calendar_month_rounded),
           onPressed: () {},
           label: const Text("Diary"),
-        ),
-        FloatingActionButton.extended(
-          heroTag: null,
-          icon: const Icon(Icons.task_outlined),
-          onPressed: () {},
-          label: const Text("Tasks"),
         ),
       ],
     );
@@ -198,6 +219,137 @@ class _RootPageState extends State<RootPage> {
             }
           },
         ),
+      ),
+    );
+  }
+
+  _buildActivityForm() {
+    return showModalBottomSheet(
+      showDragHandle: true,
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => Column(
+        children: [
+          FormTitle(
+            name: 'New Activity',
+            onSave: () {},
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ActivityForm(
+            dateOfBirthController: dateOfBirthController,
+            descriptionController: descriptionController,
+            activitySearchController: activitySearchController,
+            fileSearchController: fileSearchController,
+            onActivityChange: (value) {},  // When not available the drop downs won't work.
+            onFileChange: (value) {},  // When not available the drop downs won't work.
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildRequisitionForm() {
+    return showModalBottomSheet(
+      showDragHandle: true,
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => Column(
+        children: [
+          FormTitle(
+            name: 'New Requisition',
+            onSave: () {},
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          RequisitionForm(
+            firstNameController: firstNameController,
+            lastNameController: lastNameController,
+            otherNameController: otherNameController,
+            genderController: genderController,
+            titleController: titleController,
+            dateOfBirthController: dateOfBirthController,
+            personalEmailController: personalEmailController,
+            telephoneController: telephoneController,
+            socialSecurityNumberController: socialSecurityNumberController,
+            tinNumberController: tinNumberController,
+            roleController: roleController,
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildTaskForm() {
+    return showModalBottomSheet(
+      showDragHandle: true,
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => Column(
+        children: [
+          FormTitle(
+            name: 'New Task',
+            onSave: () {},
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          RequisitionForm(
+            firstNameController: firstNameController,
+            lastNameController: lastNameController,
+            otherNameController: otherNameController,
+            genderController: genderController,
+            titleController: titleController,
+            dateOfBirthController: dateOfBirthController,
+            personalEmailController: personalEmailController,
+            telephoneController: telephoneController,
+            socialSecurityNumberController: socialSecurityNumberController,
+            tinNumberController: tinNumberController,
+            roleController: roleController,
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildEngagementForm() {
+    return showModalBottomSheet(
+      showDragHandle: true,
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => Column(
+        children: [
+          FormTitle(
+            name: 'New Engagement',
+            onSave: () {},
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          RequisitionForm(
+            firstNameController: firstNameController,
+            lastNameController: lastNameController,
+            otherNameController: otherNameController,
+            genderController: genderController,
+            titleController: titleController,
+            dateOfBirthController: dateOfBirthController,
+            personalEmailController: personalEmailController,
+            telephoneController: telephoneController,
+            socialSecurityNumberController: socialSecurityNumberController,
+            tinNumberController: tinNumberController,
+            roleController: roleController,
+          ),
+        ],
       ),
     );
   }
