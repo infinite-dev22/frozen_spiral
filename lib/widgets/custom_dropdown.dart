@@ -8,15 +8,15 @@ import '../theme/color.dart';
 class CustomDropdown extends StatefulWidget {
   const CustomDropdown(
       {super.key,
-      required this.placeHolder,
       required this.list,
       this.value = '',
       this.onChanged,
-      this.onSearch});
+      this.onSearch,
+      required this.hint});
 
-  final String placeHolder;
   final List list;
   final String value;
+  final String hint;
   final Function(String?)? onChanged;
   final Function(String?)? onSearch;
 
@@ -55,7 +55,6 @@ class _CustomDropdownState extends State<CustomDropdown> {
   ];
 
   Future<List<String>> getData(String? search) async {
-    await Future.delayed(const Duration(seconds: 2));
     if (Random().nextBool()) throw 'sdd';
     return data.where((e) => e.contains(search ?? '')).toList();
   }
@@ -75,7 +74,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
               itemLabelFormatter: (value) {
                 return value;
               },
-              remoteItems: getData,
+              remoteItems: (value) => getData((value!.length > 2) ? value : ''),
               onChanged: (value) {
                 selectedValue.value = value;
               },
@@ -87,8 +86,9 @@ class _CustomDropdownState extends State<CustomDropdown> {
                   horizontal: 10,
                   vertical: 8,
                 ),
-                hintText: 'Search for an item...',
-                hintStyle: const TextStyle(fontSize: 12),
+                hintText: widget.hint,
+                hintStyle: const TextStyle(
+                    fontSize: 16, color: AppColors.inActiveColor),
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(10),

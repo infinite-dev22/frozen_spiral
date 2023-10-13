@@ -228,16 +228,12 @@ class _RootPageState extends State<RootPage> {
       showDragHandle: true,
       enableDrag: true,
       isScrollControlled: true,
-      useSafeArea: true,
-      context: context,
+      context: context,backgroundColor: AppColors.appBgColor,
       builder: (context) => Column(
         children: [
           FormTitle(
             name: 'New Activity',
             onSave: () {},
-          ),
-          const SizedBox(
-            height: 20,
           ),
           ActivityForm(
             dateOfBirthController: dateOfBirthController,

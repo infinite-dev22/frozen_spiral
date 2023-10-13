@@ -1,9 +1,9 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/widgets/custom_dropdown.dart';
-
 import 'package:smart_case/data/data.dart';
+import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/custom_accodion.dart';
+import 'package:smart_case/widgets/custom_dropdown.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 
 class ActivityForm extends StatefulWidget {
@@ -42,63 +42,71 @@ class _ActivityFormState extends State<ActivityForm> {
   _buildBody() {
     List defaultList = [''];
     return Expanded(
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Form(
-            child: Column(
-              children: [
-                CustomDropdown(
-                  placeHolder: 'Select activity',
-                  list: filteredActivityList.isNotEmpty
-                      ? filteredActivityList
-                      : defaultList,
-                  onChanged: widget.onActivityChange,
-                  onSearch: (value) {
-                    // Code only to imitate like functionality.
-                    if (value!.length > 2) {
-                      setState(() {
-                        filteredActivityList = activityList
-                            .where((element) => element == value)
-                            .toList();
-                      });
-                    } else {
-                      print('Enter at least 3 digits');
-                    }
-                  },
-                  // searchController: activitySearchController,
-                ),
-                CustomDropdown(
-                  placeHolder: 'Select file',
-                  list: filteredFileList.isNotEmpty
-                      ? filteredFileList
-                      : defaultList,
-                  onChanged: widget.onFileChange,
-                  onSearch: (value) {
-                    // Code only to imitate like functionality.
-                    if (value!.length > 2) {
-                      setState(() {
-                        filteredFileList = activityList
-                            .where((element) => element == value)
-                            .toList();
-                        defaultList = filteredFileList;
-                      });
-                    } else {
-                      print('Enter at least 3 digits');
-                    }
-                  },
-                  // searchController: fileSearchController,
-                ),
-                _buildEditTextFormField(
-                    'Time here', widget.dateOfBirthController),
-                _buildGroupedRadios(),
-                CustomTextArea(
-                    hint: 'Description',
-                    controller: widget.descriptionController),
-              ],
+      child: NotificationListener(
+        onNotification: (notification) {
+          if (notification is ScrollEndNotification) {
+            FocusManager.instance.primaryFocus?.unfocus();
+            return true;
+          }
+          return false;
+        },
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Form(
+              child: Column(
+                children: [
+                  CustomDropdown(
+                    hint: 'Search activity',
+                    list: filteredActivityList.isNotEmpty
+                        ? filteredActivityList
+                        : defaultList,
+                    onChanged: widget.onActivityChange,
+                    onSearch: (value) {
+                      // Code only to imitate like functionality.
+                      if (value!.length > 2) {
+                        setState(() {
+                          filteredActivityList = activityList
+                              .where((element) => element == value)
+                              .toList();
+                        });
+                      } else {
+                        print('Enter at least 3 digits');
+                      }
+                    },
+                    // searchController: activitySearchController,
+                  ),
+                  CustomDropdown(
+                    hint: 'Search file',
+                    list: filteredFileList.isNotEmpty
+                        ? filteredFileList
+                        : defaultList,
+                    onChanged: widget.onFileChange,
+                    onSearch: (value) {
+                      // Code only to imitate like functionality.
+                      if (value!.length > 2) {
+                        setState(() {
+                          filteredFileList = activityList
+                              .where((element) => element == value)
+                              .toList();
+                          defaultList = filteredFileList;
+                        });
+                      } else {
+                        print('Enter at least 3 digits');
+                      }
+                    },
+                    // searchController: fileSearchController,
+                  ),
+                  const TimeAccordion(content: 'content'),
+                  _buildGroupedRadios(),
+                  CustomTextArea(
+                      hint: 'Description',
+                      controller: widget.descriptionController),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -124,7 +132,7 @@ class _ActivityFormState extends State<ActivityForm> {
           ),
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
       ],
     );
@@ -132,8 +140,9 @@ class _ActivityFormState extends State<ActivityForm> {
 
   _buildGroupedRadios() {
     return Container(
+      height: 50,
       padding: const EdgeInsets.all(5),
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(10),
@@ -165,6 +174,82 @@ class _ActivityFormState extends State<ActivityForm> {
         padding: 5,
         radius: 20,
         enableShape: true,
+      ),
+    );
+  }
+
+  _buildTimeField(String date, String timeStart, String timeEnd) {
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.all(5),
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                height: 40,
+                child: FilledButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => AppColors.appBgColor)),
+                  child: Text(
+                    date,
+                    style: const TextStyle(color: AppColors.darker),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                child: FilledButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => AppColors.appBgColor)),
+                  child: Text(
+                    timeStart,
+                    style: const TextStyle(color: AppColors.darker),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                child: FilledButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => AppColors.appBgColor)),
+                  child: Text(
+                    timeEnd,
+                    style: const TextStyle(color: AppColors.darker),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
