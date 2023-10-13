@@ -45,18 +45,18 @@ class ModuleItem extends StatelessWidget {
           children: [
             ModuleItemIcon(
               icon: icon,
-              iconSize: 40,
+              iconSize: 60,
               radius: 50,
               padding: 20,
               color: Colors.black12,
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             Text(
               name,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 20,
                 color: AppColors.darker,
               ),
             ),

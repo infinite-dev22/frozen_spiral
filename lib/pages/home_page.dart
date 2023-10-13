@@ -12,6 +12,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var appbarPresent = true;
+  var bottomBarPresent = true;
+  var columnCount = 2;
+  var minRowCountOnScreen = 2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,17 +28,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   _buildBody() {
+    var size = MediaQuery.of(context).size;
+    var width = size.width;
+    var height = size.height;
+    if(appbarPresent){
+      height -= kToolbarHeight;
+    }
+    if(bottomBarPresent){
+      height -= kBottomNavigationBarHeight;
+    }
     return GridView.count(
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 2, // number of items in each row
       mainAxisSpacing: 20, // spacing between rows
       crossAxisSpacing: 20, // spacing between columns
-      childAspectRatio: .9,
+      childAspectRatio: (width / columnCount) / (height / minRowCountOnScreen),
       padding: const EdgeInsets.only(
         left: 16,
         top: 16,
         right: 16,
+        bottom: 16,
       ),
       // padding around the grid
       children: modules
