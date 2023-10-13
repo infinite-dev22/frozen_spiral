@@ -14,10 +14,12 @@ class AppBarContent extends StatelessWidget {
       this.searchable = false,
       this.filterable = false,
       this.search = '',
-      this.signOut});
+      this.signOut,
+      this.isNetwork = false});
 
   final bool searchable;
   final bool filterable;
+  final bool isNetwork;
   final String search;
   final Function()? signOut;
 
@@ -45,8 +47,8 @@ class AppBarContent extends StatelessWidget {
           children: [
             if (!searchable)
               const CustomSpacer(
-                width: 35,
-                height: 35,
+                width: 40,
+                height: 40,
                 radius: 10,
                 bgColor: AppColors.primary,
               ),
@@ -98,11 +100,11 @@ class AppBarContent extends StatelessWidget {
   _buildProfileDropDown(BuildContext context) {
     return PopupMenuButton(
       offset: const Offset(0, 8),
-      icon: const CustomElevatedImage(
+      icon: CustomElevatedImage(
         "assets/images/user_profile.jpg",
         width: 35,
         height: 35,
-        isNetwork: false,
+        isNetwork: isNetwork,
         radius: 10,
       ),
       itemBuilder: (context) {

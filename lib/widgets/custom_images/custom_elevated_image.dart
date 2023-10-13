@@ -57,16 +57,28 @@ class CustomElevatedImage extends StatelessWidget {
           ],
           image: (isNetwork)
               ? DecorationImage(
-                  image: NetworkImage(file),
+                  image: ResizeImage(
+                    NetworkImage(file),
+                    width: width.toInt(),
+                    height: height.toInt(),
+                  ),
                   fit: imageFit,
                 )
               : (isFile)
                   ? DecorationImage(
-                      image: FileImage(file),
+                      image: ResizeImage(
+                        FileImage(file),
+                        width: width.toInt(),
+                        height: height.toInt(),
+                      ),
                       fit: imageFit,
                     )
                   : DecorationImage(
-                      image: AssetImage(file),
+                      image: ResizeImage(
+                        AssetImage(file),
+                        width: width.toInt() * 3,
+                        height: height.toInt() * 4,
+                      ),
                       fit: imageFit,
                     ),
         ),
