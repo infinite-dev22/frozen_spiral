@@ -119,13 +119,13 @@ class _RootPageState extends State<RootPage> {
           heroTag: null,
           icon: const Icon(Icons.handshake_outlined),
           onPressed: _buildEngagementForm,
-          label: const Text("Engagements"),
+          label: const Text("Engagement"),
         ),
         FloatingActionButton.extended(
           heroTag: null,
           icon: const Icon(Icons.list_rounded),
           onPressed: _buildRequisitionForm,
-          label: const Text("Requisitions"),
+          label: const Text("Requisition"),
         ),
         FloatingActionButton.extended(
           heroTag: null,
@@ -137,7 +137,7 @@ class _RootPageState extends State<RootPage> {
           heroTag: null,
           icon: const Icon(Icons.task_outlined),
           onPressed: _buildTaskForm,
-          label: const Text("Tasks"),
+          label: const Text("Task"),
         ),
         FloatingActionButton.extended(
           heroTag: null,
@@ -161,7 +161,7 @@ class _RootPageState extends State<RootPage> {
 
   Widget _buildBottomBar() {
     return Container(
-      height: 55,
+      height: 70,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
       // margin: const EdgeInsets.only(
@@ -244,8 +244,10 @@ class _RootPageState extends State<RootPage> {
             descriptionController: descriptionController,
             activitySearchController: activitySearchController,
             fileSearchController: fileSearchController,
-            onActivityChange: (value) {},  // When not available the drop downs won't work.
-            onFileChange: (value) {},  // When not available the drop downs won't work.
+            onActivityChange: (value) {},
+            // When not available the drop downs won't work.
+            onFileChange:
+                (value) {}, // When not available the drop downs won't work.
           ),
         ],
       ),

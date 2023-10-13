@@ -43,6 +43,7 @@ dependencies:
   custom_radio_grouped_button: ^2.2.1
   reactive_dropdown_search: ^3.0.0
   reactive_forms: ^16.1.0
+  async_searchable_dropdown: ^0.0.7+4
 
 dev_dependencies:
   flutter_test:

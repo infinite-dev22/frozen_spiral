@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../theme/color.dart';
-import 'custom_images/custom_elevated_image.dart';
 
-class CustomIconHolder extends StatelessWidget {
-  const CustomIconHolder(
+class CustomSpacer extends StatelessWidget {
+  const CustomSpacer(
       {super.key,
       required this.width,
       required this.height,
       this.bgColor,
-      required this.radius,
-      required this.graphic,
-      this.isImage = false});
+      required this.radius});
 
   final double width;
   final double height;
   final Color? bgColor;
   final double radius;
-  final bool isImage;
-  final graphic;
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +36,6 @@ class CustomIconHolder extends StatelessWidget {
           ),
         ],
       ),
-      child: (isImage)
-          ? CustomElevatedImage(
-              graphic,
-              width: 35,
-              height: 35,
-              isNetwork: false,
-              radius: 10,
-            )
-          : Icon(graphic),
     );
   }
 }

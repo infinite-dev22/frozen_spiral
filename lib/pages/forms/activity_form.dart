@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_dropdown.dart';
 
-import '../../data/data.dart';
-import '../../widgets/custom_textbox.dart';
+import 'package:smart_case/data/data.dart';
+import 'package:smart_case/widgets/custom_textbox.dart';
 
 class ActivityForm extends StatefulWidget {
   const ActivityForm(
@@ -81,6 +81,7 @@ class _ActivityFormState extends State<ActivityForm> {
                         filteredFileList = activityList
                             .where((element) => element == value)
                             .toList();
+                        defaultList = filteredFileList;
                       });
                     } else {
                       print('Enter at least 3 digits');
