@@ -1,4 +1,6 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'dart:math';
+
+import 'package:async_searchable_dropdown/async_searchable_dropdown.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/color.dart';
@@ -25,222 +27,79 @@ class CustomDropdown extends StatefulWidget {
 class _CustomDropdownState extends State<CustomDropdown> {
   @override
   Widget build(BuildContext context) {
-    return _buildBody();
+    return _buildSearchableDropdown();
   }
 
-  _buildBody() {
-    TextEditingController sampleController = TextEditingController();
+  final data = [
+    "hello",
+    "world",
+    "hello world",
+    "hello world 0",
+    "hello world 1",
+    "hello world 2",
+    "hello world 3",
+    "hello world 4",
+    "hello world 5",
+    "hello world 6",
+    "hello world 7",
+    "hello world 8",
+    "hello world 9",
+    "hello world 10",
+    "hello world 11",
+    "Romeo",
+    "Juliet",
+    "Jonathan",
+    "Mark",
+    "Brainer",
+    "Aston",
+  ];
 
+  Future<List<String>> getData(String? search) async {
+    await Future.delayed(const Duration(seconds: 2));
+    if (Random().nextBool()) throw 'sdd';
+    return data.where((e) => e.contains(search ?? '')).toList();
+  }
+
+  final ValueNotifier<String?> selectedValue = ValueNotifier<String?>(null);
+
+  _buildSearchableDropdown() {
     return Column(
       children: [
-        (widget.value.isNotEmpty && widget.value != '')
-            ? DropdownButtonFormField2<String>(
-                dropdownSearchData: DropdownSearchData(
-                  searchController: sampleController,
-                  searchInnerWidgetHeight: 50,
-                  searchInnerWidget: Container(
-                    height: 50,
-                    padding: const EdgeInsets.only(
-                      top: 8,
-                      bottom: 4,
-                      right: 8,
-                      left: 8,
-                    ),
-                    child: TextFormField(
-                      expands: true,
-                      maxLines: null,
-                      onChanged: widget.onSearch,
-                      controller: sampleController,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 8,
-                        ),
-                        hintText: 'Search for an item...',
-                        hintStyle: const TextStyle(fontSize: 12),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                  ),
-                  searchMatchFn: (item, searchValue) {
-                    return item.value.toString().contains(searchValue);
-                  },
+        ValueListenableBuilder<String?>(
+          valueListenable: selectedValue,
+          builder: (context, value, child) {
+            return SearchableDropdown<String>(
+              value: value,
+              dropDownListWidth: MediaQuery.of(context).size.width * .92,
+              dropDownListHeight: 200,
+              itemLabelFormatter: (value) {
+                return value;
+              },
+              remoteItems: getData,
+              onChanged: (value) {
+                selectedValue.value = value;
+              },
+              inputDecoration: InputDecoration(
+                filled: true,
+                fillColor: AppColors.textBoxColor,
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
                 ),
-                onMenuStateChange: (isOpen) {
-                  if (!isOpen) {
-                    sampleController.clear();
-                    widget.list.clear();
-                    widget.list.add('');
-                    setState(() {});
-                  }
-                },
-                value: widget.value,
-                isExpanded: true,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.textBoxColor,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                hint: Text(
-                  widget.placeHolder,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.inActiveColor,
-                  ),
-                ),
-                items: widget.list
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ))
-                    .toList(),
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please select ${widget.placeHolder}.';
-                  }
-                  return null;
-                },
-                onChanged: widget.onChanged,
-                buttonStyleData: const ButtonStyleData(
-                  padding: EdgeInsets.only(right: 8),
-                ),
-                iconStyleData: const IconStyleData(
-                  icon: Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black45,
-                  ),
-                  iconSize: 24,
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  maxHeight: 2,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                menuItemStyleData: const MenuItemStyleData(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                ),
-              )
-            : DropdownButtonFormField2<String>(
-                dropdownSearchData: DropdownSearchData(
-                  searchController: sampleController,
-                  searchInnerWidgetHeight: 50,
-                  searchInnerWidget: Container(
-                    height: 50,
-                    padding: const EdgeInsets.only(
-                      top: 8,
-                      bottom: 4,
-                      right: 8,
-                      left: 8,
-                    ),
-                    child: TextFormField(
-                      expands: true,
-                      maxLines: null,
-                      controller: sampleController,
-                      onChanged: widget.onSearch,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 8,
-                        ),
-                        hintText: 'Search for an item...',
-                        hintStyle: const TextStyle(fontSize: 12),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                  ),
-                  searchMatchFn: (item, searchValue) {
-                    return item.value.toString().contains(searchValue);
-                  },
-                ),
-                onMenuStateChange: (isOpen) {
-                  if (!isOpen) {
-                    sampleController.clear();
-                    widget.list.clear();
-                    widget.list.add('');
-                    setState(() {});
-                  }
-                },
-                isExpanded: true,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.textBoxColor,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                hint: Text(
-                  widget.placeHolder,
-                  style: const TextStyle(fontSize: 14),
-                ),
-                items: widget.list
-                    .map((item) => (item == '')
-                        ? DropdownMenuItem<String>(
-                            enabled: false,
-                            value: '',
-                            child: Text(
-                              item,
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          )
-                        : DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ))
-                    .toList(),
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please select ${widget.placeHolder}.';
-                  }
-                  return null;
-                },
-                onChanged: widget.onChanged,
-                buttonStyleData: const ButtonStyleData(
-                  padding: EdgeInsets.only(right: 8),
-                ),
-                iconStyleData: const IconStyleData(
-                  icon: Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black45,
-                  ),
-                  iconSize: 24,
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  maxHeight: 250,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                menuItemStyleData: const MenuItemStyleData(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                hintText: 'Search for an item...',
+                hintStyle: const TextStyle(fontSize: 12),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
+              borderRadius: BorderRadius.circular(10),
+            );
+          },
+        ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
       ],
     );
