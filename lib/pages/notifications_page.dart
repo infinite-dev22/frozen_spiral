@@ -11,9 +11,7 @@ class NotificationsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: AppBarContent(
-          profile: () => Navigator.pushNamed(context, '/profile'),
-        ),
+        title: AppBarContent(),
       ),
       body: _buildBody(),
     );

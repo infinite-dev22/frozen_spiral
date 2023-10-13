@@ -8,11 +8,15 @@ class CustomDropdownFilter extends StatelessWidget {
       {super.key,
       required this.menuItems,
       this.onChanged,
-      required this.bgColor});
+      required this.bgColor,
+      required this.graphic,
+      this.isImage = false});
 
   final List<String> menuItems;
-  final Function(dynamic)? onChanged;
+  final Function(String?)? onChanged;
   final Color bgColor;
+  final graphic;
+  final bool isImage;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +30,9 @@ class CustomDropdownFilter extends StatelessWidget {
           width: 35,
           height: 35,
           radius: 10,
+          isImage: isImage,
           bgColor: bgColor,
-          icon: Icons.filter_list,
+          graphic: graphic,
         ),
         items: menuItems
             .map((item) => DropdownMenuItem<String>(
@@ -40,7 +45,7 @@ class CustomDropdownFilter extends StatelessWidget {
                   ),
                 ))
             .toList(),
-        onChanged: (value){},
+        onChanged: onChanged,
         dropdownStyleData: DropdownStyleData(
           width: 100,
           padding: const EdgeInsets.symmetric(vertical: 6),

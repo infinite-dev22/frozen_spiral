@@ -59,7 +59,7 @@ class ModuleItem extends StatelessWidget {
                 fontSize: 20,
                 color: AppColors.darker,
               ),
-            )
+            ),
           ],
         ),
       ),
