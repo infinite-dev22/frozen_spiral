@@ -97,7 +97,7 @@ class _ActivityFormState extends State<ActivityForm> {
                     },
                     // searchController: fileSearchController,
                   ),
-                  const TimeAccordion(content: 'content'),
+                  const TimeAccordion(),
                   _buildGroupedRadios(),
                   CustomTextArea(
                       hint: 'Description',
@@ -139,6 +139,8 @@ class _ActivityFormState extends State<ActivityForm> {
   }
 
   _buildGroupedRadios() {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenWidth = screenSize.width;
     return Container(
       height: 50,
       padding: const EdgeInsets.all(5),
@@ -168,7 +170,7 @@ class _ActivityFormState extends State<ActivityForm> {
         spacing: 0,
         horizontal: false,
         enableButtonWrap: false,
-        width: 150,
+        width: screenWidth * .4,
         absoluteZeroSpacing: false,
         selectedColor: AppColors.primary,
         padding: 5,

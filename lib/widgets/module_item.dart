@@ -19,10 +19,13 @@ class ModuleItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildBody();
+    return _buildBody(context);
   }
 
-  _buildBody() {
+  _buildBody(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenHeight = screenSize.height;
+    double screenWidth = screenSize.width;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -45,18 +48,18 @@ class ModuleItem extends StatelessWidget {
           children: [
             ModuleItemIcon(
               icon: icon,
-              iconSize: 60,
-              radius: 50,
-              padding: 20,
+              iconSize: screenHeight * .083,
+              radius: 100,
+              padding: screenHeight * .03,
               color: Colors.black12,
             ),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: screenHeight * .031,
             ),
             Text(
               name,
-              style: const TextStyle(
-                fontSize: 20,
+              style: TextStyle(
+                fontSize: screenWidth * .04,
                 color: AppColors.darker,
               ),
             ),

@@ -5,9 +5,8 @@ import 'package:intl/intl.dart';
 import '../theme/color.dart';
 
 class TimeAccordion extends StatefulWidget {
-  final String content;
 
-  const TimeAccordion({Key? key, required this.content}) : super(key: key);
+  const TimeAccordion({Key? key}) : super(key: key);
 
   @override
   State<TimeAccordion> createState() => _TimeAccordionState();
@@ -172,11 +171,11 @@ class _TimeAccordionState extends State<TimeAccordion> {
                     setState(() {
                       isStartTime = false;
                       isDate = false;
-                      // if (_showContent) {
-                      //   _showContent = !_showContent;
-                      //   _showContent = true;
-                      //   return;
-                      // }
+                      if (_showContent && isStartTime == false) {
+                        _showContent = !_showContent;
+                        _showContent = true;
+                        return;
+                      }
                       _height = 200;
                       _showContent = !_showContent;
                     });

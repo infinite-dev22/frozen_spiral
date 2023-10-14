@@ -95,7 +95,6 @@ class _RootPageState extends State<RootPage> {
       type: ExpandableFabType.up,
       duration: const Duration(milliseconds: 500),
       distance: 65.0,
-      pos: ExpandableFabPos.right,
       childrenOffset: const Offset(0, 20),
       overlayStyle: ExpandableFabOverlayStyle(
         // color: Colors.black.withOpacity(0.5),
@@ -106,7 +105,7 @@ class _RootPageState extends State<RootPage> {
         fabSize: ExpandableFabSize.regular,
         foregroundColor: AppColors.white,
         backgroundColor: AppColors.primary,
-        // angle: 3.14 * 2,
+        angle: 3.14 * 2,
       ),
       closeButtonBuilder: DefaultFloatingActionButtonBuilder(
         child: const Icon(Icons.close),
@@ -160,28 +159,12 @@ class _RootPageState extends State<RootPage> {
   }
 
   Widget _buildBottomBar() {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenHeight = screenSize.height;
     return Container(
-      height: 80,
+      height: screenHeight * .087,  // formerly 80.
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
-      // margin: const EdgeInsets.only(
-      //   left: 15,
-      //   right: 15,
-      //   bottom: 5,
-      //   top: 5,
-      // ),
-      // decoration: BoxDecoration(
-      //   color: AppColors.appBgColor,
-      //   borderRadius: BorderRadius.circular(20),
-      //   boxShadow: [
-      //     BoxShadow(
-      //       color: AppColors.shadowColor.withOpacity(.1),
-      //       blurRadius: 1,
-      //       spreadRadius: 1,
-      //       offset: const Offset(0, 1),
-      //     )
-      //   ],
-      // ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -228,7 +211,9 @@ class _RootPageState extends State<RootPage> {
       showDragHandle: true,
       enableDrag: true,
       isScrollControlled: true,
-      context: context,backgroundColor: AppColors.appBgColor,
+      useSafeArea: true,
+      context: context,
+      backgroundColor: AppColors.appBgColor,
       builder: (context) => Column(
         children: [
           FormTitle(
@@ -263,9 +248,6 @@ class _RootPageState extends State<RootPage> {
             name: 'New Requisition',
             onSave: () {},
           ),
-          const SizedBox(
-            height: 20,
-          ),
           RequisitionForm(
             firstNameController: firstNameController,
             lastNameController: lastNameController,
@@ -297,9 +279,6 @@ class _RootPageState extends State<RootPage> {
             name: 'New Task',
             onSave: () {},
           ),
-          const SizedBox(
-            height: 20,
-          ),
           RequisitionForm(
             firstNameController: firstNameController,
             lastNameController: lastNameController,
@@ -330,9 +309,6 @@ class _RootPageState extends State<RootPage> {
           FormTitle(
             name: 'New Engagement',
             onSave: () {},
-          ),
-          const SizedBox(
-            height: 20,
           ),
           RequisitionForm(
             firstNameController: firstNameController,
