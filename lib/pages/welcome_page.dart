@@ -6,6 +6,7 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/auth_text_field.dart';
 import 'package:smart_case/widgets/custom_images/custom_image.dart';
 import 'package:smart_case/widgets/wide_button.dart';
+import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -16,11 +17,14 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  final ToastContext toast = ToastContext();
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    toast.init(context);
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: _buildBody(),
@@ -59,6 +63,7 @@ class _WelcomePageState extends State<WelcomePage> {
             controller: emailController,
             hintText: 'email',
             obscureText: false,
+            isEmail: true,
           ),
           const SizedBox(
             height: 20,
@@ -198,7 +203,16 @@ class _WelcomePageState extends State<WelcomePage> {
   _onPressed() {
     if (emailController.text == userEmail &&
         passwordController.text == userPassword) {
-      Navigator.pushNamed(context, '/home');
+      Navigator.popUntil(context, (route) => false);
+      Navigator.pushNamed(context, '/root');
+    }
+
+    if (emailController.text != userEmail) {
+      Toast.show("Wrong email",
+          duration: Toast.lengthLong, gravity: Toast.bottom);
+    } else if (passwordController.text != userPassword) {
+      Toast.show("Incorrcet password",
+          duration: Toast.lengthLong, gravity: Toast.bottom);
     }
   }
 }

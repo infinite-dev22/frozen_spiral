@@ -263,32 +263,36 @@ class _DateAccordionState extends State<DateAccordion> {
   }
 
   _buildTimeField(String date) {
-    return Container(
-      height: 50,
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(date),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: Icon(
-                    _showContent ? Icons.arrow_drop_up : Icons.arrow_drop_down),
-                onPressed: () {
-                  setState(() {
-                    _showContent = !_showContent;
-                  });
-                },
-              ),
-            ],
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _showContent = !_showContent;
+        });
+      },
+      child: Container(
+        height: 50,
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(date),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(
+                    _showContent
+                        ? Icons.keyboard_arrow_up_rounded
+                        : Icons.keyboard_arrow_down_rounded,
+                    size: 18),
+                const SizedBox(width: 10),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

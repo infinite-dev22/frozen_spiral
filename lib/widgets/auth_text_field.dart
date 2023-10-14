@@ -35,8 +35,7 @@ class AuthTextField extends StatelessWidget {
             filled: true,
             hintText: hintText,
             hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16)),
-        keyboardType:
-            isEmail ? TextInputType.emailAddress : TextInputType.text);
+        keyboardType: TextInputType.emailAddress);
   }
 }
 

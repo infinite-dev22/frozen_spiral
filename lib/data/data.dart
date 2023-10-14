@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-String userEmail = 'anna@testmail.com';
-String userPassword = 'anna12345';
+String userEmail = 'user@testmail.com';
+String userPassword = 'user12345';
 
 List modules = [
   {'icon': Icons.local_activity_outlined, 'name': 'Activities'},

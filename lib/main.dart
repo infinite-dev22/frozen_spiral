@@ -5,6 +5,7 @@ import 'package:smart_case/pages/home_page.dart';
 import 'package:smart_case/pages/locator_page.dart';
 import 'package:smart_case/pages/notifications_page.dart';
 import 'package:smart_case/pages/profile_page.dart';
+import 'package:smart_case/pages/root_page.dart';
 import 'package:smart_case/pages/welcome_page.dart';
 import 'package:smart_case/theme/color.dart';
 
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
          ThemeMode.dark for dark theme */
       routes: {
         '/': (context) => const WelcomePage(),
+        '/root': (context) => const RootPage(),
         '/home': (context) => const HomePage(),
         '/files': (context) => const FilesPage(),
         '/Activities': (context) => const ActivitiesPage(),
