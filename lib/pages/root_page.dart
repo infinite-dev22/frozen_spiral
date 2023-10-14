@@ -10,7 +10,9 @@ import '../widgets/bottom_bar_item.dart';
 import 'activities_page.dart';
 import 'files_page.dart';
 import 'forms/activity_form.dart';
+import 'forms/engagements_form.dart';
 import 'forms/requisition_form.dart';
+import 'forms/task_form.dart';
 import 'home_page.dart';
 import 'locator_page.dart';
 import 'notifications_page.dart';
@@ -67,7 +69,7 @@ class _RootPageState extends State<RootPage> {
         "icon": Icons.notifications_none_rounded,
         "active_icon": Icons.notifications_rounded,
         "name": "Alerts",
-        "page": const NotificationsPage(),
+        "page": const AlertsPage(),
       },
       {
         "icon": Icons.location_on_outlined,
@@ -164,7 +166,7 @@ class _RootPageState extends State<RootPage> {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
     return Container(
-      height: (Platform.isIOS) ? 80 : screenHeight * .087,  // formerly 80.
+      height: (Platform.isIOS) ? 80 : screenHeight * .087, // formerly 80.
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Row(
@@ -222,16 +224,7 @@ class _RootPageState extends State<RootPage> {
             name: 'New Activity',
             onSave: () {},
           ),
-          ActivityForm(
-            dateOfBirthController: dateOfBirthController,
-            descriptionController: descriptionController,
-            activitySearchController: activitySearchController,
-            fileSearchController: fileSearchController,
-            onActivityChange: (value) {},
-            // When not available the drop downs won't work.
-            onFileChange:
-                (value) {}, // When not available the drop downs won't work.
-          ),
+          const ActivityForm(),
         ],
       ),
     );
@@ -250,19 +243,7 @@ class _RootPageState extends State<RootPage> {
             name: 'New Requisition',
             onSave: () {},
           ),
-          RequisitionForm(
-            firstNameController: firstNameController,
-            lastNameController: lastNameController,
-            otherNameController: otherNameController,
-            genderController: genderController,
-            titleController: titleController,
-            dateOfBirthController: dateOfBirthController,
-            personalEmailController: personalEmailController,
-            telephoneController: telephoneController,
-            socialSecurityNumberController: socialSecurityNumberController,
-            tinNumberController: tinNumberController,
-            roleController: roleController,
-          ),
+          const RequisitionForm(),
         ],
       ),
     );
@@ -281,7 +262,26 @@ class _RootPageState extends State<RootPage> {
             name: 'New Task',
             onSave: () {},
           ),
-          RequisitionForm(
+          const TaskForm(),
+        ],
+      ),
+    );
+  }
+
+  _buildDairyForm() {
+    return showModalBottomSheet(
+      showDragHandle: true,
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => Column(
+        children: [
+          FormTitle(
+            name: 'New Calendar Event',
+            onSave: () {},
+          ),
+          EngagementForm(
             firstNameController: firstNameController,
             lastNameController: lastNameController,
             otherNameController: otherNameController,
@@ -312,7 +312,7 @@ class _RootPageState extends State<RootPage> {
             name: 'New Engagement',
             onSave: () {},
           ),
-          RequisitionForm(
+          EngagementForm(
             firstNameController: firstNameController,
             lastNameController: lastNameController,
             otherNameController: otherNameController,

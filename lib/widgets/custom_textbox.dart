@@ -151,3 +151,43 @@ class CustomTextArea extends StatelessWidget {
     );
   }
 }
+
+class SmartCaseTextField extends StatelessWidget {
+  const SmartCaseTextField(
+      {super.key, required this.hint, required this.controller});
+
+  final String hint;
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 50,
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: AppColors.textBoxColor,
+              hintText: hint,
+              hintStyle:
+                  const TextStyle(color: AppColors.inActiveColor, fontSize: 15),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+}

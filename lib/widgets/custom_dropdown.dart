@@ -7,18 +7,11 @@ import '../theme/color.dart';
 
 class CustomDropdown extends StatefulWidget {
   const CustomDropdown(
-      {super.key,
-      required this.list,
-      this.value = '',
-      this.onChanged,
-      this.onSearch,
-      required this.hint});
+      {super.key, required this.list, this.onChanged, required this.hint});
 
-  final List list;
-  final String value;
+  final List<String> list;
   final String hint;
   final Function(String?)? onChanged;
-  final Function(String?)? onSearch;
 
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
@@ -30,33 +23,9 @@ class _CustomDropdownState extends State<CustomDropdown> {
     return _buildSearchableDropdown();
   }
 
-  final data = [
-    "hello",
-    "world",
-    "hello world",
-    "hello world 0",
-    "hello world 1",
-    "hello world 2",
-    "hello world 3",
-    "hello world 4",
-    "hello world 5",
-    "hello world 6",
-    "hello world 7",
-    "hello world 8",
-    "hello world 9",
-    "hello world 10",
-    "hello world 11",
-    "Romeo",
-    "Juliet",
-    "Jonathan",
-    "Mark",
-    "Brainer",
-    "Aston",
-  ];
-
   Future<List<String>> getData(String? search) async {
     if (Random().nextBool()) throw 'sdd';
-    return data.where((e) => e.contains(search ?? '')).toList();
+    return widget.list.where((e) => e.contains(search ?? '')).toList();
   }
 
   final ValueNotifier<String?> selectedValue = ValueNotifier<String?>(null);

@@ -4,15 +4,14 @@ import 'package:intl/intl.dart';
 
 import '../theme/color.dart';
 
-class TimeAccordion extends StatefulWidget {
-
-  const TimeAccordion({Key? key}) : super(key: key);
+class DateTimeAccordion extends StatefulWidget {
+  const DateTimeAccordion({Key? key}) : super(key: key);
 
   @override
-  State<TimeAccordion> createState() => _TimeAccordionState();
+  State<DateTimeAccordion> createState() => _DateTimeAccordionState();
 }
 
-class _TimeAccordionState extends State<TimeAccordion> {
+class _DateTimeAccordionState extends State<DateTimeAccordion> {
   bool isDate = true;
   bool isStartTime = true;
 
@@ -22,7 +21,7 @@ class _TimeAccordionState extends State<TimeAccordion> {
 
   DateTime now = DateTime.now();
 
-  String selectedDate = DateFormat('yyyy/MM/dd').format(DateTime.now());
+  String selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
   String selectedTime = DateFormat('h:mm a').format(DateTime.now());
   String selectedTime2 =
       DateFormat('h:mm a').format(DateTime.now().add(const Duration(hours: 1)));
@@ -35,7 +34,7 @@ class _TimeAccordionState extends State<TimeAccordion> {
     //   onDateTimeChanged: (DateTime newDate) {
     //     setState(() {
     //       selectedDate =
-    //           DateFormat('yyyy/MM/dd').format(newDate);
+    //           DateFormat('dd/MM/yyyy').format(newDate);
     //     });
     //   },
     // )
@@ -59,7 +58,7 @@ class _TimeAccordionState extends State<TimeAccordion> {
                         onDateChanged: (DateTime newDate) {
                           setState(() {
                             selectedDate =
-                                DateFormat('yyyy/MM/dd').format(newDate);
+                                DateFormat('dd/MM/yyyy').format(newDate);
                           });
                         },
                       )
@@ -193,6 +192,99 @@ class _TimeAccordionState extends State<TimeAccordion> {
                     style: const TextStyle(color: AppColors.darker),
                   ),
                 ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _showContent = false;
+  }
+}
+
+class DateAccordion extends StatefulWidget {
+  const DateAccordion({Key? key, required this.onDateChanged})
+      : super(key: key);
+
+  /// Called when the user selects a date in the picker.
+  final ValueChanged<DateTime> onDateChanged;
+
+  @override
+  State<DateAccordion> createState() => _DateAccordionState();
+}
+
+class _DateAccordionState extends State<DateAccordion> {
+  late bool _showContent;
+
+  late final double _height = 280;
+
+  DateTime now = DateTime.now();
+
+  String selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+  String selectedTime = DateFormat('h:mm a').format(DateTime.now());
+  String selectedTime2 =
+      DateFormat('h:mm a').format(DateTime.now().add(const Duration(hours: 1)));
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: AppColors.white,
+      elevation: 0,
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Column(children: [
+        _buildTimeField(selectedDate),
+        _showContent
+            ? Container(
+                height: _height,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                child: CalendarDatePicker(
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(DateTime.now().year),
+                  lastDate: DateTime(DateTime.now().year + 99),
+                  onDateChanged: (DateTime newDate) {
+                    setState(() {
+                      selectedDate = DateFormat('dd/MM/yyyy').format(newDate);
+
+                      widget.onDateChanged(newDate);
+                    });
+                  },
+                ),
+              )
+            : Container()
+      ]),
+    );
+  }
+
+  _buildTimeField(String date) {
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(date),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: Icon(
+                    _showContent ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+                onPressed: () {
+                  setState(() {
+                    _showContent = !_showContent;
+                  });
+                },
               ),
             ],
           ),

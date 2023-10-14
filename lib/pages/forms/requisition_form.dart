@@ -1,36 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/widgets/wide_button.dart';
+import 'package:intl/intl.dart';
+import 'package:smart_case/data/data.dart';
+import 'package:smart_case/widgets/custom_accodion.dart';
+import 'package:smart_case/widgets/custom_dropdown.dart';
+import 'package:smart_case/widgets/custom_textbox.dart';
 
-class RequisitionForm extends StatelessWidget {
-  const RequisitionForm(
-      {super.key,
-      required this.firstNameController,
-      required this.lastNameController,
-      required this.otherNameController,
-      required this.genderController,
-      required this.titleController,
-      required this.dateOfBirthController,
-      required this.personalEmailController,
-      required this.telephoneController,
-      required this.socialSecurityNumberController,
-      required this.tinNumberController,
-      required this.roleController,
-      this.onSave});
-
-  final TextEditingController firstNameController;
-  final TextEditingController lastNameController;
-  final TextEditingController otherNameController;
-  final TextEditingController genderController;
-  final TextEditingController titleController;
-  final TextEditingController dateOfBirthController;
-  final TextEditingController personalEmailController;
-  final TextEditingController telephoneController;
-  final TextEditingController socialSecurityNumberController;
-  final TextEditingController tinNumberController;
-  final TextEditingController roleController;
+class RequisitionForm extends StatefulWidget {
+  const RequisitionForm({
+    super.key,
+    this.onSave,
+  });
 
   final Function()? onSave;
+
+  @override
+  State<RequisitionForm> createState() => _RequisitionFormState();
+}
+
+class _RequisitionFormState extends State<RequisitionForm> {
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  late String date;
 
   @override
   Widget build(BuildContext context) {
@@ -42,47 +32,20 @@ class RequisitionForm extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildEditTextFormField('First name', firstNameController),
-          _buildEditTextFormField('Last name', lastNameController),
-          _buildEditTextFormField('Other name', otherNameController),
-          _buildEditTextFormField('Gender', genderController),
-          _buildEditTextFormField('Title', titleController),
-          _buildEditTextFormField('Date of birth', dateOfBirthController),
-          _buildEditTextFormField('Personal email', personalEmailController),
-          _buildEditTextFormField('Telephone', telephoneController),
-          _buildEditTextFormField(
-              'Social Security Number', socialSecurityNumberController),
-          _buildEditTextFormField('Tin number', tinNumberController),
-          _buildEditTextFormField('Role', roleController),
-          WideButton(
-            name: 'Save',
-            onPressed: () => print('Activity form submitted.'),
+          DateAccordion(
+            onDateChanged: (DateTime value) {
+              date = DateFormat('dd/MM/yyyy').format(value);
+            },
           ),
+          CustomDropdown(list: activityList, hint: 'Currency'),
+          CustomDropdown(list: activityList, hint: 'File'),
+          CustomDropdown(list: activityList, hint: 'Approver'),
+          CustomDropdown(list: activityList, hint: 'Category'),
+          SmartCaseTextField(hint: 'Amount', controller: amountController),
+          CustomTextArea(
+              hint: 'Description', controller: descriptionController),
         ],
       ),
-    );
-  }
-
-  _buildEditTextFormField(String hint, TextEditingController controller) {
-    return Column(
-      children: [
-        TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: AppColors.textBoxColor,
-            hintText: hint,
-            hintStyle: const TextStyle(color: AppColors.inActiveColor),
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-      ],
     );
   }
 }

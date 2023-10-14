@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:smart_case/pages/activities_page.dart';
+import 'package:smart_case/pages/files_page.dart';
+import 'package:smart_case/pages/home_page.dart';
+import 'package:smart_case/pages/locator_page.dart';
+import 'package:smart_case/pages/notifications_page.dart';
 import 'package:smart_case/pages/profile_page.dart';
-import 'package:smart_case/pages/root_page.dart';
+import 'package:smart_case/pages/welcome_page.dart';
 import 'package:smart_case/theme/color.dart';
 
 void main() {
@@ -31,9 +36,14 @@ class MyApp extends StatelessWidget {
          ThemeMode.light for light theme,
          ThemeMode.dark for dark theme */
       routes: {
+        '/': (context) => const WelcomePage(),
+        '/home': (context) => const HomePage(),
+        '/files': (context) => const FilesPage(),
+        '/Activities': (context) => const ActivitiesPage(),
+        '/alerts': (context) => const AlertsPage(),
+        '/locator': (context) => const LocatorPage(),
         '/profile': (context) => const ProfilePage(),
       },
-      home: const RootPage(),
     );
   }
 }

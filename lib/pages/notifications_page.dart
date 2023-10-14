@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../theme/color.dart';
 import '../widgets/custom_appbar.dart';
 
-class NotificationsPage extends StatelessWidget {
-  const NotificationsPage({super.key});
+class AlertsPage extends StatelessWidget {
+  const AlertsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

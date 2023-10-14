@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+String userEmail = 'anna@testmail.com';
+String userPassword = 'anna12345';
+
 List modules = [
   {'icon': Icons.local_activity_outlined, 'name': 'Activities'},
   {'icon': Icons.list_rounded, 'name': 'Requisitions'},
@@ -26,7 +29,7 @@ List activities = [
   },
 ];
 
-List activityList = [
+List<String> activityList = [
   "Test name 0",
   "Test name 1",
   "Test name 2",
