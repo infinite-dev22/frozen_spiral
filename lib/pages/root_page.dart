@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
@@ -162,7 +164,7 @@ class _RootPageState extends State<RootPage> {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
     return Container(
-      height: screenHeight * .087,  // formerly 80.
+      height: (Platform.isIOS) ? 80 : screenHeight * .087,  // formerly 80.
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Row(
