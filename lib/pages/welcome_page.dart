@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_case/data/data.dart';
 import 'package:smart_case/theme/color.dart';
@@ -34,83 +35,94 @@ class _WelcomePageState extends State<WelcomePage> {
   _buildBody() {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: ListView(
         children: [
-          CustomImage(
-            "assets/images/splash.png",
-            trBackground: true,
-            isNetwork: false,
-            width: MediaQuery.of(context).size.width * .6,
-            imageFit: BoxFit.contain,
-            radius: 0,
-          ),
-          const SizedBox(
-            height: 40,
-          ),
-          const Text(
-            'Welcome',
-            style: TextStyle(
-                color: AppColors.white,
-                fontSize: 40,
-                fontWeight: FontWeight.w100),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          AuthTextField(
-            controller: emailController,
-            hintText: 'email',
-            obscureText: false,
-            isEmail: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          AuthPasswordTextField(
-            controller: passwordController,
-            hintText: 'password',
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          WideButton(
-            name: 'Login',
-            onPressed: _onPressed,
-            bgColor: AppColors.gray,
-            textStyle: const TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Forgot password?',
-              style: TextStyle(
-                color: AppColors.white,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CustomImage(
+                "assets/images/splash.png",
+                trBackground: true,
+                isNetwork: false,
+                width: MediaQuery.of(context).size.width * .6,
+                imageFit: BoxFit.contain,
+                radius: 0,
               ),
-            ),
+              const SizedBox(
+                height: 40,
+              ),
+              const Text(
+                'Welcome',
+                style: TextStyle(
+                    color: AppColors.white,
+                    fontSize: 40,
+                    fontWeight: FontWeight.w100),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              AuthTextField(
+                controller: emailController,
+                hintText: 'email',
+                obscureText: false,
+                isEmail: true,
+                style: const TextStyle(color: AppColors.white),
+                borderSide: const BorderSide(color: AppColors.white),
+                fillColor: AppColors.primary,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              AuthPasswordTextField(
+                controller: passwordController,
+                hintText: 'password',
+                borderSide: const BorderSide(color: AppColors.white),
+                style: const TextStyle(color: AppColors.white),
+                fillColor: AppColors.primary,
+                iconColor: AppColors.inActiveColor,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              WideButton(
+                name: 'Login',
+                onPressed: _onPressed,
+                bgColor: AppColors.gray,
+                textStyle: const TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text(
+                  'Forgot password?',
+                  style: TextStyle(
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              _buildTextWithLink('contact us: ', 'info@infosectechno.com'),
+              const SizedBox(
+                height: 8,
+              ),
+              _buildTextWithAction('+256 (0)770456789'),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(
+                'copyright @ ${DateTime.now().year} SmartCase Manager',
+                style: const TextStyle(
+                  color: AppColors.inActiveColor,
+                  fontWeight: FontWeight.w100,
+                ),
+              )
+            ],
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          _buildTextWithLink('contact us: ', 'info@infosectechno.com'),
-          const SizedBox(
-            height: 8,
-          ),
-          _buildTextWithAction('+256 (0)770456789'),
-          const SizedBox(
-            height: 8,
-          ),
-          Text(
-            'copyright @ ${DateTime.now().year} SmartCase Manager',
-            style: const TextStyle(
-              color: AppColors.inActiveColor,
-              fontWeight: FontWeight.w100,
-            ),
-          )
         ],
       ),
     );
@@ -175,14 +187,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     decorationColor: AppColors.white,
                     color: AppColors.white),
                 recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    launchUrl(Uri(
-                      scheme: "mailto",
-                      path: "support@homepal.org",
-                      query: encodeQueryParameters(<String, String>{
-                        'subject': 'Support mail',
-                      }),
-                    ));
+                  ..onTap = () async {
+                    await FlutterPhoneDirectCaller.callNumber('+256770456789');
                   },
               ),
             ],
@@ -203,6 +209,7 @@ class _WelcomePageState extends State<WelcomePage> {
   _onPressed() {
     if (emailController.text == userEmail &&
         passwordController.text == userPassword) {
+      FocusManager.instance.primaryFocus?.unfocus();
       Navigator.popUntil(context, (route) => false);
       Navigator.pushNamed(context, '/root');
     }

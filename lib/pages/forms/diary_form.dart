@@ -1,36 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/widgets/wide_button.dart';
 
-class DiaryForm extends StatelessWidget {
-  const DiaryForm(
-      {super.key,
-      required this.firstNameController,
-      required this.lastNameController,
-      required this.otherNameController,
-      required this.genderController,
-      required this.titleController,
-      required this.dateOfBirthController,
-      required this.personalEmailController,
-      required this.telephoneController,
-      required this.socialSecurityNumberController,
-      required this.tinNumberController,
-      required this.roleController,
-      this.onSave});
+import '../../data/data.dart';
+import '../../widgets/custom_accodion.dart';
+import '../../widgets/custom_dropdown.dart';
+import '../../widgets/custom_textbox.dart';
 
-  final TextEditingController firstNameController;
-  final TextEditingController lastNameController;
-  final TextEditingController otherNameController;
-  final TextEditingController genderController;
-  final TextEditingController titleController;
-  final TextEditingController dateOfBirthController;
-  final TextEditingController personalEmailController;
-  final TextEditingController telephoneController;
-  final TextEditingController socialSecurityNumberController;
-  final TextEditingController tinNumberController;
-  final TextEditingController roleController;
+class DiaryForm extends StatefulWidget {
+  const DiaryForm({super.key});
 
-  final Function()? onSave;
+  @override
+  State<DiaryForm> createState() => _DiaryFormState();
+}
+
+class _DiaryFormState extends State<DiaryForm> {
+  final TextEditingController descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,26 +23,56 @@ class DiaryForm extends StatelessWidget {
 
   _buildBody() {
     return Expanded(
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildEditTextFormField('First name', firstNameController),
-          _buildEditTextFormField('Last name', lastNameController),
-          _buildEditTextFormField('Other name', otherNameController),
-          _buildEditTextFormField('Gender', genderController),
-          _buildEditTextFormField('Title', titleController),
-          _buildEditTextFormField('Date of birth', dateOfBirthController),
-          _buildEditTextFormField('Personal email', personalEmailController),
-          _buildEditTextFormField('Telephone', telephoneController),
-          _buildEditTextFormField(
-              'Social Security Number', socialSecurityNumberController),
-          _buildEditTextFormField('Tin number', tinNumberController),
-          _buildEditTextFormField('Role', roleController),
-          WideButton(
-            name: 'Save',
-            onPressed: () => print('Activity form submitted.'),
-          ),
-        ],
+      child: NotificationListener(
+        onNotification: (notification) {
+          if (notification is ScrollEndNotification) {
+            FocusManager.instance.primaryFocus?.unfocus();
+            return true;
+          }
+          return false;
+        },
+        child:  ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Container(
+              padding: const EdgeInsets.all(5),
+              margin: const EdgeInsets.only(bottom: 10),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Column(
+                children: [
+                  DateTimeAccordion(
+                    name: 'Starts on',
+                  ),
+                  Divider(indent: 5, endIndent: 5),
+                  DateTimeAccordion(name: 'Ends on'),
+                ],
+              ),
+            ),
+            CustomDropdown(
+              hint: 'Search activity',
+              list: activityList,
+              onChanged: (value) {},
+            ),
+            CustomDropdown(
+              hint: 'Search file',
+              list: activityList,
+              onChanged: (value) {},
+            ),
+            const DateTimeAccordion(
+              name: 'Set reminder',
+            ),
+            CustomDropdown(
+              hint: 'Reminder method',
+              list: activityList,
+              onChanged: (value) {},
+            ),
+            CustomTextArea(
+                hint: 'Description', controller: descriptionController),
+          ],
+        ),
       ),
     );
   }

@@ -49,7 +49,7 @@ class CustomIconHolder extends StatelessWidget {
               isNetwork: false,
               radius: 10,
             )
-          : Icon(graphic),
+          : Icon(graphic, color: AppColors.primary),
     );
   }
 }

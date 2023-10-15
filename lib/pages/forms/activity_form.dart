@@ -49,7 +49,7 @@ class _ActivityFormState extends State<ActivityForm> {
                     list: activityList,
                     onChanged: (value) {},
                   ),
-                  const DateTimeAccordion(),
+                  const DateTimeAccordion2(),
                   _buildGroupedRadios(),
                   CustomTextArea(
                       hint: 'Description',

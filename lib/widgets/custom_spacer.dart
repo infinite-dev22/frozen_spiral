@@ -24,18 +24,7 @@ class CustomSpacer extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: .1,
-            offset: const Offset(0, 1), // changes position of shadow
-          ),
-        ],
-      ),
+      color: bgColor,
     );
   }
 }

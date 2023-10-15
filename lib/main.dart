@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         '/root': (context) => const RootPage(),
         '/home': (context) => const HomePage(),
         '/files': (context) => const FilesPage(),
-        '/Activities': (context) => const ActivitiesPage(),
+        '/activities': (context) => const ActivitiesPage(),
         '/alerts': (context) => const AlertsPage(),
         '/locator': (context) => const LocatorPage(),
         '/profile': (context) => const ProfilePage(),

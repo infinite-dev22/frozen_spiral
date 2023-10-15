@@ -39,26 +39,35 @@ class EngagementForm extends StatelessWidget {
 
   _buildBody() {
     return Expanded(
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildEditTextFormField('First name', firstNameController),
-          _buildEditTextFormField('Last name', lastNameController),
-          _buildEditTextFormField('Other name', otherNameController),
-          _buildEditTextFormField('Gender', genderController),
-          _buildEditTextFormField('Title', titleController),
-          _buildEditTextFormField('Date of birth', dateOfBirthController),
-          _buildEditTextFormField('Personal email', personalEmailController),
-          _buildEditTextFormField('Telephone', telephoneController),
-          _buildEditTextFormField(
-              'Social Security Number', socialSecurityNumberController),
-          _buildEditTextFormField('Tin number', tinNumberController),
-          _buildEditTextFormField('Role', roleController),
-          WideButton(
-            name: 'Save',
-            onPressed: () => print('Activity form submitted.'),
-          ),
-        ],
+      child: NotificationListener(
+        onNotification: (notification) {
+          if (notification is ScrollEndNotification) {
+            FocusManager.instance.primaryFocus?.unfocus();
+            return true;
+          }
+          return false;
+        },
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            _buildEditTextFormField('First name', firstNameController),
+            _buildEditTextFormField('Last name', lastNameController),
+            _buildEditTextFormField('Other name', otherNameController),
+            _buildEditTextFormField('Gender', genderController),
+            _buildEditTextFormField('Title', titleController),
+            _buildEditTextFormField('Date of birth', dateOfBirthController),
+            _buildEditTextFormField('Personal email', personalEmailController),
+            _buildEditTextFormField('Telephone', telephoneController),
+            _buildEditTextFormField(
+                'Social Security Number', socialSecurityNumberController),
+            _buildEditTextFormField('Tin number', tinNumberController),
+            _buildEditTextFormField('Role', roleController),
+            WideButton(
+              name: 'Save',
+              onPressed: () => print('Activity form submitted.'),
+            ),
+          ],
+        ),
       ),
     );
   }

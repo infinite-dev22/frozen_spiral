@@ -37,6 +37,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: AppColors.white,
+        ),
         backgroundColor: AppColors.primary,
         title: AppBarContent(),
       ),

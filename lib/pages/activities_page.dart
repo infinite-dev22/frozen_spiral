@@ -12,6 +12,9 @@ class ActivitiesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: AppColors.white,
+        ),
         backgroundColor: AppColors.primary,
         title: AppBarContent(
           searchable: true,

@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.white,
                     padding: cardPadding,
                     icon: Icons.local_activity_outlined,
-                    onTap: () => print('Tapped')),
+                    onTap: () => Navigator.pushNamed(context, '/activities')),
               ),
               const SizedBox(width: 20,),
               Expanded(

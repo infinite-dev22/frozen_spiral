@@ -6,6 +6,9 @@ class AuthTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final bool isEmail;
+  final BorderSide borderSide;
+  final Color fillColor;
+  final TextStyle? style;
 
   const AuthTextField({
     super.key,
@@ -13,40 +16,56 @@ class AuthTextField extends StatelessWidget {
     required this.hintText,
     required this.obscureText,
     this.isEmail = false,
+    this.borderSide = BorderSide.none,
+    this.fillColor = AppColors.textBoxColor,
+    this.style,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return SizedBox(
+      height: 50,
+      child: TextFormField(
         validator: (val) =>
             val!.isEmpty ? 'Required field, Please fill in.' : null,
         controller: controller,
         obscureText: obscureText,
+        style: style,
         decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade400),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: AppColors.primary),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            fillColor: Colors.grey.shade200,
-            filled: true,
-            hintText: hintText,
-            hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16)),
-        keyboardType: TextInputType.emailAddress);
+          border: OutlineInputBorder(
+            borderSide: borderSide,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          fillColor: fillColor,
+          filled: true,
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: AppColors.inActiveColor,
+            fontSize: 16,
+          ),
+        ),
+        keyboardType: TextInputType.emailAddress,
+      ),
+    );
   }
 }
 
 class AuthPasswordTextField extends StatefulWidget {
   final controller;
   final String hintText;
+  final BorderSide borderSide;
+  final Color fillColor;
+  final Color iconColor;
+  final TextStyle? style;
 
   const AuthPasswordTextField({
     super.key,
     required this.controller,
     required this.hintText,
+    this.borderSide = BorderSide.none,
+    this.fillColor = AppColors.textBoxColor,
+    this.iconColor = AppColors.darker,
+    this.style,
   });
 
   @override
@@ -58,12 +77,15 @@ class _AuthPasswordTextField extends State<AuthPasswordTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      validator: (val) =>
-          val!.isEmpty ? 'Required field, Please fill in.' : null,
-      controller: widget.controller,
-      obscureText: obscure,
-      decoration: InputDecoration(
+    return SizedBox(
+      height: 50,
+      child: TextFormField(
+        validator: (val) =>
+            val!.isEmpty ? 'Required field, Please fill in.' : null,
+        controller: widget.controller,
+        obscureText: obscure,
+        style: widget.style,
+        decoration: InputDecoration(
           suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
@@ -71,20 +93,23 @@ class _AuthPasswordTextField extends State<AuthPasswordTextField> {
                 });
               },
               icon: Icon(
-                  obscure ? Icons.visibility_off : Icons.visibility_rounded)),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400),
+                obscure ? Icons.visibility_off : Icons.visibility_rounded,
+                color: widget.iconColor,
+              )),
+          border: OutlineInputBorder(
+            borderSide: widget.borderSide,
             borderRadius: BorderRadius.circular(10),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: AppColors.primary),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          fillColor: Colors.grey.shade200,
+          fillColor: widget.fillColor,
           filled: true,
           hintText: widget.hintText,
-          hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16)),
-      keyboardType: TextInputType.visiblePassword,
+          hintStyle: const TextStyle(
+            color: AppColors.inActiveColor,
+            fontSize: 16,
+          ),
+        ),
+        keyboardType: TextInputType.visiblePassword,
+      ),
     );
   }
 }

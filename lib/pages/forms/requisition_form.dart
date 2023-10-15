@@ -29,22 +29,31 @@ class _RequisitionFormState extends State<RequisitionForm> {
 
   _buildBody() {
     return Expanded(
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          DateAccordion(
-            onDateChanged: (DateTime value) {
-              date = DateFormat('dd/MM/yyyy').format(value);
-            },
-          ),
-          CustomDropdown(list: activityList, hint: 'Currency'),
-          CustomDropdown(list: activityList, hint: 'File'),
-          CustomDropdown(list: activityList, hint: 'Approver'),
-          CustomDropdown(list: activityList, hint: 'Category'),
-          SmartCaseTextField(hint: 'Amount', controller: amountController),
-          CustomTextArea(
-              hint: 'Description', controller: descriptionController),
-        ],
+      child: NotificationListener(
+        onNotification: (notification) {
+          if (notification is ScrollEndNotification) {
+            FocusManager.instance.primaryFocus?.unfocus();
+            return true;
+          }
+          return false;
+        },
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            DateAccordion(
+              onDateChanged: (DateTime value) {
+                date = DateFormat('dd/MM/yyyy').format(value);
+              },
+            ),
+            CustomDropdown(list: activityList, hint: 'Currency'),
+            CustomDropdown(list: activityList, hint: 'File'),
+            CustomDropdown(list: activityList, hint: 'Approver'),
+            CustomDropdown(list: activityList, hint: 'Category'),
+            SmartCaseTextField(hint: 'Amount', controller: amountController),
+            CustomTextArea(
+                hint: 'Description', controller: descriptionController),
+          ],
+        ),
       ),
     );
   }

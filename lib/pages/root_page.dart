@@ -10,6 +10,7 @@ import '../widgets/bottom_bar_item.dart';
 import 'activities_page.dart';
 import 'files_page.dart';
 import 'forms/activity_form.dart';
+import 'forms/diary_form.dart';
 import 'forms/engagements_form.dart';
 import 'forms/requisition_form.dart';
 import 'forms/task_form.dart';
@@ -145,7 +146,7 @@ class _RootPageState extends State<RootPage> {
         FloatingActionButton.extended(
           heroTag: null,
           icon: const Icon(Icons.calendar_month_rounded),
-          onPressed: () {},
+          onPressed: _buildDairyForm,
           label: const Text("Diary"),
         ),
       ],
@@ -281,19 +282,7 @@ class _RootPageState extends State<RootPage> {
             name: 'New Calendar Event',
             onSave: () {},
           ),
-          EngagementForm(
-            firstNameController: firstNameController,
-            lastNameController: lastNameController,
-            otherNameController: otherNameController,
-            genderController: genderController,
-            titleController: titleController,
-            dateOfBirthController: dateOfBirthController,
-            personalEmailController: personalEmailController,
-            telephoneController: telephoneController,
-            socialSecurityNumberController: socialSecurityNumberController,
-            tinNumberController: tinNumberController,
-            roleController: roleController,
-          ),
+          const DiaryForm(),
         ],
       ),
     );
