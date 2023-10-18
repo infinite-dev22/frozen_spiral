@@ -4,6 +4,8 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/module_item.dart';
 
+import '../util/smart_case_init.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -12,15 +14,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: AppBarContent(),
+        title:
+            AppBarContent(isNetwork: currentUser.avatar != null ? true : false),
       ),
-      body: _buildGridColumns(),
+      body: ListView(children: [_buildGridColumns()]),
     );
   }
 
@@ -54,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _buildGridColumns() {
-    double cardPadding = MediaQuery.of(context).size.height * .012;
+    double cardPadding = MediaQuery.of(context).size.height * .038;
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -69,7 +71,9 @@ class _HomePageState extends State<HomePage> {
                     icon: Icons.local_activity_outlined,
                     onTap: () => Navigator.pushNamed(context, '/activities')),
               ),
-              const SizedBox(width: 20,),
+              const SizedBox(
+                width: 20,
+              ),
               Expanded(
                 child: ModuleItem(
                     name: 'Requisitions',
@@ -80,7 +84,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          const SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           Row(
             children: [
               Expanded(
@@ -91,7 +97,9 @@ class _HomePageState extends State<HomePage> {
                     icon: Icons.calendar_month_rounded,
                     onTap: () => print('Tapped')),
               ),
-              const SizedBox(width: 20,),
+              const SizedBox(
+                width: 20,
+              ),
               Expanded(
                 child: ModuleItem(
                     name: 'Tasks',
@@ -102,7 +110,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          const SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           Row(
             children: [
               Expanded(
@@ -113,7 +123,9 @@ class _HomePageState extends State<HomePage> {
                     icon: Icons.handshake_outlined,
                     onTap: () => print('Tapped')),
               ),
-              const SizedBox(width: 20,),
+              const SizedBox(
+                width: 20,
+              ),
               Expanded(
                 child: ModuleItem(
                     name: 'Reports',

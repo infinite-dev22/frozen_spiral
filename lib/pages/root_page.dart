@@ -167,9 +167,21 @@ class _RootPageState extends State<RootPage> {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
     return Container(
-      height: (Platform.isIOS) ? 80 : screenHeight * .087, // formerly 80.
+      height: (Platform.isIOS) ? 80 : screenHeight * .087,
+      // formerly 80.
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withOpacity(.1),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: const Offset(0, 1), // changes position of shadow
+          ),
+        ],
+        color: AppColors.white,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.end,

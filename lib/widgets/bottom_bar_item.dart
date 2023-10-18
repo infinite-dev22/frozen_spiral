@@ -44,7 +44,7 @@ class BottomBarItem extends StatelessWidget {
               name,
               style: TextStyle(
                 color: isActive ? activeColor : color,
-                fontSize: 9,
+                fontSize: 14,
               ),
             ),
           ],

@@ -37,12 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   dropdown_button2: ^2.3.9
   double_back_to_close: ^2.0.0
-  draggable_bottom_sheet: ^1.0.2
   flutter_expandable_fab: ^2.0.0
   flutter_native_splash: ^2.3.3
   custom_radio_grouped_button: ^2.2.1
-  reactive_dropdown_search: ^3.0.0
-  reactive_forms: ^16.1.0
   async_searchable_dropdown: ^0.0.7+4
   intl: ^0.18.1
   clean_calendar: ^1.1.0
@@ -50,6 +47,9 @@ dependencies:
   url_launcher: ^6.1.14
   flutter_phone_direct_caller: ^2.1.1
   toast: ^0.3.0
+  http: ^1.1.0
+  email_validator: ^2.1.17
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:
@@ -100,4 +100,4 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
   assets:
-     - assets/images/
+    - assets/images/

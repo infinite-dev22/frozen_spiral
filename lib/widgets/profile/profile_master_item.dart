@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/custom_icon_holder.dart';
 import 'package:smart_case/widgets/custom_images/custom_image.dart';
 
 class ProfileMasterItem extends StatelessWidget {
@@ -12,6 +13,8 @@ class ProfileMasterItem extends StatelessWidget {
     required this.padding,
     this.changePhotoTap,
     this.changePasswordTap,
+    required this.firstName,
+    required this.lastName,
   });
 
   final image;
@@ -19,6 +22,8 @@ class ProfileMasterItem extends StatelessWidget {
   final bool isNetwork;
   final Color color;
   final double padding;
+  final String firstName;
+  final String lastName;
   final Function()? changePhotoTap;
   final Function()? changePasswordTap;
 
@@ -58,24 +63,32 @@ class ProfileMasterItem extends StatelessWidget {
   _buildProfileImage() {
     return Column(
       children: [
-        CustomImage(
-          image,
-          isFile: isFile,
-          isNetwork: isNetwork,
-        ),
+        isNetwork
+            ? CustomImage(
+                image,
+                isFile: isFile,
+                isNetwork: isNetwork,
+              )
+            : CustomIconHolder(
+                width: 45,
+                height: 45,
+                graphic: Icons.account_circle,
+                radius: 50,
+                size: 35,
+              ),
         const SizedBox(
           height: 10,
         ),
-        const Column(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Test',
-              style: TextStyle(
+              firstName,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text('Name'),
+            Text(lastName),
           ],
         ),
       ],

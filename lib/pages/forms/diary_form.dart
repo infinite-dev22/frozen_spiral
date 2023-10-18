@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
 
 import '../../data/data.dart';
-import '../../widgets/custom_accodion.dart';
+import '../../widgets/custom_accordion.dart';
 import '../../widgets/custom_dropdown.dart';
 import '../../widgets/custom_textbox.dart';
 

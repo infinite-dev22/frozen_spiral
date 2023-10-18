@@ -48,4 +48,14 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+
+  // _getPreferences() async {
+  //   String? value = await storage.read(key: 'email');
+  //
+  //   Map<String, String> allValues = await storage.readAll();
+  //
+  //   await storage.delete(key: key);
+  //
+  //   await storage.deleteAll();
+  // }
 }

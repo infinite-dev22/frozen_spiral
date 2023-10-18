@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/auth_text_field.dart';
+import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/profile/profile_detail_item.dart';
 import 'package:smart_case/widgets/profile/profile_master_item.dart';
 import 'package:smart_case/widgets/wide_button.dart';
-
-import '../data/data.dart';
-import '../theme/color.dart';
-import '../widgets/custom_appbar.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -41,7 +40,9 @@ class _ProfilePageState extends State<ProfilePage> {
           color: AppColors.white,
         ),
         backgroundColor: AppColors.primary,
-        title: AppBarContent(),
+        title: AppBarContent(
+          isNetwork: currentUserImage != null ? true : false,
+        ),
       ),
       body: _buildBody(),
     );
@@ -52,27 +53,29 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.all(16),
       children: [
         ProfileMasterItem(
-          image: profile['picture'],
+          image: currentUserImage,
           isFile: false,
-          isNetwork: false,
+          isNetwork: currentUserImage != null ? true : false,
           color: Colors.white,
           padding: 20,
           changePhotoTap: _changePhotoTapped,
           changePasswordTap: _changePasswordTapped,
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
         ),
         const SizedBox(
           height: 20,
         ),
         ProfileDetailItem(
-          gender: profile['gender'],
-          email: profile['email'],
-          personalEmail: profile['personal_email'],
-          telephone: profile['telephone'],
-          dateOfBirth: profile['dob'],
-          height: profile['height'],
-          code: profile['code'],
-          idNumber: profile['id_number'],
-          nssfNumber: profile['nssf_number'],
+          gender: (currentUser.gender == 1) ? 'Male' : 'Female',
+          email: currentUser.personalEmail,
+          personalEmail: currentUser.personalEmail,
+          telephone: currentUser.telephone,
+          dateOfBirth: currentUser.dateOfBirth,
+          height: currentUser.height,
+          code: currentUser.code,
+          idNumber: currentUser.idNumber,
+          nssfNumber: currentUser.nssfNumber,
           color: Colors.white,
           padding: 20,
           onPressed: _changeEditDetailsTapped,

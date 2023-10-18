@@ -11,13 +11,17 @@ class CustomIconHolder extends StatelessWidget {
       this.bgColor,
       required this.radius,
       required this.graphic,
-      this.isImage = false});
+      this.isImage = false,
+      this.size,
+      this.isProfile = false});
 
   final double width;
   final double height;
   final Color? bgColor;
   final double radius;
+  final double? size;
   final bool isImage;
+  final bool isProfile;
   final graphic;
 
   @override
@@ -26,30 +30,40 @@ class CustomIconHolder extends StatelessWidget {
   }
 
   _buildBody() {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: .1,
-            offset: const Offset(0, 1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: (isImage)
-          ? CustomElevatedImage(
-              graphic,
-              width: 35,
-              height: 35,
-              isNetwork: false,
-              radius: 10,
-            )
-          : Icon(graphic, color: AppColors.primary),
-    );
+    return (isProfile)
+        ? Icon(
+            graphic,
+            color: isProfile ? AppColors.inActiveColor : AppColors.primary,
+            size: size,
+          )
+        : Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(radius),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: .1,
+                  offset: const Offset(0, 1), // changes position of shadow
+                ),
+              ],
+            ),
+            child: (isImage)
+                ? CustomElevatedImage(
+                    graphic,
+                    width: 35,
+                    height: 35,
+                    isNetwork: false,
+                    radius: 10,
+                  )
+                : Icon(
+                    graphic,
+                    color: AppColors.primary,
+                    size: size,
+                  ),
+          );
   }
 }

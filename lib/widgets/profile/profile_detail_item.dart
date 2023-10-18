@@ -24,10 +24,10 @@ class ProfileDetailItem extends StatelessWidget {
   final String personalEmail;
   final String telephone;
   final String dateOfBirth;
-  final String height;
-  final String code;
-  final String idNumber;
-  final String nssfNumber;
+  final dynamic height;
+  final String? code;
+  final String? idNumber;
+  final String? nssfNumber;
   final Color color;
   final double padding;
   final Function()? onPressed;
@@ -82,23 +82,39 @@ class ProfileDetailItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Gender: $gender"),
+        _profileDetailItem("Gender", gender),
         const SizedBox(height: 10),
-        Text("Email: $email"),
+        _profileDetailItem("Email", email),
         const SizedBox(height: 10),
-        Text("Personal Email: $personalEmail"),
+        _profileDetailItem("Personal Email", personalEmail),
         const SizedBox(height: 10),
-        Text("Telephone: $telephone"),
+        _profileDetailItem("Telephone", telephone),
         const SizedBox(height: 10),
-        Text("Date of birth: $dateOfBirth"),
+        _profileDetailItem("Date of birth", dateOfBirth),
         const SizedBox(height: 10),
-        Text("Height(cm): $height"),
+        _profileDetailItem("Height(cm)", height),
         const SizedBox(height: 10),
-        Text("Code: $code"),
+        _profileDetailItem("Code", code),
         const SizedBox(height: 10),
-        Text("Id number: $idNumber"),
+        _profileDetailItem("Id number", idNumber),
         const SizedBox(height: 10),
-        Text("NSSF number: $nssfNumber"),
+        _profileDetailItem("NSSF number", nssfNumber),
+      ],
+    );
+  }
+
+  _profileDetailItem(String name, var value) {
+    return Row(
+      children: [
+        Text(
+          '$name:',
+          style: const TextStyle(color: AppColors.inActiveColor),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(value.toString(),
+            style: const TextStyle(fontWeight: FontWeight.bold)),
       ],
     );
   }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../theme/color.dart';
-
 class CustomSpacer extends StatelessWidget {
   const CustomSpacer(
       {super.key,

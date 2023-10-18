@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/data/data.dart';
-import 'package:smart_case/widgets/custom_accodion.dart';
+import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_dropdown.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 

@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/widgets/file/file_item.dart';
 
-import '../data/data.dart';
+import '../models/file.dart';
+import '../services/apis/smartcase_api.dart';
 import '../theme/color.dart';
+import '../util/smart_case_init.dart';
 import '../widgets/custom_appbar.dart';
 
-class FilesPage extends StatelessWidget {
+class FilesPage extends StatefulWidget {
   const FilesPage({super.key});
+
+  @override
+  State<FilesPage> createState() => _FilesPageState();
+}
+
+class _FilesPageState extends State<FilesPage> {
+  List<SmartFile> files = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +26,7 @@ class FilesPage extends StatelessWidget {
         ),
         backgroundColor: AppColors.primary,
         title: AppBarContent(
+          isNetwork: currentUserImage != null ? true : false,
           searchable: true,
           filterable: true,
           search: 'files',
@@ -37,14 +47,27 @@ class FilesPage extends StatelessWidget {
       itemCount: files.length,
       itemBuilder: (context, index) {
         return FileItem(
-          fileName: files[index]['name'],
-          fileNumber: files[index]['number'],
-          dateCreated: files[index]['date'],
-          clientName: files[index]['client'],
+          fileName: files[index].fileName,
+          fileNumber: files[index].fileNumber,
+          dateCreated: files[index].dateOpened,
+          clientName: files[index].clientName,
           color: Colors.white,
           padding: 20,
+          status: files[index].status!,
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    _setUpData();
+
+    super.initState();
+  }
+
+  Future<void> _setUpData() async {
+    files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+    setState(() {});
   }
 }

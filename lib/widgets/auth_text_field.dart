@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
 
 class AuthTextField extends StatelessWidget {
-  final controller;
+  final TextEditingController controller;
   final String hintText;
   final bool obscureText;
   final bool isEmail;
@@ -51,7 +51,7 @@ class AuthTextField extends StatelessWidget {
 }
 
 class AuthPasswordTextField extends StatefulWidget {
-  final controller;
+  final TextEditingController controller;
   final String hintText;
   final BorderSide borderSide;
   final Color fillColor;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../theme/color.dart';
 import 'custom_icon_bottom.dart';
@@ -30,6 +31,7 @@ class ActivityItem extends StatelessWidget {
       children: [
         Container(
           padding: EdgeInsets.all(padding),
+          margin: EdgeInsets.only(bottom: padding),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(
               Radius.circular(8),
@@ -55,7 +57,12 @@ class ActivityItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildStringItem('Activity date', date),
+                  _buildStringItem(
+                      'Activity date',
+                      date == 'Null'
+                          ? 'Null'
+                          : DateFormat("dd/MM/yyyy").format(
+                              DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date))),
                   _buildStringItem('Done by', doneBy),
                 ],
               ),

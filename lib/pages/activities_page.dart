@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:smart_case/models/activity.dart';
+import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/activity_item.dart';
 
-import '../data/data.dart';
 import '../theme/color.dart';
 import '../widgets/custom_appbar.dart';
 
-class ActivitiesPage extends StatelessWidget {
+class ActivitiesPage extends StatefulWidget {
   const ActivitiesPage({super.key});
+
+  @override
+  State<ActivitiesPage> createState() => _ActivitiesPageState();
+}
+
+class _ActivitiesPageState extends State<ActivitiesPage> {
+  List<Activity> activities = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +26,7 @@ class ActivitiesPage extends StatelessWidget {
         ),
         backgroundColor: AppColors.primary,
         title: AppBarContent(
+          isNetwork: currentUserImage != null ? true : false,
           searchable: true,
           filterable: true,
           search: 'activities',
@@ -37,13 +47,26 @@ class ActivitiesPage extends StatelessWidget {
       itemCount: activities.length,
       itemBuilder: (context, index) {
         return ActivityItem(
-          name: activities[index]['name'],
-          date: activities[index]['date'],
-          doneBy: activities[index]['doneBy'],
+          name: activities[index].name,
+          date: activities[index].activityDate ?? 'Null',
+          doneBy:
+              '${currentUser.firstName} ${currentUser.middleName ?? ''} ${currentUser.lastName}',
           padding: 20,
           color: Colors.white,
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    _setUpData();
+
+    super.initState();
+  }
+
+  Future<void> _setUpData() async {
+    activities = await SmartCaseApi.fetchAllActivities(currentUser.token);
+    setState(() {});
   }
 }

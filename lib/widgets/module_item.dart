@@ -30,9 +30,10 @@ class ModuleItem extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(padding),
+        height: MediaQuery.of(context).size.height / 4.2,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
-            Radius.circular(8),
+            Radius.circular(20),
           ),
           boxShadow: [
             BoxShadow(
@@ -48,19 +49,19 @@ class ModuleItem extends StatelessWidget {
           children: [
             ModuleItemIcon(
               icon: icon,
-              iconSize: screenHeight * .083,
+              iconSize: screenHeight * .04,
               radius: 100,
               padding: screenHeight * .03,
-              color: Colors.black12,
+              color: AppColors.secondary.withOpacity(.5),
             ),
-            SizedBox(
-              height: screenHeight * .031,
+            const SizedBox(
+              height: 20,
             ),
             Text(
               name,
-              style: TextStyle(
-                fontSize: screenWidth * .04,
-                color: AppColors.darker,
+              style: const TextStyle(
+                fontSize: 18,
+                color: AppColors.darker,fontWeight: FontWeight.w600
               ),
             ),
           ],
