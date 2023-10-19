@@ -1,4 +1,6 @@
-class SmartFile {
+import 'package:smart_case/models/smart_model.dart';
+
+class SmartFile extends SmartModel {
   int id;
   String fileName;
   String fileNumber;
@@ -35,5 +37,15 @@ class SmartFile {
       "client_name": file.clientName,
       "Status": file.status,
     };
+  }
+
+  @override
+  int getId() {
+    return id;
+  }
+
+  @override
+  String getName() {
+    return fileName;
   }
 }

@@ -1,14 +1,17 @@
-import 'package:async_searchable_dropdown/async_searchable_dropdown.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
+import 'package:toast/toast.dart';
 
 import '../../models/activity.dart';
 import '../../models/file.dart';
 import '../../services/apis/smartcase_api.dart';
 import '../../util/smart_case_init.dart';
+import '../../widgets/custom_searchable_async_activity_bottom_sheet_contents.dart';
+import '../../widgets/custom_searchable_async_file_bottom_sheet_contents.dart';
+import '../../widgets/form_title.dart';
 
 class ActivityForm extends StatefulWidget {
   const ActivityForm({super.key});
@@ -18,7 +21,13 @@ class ActivityForm extends StatefulWidget {
 }
 
 class _ActivityFormState extends State<ActivityForm> {
+  final globalKey = GlobalKey();
+  final ToastContext toast = ToastContext();
+
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController startTimeController = TextEditingController();
+  final TextEditingController endTimeController = TextEditingController();
 
   final ValueNotifier<Activity?> activitySelectedValue =
       ValueNotifier<Activity?>(null);
@@ -28,39 +37,115 @@ class _ActivityFormState extends State<ActivityForm> {
   late List<Activity> activities;
   late List<SmartFile> files;
 
+  Activity? activity;
+  SmartFile? file;
+  String billable = 'yes';
+
   @override
   Widget build(BuildContext context) {
+    toast.init(context);
     return _buildBody();
   }
 
   _buildBody() {
-    print(activitySelectedValue.value.toString());
     return Expanded(
-      child: NotificationListener(
-        onNotification: (notification) {
-          if (notification is ScrollEndNotification) {
-            FocusManager.instance.primaryFocus?.unfocus();
-            return true;
-          }
-          return false;
-        },
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            Form(
-              child: Column(
+      child: Column(
+        children: [
+          FormTitle(
+            name: 'New Activity',
+            onSave: () {
+              print("Activity: ${activity!.id}\nFile: ${file!.id}"
+                  "\nBillable: $billable\nDate: ${dateController.text}"
+                  "\nStart Time: ${startTimeController.text}"
+                  "\nEnd Time: ${endTimeController.text}"
+                  "\nDescription: ${descriptionController.text}");
+
+              SmartCaseApi.smartPost(currentUser.url,
+                  'api/cases/${file!.id}/activities', currentUser.token, {
+                "description": descriptionController.text.trim(),
+                "case_activity_status_id": activity!.id,
+                "employee_id": currentUser.id,
+                "date": dateController.text.trim(),
+                "billable": billable,
+                "from": startTimeController.text.trim(),
+                "to": endTimeController.text.trim(),
+              }, onError: () {
+                Toast.show("An error occurred",
+                    duration: Toast.lengthLong, gravity: Toast.bottom);
+              }, onSuccess: () {
+                Toast.show("Activity added successfully",
+                    duration: Toast.lengthLong, gravity: Toast.bottom);
+                Navigator.pop(context);
+              });
+            },
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: ListView(
+                padding: const EdgeInsets.all(16),
                 children: [
-                  _buildSearchableActivityDropdown(),
-                  _buildSearchableFileDropdown(),
-                  const DateTimeAccordion2(),
-                  _buildGroupedRadios(),
-                  CustomTextArea(
-                      hint: 'Description', controller: descriptionController),
+                  Form(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextButton(
+                            onPressed: _showSearchActivityBottomSheet,
+                            child: Text(
+                              activity?.name ?? 'Select activity status',
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextButton(
+                            onPressed: _showSearchFileBottomSheet,
+                            child: Text(
+                              file?.fileName ?? 'Select file',
+                            ),
+                          ),
+                        ),
+                        DateTimeAccordion2(
+                            date: dateController,
+                            startTime: startTimeController,
+                            endTime: endTimeController),
+                        _buildGroupedRadios(),
+                        CustomTextArea(
+                          key: globalKey,
+                          hint: 'Description',
+                          controller: descriptionController,
+                          onTap: () {
+                            Scrollable.ensureVisible(globalKey.currentContext!);
+                          },
+                        ),
+                        const SizedBox(
+                            height:
+                                300 /* MediaQuery.of(context).viewInsets.bottom */),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -82,17 +167,17 @@ class _ActivityFormState extends State<ActivityForm> {
             unSelectedColor: AppColors.darker,
             textStyle: TextStyle(fontSize: 16)),
         radioButtonValue: (value) {
-          print(value);
+          billable = value;
         },
-        defaultSelected: 'Billable',
+        defaultSelected: 'yes',
         unSelectedColor: AppColors.white,
         buttonLables: const [
           "Billable",
           "Non-billable",
         ],
         buttonValues: const [
-          "Billable",
-          "Non-billable",
+          'yes',
+          'no',
         ],
         spacing: 0,
         horizontal: false,
@@ -107,134 +192,72 @@ class _ActivityFormState extends State<ActivityForm> {
     );
   }
 
-  Future<List<SmartFile>> getFileData(String? search) async {
-    List<SmartFile> list = List.empty(growable: true);
-    List<SmartFile> searches = List.empty(growable: true);
-    searches.clear();
-    // if (Random().nextBool()) throw 'sdd';
-    // await Future.delayed(const Duration(microseconds: 200));
-    searches.addAll(files.where((e) => e.fileName.contains(search!)));
-
-    print('List length: ${searches.length}');
-
-    setState(() {
-      if (searches.isNotEmpty) {
-        list = searches;
-      } else {
-        list = [];
-      }
-    });
-    return list;
+  _showSearchFileBottomSheet() {
+    List<SmartFile> searchedList = List.empty(growable: true);
+    return showModalBottomSheet(
+        isScrollControlled: true,
+        constraints: BoxConstraints.expand(
+            height: MediaQuery.of(context).size.height * .8),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return AsyncSearchableSmartFileBottomSheetContents(
+                hint: "Search file",
+                list: searchedList,
+                onTap: (value) {
+                  Navigator.pop(context);
+                  _onTapSearchedFile(value!);
+                },
+                onSearch: (value) {
+                  setState(() {
+                    searchedList.clear();
+                    if (value.length > 2) {
+                      searchedList.addAll(files.where((smartFile) => smartFile
+                          .fileName
+                          .toLowerCase()
+                          .contains(value.toLowerCase())));
+                    }
+                  });
+                },
+              );
+            },
+          );
+        });
   }
 
-  _buildSearchableFileDropdown() {
-    return Column(
-      children: [
-        ValueListenableBuilder<SmartFile?>(
-          valueListenable: fileSelectedValue,
-          builder: (context, value, child) {
-            return SearchableDropdown<SmartFile>(
-              value: value,
-              dropDownListWidth: MediaQuery.of(context).size.width * .92,
-              dropDownListHeight: 200,
-              itemLabelFormatter: (value) {
-                return value.fileName;
-              },
-              remoteItems: (value) =>
-                  getFileData((value!.length > 2) ? value : ''),
-              onChanged: (value) {
-                fileSelectedValue.value = value;
-              },
-              inputDecoration: InputDecoration(
-                filled: true,
-                fillColor: AppColors.textBoxColor,
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                hintText: 'File',
-                hintStyle: const TextStyle(
-                    fontSize: 16, color: AppColors.inActiveColor),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              borderRadius: BorderRadius.circular(10),
-            );
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-      ],
-    );
-  }
-
-  Future<List<Activity>> getActivityData(String? search) async {
-    List<Activity> list = List.empty(growable: true);
-    List<Activity> searches = List.empty(growable: true);
-    searches.clear();
-    // if (Random().nextBool()) throw 'sdd';
-    // await Future.delayed(const Duration(microseconds: 200));
-    searches.addAll(activities.where((e) => e.name.contains(search!)));
-
-    print('List length: ${searches.length}');
-
-    setState(() {
-      if (searches.isNotEmpty) {
-        list = searches;
-      } else {
-        list = [];
-      }
-    });
-    return list;
-  }
-
-  _buildSearchableActivityDropdown() {
-    return Column(
-      children: [
-        ValueListenableBuilder<Activity?>(
-          valueListenable: activitySelectedValue,
-          builder: (context, value, child) {
-            return SearchableDropdown<Activity>(
-              value: value,
-              dropDownListWidth: MediaQuery.of(context).size.width * .92,
-              dropDownListHeight: 200,
-              itemLabelFormatter: (value) {
-                return value.name;
-              },
-              remoteItems: (value) =>
-                  getActivityData((value!.length > 2) ? value : ''),
-              onChanged: (value) {
-                activitySelectedValue.value = value;
-              },
-              inputDecoration: InputDecoration(
-                filled: true,
-                fillColor: AppColors.textBoxColor,
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                hintText: 'Activity',
-                hintStyle: const TextStyle(
-                    fontSize: 16, color: AppColors.inActiveColor),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              borderRadius: BorderRadius.circular(10),
-            );
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-      ],
-    );
+  _showSearchActivityBottomSheet() {
+    List<Activity> searchedList = List.empty(growable: true);
+    return showModalBottomSheet(
+        isScrollControlled: true,
+        constraints: BoxConstraints.expand(
+            height: MediaQuery.of(context).size.height * .8),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return AsyncSearchableActivityBottomSheetContents(
+                hint: "Search activity",
+                list: searchedList,
+                onTap: (value) {
+                  Navigator.pop(context);
+                  _onTapSearchedActivity(value!);
+                },
+                onSearch: (value) {
+                  setState(() {
+                    searchedList.clear();
+                    if (value.length > 2) {
+                      searchedList.addAll(activities.where((activity) =>
+                          activity.name
+                              .toLowerCase()
+                              .contains(value.toLowerCase())));
+                    }
+                  });
+                },
+              );
+            },
+          );
+        });
   }
 
   @override
@@ -248,5 +271,17 @@ class _ActivityFormState extends State<ActivityForm> {
     activities = await SmartCaseApi.fetchAllActivities(currentUser.token);
     files = await SmartCaseApi.fetchAllFiles(currentUser.token);
     setState(() {});
+  }
+
+  _onTapSearchedActivity(Activity value) {
+    setState(() {
+      activity = value;
+    });
+  }
+
+  _onTapSearchedFile(SmartFile value) {
+    setState(() {
+      file = value;
+    });
   }
 }

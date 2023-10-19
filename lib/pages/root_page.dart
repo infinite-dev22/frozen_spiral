@@ -231,13 +231,9 @@ class _RootPageState extends State<RootPage> {
       useSafeArea: true,
       context: context,
       backgroundColor: AppColors.appBgColor,
-      builder: (context) => Column(
+      builder: (context) => const Column(
         children: [
-          FormTitle(
-            name: 'New Activity',
-            onSave: () {},
-          ),
-          const ActivityForm(),
+          ActivityForm(),
         ],
       ),
     );

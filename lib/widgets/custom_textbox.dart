@@ -112,13 +112,14 @@ class CustomTextArea extends StatelessWidget {
       this.autoFocus = false,
       this.controller,
       this.onChanged,
-      this.minLines = 5});
+      this.minLines = 5, this.onTap});
 
   final String hint;
   final bool readOnly;
   final bool autoFocus;
   final TextEditingController? controller;
   final Function(String)? onChanged;
+  final Function()? onTap;
   final int minLines;
 
   @override
@@ -136,6 +137,7 @@ class CustomTextArea extends StatelessWidget {
           onChanged: onChanged,
           minLines: minLines,
           maxLines: 500,
+          onTap: onTap,
           decoration: InputDecoration(
             filled: true,
             fillColor: AppColors.textBoxColor,

@@ -177,7 +177,11 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
 }
 
 class DateTimeAccordion2 extends StatefulWidget {
-  const DateTimeAccordion2({Key? key}) : super(key: key);
+  const DateTimeAccordion2({Key? key, required this.date, required this.startTime, required this.endTime}) : super(key: key);
+
+  final TextEditingController date;
+  final TextEditingController startTime;
+  final TextEditingController endTime;
 
   @override
   State<DateTimeAccordion2> createState() => _DateTimeAccordion2State();
@@ -186,6 +190,7 @@ class DateTimeAccordion2 extends StatefulWidget {
 class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
   bool isDate = true;
   bool isStartTime = true;
+  bool isEndTime = true;
 
   late bool _showContent;
 
@@ -200,16 +205,6 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
 
   @override
   Widget build(BuildContext context) {
-    // CupertinoDatePicker(
-    //   mode: CupertinoDatePickerMode.date,
-    //   initialDateTime: now,
-    //   onDateTimeChanged: (DateTime newDate) {
-    //     setState(() {
-    //       selectedDate =
-    //           DateFormat('dd/MM/yyyy').format(newDate);
-    //     });
-    //   },
-    // )
     return Card(
       color: AppColors.white,
       elevation: 0,
@@ -231,6 +226,7 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                           setState(() {
                             selectedDate =
                                 DateFormat('dd/MM/yyyy').format(newDate);
+                            widget.date.text = selectedDate;
                           });
                         },
                       )
@@ -242,6 +238,8 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                               setState(() {
                                 selectedTime =
                                     DateFormat('h:mm a').format(newTime);
+                                widget.startTime.text = selectedTime;
+
                               });
                             },
                           )
@@ -253,6 +251,7 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                               setState(() {
                                 selectedTime2 =
                                     DateFormat('h:mm a').format(newTime);
+                                widget.endTime.text = selectedTime2;
                               });
                             },
                           ),
@@ -282,11 +281,17 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                   onPressed: () {
                     setState(() {
                       isDate = true;
-                      // if (_showContent) {
-                      //   _showContent = !_showContent;
-                      //   _showContent = true;
-                      //   return;
-                      // }
+
+                      if (_showContent && isStartTime || isEndTime) {
+                        isEndTime = false;
+                        isStartTime = false;
+                        _height = 280;
+                        _showContent = true;
+                        return;
+                      }
+
+                      isEndTime = false;
+                      isStartTime = false;
                       _height = 280;
                       _showContent = !_showContent;
                     });
@@ -311,12 +316,17 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                   onPressed: () {
                     setState(() {
                       isStartTime = true;
+
+                      if (_showContent && isDate || isEndTime) {
+                        isDate = false;
+                        isEndTime = false;
+                        _showContent = true;
+                        _height = 200;
+                        return;
+                      }
+
                       isDate = false;
-                      // if (_showContent) {
-                      //   _showContent = !_showContent;
-                      //   _showContent = true;
-                      //   return;
-                      // }
+                      isEndTime = false;
                       _height = 200;
                       _showContent = !_showContent;
                     });
@@ -340,13 +350,18 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                 child: FilledButton(
                   onPressed: () {
                     setState(() {
-                      isStartTime = false;
-                      isDate = false;
-                      if (_showContent && isStartTime == false) {
-                        _showContent = !_showContent;
+                      isEndTime = true;
+
+                      if (_showContent && isStartTime || isDate) {
+                        isDate = false;
+                        isStartTime = false;
                         _showContent = true;
+                        _height = 200;
                         return;
                       }
+
+                      isDate = false;
+                      isStartTime = false;
                       _height = 200;
                       _showContent = !_showContent;
                     });

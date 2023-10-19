@@ -1,4 +1,6 @@
-class Activity {
+import 'package:smart_case/models/smart_model.dart';
+
+class Activity extends SmartModel {
   int id;
   String name;
   String? description;
@@ -38,5 +40,15 @@ class Activity {
       'is_active': activity.isActive,
       'created_at': activity.activityDate,
     };
+  }
+
+  @override
+  int getId() {
+    return id;
+  }
+
+  @override
+  String getName() {
+    return name;
   }
 }
