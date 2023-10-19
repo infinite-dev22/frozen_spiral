@@ -7,6 +7,8 @@ import 'package:smart_case/models/activity.dart';
 import 'package:smart_case/models/file.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
+import '../../models/contact.dart';
+
 class SmartCaseApi {
   static Future<List<SmartFile>> fetchAllFiles(String token,
       {Function()? onSuccess,
@@ -85,7 +87,7 @@ class SmartCaseApi {
     return [];
   }
 
-  static smartPost(String url, String endPoint, String token, Object data,
+  static smartPost(String endPoint, String token, Object data,
       {Function()? onSuccess, Function()? onError}) async {
     var client = RetryClient(http.Client());
 
@@ -106,7 +108,7 @@ class SmartCaseApi {
 
       final encoding = Encoding.getByName('utf-8');
       var response = await client.post(
-          Uri.https(url.replaceRange(0, 8, ''), endPoint),
+          Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint),
           body: jsonEncode(data),
           encoding: encoding,
           headers: {
@@ -119,6 +121,39 @@ class SmartCaseApi {
         if (onSuccess != null) {
           onSuccess();
         }
+      } else {
+        if (onError != null) {
+          onError();
+        }
+      }
+    } catch (e) {
+      if (onError != null) {
+        onError();
+      }
+    } finally {
+      client.close();
+    }
+    return [];
+  }
+
+  static Future<List<dynamic>> smartFetch(String endPoint, String token,
+      {Function()? onSuccess, Function()? onError}) async {
+    var client = RetryClient(http.Client());
+
+    try {
+      var response = await client.get(
+          Uri.parse('${currentUser.url.replaceRange(0, 8, '')}/$endPoint'),
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+          });
+
+      if (response.statusCode == 200) {
+        var decodedResponse =
+            jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        List list = decodedResponse['contacts'];
+
+        return list;
       } else {
         if (onError != null) {
           onError();

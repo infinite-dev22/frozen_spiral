@@ -11,12 +11,14 @@ class AsyncSearchableSmartFileBottomSheetContents extends StatefulWidget {
       required this.hint,
       required this.list,
       this.onTap,
-      this.onSearch});
+      this.onSearch,
+      required this.isLoading});
 
   final String hint;
   final List<SmartFile> list;
   final Function(SmartFile?)? onTap;
   final Function(String)? onSearch;
+  final bool isLoading;
 
   @override
   State<AsyncSearchableSmartFileBottomSheetContents> createState() =>
@@ -42,17 +44,21 @@ class _AsyncSearchableSmartFileBottomSheetContentsState
             autoFocus: true,
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: widget.list.length,
-            itemBuilder: (context, index) => SearchItem<SmartFile>(
-              value: widget.list[index],
-              padding: 20,
-              color: AppColors.white,
-              onTap: widget.onTap,
-            ),
-          ),
-        )
+        !widget.isLoading
+            ? Expanded(
+                child: ListView.builder(
+                  itemCount: widget.list.length,
+                  itemBuilder: (context, index) => SearchItem<SmartFile>(
+                    value: widget.list[index],
+                    padding: 20,
+                    color: AppColors.white,
+                    onTap: widget.onTap,
+                  ),
+                ),
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ),
       ],
     );
   }

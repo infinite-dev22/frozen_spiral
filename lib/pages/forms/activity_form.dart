@@ -1,5 +1,7 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:smart_case/models/contact.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
@@ -34,8 +36,9 @@ class _ActivityFormState extends State<ActivityForm> {
   final ValueNotifier<SmartFile?> fileSelectedValue =
       ValueNotifier<SmartFile?>(null);
 
-  late List<Activity> activities;
-  late List<SmartFile> files;
+  List<Activity> activities = List.empty(growable: true);
+  List<SmartFile> files = List.empty(growable: true);
+  List<SmartContact> contacts = List.empty(growable: true);
 
   Activity? activity;
   SmartFile? file;
@@ -54,13 +57,7 @@ class _ActivityFormState extends State<ActivityForm> {
           FormTitle(
             name: 'New Activity',
             onSave: () {
-              print("Activity: ${activity!.id}\nFile: ${file!.id}"
-                  "\nBillable: $billable\nDate: ${dateController.text}"
-                  "\nStart Time: ${startTimeController.text}"
-                  "\nEnd Time: ${endTimeController.text}"
-                  "\nDescription: ${descriptionController.text}");
-
-              SmartCaseApi.smartPost(currentUser.url,
+              SmartCaseApi.smartPost(
                   'api/cases/${file!.id}/activities', currentUser.token, {
                 "description": descriptionController.text.trim(),
                 "case_activity_status_id": activity!.id,
@@ -135,6 +132,25 @@ class _ActivityFormState extends State<ActivityForm> {
                             Scrollable.ensureVisible(globalKey.currentContext!);
                           },
                         ),
+                        const SizedBox(height: 10),
+                        if (file != null)
+                          MultiSelectDropDown(
+                            showClearIcon: true,
+                            onOptionSelected: (options) {
+                              debugPrint(options.toString());
+                            },
+                            options: contacts
+                                .map((contact) => ValueItem(
+                                    label: '${contact.name} - ${contact.email}',
+                                    value: contact.email))
+                                .toList(),
+                            selectionType: SelectionType.multi,
+                            chipConfig:
+                                const ChipConfig(wrapType: WrapType.wrap),
+                            dropdownHeight: 300,borderColor: AppColors.white,
+                            optionTextStyle: const TextStyle(fontSize: 16),
+                            selectedOptionIcon: const Icon(Icons.check_circle),
+                          ),
                         const SizedBox(
                             height:
                                 300 /* MediaQuery.of(context).viewInsets.bottom */),
@@ -194,6 +210,7 @@ class _ActivityFormState extends State<ActivityForm> {
 
   _showSearchFileBottomSheet() {
     List<SmartFile> searchedList = List.empty(growable: true);
+    bool isLoading = false;
     return showModalBottomSheet(
         isScrollControlled: true,
         constraints: BoxConstraints.expand(
@@ -213,13 +230,20 @@ class _ActivityFormState extends State<ActivityForm> {
                   setState(() {
                     searchedList.clear();
                     if (value.length > 2) {
-                      searchedList.addAll(files.where((smartFile) => smartFile
-                          .fileName
-                          .toLowerCase()
-                          .contains(value.toLowerCase())));
+                      if (files.isNotEmpty) {
+                        isLoading = false;
+                        searchedList.addAll(files.where((smartFile) => smartFile
+                            .fileName
+                            .toLowerCase()
+                            .contains(value.toLowerCase())));
+                      } else {
+                        _reloadFiles();
+                        isLoading = true;
+                      }
                     }
                   });
                 },
+                isLoading: isLoading,
               );
             },
           );
@@ -228,6 +252,7 @@ class _ActivityFormState extends State<ActivityForm> {
 
   _showSearchActivityBottomSheet() {
     List<Activity> searchedList = List.empty(growable: true);
+    bool isLoading = false;
     return showModalBottomSheet(
         isScrollControlled: true,
         constraints: BoxConstraints.expand(
@@ -247,17 +272,41 @@ class _ActivityFormState extends State<ActivityForm> {
                   setState(() {
                     searchedList.clear();
                     if (value.length > 2) {
-                      searchedList.addAll(activities.where((activity) =>
-                          activity.name
-                              .toLowerCase()
-                              .contains(value.toLowerCase())));
+                      if (activities.isNotEmpty) {
+                        isLoading = false;
+                        searchedList.addAll(activities.where((activity) =>
+                            activity.name
+                                .toLowerCase()
+                                .contains(value.toLowerCase())));
+                      } else {
+                        _reloadActivities();
+                        isLoading = true;
+                      }
                     }
                   });
                 },
+                isLoading: isLoading,
               );
             },
           );
         });
+  }
+
+  _reloadActivities() async {
+    activities = await SmartCaseApi.fetchAllActivities(currentUser.token);
+  }
+
+  _reloadFiles() async {
+    files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+  }
+
+  _loadContacts() async {
+    List contacts = await SmartCaseApi.smartFetch(
+        'api/cases/${file!.id}/contactsandfinancialstatus', currentUser.token);
+    setState(() {
+      this.contacts =
+          contacts.map((doc) => SmartContact.fromJson(doc)).toList();
+    });
   }
 
   @override
@@ -282,6 +331,7 @@ class _ActivityFormState extends State<ActivityForm> {
   _onTapSearchedFile(SmartFile value) {
     setState(() {
       file = value;
+      _loadContacts();
     });
   }
 }

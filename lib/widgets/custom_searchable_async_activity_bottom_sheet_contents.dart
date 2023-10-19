@@ -11,12 +11,14 @@ class AsyncSearchableActivityBottomSheetContents extends StatefulWidget {
       required this.hint,
       required this.list,
       this.onTap,
-      this.onSearch});
+      this.onSearch,
+      required this.isLoading});
 
   final String hint;
   final List<Activity> list;
   final Function(Activity?)? onTap;
   final Function(String)? onSearch;
+  final bool isLoading;
 
   @override
   State<AsyncSearchableActivityBottomSheetContents> createState() =>
@@ -42,17 +44,21 @@ class _AsyncSearchableActivityBottomSheetContentsState
             autoFocus: true,
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: widget.list.length,
-            itemBuilder: (context, index) => SearchItem<Activity>(
-              value: widget.list[index],
-              padding: 20,
-              color: AppColors.white,
-              onTap: widget.onTap,
-            ),
-          ),
-        )
+        widget.isLoading
+            ? Expanded(
+                child: ListView.builder(
+                  itemCount: widget.list.length,
+                  itemBuilder: (context, index) => SearchItem<Activity>(
+                    value: widget.list[index],
+                    padding: 20,
+                    color: AppColors.white,
+                    onTap: widget.onTap,
+                  ),
+                ),
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ),
       ],
     );
   }
