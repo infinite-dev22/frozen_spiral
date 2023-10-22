@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/widgets/file/file_item.dart';
 
-import '../models/file.dart';
+import '../models/smart_file.dart';
 import '../services/apis/smartcase_api.dart';
 import '../theme/color.dart';
 import '../util/smart_case_init.dart';

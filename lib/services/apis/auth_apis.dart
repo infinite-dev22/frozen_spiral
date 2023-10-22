@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
-import 'package:smart_case/models/employee.dart';
+import 'package:smart_case/models/user.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
 class AuthApis {
@@ -38,7 +38,7 @@ class AuthApis {
           userDataDecodedResponse['url'] = url;
 
           if (userSuccess) {
-            currentUser = Employee.fromJson(userDataDecodedResponse);
+            currentUser = CurrentSmartUser.fromJson(userDataDecodedResponse);
 
             if (onSuccess != null) {
               onSuccess();

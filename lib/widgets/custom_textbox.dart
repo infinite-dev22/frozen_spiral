@@ -112,7 +112,8 @@ class CustomTextArea extends StatelessWidget {
       this.autoFocus = false,
       this.controller,
       this.onChanged,
-      this.minLines = 5, this.onTap});
+      this.minLines = 5,
+      this.onTap});
 
   final String hint;
   final bool readOnly;
@@ -190,6 +191,50 @@ class SmartCaseTextField extends StatelessWidget {
           height: 10,
         ),
       ],
+    );
+  }
+}
+
+class SmartText extends StatelessWidget {
+  const SmartText(
+      {super.key,
+      required this.value,
+      required this.icon,
+      required this.color});
+
+  final IconData icon;
+  final String value;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Container(
+      height: 50,
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: AppColors.textBoxColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: 20,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            value,
+            style: TextStyle(color: color, fontSize: 18),
+          ),
+        ],
+      ),
     );
   }
 }

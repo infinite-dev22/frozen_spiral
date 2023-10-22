@@ -1,6 +1,6 @@
 import 'package:smart_case/models/smart_model.dart';
 
-class Activity extends SmartModel {
+class SmartActivity extends SmartModel {
   int id;
   String name;
   String? description;
@@ -9,7 +9,7 @@ class Activity extends SmartModel {
   int isActive;
   String? activityDate;
 
-  Activity({
+  SmartActivity({
     required this.id,
     required this.name,
     required this.description,
@@ -19,8 +19,8 @@ class Activity extends SmartModel {
     required this.activityDate,
   });
 
-  factory Activity.fromJson(Map json) {
-    return Activity(
+  factory SmartActivity.fromJson(Map json) {
+    return SmartActivity(
         id: json['id'],
         name: json['name'],
         description: json['description'],
@@ -30,7 +30,7 @@ class Activity extends SmartModel {
         activityDate: json['created_at']);
   }
 
-  static toJson(Activity activity) {
+  static toJson(SmartActivity activity) {
     return {
       'id': activity.id,
       'name': activity.name,

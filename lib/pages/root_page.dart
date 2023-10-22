@@ -284,15 +284,7 @@ class _RootPageState extends State<RootPage> {
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
-      builder: (context) => Column(
-        children: [
-          FormTitle(
-            name: 'New Calendar Event',
-            onSave: () {},
-          ),
-          const DiaryForm(),
-        ],
-      ),
+      builder: (context) => const DiaryForm(),
     );
   }
 

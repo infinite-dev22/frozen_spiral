@@ -5,9 +5,11 @@ import 'package:intl/intl.dart';
 import '../theme/color.dart';
 
 class DateTimeAccordion extends StatefulWidget {
-  const DateTimeAccordion({Key? key, required this.name}) : super(key: key);
+  const DateTimeAccordion({Key? key, required this.name, required this.dateController, required this.timeController}) : super(key: key);
 
   final String name;
+  final TextEditingController dateController;
+  final TextEditingController timeController;
 
   @override
   State<DateTimeAccordion> createState() => _DateTimeAccordionState();
@@ -25,8 +27,6 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
 
   String selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
   String selectedTime = DateFormat('h:mm a').format(DateTime.now());
-  String selectedTime2 =
-      DateFormat('h:mm a').format(DateTime.now().add(const Duration(hours: 1)));
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +51,7 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
                           setState(() {
                             selectedDate =
                                 DateFormat('dd/MM/yyyy').format(newDate);
+                            widget.dateController.text = selectedDate;
                           });
                         },
                       )
@@ -62,16 +63,17 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
                               setState(() {
                                 selectedTime =
                                     DateFormat('h:mm a').format(newTime);
+                                widget.timeController.text = selectedTime;
                               });
                             },
                           )
                         : CupertinoDatePicker(
                             mode: CupertinoDatePickerMode.time,
                             initialDateTime:
-                                DateTime.now().add(const Duration(hours: 1)),
+                                DateTime.now(),
                             onDateTimeChanged: (DateTime newTime) {
                               setState(() {
-                                selectedTime2 =
+                                selectedTime =
                                     DateFormat('h:mm a').format(newTime);
                               });
                             },
@@ -105,11 +107,15 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
                       onPressed: () {
                         setState(() {
                           isDate = true;
-                          // if (_showContent) {
-                          //   _showContent = !_showContent;
-                          //   _showContent = true;
-                          //   return;
-                          // }
+
+                          if (_showContent && isTime) {
+                            isTime = false;
+                            _height = 280;
+                            _showContent = true;
+                            return;
+                          }
+
+                          isTime = false;
                           _height = 280;
                           _showContent = !_showContent;
                         });
@@ -134,13 +140,16 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
                     child: FilledButton(
                       onPressed: () {
                         setState(() {
-                          isTime = false;
-                          isDate = false;
-                          if (_showContent && isTime == false) {
-                            _showContent = !_showContent;
+                          isTime = true;
+
+                          if (_showContent && isDate) {
+                            isDate = false;
                             _showContent = true;
+                            _height = 200;
                             return;
                           }
+
+                          isDate = false;
                           _height = 200;
                           _showContent = !_showContent;
                         });
@@ -172,16 +181,18 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
   void initState() {
     super.initState();
 
+    widget.dateController.text = selectedDate;
+    widget.timeController.text = selectedTime;
     _showContent = false;
   }
 }
 
 class DateTimeAccordion2 extends StatefulWidget {
-  const DateTimeAccordion2({Key? key, required this.date, required this.startTime, required this.endTime}) : super(key: key);
+  const DateTimeAccordion2({Key? key, required this.dateController, required this.startTimeController, required this.endTimeController}) : super(key: key);
 
-  final TextEditingController date;
-  final TextEditingController startTime;
-  final TextEditingController endTime;
+  final TextEditingController dateController;
+  final TextEditingController startTimeController;
+  final TextEditingController endTimeController;
 
   @override
   State<DateTimeAccordion2> createState() => _DateTimeAccordion2State();
@@ -199,8 +210,8 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
   DateTime now = DateTime.now();
 
   String selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
-  String selectedTime = DateFormat('h:mm a').format(DateTime.now());
-  String selectedTime2 =
+  String selectedStartTime = DateFormat('h:mm a').format(DateTime.now());
+  String selectedEndTime =
       DateFormat('h:mm a').format(DateTime.now().add(const Duration(hours: 1)));
 
   @override
@@ -210,7 +221,7 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 10),
       child: Column(children: [
-        _buildTimeField(selectedDate, selectedTime, selectedTime2),
+        _buildTimeField(selectedDate, selectedStartTime, selectedEndTime),
         // Show or hide the content based on the state
         _showContent
             ? Container(
@@ -226,7 +237,7 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                           setState(() {
                             selectedDate =
                                 DateFormat('dd/MM/yyyy').format(newDate);
-                            widget.date.text = selectedDate;
+                            widget.dateController.text = selectedDate;
                           });
                         },
                       )
@@ -236,9 +247,9 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                             initialDateTime: DateTime.now(),
                             onDateTimeChanged: (DateTime newTime) {
                               setState(() {
-                                selectedTime =
+                                selectedStartTime =
                                     DateFormat('h:mm a').format(newTime);
-                                widget.startTime.text = selectedTime;
+                                widget.startTimeController.text = selectedStartTime;
 
                               });
                             },
@@ -249,9 +260,9 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                                 DateTime.now().add(const Duration(hours: 1)),
                             onDateTimeChanged: (DateTime newTime) {
                               setState(() {
-                                selectedTime2 =
+                                selectedEndTime =
                                     DateFormat('h:mm a').format(newTime);
-                                widget.endTime.text = selectedTime2;
+                                widget.endTimeController.text = selectedEndTime;
                               });
                             },
                           ),
@@ -390,17 +401,18 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
   @override
   void initState() {
     super.initState();
-
+    widget.dateController.text = selectedDate;
+    widget.startTimeController.text = selectedStartTime;
+    widget.endTimeController.text = selectedEndTime;
     _showContent = false;
   }
 }
 
 class DateAccordion extends StatefulWidget {
-  const DateAccordion({Key? key, required this.onDateChanged})
+  const DateAccordion({Key? key, required this.dateController})
       : super(key: key);
 
-  /// Called when the user selects a date in the picker.
-  final ValueChanged<DateTime> onDateChanged;
+  final TextEditingController dateController;
 
   @override
   State<DateAccordion> createState() => _DateAccordionState();
@@ -414,9 +426,6 @@ class _DateAccordionState extends State<DateAccordion> {
   DateTime now = DateTime.now();
 
   String selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
-  String selectedTime = DateFormat('h:mm a').format(DateTime.now());
-  String selectedTime2 =
-      DateFormat('h:mm a').format(DateTime.now().add(const Duration(hours: 1)));
 
   @override
   Widget build(BuildContext context) {
@@ -425,7 +434,7 @@ class _DateAccordionState extends State<DateAccordion> {
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 10),
       child: Column(children: [
-        _buildTimeField(selectedDate),
+        _buildDateField(selectedDate),
         _showContent
             ? Container(
                 height: _height,
@@ -439,7 +448,7 @@ class _DateAccordionState extends State<DateAccordion> {
                     setState(() {
                       selectedDate = DateFormat('dd/MM/yyyy').format(newDate);
 
-                      widget.onDateChanged(newDate);
+                      widget.dateController.text = selectedDate;
                     });
                   },
                 ),
@@ -449,7 +458,7 @@ class _DateAccordionState extends State<DateAccordion> {
     );
   }
 
-  _buildTimeField(String date) {
+  _buildDateField(String date) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -488,6 +497,7 @@ class _DateAccordionState extends State<DateAccordion> {
   void initState() {
     super.initState();
 
+    widget.dateController.text = selectedDate;
     _showContent = false;
   }
 }

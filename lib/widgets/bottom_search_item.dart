@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_model.dart';
 
-import '../theme/color.dart';
-
 class SearchItem<T extends SmartModel> extends StatelessWidget {
   const SearchItem({
     super.key,
@@ -22,8 +20,8 @@ class SearchItem<T extends SmartModel> extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap!(value),
       child: Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
         height: 50,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:smart_case/models/smart_model.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/bottom_search_item.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 
-import '../models/smart_file.dart';
-
-class AsyncSearchableSmartFileBottomSheetContents extends StatefulWidget {
-  const AsyncSearchableSmartFileBottomSheetContents(
+class AsyncSearchableBottomSheetContents<T extends SmartModel>
+    extends StatefulWidget {
+  const AsyncSearchableBottomSheetContents(
       {super.key,
       required this.hint,
       required this.list,
@@ -15,18 +15,18 @@ class AsyncSearchableSmartFileBottomSheetContents extends StatefulWidget {
       required this.isLoading});
 
   final String hint;
-  final List<SmartFile> list;
-  final Function(SmartFile?)? onTap;
+  final List<T> list;
+  final Function(T?)? onTap;
   final Function(String)? onSearch;
   final bool isLoading;
 
   @override
-  State<AsyncSearchableSmartFileBottomSheetContents> createState() =>
-      _AsyncSearchableSmartFileBottomSheetContentsState();
+  State<AsyncSearchableBottomSheetContents> createState() =>
+      _AsyncSearchableBottomSheetContentsState<T>();
 }
 
-class _AsyncSearchableSmartFileBottomSheetContentsState
-    extends State<AsyncSearchableSmartFileBottomSheetContents> {
+class _AsyncSearchableBottomSheetContentsState<T extends SmartModel>
+    extends State<AsyncSearchableBottomSheetContents<T>> {
   @override
   Widget build(BuildContext context) {
     return _buildBody();
@@ -48,7 +48,7 @@ class _AsyncSearchableSmartFileBottomSheetContentsState
             ? Expanded(
                 child: ListView.builder(
                   itemCount: widget.list.length,
-                  itemBuilder: (context, index) => SearchItem<SmartFile>(
+                  itemBuilder: (context, index) => SearchItem<T>(
                     value: widget.list[index],
                     padding: 20,
                     color: AppColors.white,

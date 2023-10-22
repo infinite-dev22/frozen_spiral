@@ -3,7 +3,7 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/bottom_search_item.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 
-import '../models/activity.dart';
+import '../models/smart_activity.dart';
 
 class AsyncSearchableActivityBottomSheetContents extends StatefulWidget {
   const AsyncSearchableActivityBottomSheetContents(
@@ -15,8 +15,8 @@ class AsyncSearchableActivityBottomSheetContents extends StatefulWidget {
       required this.isLoading});
 
   final String hint;
-  final List<Activity> list;
-  final Function(Activity?)? onTap;
+  final List<SmartActivity> list;
+  final Function(SmartActivity?)? onTap;
   final Function(String)? onSearch;
   final bool isLoading;
 
@@ -44,11 +44,11 @@ class _AsyncSearchableActivityBottomSheetContentsState
             autoFocus: true,
           ),
         ),
-        widget.isLoading
+        !widget.isLoading
             ? Expanded(
                 child: ListView.builder(
                   itemCount: widget.list.length,
-                  itemBuilder: (context, index) => SearchItem<Activity>(
+                  itemBuilder: (context, index) => SearchItem<SmartActivity>(
                     value: widget.list[index],
                     padding: 20,
                     color: AppColors.white,

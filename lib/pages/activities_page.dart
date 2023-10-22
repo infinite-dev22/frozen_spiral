@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_case/models/activity.dart';
+import 'package:smart_case/models/smart_activity.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/activity_item.dart';
@@ -15,7 +15,7 @@ class ActivitiesPage extends StatefulWidget {
 }
 
 class _ActivitiesPageState extends State<ActivitiesPage> {
-  List<Activity> activities = List.empty(growable: true);
+  List<SmartActivity> activities = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {

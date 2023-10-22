@@ -1,14 +1,14 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
-import 'package:smart_case/models/contact.dart';
+import 'package:smart_case/models/smart_contact.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:toast/toast.dart';
 
-import '../../models/activity.dart';
-import '../../models/file.dart';
+import '../../models/smart_activity.dart';
+import '../../models/smart_file.dart';
 import '../../services/apis/smartcase_api.dart';
 import '../../util/smart_case_init.dart';
 import '../../widgets/custom_searchable_async_activity_bottom_sheet_contents.dart';
@@ -30,17 +30,18 @@ class _ActivityFormState extends State<ActivityForm> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController startTimeController = TextEditingController();
   final TextEditingController endTimeController = TextEditingController();
+  List emails = List.empty(growable: true);
 
-  final ValueNotifier<Activity?> activitySelectedValue =
-      ValueNotifier<Activity?>(null);
+  final ValueNotifier<SmartActivity?> activitySelectedValue =
+      ValueNotifier<SmartActivity?>(null);
   final ValueNotifier<SmartFile?> fileSelectedValue =
       ValueNotifier<SmartFile?>(null);
 
-  List<Activity> activities = List.empty(growable: true);
+  List<SmartActivity> activities = List.empty(growable: true);
   List<SmartFile> files = List.empty(growable: true);
   List<SmartContact> contacts = List.empty(growable: true);
 
-  Activity? activity;
+  SmartActivity? activity;
   SmartFile? file;
   String billable = 'yes';
 
@@ -66,6 +67,7 @@ class _ActivityFormState extends State<ActivityForm> {
                 "billable": billable,
                 "from": startTimeController.text.trim(),
                 "to": endTimeController.text.trim(),
+                "to_be_notified": emails,
               }, onError: () {
                 Toast.show("An error occurred",
                     duration: Toast.lengthLong, gravity: Toast.bottom);
@@ -120,9 +122,9 @@ class _ActivityFormState extends State<ActivityForm> {
                           ),
                         ),
                         DateTimeAccordion2(
-                            date: dateController,
-                            startTime: startTimeController,
-                            endTime: endTimeController),
+                            dateController: dateController,
+                            startTimeController: startTimeController,
+                            endTimeController: endTimeController),
                         _buildGroupedRadios(),
                         CustomTextArea(
                           key: globalKey,
@@ -137,17 +139,20 @@ class _ActivityFormState extends State<ActivityForm> {
                           MultiSelectDropDown(
                             showClearIcon: true,
                             onOptionSelected: (options) {
-                              debugPrint(options.toString());
+                              for (var element in options) {
+                                emails.add(element.value!);
+                              }
                             },
                             options: contacts
                                 .map((contact) => ValueItem(
                                     label: '${contact.name} - ${contact.email}',
-                                    value: contact.email))
+                                    value: '${contact.name}|${contact.email}'))
                                 .toList(),
                             selectionType: SelectionType.multi,
                             chipConfig:
                                 const ChipConfig(wrapType: WrapType.wrap),
-                            dropdownHeight: 300,borderColor: AppColors.white,
+                            dropdownHeight: 300,
+                            borderColor: AppColors.white,
                             optionTextStyle: const TextStyle(fontSize: 16),
                             selectedOptionIcon: const Icon(Icons.check_circle),
                           ),
@@ -223,8 +228,9 @@ class _ActivityFormState extends State<ActivityForm> {
                 hint: "Search file",
                 list: searchedList,
                 onTap: (value) {
-                  Navigator.pop(context);
+                  file = null;
                   _onTapSearchedFile(value!);
+                  Navigator.pop(context);
                 },
                 onSearch: (value) {
                   setState(() {
@@ -251,7 +257,7 @@ class _ActivityFormState extends State<ActivityForm> {
   }
 
   _showSearchActivityBottomSheet() {
-    List<Activity> searchedList = List.empty(growable: true);
+    List<SmartActivity> searchedList = List.empty(growable: true);
     bool isLoading = false;
     return showModalBottomSheet(
         isScrollControlled: true,
@@ -294,18 +300,23 @@ class _ActivityFormState extends State<ActivityForm> {
 
   _reloadActivities() async {
     activities = await SmartCaseApi.fetchAllActivities(currentUser.token);
+    setState(() {});
   }
 
   _reloadFiles() async {
     files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+    setState(() {});
   }
 
   _loadContacts() async {
-    List contacts = await SmartCaseApi.smartFetch(
+    Map contactsMap = await SmartCaseApi.smartFetch(
         'api/cases/${file!.id}/contactsandfinancialstatus', currentUser.token);
+
+    List? contacts = contactsMap['contacts'];
     setState(() {
       this.contacts =
-          contacts.map((doc) => SmartContact.fromJson(doc)).toList();
+          contacts!.map((doc) => SmartContact.fromJson(doc)).toList();
+      contacts = null;
     });
   }
 
@@ -322,7 +333,7 @@ class _ActivityFormState extends State<ActivityForm> {
     setState(() {});
   }
 
-  _onTapSearchedActivity(Activity value) {
+  _onTapSearchedActivity(SmartActivity value) {
     setState(() {
       activity = value;
     });

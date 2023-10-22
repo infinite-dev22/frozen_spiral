@@ -65,22 +65,24 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(
                 child: ModuleItem(
-                    name: 'Activities',
-                    color: Colors.white,
-                    padding: cardPadding,
-                    icon: Icons.local_activity_outlined,
-                    onTap: () => Navigator.pushNamed(context, '/activities')),
+                  name: 'Activities',
+                  color: Colors.white,
+                  padding: cardPadding,
+                  icon: Icons.local_activity_outlined,
+                  onTap: () => Navigator.pushNamed(context, '/activities'),
+                ),
               ),
               const SizedBox(
                 width: 20,
               ),
               Expanded(
                 child: ModuleItem(
-                    name: 'Requisitions',
-                    color: Colors.white,
-                    padding: cardPadding,
-                    icon: Icons.list_rounded,
-                    onTap: () => print('Tapped')),
+                  name: 'Requisitions',
+                  color: Colors.white,
+                  padding: cardPadding,
+                  icon: Icons.list_rounded,
+                  onTap: () => Navigator.pushNamed(context, '/requisitions'),
+                ),
               ),
             ],
           ),
@@ -91,22 +93,24 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(
                 child: ModuleItem(
-                    name: 'Diary',
-                    color: Colors.white,
-                    padding: cardPadding,
-                    icon: Icons.calendar_month_rounded,
-                    onTap: () => print('Tapped')),
+                  name: 'Diary',
+                  color: Colors.white,
+                  padding: cardPadding,
+                  icon: Icons.calendar_month_rounded,
+                  onTap: () => Navigator.pushNamed(context, '/events'),
+                ),
               ),
               const SizedBox(
                 width: 20,
               ),
               Expanded(
                 child: ModuleItem(
-                    name: 'Tasks',
-                    color: Colors.white,
-                    padding: cardPadding,
-                    icon: Icons.task_outlined,
-                    onTap: () => print('Tapped')),
+                  name: 'Tasks',
+                  color: Colors.white,
+                  padding: cardPadding,
+                  icon: Icons.task_outlined,
+                  onTap: () => Navigator.pushNamed(context, '/tasks'),
+                ),
               ),
             ],
           ),
@@ -117,22 +121,24 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(
                 child: ModuleItem(
-                    name: 'Engagements',
-                    color: Colors.white,
-                    padding: cardPadding,
-                    icon: Icons.handshake_outlined,
-                    onTap: () => print('Tapped')),
+                  name: 'Engagements',
+                  color: Colors.white,
+                  padding: cardPadding,
+                  icon: Icons.handshake_outlined,
+                  onTap: () => Navigator.pushNamed(context, '/engagements'),
+                ),
               ),
               const SizedBox(
                 width: 20,
               ),
               Expanded(
                 child: ModuleItem(
-                    name: 'Reports',
-                    color: Colors.white,
-                    padding: cardPadding,
-                    icon: Icons.bar_chart_rounded,
-                    onTap: () => print('Tapped')),
+                  name: 'Reports',
+                  color: Colors.white,
+                  padding: cardPadding,
+                  icon: Icons.bar_chart_rounded,
+                  onTap: () => Navigator.pushNamed(context, '/reports'),
+                ),
               ),
             ],
           ),

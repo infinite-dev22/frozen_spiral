@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/pages/activities_page.dart';
+import 'package:smart_case/pages/diary_page.dart';
+import 'package:smart_case/pages/engagements_page.dart';
 import 'package:smart_case/pages/files_page.dart';
 import 'package:smart_case/pages/home_page.dart';
 import 'package:smart_case/pages/locator_page.dart';
 import 'package:smart_case/pages/notifications_page.dart';
 import 'package:smart_case/pages/profile_page.dart';
+import 'package:smart_case/pages/reports_page.dart';
+import 'package:smart_case/pages/requisitions_page.dart';
 import 'package:smart_case/pages/root_page.dart';
+import 'package:smart_case/pages/tasks_page.dart';
 import 'package:smart_case/pages/welcome_page.dart';
 import 'package:smart_case/theme/color.dart';
 
@@ -42,6 +47,11 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomePage(),
         '/files': (context) => const FilesPage(),
         '/activities': (context) => const ActivitiesPage(),
+        '/requisitions': (context) => const RequisitionsPage(),
+        '/events': (context) => const DiaryPage(),
+        '/tasks': (context) => const TasksPage(),
+        '/engagements': (context) => const EngagementsPage(),
+        '/reports': (context) => const ReportsPage(),
         '/alerts': (context) => const AlertsPage(),
         '/locator': (context) => const LocatorPage(),
         '/profile': (context) => const ProfilePage(),
@@ -49,13 +59,13 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  // _getPreferences() async {
-  //   String? value = await storage.read(key: 'email');
-  //
-  //   Map<String, String> allValues = await storage.readAll();
-  //
-  //   await storage.delete(key: key);
-  //
-  //   await storage.deleteAll();
-  // }
+// _getPreferences() async {
+//   String? value = await storage.read(key: 'email');
+//
+//   Map<String, String> allValues = await storage.readAll();
+//
+//   await storage.delete(key: key);
+//
+//   await storage.deleteAll();
+// }
 }
