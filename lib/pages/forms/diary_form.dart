@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
-import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_event.dart';
+import 'package:smart_case/models/user.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:toast/toast.dart';
 
@@ -27,7 +27,6 @@ class _DiaryFormState extends State<DiaryForm> {
   final globalKey = GlobalKey();
   final ToastContext toast = ToastContext();
 
-  final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController startDateController = TextEditingController();
   final TextEditingController startTimeController = TextEditingController();
@@ -46,7 +45,7 @@ class _DiaryFormState extends State<DiaryForm> {
   List<SmartActivity> activities = List.empty(growable: true);
   List<SmartFile> files = List.empty(growable: true);
   List<SmartContact> contacts = List.empty(growable: true);
-  List<SmartEmployee> employees = List.empty(growable: true);
+  List<SmartUser> employees = List.empty(growable: true);
 
   SmartActivity? activity;
   SmartFile? file;
@@ -73,31 +72,13 @@ class _DiaryFormState extends State<DiaryForm> {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                SmartCaseTextField(
-                    hint: 'Event name', controller: nameController),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    children: [
-                      DateTimeAccordion(
-                        name: 'Starts on',
-                        dateController: startDateController,
-                        timeController: startTimeController,
-                      ),
-                      const Divider(indent: 5, endIndent: 5),
-                      DateTimeAccordion(
-                        name: 'Ends on',
-                        dateController: endDateController,
-                        timeController: endTimeController,
-                      ),
-                    ],
-                  ),
-                ),
+                DoubleDateTimeAccordion(
+                    startName: 'Starts on',
+                    endName: 'Ends on',
+                    startDateController: startDateController,
+                    startTimeController: startTimeController,
+                    endDateController: endDateController,
+                    endTimeController: endTimeController),
                 Container(
                   height: 50,
                   width: double.infinity,
@@ -162,6 +143,7 @@ class _DiaryFormState extends State<DiaryForm> {
                   timeController: reminderTimeController,
                 ),
                 MultiSelectDropDown(
+                  hint: 'Remind me with',
                   showClearIcon: true,
                   onOptionSelected: (options) {
                     for (var element in options) {
@@ -170,11 +152,11 @@ class _DiaryFormState extends State<DiaryForm> {
                   },
                   options: employees
                       .map((employee) => ValueItem(
-                          label: employee.title, value: employee.id.toString()))
+                          label: employee.getName(),
+                          value: employee.id.toString()))
                       .toList(),
                   selectionType: SelectionType.multi,
                   chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                  dropdownHeight: 300,
                   borderColor: AppColors.white,
                   optionTextStyle: const TextStyle(fontSize: 16),
                   selectedOptionIcon: const Icon(Icons.check_circle),
@@ -359,7 +341,7 @@ class _DiaryFormState extends State<DiaryForm> {
 
   _submitFormData() {
     SmartEvent smartEvent = SmartEvent(
-        title: nameController.text.trim(),
+        title: activity!.getName(),
         description: descriptionController.text.trim(),
         startDate: startDateController.text.trim(),
         startTime: startTimeController.text.trim(),
@@ -389,10 +371,10 @@ class _DiaryFormState extends State<DiaryForm> {
     Map employeesMap =
         await SmartCaseApi.smartFetch('api/hr/employees', currentUser.token);
 
-    List? employees = employeesMap["search"]["jobs"];
+    List? employees = employeesMap["search"]["employees"];
     setState(() {
       this.employees =
-          employees!.map((doc) => SmartEmployee.fromJson(doc)).toList();
+          employees!.map((doc) => SmartUser.fromJson(doc)).toList();
       employees = null;
     });
   }

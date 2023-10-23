@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
+import 'package:flutter_multi_formatter/formatters/phone_input_formatter.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/theme/color.dart';
 
 class CustomTextBox extends StatelessWidget {
@@ -185,6 +188,50 @@ class SmartCaseTextField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+}
+
+class SmartCaseNumberField extends StatelessWidget {
+  const SmartCaseNumberField(
+      {super.key, required this.hint, required this.controller});
+
+  final String hint;
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 50,
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: AppColors.textBoxColor,
+              hintText: hint,
+              hintStyle:
+                  const TextStyle(color: AppColors.inActiveColor, fontSize: 15),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              CurrencyInputFormatter()
+            ],
           ),
         ),
         const SizedBox(

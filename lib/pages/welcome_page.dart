@@ -24,6 +24,8 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   final ToastContext toast = ToastContext();
 
+  bool enabled = true;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -72,6 +74,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   ? AuthTextField(
                       controller: emailController,
                       hintText: 'email',
+                      enabled: enabled,
                       obscureText: false,
                       isEmail: true,
                       style: const TextStyle(color: AppColors.white),
@@ -95,6 +98,7 @@ class _WelcomePageState extends State<WelcomePage> {
               AuthPasswordTextField(
                 controller: passwordController,
                 hintText: 'password',
+                enabled: enabled,
                 borderSide: const BorderSide(color: AppColors.white),
                 style: const TextStyle(color: AppColors.white),
                 fillColor: AppColors.primary,
@@ -103,12 +107,12 @@ class _WelcomePageState extends State<WelcomePage> {
               const SizedBox(
                 height: 10,
               ),
-              WideButton(
+              (enabled) ? WideButton(
                 name: 'Login',
                 onPressed: _onPressed,
                 bgColor: AppColors.gray,
                 textStyle: const TextStyle(color: Colors.white, fontSize: 20),
-              ),
+              ) : const CircularProgressIndicator(color: AppColors.gray,),
               const SizedBox(
                 height: 10,
               ),
@@ -229,6 +233,10 @@ class _WelcomePageState extends State<WelcomePage> {
         currentUserEmail != '' && currentUserEmail != null
             ? currentUserEmail!
             : emailController.text)) {
+      setState(() {
+        enabled = false;
+      });
+
       AuthApis.signInUser(
           currentUserEmail != '' && currentUserEmail != null
               ? currentUserEmail!
@@ -258,20 +266,32 @@ class _WelcomePageState extends State<WelcomePage> {
   _handleWrongEmail() {
     Toast.show("User not found",
         duration: Toast.lengthLong, gravity: Toast.bottom);
+    setState(() {
+      enabled = true;
+    });
   }
 
   _handleErrors(e) {
     Toast.show(e.toString(), duration: Toast.lengthLong, gravity: Toast.bottom);
+    setState(() {
+      enabled = true;
+    });
   }
 
   _handleWrongPass() {
     Toast.show("Incorrect password",
         duration: Toast.lengthLong, gravity: Toast.bottom);
+    setState(() {
+      enabled = true;
+    });
   }
 
   _handleError() {
     Toast.show("An error occurred",
         duration: Toast.lengthLong, gravity: Toast.bottom);
+    setState(() {
+      enabled = true;
+    });
   }
 
   _getCurrentUserData() async {

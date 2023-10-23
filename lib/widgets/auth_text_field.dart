@@ -9,6 +9,7 @@ class AuthTextField extends StatelessWidget {
   final BorderSide borderSide;
   final Color fillColor;
   final TextStyle? style;
+  final bool enabled;
 
   const AuthTextField({
     super.key,
@@ -19,6 +20,7 @@ class AuthTextField extends StatelessWidget {
     this.borderSide = BorderSide.none,
     this.fillColor = AppColors.textBoxColor,
     this.style,
+    this.enabled = true,
   });
 
   @override
@@ -31,6 +33,7 @@ class AuthTextField extends StatelessWidget {
         controller: controller,
         obscureText: obscureText,
         style: style,
+        enabled: enabled,
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderSide: borderSide,
@@ -56,6 +59,7 @@ class AuthPasswordTextField extends StatefulWidget {
   final BorderSide borderSide;
   final Color fillColor;
   final Color iconColor;
+  final bool enabled;
   final TextStyle? style;
 
   const AuthPasswordTextField({
@@ -66,6 +70,7 @@ class AuthPasswordTextField extends StatefulWidget {
     this.fillColor = AppColors.textBoxColor,
     this.iconColor = AppColors.darker,
     this.style,
+    this.enabled = true,
   });
 
   @override
@@ -85,6 +90,7 @@ class _AuthPasswordTextField extends State<AuthPasswordTextField> {
         controller: widget.controller,
         obscureText: obscure,
         style: widget.style,
+        enabled: widget.enabled,
         decoration: InputDecoration(
           suffixIcon: IconButton(
               onPressed: () {

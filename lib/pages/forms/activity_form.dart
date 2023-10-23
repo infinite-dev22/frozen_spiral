@@ -137,7 +137,7 @@ class _ActivityFormState extends State<ActivityForm> {
                         const SizedBox(height: 10),
                         if (file != null)
                           MultiSelectDropDown(
-                            showClearIcon: true,
+                            showClearIcon: true,hint: 'Notify',
                             onOptionSelected: (options) {
                               for (var element in options) {
                                 emails.add(element.value!);
@@ -151,7 +151,6 @@ class _ActivityFormState extends State<ActivityForm> {
                             selectionType: SelectionType.multi,
                             chipConfig:
                                 const ChipConfig(wrapType: WrapType.wrap),
-                            dropdownHeight: 300,
                             borderColor: AppColors.white,
                             optionTextStyle: const TextStyle(fontSize: 16),
                             selectedOptionIcon: const Icon(Icons.check_circle),
@@ -233,21 +232,21 @@ class _ActivityFormState extends State<ActivityForm> {
                   Navigator.pop(context);
                 },
                 onSearch: (value) {
-                  setState(() {
-                    searchedList.clear();
-                    if (value.length > 2) {
-                      if (files.isNotEmpty) {
-                        isLoading = false;
-                        searchedList.addAll(files.where((smartFile) => smartFile
-                            .fileName
-                            .toLowerCase()
-                            .contains(value.toLowerCase())));
-                      } else {
-                        _reloadFiles();
-                        isLoading = true;
-                      }
+                  searchedList.clear();
+                  if (value.length > 2) {
+                    if (files.isNotEmpty) {
+                      isLoading = false;
+                      searchedList.addAll(files.where((smartFile) => smartFile
+                          .fileName
+                          .toLowerCase()
+                          .contains(value.toLowerCase())));
+                      setState(() {});
+                    } else {
+                      _reloadFiles();
+                      isLoading = true;
+                      setState(() {});
                     }
-                  });
+                  }
                 },
                 isLoading: isLoading,
               );
@@ -275,21 +274,21 @@ class _ActivityFormState extends State<ActivityForm> {
                   _onTapSearchedActivity(value!);
                 },
                 onSearch: (value) {
-                  setState(() {
-                    searchedList.clear();
-                    if (value.length > 2) {
-                      if (activities.isNotEmpty) {
-                        isLoading = false;
-                        searchedList.addAll(activities.where((activity) =>
-                            activity.name
-                                .toLowerCase()
-                                .contains(value.toLowerCase())));
-                      } else {
-                        _reloadActivities();
-                        isLoading = true;
-                      }
+                  searchedList.clear();
+                  if (value.length > 2) {
+                    if (activities.isNotEmpty) {
+                      isLoading = false;
+                      searchedList.addAll(activities.where((activity) =>
+                          activity.name
+                              .toLowerCase()
+                              .contains(value.toLowerCase())));
+                      setState(() {});
+                    } else {
+                      _reloadActivities();
+                      isLoading = true;
+                      setState(() {});
                     }
-                  });
+                  }
                 },
                 isLoading: isLoading,
               );

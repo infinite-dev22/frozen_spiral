@@ -258,7 +258,7 @@ Widget scheduleViewBuilder(
   return Stack(
     children: <Widget>[
       Image(
-          image: ExactAssetImage('images/$monthName.png'),
+          image: ExactAssetImage('assets/images/calendar_images/$monthName.png'),
           fit: BoxFit.cover,
           width: details.bounds.width,
           height: details.bounds.height),

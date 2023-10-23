@@ -5,7 +5,12 @@ import 'package:intl/intl.dart';
 import '../theme/color.dart';
 
 class DateTimeAccordion extends StatefulWidget {
-  const DateTimeAccordion({Key? key, required this.name, required this.dateController, required this.timeController}) : super(key: key);
+  const DateTimeAccordion(
+      {Key? key,
+      required this.name,
+      required this.dateController,
+      required this.timeController})
+      : super(key: key);
 
   final String name;
   final TextEditingController dateController;
@@ -69,8 +74,7 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
                           )
                         : CupertinoDatePicker(
                             mode: CupertinoDatePickerMode.time,
-                            initialDateTime:
-                                DateTime.now(),
+                            initialDateTime: DateTime.now(),
                             onDateTimeChanged: (DateTime newTime) {
                               setState(() {
                                 selectedTime =
@@ -187,8 +191,388 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
   }
 }
 
+class DoubleDateTimeAccordion extends StatefulWidget {
+  const DoubleDateTimeAccordion(
+      {Key? key,
+      required this.startName,
+      required this.endName,
+      required this.startDateController,
+      required this.startTimeController,
+      required this.endDateController,
+      required this.endTimeController})
+      : super(key: key);
+
+  final String startName;
+  final String endName;
+  final TextEditingController startDateController;
+  final TextEditingController startTimeController;
+  final TextEditingController endDateController;
+  final TextEditingController endTimeController;
+
+  @override
+  State<DoubleDateTimeAccordion> createState() =>
+      _DoubleDateTimeAccordionState();
+}
+
+class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
+  bool isStartDate = false;
+  bool isStartTime = false;
+  bool isEndDate = false;
+  bool isEndTime = false;
+
+  late bool _showStartContent;
+  late bool _showEndContent;
+
+  late double _height = 200;
+
+  DateTime now = DateTime.now();
+
+  String startSelectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+  String startSelectedTime = DateFormat('h:mm a').format(DateTime.now());
+  String endSelectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+  String endSelectedTime =
+      DateFormat('h:mm a').format(DateTime.now().add(const Duration(hours: 1)));
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Card(
+            color: AppColors.white,
+            elevation: 0,
+            child: Column(children: [
+              _buildStartTimeField(startSelectedDate, startSelectedTime),
+              // Show or hide the content based on the state
+              _showStartContent
+                  ? Container(
+                      height: _height,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 15),
+                      child: (isStartDate)
+                          ? CalendarDatePicker(
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(DateTime.now().year),
+                              lastDate: DateTime(DateTime.now().year + 99),
+                              onDateChanged: (DateTime newDate) {
+                                setState(() {
+                                  if (isStartDate) {
+                                    startSelectedDate = DateFormat('dd/MM/yyyy')
+                                        .format(newDate);
+
+                                    widget.startDateController.text =
+                                        startSelectedDate;
+
+                                    endSelectedDate = startSelectedDate;
+                                  } else if (isEndDate) {
+                                    endSelectedDate = DateFormat('dd/MM/yyyy')
+                                        .format(newDate);
+
+                                    widget.endDateController.text =
+                                        endSelectedDate;
+                                  }
+                                });
+                              },
+                            )
+                          : CupertinoDatePicker(
+                              mode: CupertinoDatePickerMode.time,
+                              initialDateTime: DateTime.now(),
+                              onDateTimeChanged: (DateTime newTime) {
+                                setState(() {
+                                  if (isStartTime) {
+                                    startSelectedTime =
+                                        DateFormat('h:mm a').format(newTime);
+                                    widget.endDateController.text =
+                                        endSelectedTime;
+
+                                    endSelectedTime = DateFormat('h:mm a')
+                                        .format(newTime
+                                        .add(const Duration(hours: 1)));
+                                  } else if (isEndTime) {
+                                    endSelectedDate =
+                                        DateFormat('h:mm a').format(newTime);
+                                    widget.endTimeController.text =
+                                        endSelectedTime;
+                                  }
+                                });
+                              },
+                            ))
+                  : Container()
+            ]),
+          ),
+          const Divider(indent: 5, endIndent: 5,height: 0),
+          Card(
+            color: AppColors.white,
+            elevation: 0,
+            child: Column(children: [
+              _buildEndTimeField(endSelectedDate, endSelectedTime),
+              // Show or hide the content based on the state
+              _showEndContent
+                  ? Container(
+                      height: _height,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 15),
+                      child: (isEndDate)
+                          ? CalendarDatePicker(
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(DateTime.now().year),
+                              lastDate: DateTime(DateTime.now().year + 99),
+                              onDateChanged: (DateTime newDate) {
+                                setState(() {
+                                  if (isStartDate) {
+                                    startSelectedDate = DateFormat('dd/MM/yyyy')
+                                        .format(newDate);
+                                    widget.startDateController.text =
+                                        startSelectedDate;
+                                  } else if (isEndDate) {
+                                    endSelectedDate = DateFormat('dd/MM/yyyy')
+                                        .format(newDate);
+                                    widget.endDateController.text =
+                                        endSelectedDate;
+                                  }
+                                });
+                              },
+                            )
+                          : CupertinoDatePicker(
+                              mode: CupertinoDatePickerMode.time,
+                              initialDateTime: DateTime.now(),
+                              onDateTimeChanged: (DateTime newTime) {
+                                setState(() {
+                                  if (isEndDate) {
+                                    startSelectedTime =
+                                        DateFormat('h:mm a').format(newTime);
+                                    widget.endDateController.text =
+                                        endSelectedTime;
+                                  } else if (isEndDate) {
+                                    endSelectedDate =
+                                        DateFormat('h:mm a').format(newTime);
+                                    widget.endTimeController.text =
+                                        endSelectedTime;
+                                  }
+                                });
+                              },
+                            ))
+                  : Container()
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildStartTimeField(String startDate, String startTime) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(widget.startName),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 40,
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() {
+                          isStartDate = true;
+                          _showEndContent = false;
+
+                          if (_showStartContent && isStartTime) {
+                            isStartTime = false;
+                            _height = 280;
+                            _showStartContent = true;
+                            return;
+                          }
+
+                          isStartTime = false;
+                          _height = 280;
+                          _showStartContent = !_showStartContent;
+                        });
+                      },
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) => AppColors.appBgColor)),
+                      child: Text(
+                        startDate,
+                        style: const TextStyle(color: AppColors.darker),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    height: 40,
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() {
+                          isStartTime = true;
+                          _showEndContent = false;
+
+                          if (_showStartContent && isStartDate) {
+                            isStartDate = false;
+                            _showStartContent = true;
+                            _height = 200;
+                            return;
+                          }
+
+                          isStartDate = false;
+                          _height = 200;
+                          _showStartContent = !_showStartContent;
+                        });
+                      },
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) => AppColors.appBgColor)),
+                      child: Text(
+                        startTime,
+                        style: const TextStyle(color: AppColors.darker),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildEndTimeField(String endDate, String endTime) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(widget.endName),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 40,
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() {
+                          isEndDate = true;
+                          _showStartContent = false;
+
+                          if (_showEndContent && isEndTime) {
+                            isEndTime = false;
+                            _height = 280;
+                            _showEndContent = true;
+                            return;
+                          }
+
+                          isEndTime = false;
+                          _height = 280;
+                          _showEndContent = !_showEndContent;
+                        });
+                      },
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) => AppColors.appBgColor)),
+                      child: Text(
+                        endDate,
+                        style: const TextStyle(color: AppColors.darker),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    height: 40,
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() {
+                          isEndTime = true;
+                          _showStartContent = false;
+
+                          if (_showEndContent && isEndDate) {
+                            isEndDate = false;
+                            _showEndContent = true;
+                            _height = 200;
+                            return;
+                          }
+
+                          isEndDate = false;
+                          _height = 200;
+                          _showEndContent = !_showEndContent;
+                        });
+                      },
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) => AppColors.appBgColor)),
+                      child: Text(
+                        endTime,
+                        style: const TextStyle(color: AppColors.darker),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.startDateController.text = startSelectedDate;
+    widget.startTimeController.text = startSelectedTime;
+    widget.endDateController.text = endSelectedDate;
+    widget.endTimeController.text = endSelectedTime;
+    _showStartContent = false;
+    _showEndContent = false;
+  }
+}
+
 class DateTimeAccordion2 extends StatefulWidget {
-  const DateTimeAccordion2({Key? key, required this.dateController, required this.startTimeController, required this.endTimeController}) : super(key: key);
+  const DateTimeAccordion2(
+      {Key? key,
+      required this.dateController,
+      required this.startTimeController,
+      required this.endTimeController})
+      : super(key: key);
 
   final TextEditingController dateController;
   final TextEditingController startTimeController;
@@ -249,8 +633,8 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                               setState(() {
                                 selectedStartTime =
                                     DateFormat('h:mm a').format(newTime);
-                                widget.startTimeController.text = selectedStartTime;
-
+                                widget.startTimeController.text =
+                                    selectedStartTime;
                               });
                             },
                           )
@@ -467,7 +851,7 @@ class _DateAccordionState extends State<DateAccordion> {
       },
       child: Container(
         height: 50,
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.fromLTRB(15, 5, 8, 5),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(10),
@@ -480,11 +864,10 @@ class _DateAccordionState extends State<DateAccordion> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Icon(
-                    _showContent
-                        ? Icons.keyboard_arrow_up_rounded
-                        : Icons.keyboard_arrow_down_rounded,
-                    size: 18),
-                const SizedBox(width: 10),
+                  _showContent ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                  size: 25,
+                  color: Colors.black45,
+                ),
               ],
             ),
           ],

@@ -15,7 +15,10 @@ class ActivitiesPage extends StatefulWidget {
 }
 
 class _ActivitiesPageState extends State<ActivitiesPage> {
+  TextEditingController filterController = TextEditingController();
+
   List<SmartActivity> activities = List.empty(growable: true);
+  List<SmartActivity> filteredActivities = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +33,8 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
           searchable: true,
           filterable: true,
           search: 'activities',
+          filterController: filterController,
+          onChanged: _searchActivities,
         ),
       ),
       body: _buildBody(),
@@ -37,25 +42,61 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
   }
 
   _buildBody() {
-    return ListView.builder(
-      padding: const EdgeInsets.only(
-        left: 10,
-        top: 16,
-        right: 10,
-        bottom: 80,
-      ),
-      itemCount: activities.length,
-      itemBuilder: (context, index) {
-        return ActivityItem(
-          name: activities[index].name,
-          date: activities[index].activityDate ?? 'Null',
-          doneBy:
-              '${currentUser.firstName} ${currentUser.middleName ?? ''} ${currentUser.lastName}',
-          padding: 20,
-          color: Colors.white,
-        );
-      },
-    );
+    return (filteredActivities.isEmpty)
+        ? _buildNonSearchedBody()
+        : _buildSearchedBody();
+  }
+
+  _buildNonSearchedBody() {
+    return (activities.isNotEmpty)
+        ? ListView.builder(
+            padding: const EdgeInsets.only(
+              left: 10,
+              top: 16,
+              right: 10,
+              bottom: 80,
+            ),
+            itemCount: activities.length,
+            itemBuilder: (context, index) {
+              return ActivityItem(
+                name: activities[index].name,
+                date: activities[index].activityDate ?? 'Null',
+                doneBy:
+                    '${currentUser.firstName} ${currentUser.middleName ?? ''} ${currentUser.lastName}',
+                padding: 20,
+                color: Colors.white,
+              );
+            },
+          )
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
+  }
+
+  _buildSearchedBody() {
+    return (filteredActivities.isNotEmpty)
+        ? ListView.builder(
+            padding: const EdgeInsets.only(
+              left: 10,
+              top: 16,
+              right: 10,
+              bottom: 80,
+            ),
+            itemCount: filteredActivities.length,
+            itemBuilder: (context, index) {
+              return ActivityItem(
+                name: filteredActivities[index].name,
+                date: filteredActivities[index].activityDate ?? 'Null',
+                doneBy:
+                    '${currentUser.firstName} ${currentUser.middleName ?? ''} ${currentUser.lastName}',
+                padding: 20,
+                color: Colors.white,
+              );
+            },
+          )
+        : const Center(
+            child: Text('No result found'),
+          );
   }
 
   @override
@@ -67,6 +108,16 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
 
   Future<void> _setUpData() async {
     activities = await SmartCaseApi.fetchAllActivities(currentUser.token);
+    filterController.text == 'Name';
     setState(() {});
+  }
+
+  _searchActivities(String value) {
+    filteredActivities.clear();
+    if (filterController.text == 'Name') {
+      filteredActivities.addAll(activities.where((smartActivity) =>
+          smartActivity.getName().toLowerCase().contains(value.toLowerCase())));
+      setState(() {});
+    }
   }
 }
