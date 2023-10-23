@@ -1,57 +1,5 @@
 import 'package:smart_case/models/smart_model.dart';
 
-class SmartRequisition {
-  final String date;
-  final String amount;
-  final String payoutAmount;
-  final String description;
-  final int employeeId;
-  final int supervisorId;
-  final int requisitionStatusId;
-  final int requisitionCategoryId;
-  final int currencyId;
-
-  SmartRequisition({
-    required this.date,
-    required this.amount,
-    required this.payoutAmount,
-    required this.description,
-    required this.employeeId,
-    required this.supervisorId,
-    required this.requisitionStatusId,
-    required this.requisitionCategoryId,
-    required this.currencyId,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'date': date,
-      'amount': amount,
-      'payout_amount': payoutAmount,
-      'description': description,
-      'employee_id': employeeId,
-      'supervisor_id': supervisorId,
-      'requisition_status_id': requisitionStatusId,
-      'requisition_category_id': requisitionCategoryId,
-      'currency_id': currencyId,
-    };
-  }
-
-  factory SmartRequisition.fromJson(Map<String, dynamic> doc) {
-    return SmartRequisition(
-      date: doc['date'],
-      amount: doc['amount'].toString(),
-      payoutAmount: doc['payout_amount'].toString(),
-      description: doc['description'],
-      employeeId: doc['employee_id'],
-      supervisorId: doc['supervisor_id'],
-      requisitionStatusId: doc['requisition_status_id'],
-      requisitionCategoryId: doc['requisition_category_id'],
-      currencyId: doc['currency_id'],
-    );
-  }
-}
-
 class SmartRequisitionCategory extends SmartModel {
   final int id;
   final String name;
@@ -83,5 +31,65 @@ class SmartRequisitionCategory extends SmartModel {
   @override
   String getName() {
     return name;
+  }
+}
+
+class SmartRequisition {
+  final String date;
+  final List<String> amounts;
+  final String payoutAmount;
+  final List<String> descriptions;
+  final int employeeId;
+  final int supervisorId;
+  final int requisitionStatusId;
+  final int requisitionCategoryId;
+  final List<String> requisitionCategoryIds;
+  final List<String> caseFileIds;
+  final int currencyId;
+
+  SmartRequisition({
+    required this.date,
+    required this.amounts,
+    required this.payoutAmount,
+    required this.descriptions,
+    required this.employeeId,
+    required this.supervisorId,
+    required this.requisitionStatusId,
+    required this.requisitionCategoryId,
+    required this.requisitionCategoryIds,
+    required this.caseFileIds,
+    required this.currencyId,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date,
+      'amounts': amounts,
+      'payout_amount': payoutAmount,
+      'descriptions': descriptions,
+      'employee_id': employeeId,
+      'supervisor_id': supervisorId,
+      'requisition_status_id': requisitionStatusId,
+      'requisition_category_id': requisitionCategoryId,
+      'requisition_category_ids': requisitionCategoryIds,
+      'case_file_ids': caseFileIds,
+      'currency_id': currencyId,
+    };
+  }
+
+  factory SmartRequisition.fromJson(Map<String, dynamic> map) {
+    return SmartRequisition(
+      date: map['date'],
+      amounts: map['amounts'],
+      payoutAmount: map['payout_amount'],
+      descriptions: map['descriptions'],
+      employeeId: map['employee_id'],
+      supervisorId: map['supervisor_id'],
+      requisitionStatusId: map['requisition_status_id'],
+      requisitionCategoryId: map['requisition_category_id'],
+      requisitionCategoryIds: map['requisition_category_ids'],
+      caseFileIds: map['case_file_ids'],
+      currencyId: map['currency_id'],
+    );
   }
 }

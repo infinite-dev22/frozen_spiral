@@ -17,7 +17,8 @@ import '../../widgets/form_title.dart';
 class RequisitionForm extends StatefulWidget {
   const RequisitionForm({
     super.key,
-    this.onSave, required this.currencies,
+    this.onSave,
+    required this.currencies,
   });
 
   final Function()? onSave;
@@ -314,15 +315,24 @@ class _RequisitionFormState extends State<RequisitionForm> {
 
   _submitFormData() {
     SmartRequisition smartRequisition = SmartRequisition(
-        date: dateController.text.trim(),
-        amount: amountController.text.trim(),
-        payoutAmount: financialStatus.toString(),
-        description: descriptionController.text.trim(),
-        employeeId: currentUser.getId(),
-        supervisorId: approver!.getId(),
-        requisitionStatusId: 5,
-        requisitionCategoryId: category!.getId(),
-        currencyId: currency!.getId());
+      date: dateController.text.trim(),
+      amounts: [amountController.text.trim()],
+      payoutAmount: financialStatus.toString(),
+      descriptions: [
+        descriptionController.text.trim(),
+      ],
+      employeeId: currentUser.getId(),
+      supervisorId: approver!.getId(),
+      requisitionStatusId: 5,
+      requisitionCategoryId: category!.getId(),
+      currencyId: currency!.getId(),
+      requisitionCategoryIds: [
+        category!.getId().toString(),
+      ],
+      caseFileIds: [
+        file!.getId().toString(),
+      ],
+    );
 
     SmartCaseApi.smartPost(
       'api/accounts/cases/${file!.getId()}/requisitions',

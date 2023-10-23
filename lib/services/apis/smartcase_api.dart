@@ -115,8 +115,6 @@ class SmartCaseApi {
             "Accept": "application/json",
           });
 
-      print(jsonEncode(data));
-
       if (response.statusCode == 200) {
         if (onSuccess != null) {
           onSuccess();
