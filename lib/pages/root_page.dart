@@ -4,6 +4,7 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:smart_case/services/apis/firebase_apis.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/form_title.dart';
 
@@ -86,12 +87,13 @@ class _RootPageState extends State<RootPage> {
       },
     ];
   }
+
   // It is assumed that all messages contain a data field with the key 'type'
   Future<void> setupInteractedMessage() async {
     // Get any messages which caused the application to open from
     // a terminated state.
     RemoteMessage? initialMessage =
-    await FirebaseMessaging.instance.getInitialMessage();
+        await FirebaseMessaging.instance.getInitialMessage();
 
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
@@ -106,7 +108,9 @@ class _RootPageState extends State<RootPage> {
 
   void _handleMessage(RemoteMessage message) {
     if (message.data['type'] == 'chat') {
-      Navigator.pushNamed(context, '/chat',
+      Navigator.pushNamed(
+        context,
+        '/chat',
         arguments: AlertsPage(),
       );
     }
@@ -301,6 +305,7 @@ class _RootPageState extends State<RootPage> {
   }
 
   _buildDairyForm() {
+    sendPushNotifications();
     return showModalBottomSheet(
       showDragHandle: true,
       enableDrag: true,
