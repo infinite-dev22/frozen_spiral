@@ -34,11 +34,38 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           filterController: filterController,
         ),
       ),
-      body: _buildTestBody(),
+      body: _buildBody(),
     );
   }
 
   _buildBody() {
+    return ListView.builder(
+      itemCount: requisitions.length,
+      padding: const EdgeInsets.all(10),
+      itemBuilder: (context, index) {
+        return RequisitionItem(
+          fileName: requisitions[index]['case_file']['file_name'],
+          requisitionNumber: requisitions[index]['number'],
+          dateCreated: requisitions[index]['date'],
+          color: AppColors.white,
+          padding: 10,
+          status: requisitions[index]['requisition_actions'][0]
+              ['requisition_status']['name'],
+          category: requisitions[index]['requisition_category']['name'],
+          description: requisitions[index]['description'],
+          requesterName:
+              "${requisitions[index]['employee']['first_name']} ${requisitions[index]['employee']['last_name']}",
+          supervisorName:
+              "${requisitions[index]['supervisor']['first_name']} ${requisitions[index]['supervisor']['last_name']}",
+          amount: requisitions[index]['amount'],
+          statusCode: requisitions[index]['requisition_actions'][0]
+              ['requisition_status']['code'],
+          isMine: requisitions[index]['isMine'],
+          canApprove: requisitions[index]['canApprove'],
+          canPay: requisitions[index]['canPay'],
+        );
+      },
+    );
     return const Center(
       child: Text(
         'Your requisitions appear here',
@@ -47,22 +74,22 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     );
   }
 
-  _buildTestBody() {
-    return ListView(padding: EdgeInsets.all(10), children: [
-      RequisitionItem(
-          fileName: "fileName",
-          requisitionNumber: "requisitionNumber",
-          dateCreated: "dateCreated",
-          color: AppColors.white,
-          padding: 10,
-          status: "status",
-          category: "category",
-          description: "description",
-          requesterName: "requesterName",
-          supervisorName: "supervisorName",
-          amount: "amount"),
-    ]);
-  }
+  // _buildTestBody() {
+  //   return ListView(padding: const EdgeInsets.all(10), children: [
+  //     const RequisitionItem(
+  //         fileName: "fileName",
+  //         requisitionNumber: "requisitionNumber",
+  //         dateCreated: "dateCreated",
+  //         color: AppColors.white,
+  //         padding: 10,
+  //         status: "status",
+  //         category: "category",
+  //         description: "description",
+  //         requesterName: "requesterName",
+  //         supervisorName: "supervisorName",
+  //         amount: "amount"),
+  //   ]);
+  // }
 
   Future<void> _setUpData() async {
     Map requisitionMap = await SmartCaseApi.smartFetch(
@@ -72,7 +99,6 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
       this.requisitions = requisitions!;
       requisitions = null;
     });
-    setState(() {});
 
     filterController.text == 'Name';
   }
@@ -89,7 +115,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     if (filterController.text == 'Name') {
       filteredRequisitions.addAll(requisitions.where((requisitionMap) =>
           requisitionMap['case_file']['file_name']
-               .toLowerCase()
+              .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     }

@@ -19,7 +19,9 @@ class RequisitionItem extends StatelessWidget {
       required this.supervisorName,
       required this.amount,
       this.financialStatus,
-      this.showFinancialStatus = false});
+      this.showFinancialStatus = false,
+      required this.statusCode,
+      required this.isMine, this.canApprove, this.canPay});
 
   final String fileName;
   final String requisitionNumber;
@@ -30,7 +32,11 @@ class RequisitionItem extends StatelessWidget {
   final String amount;
   final String? financialStatus;
   final String dateCreated;
+  final String statusCode;
+  final String? canApprove;
   final bool showFinancialStatus;
+  final bool isMine;
+  final bool? canPay;
 
   // final String clientName;
   final String status;
@@ -74,6 +80,7 @@ class RequisitionItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                if (canApprove != null)
                 TextButton(
                   onPressed: () {},
                   child: Row(
@@ -88,6 +95,7 @@ class RequisitionItem extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (canPay != null && canPay!)
                 TextButton(
                   onPressed: () {},
                   child: Row(
@@ -102,20 +110,21 @@ class RequisitionItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(CupertinoIcons.pencil_ellipsis_rectangle),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text('Edit')
-                    ],
+                if (isMine && statusCode == 'SUBMITTED')
+                  TextButton(
+                    onPressed: () {},
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(CupertinoIcons.pencil_ellipsis_rectangle),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text('Edit')
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           ),

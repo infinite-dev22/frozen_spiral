@@ -107,12 +107,17 @@ class _WelcomePageState extends State<WelcomePage> {
               const SizedBox(
                 height: 10,
               ),
-              (enabled) ? WideButton(
-                name: 'Login',
-                onPressed: _onPressed,
-                bgColor: AppColors.gray,
-                textStyle: const TextStyle(color: Colors.white, fontSize: 20),
-              ) : const CircularProgressIndicator(color: AppColors.gray,),
+              (enabled)
+                  ? WideButton(
+                      name: 'Login',
+                      onPressed: _onPressed,
+                      bgColor: AppColors.gray,
+                      textStyle:
+                          const TextStyle(color: Colors.white, fontSize: 20),
+                    )
+                  : const CircularProgressIndicator(
+                      color: AppColors.gray,
+                    ),
               const SizedBox(
                 height: 10,
               ),
@@ -240,8 +245,8 @@ class _WelcomePageState extends State<WelcomePage> {
       AuthApis.signInUser(
           currentUserEmail != '' && currentUserEmail != null
               ? currentUserEmail!
-              : emailController.text,
-          passwordController.text,
+              : emailController.text.trim(),
+          passwordController.text.trim(),
           onSuccess: _signUserIn,
           onNoUser: _handleWrongEmail,
           onWrongPassword: _handleWrongPass,
@@ -258,7 +263,7 @@ class _WelcomePageState extends State<WelcomePage> {
     Navigator.popUntil(context, (route) => false);
     Navigator.pushNamed(context, '/root');
 
-    await storage.write(key: 'email', value: emailController.text);
+    await storage.write(key: 'email', value: emailController.text.trim());
     await storage.write(key: 'name', value: currentUser.firstName);
     await storage.write(key: 'image', value: currentUser.avatar);
   }
@@ -298,11 +303,13 @@ class _WelcomePageState extends State<WelcomePage> {
     String? email = await storage.read(key: 'email');
     String? name = await storage.read(key: 'name');
     String? image = await storage.read(key: 'image');
+    String? fcmToken = await storage.read(key: 'fcmToken');
 
     setState(() {
       currentUserEmail = email;
       currentUsername = name;
       currentUserImage = image;
+      currentUserFcmToken = fcmToken;
     });
   }
 

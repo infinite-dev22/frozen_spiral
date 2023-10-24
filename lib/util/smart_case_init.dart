@@ -5,5 +5,6 @@ late CurrentSmartUser currentUser;
 String? currentUserImage;
 String? currentUserEmail;
 String? currentUsername;
+String? currentUserFcmToken;
 
 const storage = FlutterSecureStorage();

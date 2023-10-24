@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:double_back_to_close/double_back_to_close.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:smart_case/theme/color.dart';
@@ -84,6 +85,31 @@ class _RootPageState extends State<RootPage> {
         "page": const LocatorPage(),
       },
     ];
+  }
+  // It is assumed that all messages contain a data field with the key 'type'
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+    await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    if (message.data['type'] == 'chat') {
+      Navigator.pushNamed(context, '/chat',
+        arguments: AlertsPage(),
+      );
+    }
   }
 
   @override
@@ -329,6 +355,10 @@ class _RootPageState extends State<RootPage> {
 
   @override
   void initState() {
+    // Run code required to handle interacted messages in an async function
+    // as initState() must not be async
+    setupInteractedMessage();
+
     _loadCurrencies();
 
     super.initState();

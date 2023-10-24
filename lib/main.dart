@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/pages/activities_page.dart';
 import 'package:smart_case/pages/diary_page.dart';
@@ -12,9 +14,23 @@ import 'package:smart_case/pages/requisitions_page.dart';
 import 'package:smart_case/pages/root_page.dart';
 import 'package:smart_case/pages/tasks_page.dart';
 import 'package:smart_case/pages/welcome_page.dart';
+import 'package:smart_case/services/apis/firebase_apis.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await FirebaseApi().initPushNotification();
+  appFCMInit();
+  handleForegroundMasseges();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
   runApp(const MyApp());
 }
 

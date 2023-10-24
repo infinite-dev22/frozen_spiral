@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
@@ -13,11 +14,10 @@ class AuthApis {
       Function()? onError,
       Function(dynamic e)? onErrors}) async {
     var client = RetryClient(http.Client());
-
     try {
       var response = await client
           .post(Uri.https('app.smartcase.co.ug', 'api/login'), body: {
-        'email': email /*, 'password': password*/
+        'email': email,
       });
       var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       bool success = decodedResponse['success'] as bool;
@@ -40,6 +40,20 @@ class AuthApis {
           if (userSuccess) {
             currentUser = CurrentSmartUser.fromJson(userDataDecodedResponse);
 
+            // await SmartCaseApi.smartPost(
+            //     'api/save/fcm/token', currentUser.token, {
+            //   'fcm_token': currentUserFcmToken,
+            //   'email': email
+            // });
+            await client.post(
+              Uri.parse('https://app.smartcase.co.ug/api/save/fcm/token'),
+              body: jsonEncode(
+                  {'fcm_token': currentUserFcmToken, 'email': email}),
+                headers: {
+                  HttpHeaders.authorizationHeader: "Bearer ${currentUser.token}",
+                  "content-Type": "application/json",
+                  "Accept": "application/json",
+                });
             if (onSuccess != null) {
               onSuccess();
             }
@@ -71,16 +85,18 @@ class AuthApis {
           onError();
         }
       }
-    } catch (e) {
-      if (onError != null) {
-        onError();
-      }
-
-      // For testing purposes only
-      if (onErrors != null) {
-        onErrors(e);
-      }
-    } finally {
+    }
+    // catch (e) {
+    //   if (onError != null) {
+    //     onError();
+    //   }
+    //
+    //   // For testing purposes only
+    //   if (onErrors != null) {
+    //     onErrors(e);
+    //   }
+    // }
+    finally {
       client.close();
     }
     return null;

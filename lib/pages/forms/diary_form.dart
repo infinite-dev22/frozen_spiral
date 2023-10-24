@@ -117,6 +117,7 @@ class _DiaryFormState extends State<DiaryForm> {
                       const SizedBox(height: 10),
                       MultiSelectDropDown(
                         showClearIcon: true,
+                        hint: 'Select contact to notify',
                         onOptionSelected: (options) {
                           for (var element in options) {
                             emails.add(element.value!);
