@@ -1,6 +1,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
+import '../models/smart_model.dart';
+import '../theme/color.dart';
 import 'custom_icon_holder.dart';
 import 'custom_images/custom_elevated_image.dart';
 
@@ -115,6 +117,90 @@ class CustomDropdownAction extends StatelessWidget {
           offset: const Offset(-60, -6),
         ),
       ),
+    );
+  }
+}
+
+class CustomDropdown<T extends SmartModel> extends StatelessWidget {
+  const CustomDropdown(
+      {super.key,
+      required this.hintText,
+      required this.menuItems,
+      this.onChanged,
+      this.defaultValue});
+
+  final String hintText;
+  final List<T> menuItems;
+  final T? defaultValue;
+  final Function(T?)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 50,
+          child: DropdownButtonFormField2<T>(
+            value: defaultValue,
+            isExpanded: true,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+              filled: true,
+              fillColor: AppColors.textBoxColor,
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            hint: Text(
+              'Select $hintText',
+              style:
+                  const TextStyle(color: AppColors.inActiveColor, fontSize: 15),
+            ),
+            items: menuItems
+                .map((item) => DropdownMenuItem<T>(
+                      value: item,
+                      child: Text(
+                        item.getName(),
+                        style: const TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    ))
+                .toList(),
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a $hintText';
+              }
+              return null;
+            },
+            onChanged: onChanged,
+            buttonStyleData: const ButtonStyleData(
+              padding: EdgeInsets.only(right: 8),
+            ),
+            iconStyleData: const IconStyleData(
+              icon: Icon(
+                Icons.arrow_drop_down,
+                color: Colors.black45,
+              ),
+              iconSize: 24,
+            ),
+            dropdownStyleData: DropdownStyleData(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            menuItemStyleData: const MenuItemStyleData(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+      ],
     );
   }
 }

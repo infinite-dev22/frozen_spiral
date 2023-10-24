@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/services/apis/auth_apis.dart';
 import 'package:smart_case/theme/color.dart';
@@ -17,13 +16,16 @@ class AppBarContent extends StatelessWidget {
       this.filterable = false,
       this.search = '',
       this.signOut,
-      this.isNetwork = false});
+      this.isNetwork = false,
+      this.onChanged, this.filterController});
 
   final bool searchable;
   final bool filterable;
   final bool isNetwork;
   final String search;
   final Function()? signOut;
+  final Function(String)? onChanged;
+  final TextEditingController? filterController;
 
   final List<String> filters = [
     "Name",
@@ -62,11 +64,7 @@ class AppBarContent extends StatelessWidget {
                   ? CustomTextBox(
                       hint: "Search $search",
                       prefix: const Icon(Icons.search, color: Colors.grey),
-                      onChanged: (value) {
-                        if (kDebugMode) {
-                          print(value);
-                        }
-                      },
+                      onChanged: onChanged,
                       autoFocus: false,
                     )
                   : const CustomImage(
@@ -87,7 +85,9 @@ class AppBarContent extends StatelessWidget {
                     menuItems: filters,
                     bgColor: Colors.white,
                     icon: Icons.filter_list_rounded,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      filterController!.text = value!;
+                    },
                   )
                 : isNetwork
                     ? CustomDropdownAction(

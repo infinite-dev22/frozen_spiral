@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:smart_case/widgets/requisition/reuisition_item_status.dart';
 
 import '../../theme/color.dart';
@@ -44,7 +44,12 @@ class RequisitionItem extends StatelessWidget {
 
   Widget _buildBody() {
     return Container(
-      padding: EdgeInsets.all(padding),
+      padding: EdgeInsets.fromLTRB(
+        padding,
+        0,
+        padding,
+        padding,
+      ),
       margin: EdgeInsets.only(bottom: padding),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
@@ -63,22 +68,56 @@ class RequisitionItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () {},
-                child: Text('Process'),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: Text('Pay out'),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: Text('Edit'),
-              ),
-            ],
+          SizedBox(
+            height: 33,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {},
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.recycling_rounded),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text('Process')
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.money_rounded),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text('Pay out')
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(CupertinoIcons.pencil_ellipsis_rectangle),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text('Edit')
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(
             height: 10,
