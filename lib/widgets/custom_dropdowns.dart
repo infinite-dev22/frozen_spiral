@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
 
 import '../models/smart_model.dart';
 import '../theme/color.dart';
@@ -121,8 +122,8 @@ class CustomDropdownAction extends StatelessWidget {
   }
 }
 
-class CustomDropdown<T extends SmartModel> extends StatelessWidget {
-  const CustomDropdown(
+class SearchableDropDown<T extends SmartModel> extends StatelessWidget {
+  const SearchableDropDown(
       {super.key,
       required this.hintText,
       required this.menuItems,
@@ -140,11 +141,84 @@ class CustomDropdown<T extends SmartModel> extends StatelessWidget {
   }
 
   _buildBody() {
+    return SearchableDropdown<T>(
+      backgroundDecoration: (child) => Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: child,
+      ),
+      trailingIcon: const Icon(
+        Icons.arrow_drop_down,
+        size: 25,
+        color: Colors.black45,
+      ),
+      hintText: Text('Select $hintText'),
+      margin: const EdgeInsets.all(15),
+      items: menuItems
+          .map((item) => SearchableDropdownMenuItem(
+              value: item,
+              label: item.getName(),
+              child: Text(item.getName())))
+          .toList(),
+      onChanged: onChanged,
+      value: defaultValue,searchHintText: 'Search $hintText',
+    );
+  }
+}
+
+class CustomDropdown<T extends SmartModel> extends StatelessWidget {
+  CustomDropdown(
+      {super.key,
+      required this.hintText,
+      required this.menuItems,
+      this.onChanged,
+      this.defaultValue});
+
+  final String hintText;
+  final List<T> menuItems;
+  final T? defaultValue;
+  final Function(T?)? onChanged;
+
+  TextEditingController searchController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
     return Column(
       children: [
         SizedBox(
           height: 50,
           child: DropdownButtonFormField2<T>(
+            dropdownSearchData: DropdownSearchData(
+              searchController: searchController,
+              searchInnerWidget: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: 50,
+                  child: TextFormField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search $hintText',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              searchInnerWidgetHeight: 50,
+              searchMatchFn: (item, searchValue) => item.value
+                  .toString()
+                  .toLowerCase()
+                  .contains(searchValue.toLowerCase()),
+            ),
             value: defaultValue,
             isExpanded: true,
             decoration: InputDecoration(

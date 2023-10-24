@@ -305,7 +305,6 @@ class _RootPageState extends State<RootPage> {
   }
 
   _buildDairyForm() {
-    sendPushNotifications();
     return showModalBottomSheet(
       showDragHandle: true,
       enableDrag: true,

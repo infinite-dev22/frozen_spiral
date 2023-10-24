@@ -61,14 +61,8 @@ class _RequisitionFormState extends State<RequisitionForm> {
           onSave: _submitFormData,
         ),
         Expanded(
-          child: NotificationListener(
-            onNotification: (notification) {
-              if (notification is ScrollEndNotification) {
-                FocusManager.instance.primaryFocus?.unfocus();
-                return true;
-              }
-              return false;
-            },
+          child: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
@@ -110,7 +104,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
                           : (financialStatus < 0)
                               ? AppColors.red
                               : AppColors.blue),
-                CustomDropdown<SmartUser>(
+                SearchableDropDown<SmartUser>(
                   hintText: 'approver',
                   menuItems: approvers,
                   onChanged: _onTapSearchedApprover,
@@ -243,6 +237,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
   }
 
   _loadApprovers() async {
+    approvers.clear();
     Map usersMap =
         await SmartCaseApi.smartFetch('api/hr/employees', currentUser.token);
 
@@ -309,6 +304,8 @@ class _RequisitionFormState extends State<RequisitionForm> {
     _loadFiles();
     _loadApprovers();
     _loadCategories();
+    currency =
+        widget.currencies.firstWhere((currency) => currency.code == 'UGX');
 
     super.initState();
   }
