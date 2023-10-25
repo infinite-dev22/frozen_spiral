@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_currency.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
@@ -32,6 +33,7 @@ class RequisitionForm extends StatefulWidget {
 class _RequisitionFormState extends State<RequisitionForm> {
   final globalKey = GlobalKey();
   final ToastContext toast = ToastContext();
+  bool isTitleElevated = false;
 
   final TextEditingController dateController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
@@ -55,92 +57,116 @@ class _RequisitionFormState extends State<RequisitionForm> {
   }
 
   _buildBody() {
-    NumberFormat formatter = NumberFormat('###,###,###,###,###,###,###,###,###');
+    final ScrollController scrollController = ScrollController();
+    NumberFormat formatter =
+        NumberFormat('###,###,###,###,###,###,###,###,###');
 
     return Column(
       children: [
         FormTitle(
           name: 'New Requisition',
           onSave: _submitFormData,
+          isElevated: isTitleElevated,
         ),
         Expanded(
           child: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                DateAccordion(
-                  dateController: dateController,
-                ),
-                CustomGenericDropdown<SmartCurrency>(
-                    hintText: 'currency',
-                    menuItems: widget.currencies,
-                    defaultValue: widget.currencies
-                        .firstWhere((currency) => currency.code == 'UGX'),
-                    onChanged: _onTapSearchedCurrency),
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(10),
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollController.position.userScrollDirection ==
+                    ScrollDirection.reverse) {
+                  setState(() {
+                    isTitleElevated = true;
+                  });
+                } else if (scrollController.position.userScrollDirection ==
+                    ScrollDirection.forward) {
+                  if (scrollController.position.pixels ==
+                      scrollController.position.maxScrollExtent) {
+                    setState(() {
+                      isTitleElevated = false;
+                    });
+                  }
+                }
+                return true;
+              },
+              child: ListView(
+                controller: scrollController,
+                padding: const EdgeInsets.all(16),
+                children: [
+                  DateAccordion(
+                    dateController: dateController,
                   ),
-                  child: TextButton(
-                    onPressed: _showSearchFileBottomSheet,
-                    child: Text(
-                      file?.getName() ?? 'Select file',
+                  CustomGenericDropdown<SmartCurrency>(
+                      hintText: 'currency',
+                      menuItems: widget.currencies,
+                      defaultValue: widget.currencies
+                          .firstWhere((currency) => currency.code == 'UGX'),
+                      onChanged: _onTapSearchedCurrency),
+                  Container(
+                    height: 50,
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(5),
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextButton(
+                      onPressed: _showSearchFileBottomSheet,
+                      child: Text(
+                        file?.getName() ?? 'Select file',
+                      ),
                     ),
                   ),
-                ),
-                if (file != null)
-                  SmartText(
-                      value: formatter.format(financialStatus).toString(),
-                      icon: (financialStatus > 0)
-                          ? Icons.arrow_upward_rounded
-                          : (financialStatus < 0)
-                              ? Icons.arrow_downward_rounded
-                              : Icons.circle_outlined,
-                      color: (financialStatus > 0)
-                          ? AppColors.green
-                          : (financialStatus < 0)
-                              ? AppColors.red
-                              : AppColors.blue),
-                SearchableDropDown<SmartUser>(
-                  hintText: 'approver',
-                  menuItems: approvers,
-                  onChanged: _onTapSearchedApprover,
-                ),
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(10),
+                  if (file != null)
+                    SmartText(
+                        value: formatter.format(financialStatus).toString(),
+                        icon: (financialStatus > 0)
+                            ? Icons.arrow_upward_rounded
+                            : (financialStatus < 0)
+                                ? Icons.arrow_downward_rounded
+                                : Icons.circle_outlined,
+                        color: (financialStatus > 0)
+                            ? AppColors.green
+                            : (financialStatus < 0)
+                                ? AppColors.red
+                                : AppColors.blue),
+                  SearchableDropDown<SmartUser>(
+                    hintText: 'approver',
+                    menuItems: approvers,
+                    onChanged: _onTapSearchedApprover,
                   ),
-                  child: TextButton(
-                    onPressed: _showSearchCategoryBottomSheet,
-                    child: Text(
-                      category?.getName() ?? 'Select requisition category',
+                  Container(
+                    height: 50,
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(5),
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextButton(
+                      onPressed: _showSearchCategoryBottomSheet,
+                      child: Text(
+                        category?.getName() ?? 'Select requisition category',
+                      ),
                     ),
                   ),
-                ),
-                SmartCaseNumberField(
-                    hint: 'Amount', controller: amountController),
-                CustomTextArea(
-                  key: globalKey,
-                  hint: 'Description',
-                  controller: descriptionController,
-                  onTap: () {
-                    Scrollable.ensureVisible(globalKey.currentContext!);
-                  },
-                ),
-                const SizedBox(
-                    height: 300 /* MediaQuery.of(context).viewInsets.bottom */),
-              ],
+                  SmartCaseNumberField(
+                      hint: 'Amount', controller: amountController),
+                  CustomTextArea(
+                    key: globalKey,
+                    hint: 'Description',
+                    controller: descriptionController,
+                    onTap: () {
+                      Scrollable.ensureVisible(globalKey.currentContext!);
+                    },
+                  ),
+                  const SizedBox(
+                      height:
+                          300 /* MediaQuery.of(context).viewInsets.bottom */),
+                ],
+              ),
             ),
           ),
         ),

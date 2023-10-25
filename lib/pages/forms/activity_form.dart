@@ -1,5 +1,6 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:smart_case/models/smart_contact.dart';
 import 'package:smart_case/theme/color.dart';
@@ -25,6 +26,7 @@ class ActivityForm extends StatefulWidget {
 class _ActivityFormState extends State<ActivityForm> {
   final globalKey = GlobalKey();
   final ToastContext toast = ToastContext();
+  bool isTitleElevated = false;
 
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
@@ -52,11 +54,13 @@ class _ActivityFormState extends State<ActivityForm> {
   }
 
   _buildBody() {
+    final ScrollController scrollController = ScrollController();
     return Expanded(
       child: Column(
         children: [
           FormTitle(
             name: 'New Activity',
+            isElevated: isTitleElevated,
             onSave: () {
               SmartCaseApi.smartPost(
                   'api/cases/${file!.id}/activities', currentUser.token, {
@@ -83,85 +87,110 @@ class _ActivityFormState extends State<ActivityForm> {
               onTap: () {
                 FocusManager.instance.primaryFocus?.unfocus();
               },
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  Form(
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 50,
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(5),
-                          margin: const EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: TextButton(
-                            onPressed: _showSearchActivityBottomSheet,
-                            child: Text(
-                              activity?.name ?? 'Select activity status',
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (scrollNotification) {
+                  if (scrollController.position.userScrollDirection ==
+                      ScrollDirection.reverse) {
+                    setState(() {
+                      isTitleElevated = true;
+                    });
+                  } else if (scrollController.position.userScrollDirection ==
+                      ScrollDirection.forward) {
+                    if (scrollController.position.pixels ==
+                        scrollController.position.maxScrollExtent) {
+                      setState(() {
+                        isTitleElevated = false;
+                      });
+                    }
+                  }
+                  return true;
+                },
+                child: ListView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    Form(
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: TextButton(
+                              onPressed: _showSearchFileBottomSheet,
+                              child: Text(
+                                file?.fileName ?? 'Select file',
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          height: 50,
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(5),
-                          margin: const EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: TextButton(
-                            onPressed: _showSearchFileBottomSheet,
-                            child: Text(
-                              file?.fileName ?? 'Select file',
+                          Container(
+                            height: 50,
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: TextButton(
+                              onPressed: _showSearchActivityBottomSheet,
+                              child: Text(
+                                activity?.name ?? 'Select activity status',
+                              ),
                             ),
                           ),
-                        ),
-                        DateTimeAccordion2(
-                            dateController: dateController,
-                            startTimeController: startTimeController,
-                            endTimeController: endTimeController),
-                        _buildGroupedRadios(),
-                        CustomTextArea(
-                          key: globalKey,
-                          hint: 'Description',
-                          controller: descriptionController,
-                          onTap: () {
-                            Scrollable.ensureVisible(globalKey.currentContext!);
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        if (file != null)
-                          MultiSelectDropDown(
-                            showClearIcon: true,hint: 'Notify',
-                            onOptionSelected: (options) {
-                              for (var element in options) {
-                                emails.add(element.value!);
-                              }
+                          DateTimeAccordion2(
+                              dateController: dateController,
+                              startTimeController: startTimeController,
+                              endTimeController: endTimeController),
+                          _buildGroupedRadios(),
+                          CustomTextArea(
+                            key: globalKey,
+                            hint: 'Description',
+                            controller: descriptionController,
+                            onTap: () {
+                              Scrollable.ensureVisible(
+                                  globalKey.currentContext!);
                             },
-                            options: contacts
-                                .map((contact) => ValueItem(
-                                    label: '${contact.name} - ${contact.email}',
-                                    value: '${contact.name}|${contact.email}'))
-                                .toList(),
-                            selectionType: SelectionType.multi,
-                            chipConfig:
-                                const ChipConfig(wrapType: WrapType.wrap),
-                            borderColor: AppColors.white,
-                            optionTextStyle: const TextStyle(fontSize: 16),
-                            selectedOptionIcon: const Icon(Icons.check_circle),
                           ),
-                        const SizedBox(
-                            height:
-                                300 /* MediaQuery.of(context).viewInsets.bottom */),
-                      ],
+                          const SizedBox(height: 10),
+                          if (file != null)
+                            MultiSelectDropDown(
+                              showClearIcon: true,
+                              hint: 'Notify',
+                              onOptionSelected: (options) {
+                                for (var element in options) {
+                                  emails.add(element.value!);
+                                }
+                              },
+                              options: contacts
+                                  .map((contact) => ValueItem(
+                                      label:
+                                          '${contact.name} - ${contact.email}',
+                                      value:
+                                          '${contact.name}|${contact.email}'))
+                                  .toList(),
+                              selectionType: SelectionType.multi,
+                              chipConfig:
+                                  const ChipConfig(wrapType: WrapType.wrap),
+                              borderColor: AppColors.white,
+                              optionTextStyle: const TextStyle(fontSize: 16),
+                              selectedOptionIcon:
+                                  const Icon(Icons.check_circle),
+                            ),
+                          const SizedBox(
+                              height:
+                                  300 /* MediaQuery.of(context).viewInsets.bottom */),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

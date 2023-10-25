@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
+
+import '../../widgets/form_title.dart';
 
 class TaskForm extends StatefulWidget {
   const TaskForm({super.key, this.onSave});
@@ -11,6 +14,8 @@ class TaskForm extends StatefulWidget {
 }
 
 class _TaskFormState extends State<TaskForm> {
+  bool isTitleElevated = false;
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -21,20 +26,51 @@ class _TaskFormState extends State<TaskForm> {
   }
 
   _buildBody() {
-    return Expanded(
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          SmartCaseTextField(hint: 'Name', controller: nameController),
-          // CustomDropdown(list: activityList, hint: 'Priority'),
-          // CustomDropdown(list: activityList, hint: 'File'),
-          // CustomDropdown(list: activityList, hint: 'Approver'),
-          // CustomDropdown(list: activityList, hint: 'Category'),
-          SmartCaseTextField(hint: 'Amount', controller: amountController),
-          CustomTextArea(
-              hint: 'Description', controller: descriptionController),
-        ],
-      ),
+    final ScrollController scrollController = ScrollController();
+
+    return Column(
+      children: [
+        FormTitle(
+          name: 'New Task',
+          onSave: () {},
+          isElevated: isTitleElevated,
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollController.position.userScrollDirection ==
+                    ScrollDirection.reverse) {
+                  setState(() {
+                    isTitleElevated = true;
+                  });
+                } else if (scrollController.position.userScrollDirection ==
+                    ScrollDirection.forward) {
+                  if (scrollController.position.pixels ==
+                      scrollController.position.maxScrollExtent) {
+                    setState(() {
+                      isTitleElevated = false;
+                    });
+                  }
+                }
+                return true;
+              },
+              child: ListView(
+                controller: scrollController,
+                padding: const EdgeInsets.all(16),
+                children: [
+                  SmartCaseTextField(hint: 'Name', controller: nameController),
+                  SmartCaseTextField(
+                      hint: 'Amount', controller: amountController),
+                  CustomTextArea(
+                      hint: 'Description', controller: descriptionController),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -4,9 +4,7 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
-import 'package:smart_case/services/apis/firebase_apis.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/widgets/form_title.dart';
 
 import '../models/smart_currency.dart';
 import '../services/apis/smartcase_api.dart';
@@ -111,7 +109,7 @@ class _RootPageState extends State<RootPage> {
       Navigator.pushNamed(
         context,
         '/chat',
-        arguments: AlertsPage(),
+        arguments: const AlertsPage(),
       );
     }
   }
@@ -260,23 +258,17 @@ class _RootPageState extends State<RootPage> {
 
   _buildActivityForm() {
     return showModalBottomSheet(
-      showDragHandle: true,
       enableDrag: true,
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
       backgroundColor: AppColors.appBgColor,
-      builder: (context) => const Column(
-        children: [
-          ActivityForm(),
-        ],
-      ),
+      builder: (context) => const ActivityForm(),
     );
   }
 
   _buildRequisitionForm() {
     return showModalBottomSheet(
-      showDragHandle: true,
       enableDrag: true,
       isScrollControlled: true,
       useSafeArea: true,
@@ -287,26 +279,16 @@ class _RootPageState extends State<RootPage> {
 
   _buildTaskForm() {
     return showModalBottomSheet(
-      showDragHandle: true,
       enableDrag: true,
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
-      builder: (context) => Column(
-        children: [
-          FormTitle(
-            name: 'New Task',
-            onSave: () {},
-          ),
-          const TaskForm(),
-        ],
-      ),
+      builder: (context) => const TaskForm(),
     );
   }
 
   _buildDairyForm() {
     return showModalBottomSheet(
-      showDragHandle: true,
       enableDrag: true,
       isScrollControlled: true,
       useSafeArea: true,
@@ -317,31 +299,22 @@ class _RootPageState extends State<RootPage> {
 
   _buildEngagementForm() {
     return showModalBottomSheet(
-      showDragHandle: true,
       enableDrag: true,
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
-      builder: (context) => Column(
-        children: [
-          FormTitle(
-            name: 'New Engagement',
-            onSave: () {},
-          ),
-          EngagementForm(
-            firstNameController: firstNameController,
-            lastNameController: lastNameController,
-            otherNameController: otherNameController,
-            genderController: genderController,
-            titleController: titleController,
-            dateOfBirthController: dateOfBirthController,
-            personalEmailController: personalEmailController,
-            telephoneController: telephoneController,
-            socialSecurityNumberController: socialSecurityNumberController,
-            tinNumberController: tinNumberController,
-            roleController: roleController,
-          ),
-        ],
+      builder: (context) => EngagementForm(
+        firstNameController: firstNameController,
+        lastNameController: lastNameController,
+        otherNameController: otherNameController,
+        genderController: genderController,
+        titleController: titleController,
+        dateOfBirthController: dateOfBirthController,
+        personalEmailController: personalEmailController,
+        telephoneController: telephoneController,
+        socialSecurityNumberController: socialSecurityNumberController,
+        tinNumberController: tinNumberController,
+        roleController: roleController,
       ),
     );
   }
