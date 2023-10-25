@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/widgets/custom_icon_bottom.dart';
 
 import '../../theme/color.dart';
@@ -90,7 +91,8 @@ class ProfileDetailItem extends StatelessWidget {
         const SizedBox(height: 10),
         _profileDetailItem("Telephone", telephone),
         const SizedBox(height: 10),
-        _profileDetailItem("Date of birth", dateOfBirth),
+        _profileDetailItem(
+            "Date of birth", DateFormat('dd/MM/yyyy').format(DateFormat('yyyy-MM-dd').parse(dateOfBirth))),
         const SizedBox(height: 10),
         _profileDetailItem("Height(cm)", height),
         const SizedBox(height: 10),
@@ -113,8 +115,11 @@ class ProfileDetailItem extends StatelessWidget {
         const SizedBox(
           width: 5,
         ),
-        Text(value.toString(),
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+        Expanded(
+          child: Text(value.toString(),
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
+        ),
       ],
     );
   }

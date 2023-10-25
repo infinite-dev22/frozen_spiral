@@ -24,7 +24,9 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   final ToastContext toast = ToastContext();
 
-  bool enabled = true;
+  bool isAuthingUser = true;
+  bool showLogin = true;
+  bool isSendingResetRequest = true;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -55,97 +57,18 @@ class _WelcomePageState extends State<WelcomePage> {
                 imageFit: BoxFit.contain,
                 radius: 0,
               ),
-              const SizedBox(
-                height: 40,
-              ),
-              Text(
-                (currentUsername != null)
-                    ? 'Welcome, ${currentUsername!}'
-                    : 'Welcome',
-                style: const TextStyle(
-                    color: AppColors.white,
-                    fontSize: 40,
-                    fontWeight: FontWeight.w100),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              (currentUserEmail == null || currentUserEmail == '')
-                  ? AuthTextField(
-                      controller: emailController,
-                      hintText: 'email',
-                      enabled: enabled,
-                      obscureText: false,
-                      isEmail: true,
-                      style: const TextStyle(color: AppColors.white),
-                      borderSide: const BorderSide(color: AppColors.white),
-                      fillColor: AppColors.primary,
-                    )
-                  : currentUserImage != null
-                      ? CustomImage(currentUserImage)
-                      : const CustomIconHolder(
-                          width: 120,
-                          height: 120,
-                          graphic: Icons.account_circle,
-                          bgColor: AppColors.white,
-                          radius: 90,
-                          size: 135,
-                          isProfile: true,
-                        ),
-              const SizedBox(
-                height: 20,
-              ),
-              AuthPasswordTextField(
-                controller: passwordController,
-                hintText: 'password',
-                enabled: enabled,
-                borderSide: const BorderSide(color: AppColors.white),
-                style: const TextStyle(color: AppColors.white),
-                fillColor: AppColors.primary,
-                iconColor: AppColors.inActiveColor,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              (enabled)
-                  ? WideButton(
-                      name: 'Login',
-                      onPressed: _onPressed,
-                      bgColor: AppColors.gray,
-                      textStyle:
-                          const TextStyle(color: Colors.white, fontSize: 20),
-                    )
-                  : const CircularProgressIndicator(
-                      color: AppColors.gray,
-                    ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'Forgot password?',
-                  style: TextStyle(
-                    color: AppColors.white,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 40),
+              (showLogin) ? _buildLoginBody() : _buildPasswordResetBody(),
+              const SizedBox(height: 10),
               _buildTextWithLink('contact us: ', 'info@infosectechno.com'),
-              const SizedBox(
-                height: 8,
-              ),
+              const SizedBox(height: 8),
               _buildTextWithAction('+256 (0)770456789'),
-              const SizedBox(
-                height: 8,
-              ),
+              const SizedBox(height: 8),
               Text(
                 'copyright @ ${DateTime.now().year} SmartCase Manager',
                 style: const TextStyle(
                   color: AppColors.inActiveColor,
-                  fontWeight: FontWeight.w100,
+                  fontWeight: FontWeight.w300,
                 ),
               )
             ],
@@ -239,7 +162,7 @@ class _WelcomePageState extends State<WelcomePage> {
             ? currentUserEmail!
             : emailController.text)) {
       setState(() {
-        enabled = false;
+        isAuthingUser = false;
       });
 
       AuthApis.signInUser(
@@ -252,6 +175,40 @@ class _WelcomePageState extends State<WelcomePage> {
           onWrongPassword: _handleWrongPass,
           onError: _handleError,
           onErrors: _handleErrors);
+    } else {
+      Toast.show("Email not valid",
+          duration: Toast.lengthLong, gravity: Toast.bottom);
+    }
+  }
+
+  _onResetPressed() {
+    if (EmailValidator.validate(emailController.text.trim())) {
+      setState(() {
+        isSendingResetRequest = false;
+      });
+
+      AuthApis.requestReset(
+        'api/password/email',
+        onError: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+          Toast.show("An error occurred",
+              duration: Toast.lengthLong, gravity: Toast.bottom);
+
+          setState(() {
+            isSendingResetRequest = false;
+            showLogin = false;
+          });
+        },
+        onSuccess: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+          Toast.show("Reset password link sent on your email",
+              duration: Toast.lengthLong, gravity: Toast.bottom);
+          setState(() {
+            isSendingResetRequest = true;
+            showLogin = true;
+          });
+        },
+      );
     } else {
       Toast.show("Email not valid",
           duration: Toast.lengthLong, gravity: Toast.bottom);
@@ -272,14 +229,14 @@ class _WelcomePageState extends State<WelcomePage> {
     Toast.show("User not found",
         duration: Toast.lengthLong, gravity: Toast.bottom);
     setState(() {
-      enabled = true;
+      isAuthingUser = true;
     });
   }
 
   _handleErrors(e) {
     Toast.show(e.toString(), duration: Toast.lengthLong, gravity: Toast.bottom);
     setState(() {
-      enabled = true;
+      isAuthingUser = true;
     });
   }
 
@@ -287,7 +244,7 @@ class _WelcomePageState extends State<WelcomePage> {
     Toast.show("Incorrect password",
         duration: Toast.lengthLong, gravity: Toast.bottom);
     setState(() {
-      enabled = true;
+      isAuthingUser = true;
     });
   }
 
@@ -295,7 +252,7 @@ class _WelcomePageState extends State<WelcomePage> {
     Toast.show("An error occurred",
         duration: Toast.lengthLong, gravity: Toast.bottom);
     setState(() {
-      enabled = true;
+      isAuthingUser = true;
     });
   }
 
@@ -311,6 +268,164 @@ class _WelcomePageState extends State<WelcomePage> {
       currentUserImage = image;
       currentUserFcmToken = fcmToken;
     });
+  }
+
+  _buildPasswordResetBody() {
+    return Column(
+      children: [
+        const Text(
+          'A Password reset link will be sent to the email entered below, '
+          'click Proceed to continue',
+          style: TextStyle(color: AppColors.white, fontSize: 18),
+        ),
+        const SizedBox(height: 20),
+        AuthTextField(
+          controller: emailController,
+          hintText: 'email',
+          enabled: isAuthingUser,
+          obscureText: false,
+          isEmail: true,
+          style: const TextStyle(color: AppColors.white),
+          borderSide: const BorderSide(color: AppColors.white),
+          fillColor: AppColors.primary,
+        ),
+        const SizedBox(height: 10),
+        _buildButtons(),
+      ],
+    );
+  }
+
+  _buildButtons() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateColor.resolveWith((states) => AppColors.gray45),
+            ),
+            onPressed: () {
+              setState(() {
+                isSendingResetRequest = false;
+                showLogin = true;
+              });
+            },
+            alignment: Alignment.center,
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.primary,
+              size: 30,
+            ),
+          ),
+          OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: AppColors.gray45),
+              fixedSize:
+                  Size.fromWidth(MediaQuery.of(context).size.width * .75),
+            ),
+            onPressed: _onResetPressed,
+            child: isSendingResetRequest
+                ? const Text(
+                    'Proceed',
+                    style: TextStyle(color: AppColors.gray45, fontSize: 20),
+                  )
+                : const SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: CircularProgressIndicator(
+                      color: AppColors.gray45,
+                      strokeWidth: 2,
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildLoginBody() {
+    return Column(
+      children: [
+        Text(
+          (currentUsername != null)
+              ? 'Welcome, ${currentUsername!}'
+              : 'Welcome',
+          style: const TextStyle(
+              color: AppColors.white,
+              fontSize: 30,
+              fontWeight: FontWeight.w100),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        (currentUserEmail == null || currentUserEmail == '')
+            ? AuthTextField(
+                controller: emailController,
+                hintText: 'email',
+                enabled: isAuthingUser,
+                obscureText: false,
+                isEmail: true,
+                style: const TextStyle(color: AppColors.gray45),
+                borderSide: const BorderSide(color: AppColors.gray45),
+                fillColor: AppColors.primary,
+              )
+            : currentUserImage != null
+                ? CustomImage(currentUserImage)
+                : const CustomIconHolder(
+                    width: 120,
+                    height: 120,
+                    graphic: Icons.account_circle,
+                    bgColor: AppColors.white,
+                    radius: 90,
+                    size: 135,
+                    isProfile: true,
+                  ),
+        const SizedBox(
+          height: 20,
+        ),
+        AuthPasswordTextField(
+          controller: passwordController,
+          hintText: 'password',
+          enabled: isAuthingUser,
+          borderSide: const BorderSide(color: AppColors.gray45),
+          style: const TextStyle(color: AppColors.gray45),
+          fillColor: AppColors.primary,
+          iconColor: AppColors.gray45,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        (isAuthingUser)
+            ? WideButton(
+                name: 'Login',
+                onPressed: _onPressed,
+                bgColor: AppColors.gray45,
+                textStyle:
+                    const TextStyle(color: AppColors.primary, fontSize: 20),
+              )
+            : const CircularProgressIndicator(
+                color: AppColors.gray45,
+              ),
+        const SizedBox(
+          height: 10,
+        ),
+        TextButton(
+          onPressed: () {
+            setState(() {
+              showLogin = false;
+            });
+          },
+          child: const Text(
+            'Forgot password?',
+            style: TextStyle(
+              color: AppColors.white,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
