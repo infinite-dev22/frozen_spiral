@@ -219,7 +219,7 @@ class _RootPageState extends State<RootPage> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: List.generate(
           _barItems().length,
           (index) {

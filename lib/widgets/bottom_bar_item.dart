@@ -23,32 +23,33 @@ class BottomBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenWidth = screenSize.width;
+    double fontSize = screenWidth * .025;
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(top: 8),
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-              ),
-              child: Icon(
-                icon,
-                size: 30,
-                color: isActive ? activeColor : color,
-              ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
             ),
-            Text(
-              name,
-              style: TextStyle(
-                color: isActive ? activeColor : color,
-                fontSize: 14,
-              ),
+            alignment: Alignment.center,
+            child: Icon(
+              icon,
+              size: 30,
+              color: isActive ? activeColor : color,
             ),
-          ],
-        ),
+          ),
+          Text(
+            name,
+            style: TextStyle(
+              color: isActive ? activeColor : color,
+              fontSize: fontSize,
+            ),
+          ),
+        ],
       ),
     );
   }
