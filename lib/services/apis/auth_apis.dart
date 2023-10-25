@@ -46,11 +46,12 @@ class AuthApis {
             //   'email': email
             // });
             await client.post(
-              Uri.parse('https://app.smartcase.co.ug/api/save/fcm/token'),
-              body: jsonEncode(
-                  {'fcm_token': currentUserFcmToken, 'email': email}),
+                Uri.parse('https://app.smartcase.co.ug/api/save/fcm/token'),
+                body: jsonEncode(
+                    {'fcm_token': currentUserFcmToken, 'email': email}),
                 headers: {
-                  HttpHeaders.authorizationHeader: "Bearer ${currentUser.token}",
+                  HttpHeaders.authorizationHeader:
+                      "Bearer ${currentUser.token}",
                   "content-Type": "application/json",
                   "Accept": "application/json",
                 });
@@ -108,5 +109,66 @@ class AuthApis {
     await storage.delete(key: 'email').then(onSuccess).onError(onError);
     await storage.delete(key: 'name').then(onSuccess).onError(onError);
     await storage.delete(key: 'image').then(onSuccess).onError(onError);
+  }
+
+  static requestReset(String email,
+      {Function()? onSuccess,
+      Function()? onNoUser,
+      Function()? onWrongPassword,
+      Function()? onError,
+      Function(dynamic e)? onErrors}) async {
+    var client = RetryClient(http.Client());
+    try {
+      var response = await client
+          .post(Uri.https('app.smartcase.co.ug', 'api/login'), body: {
+        'email': email,
+      });
+      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+      bool success = decodedResponse['success'] as bool;
+
+      if (response.statusCode == 200) {
+        if (success) {
+          String url = decodedResponse['user']['app_url'];
+
+          var resetRequest = await client.post(
+              Uri.https(url.replaceRange(0, 8, ''), 'api/password/email'),
+              body: {'email': email});
+
+          if (resetRequest.statusCode == 200) {
+            if (onSuccess != null) {
+              onSuccess();
+            }
+          } else {
+            if (onError != null) {
+              onError();
+            }
+          }
+        } else {
+          if (decodedResponse['message'] == 'USER_NOT_FOUND') {
+            if (onNoUser != null) {
+              onNoUser();
+            }
+          }
+        }
+      } else {
+        if (onError != null) {
+          onError();
+        }
+      }
+    }
+    // catch (e) {
+    //   if (onError != null) {
+    //     onError();
+    //   }
+    //
+    //   // For testing purposes only
+    //   if (onErrors != null) {
+    //     onErrors(e);
+    //   }
+    // }
+    finally {
+      client.close();
+    }
+    return null;
   }
 }

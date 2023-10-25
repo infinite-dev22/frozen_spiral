@@ -35,6 +35,23 @@ class AuthTextField extends StatelessWidget {
         style: style,
         enabled: enabled,
         decoration: InputDecoration(
+          focusedBorder: (borderSide != BorderSide.none)
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppColors.gray45,
+                    width: 2.0,
+                  ),
+                )
+              : null,
+          enabledBorder: (borderSide != BorderSide.none)
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppColors.gray45,
+                  ),
+                )
+              : null,
           border: OutlineInputBorder(
             borderSide: borderSide,
             borderRadius: BorderRadius.circular(10),
@@ -92,6 +109,23 @@ class _AuthPasswordTextField extends State<AuthPasswordTextField> {
         style: widget.style,
         enabled: widget.enabled,
         decoration: InputDecoration(
+          focusedBorder: (widget.borderSide != BorderSide.none)
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppColors.gray45,
+                    width: 2.0,
+                  ),
+                )
+              : null,
+          enabledBorder: (widget.borderSide != BorderSide.none)
+              ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppColors.gray45,
+                  ),
+                )
+              : null,
           suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
