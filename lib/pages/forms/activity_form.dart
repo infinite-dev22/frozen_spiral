@@ -55,147 +55,145 @@ class _ActivityFormState extends State<ActivityForm> {
 
   _buildBody() {
     final ScrollController scrollController = ScrollController();
-    return Expanded(
-      child: Column(
-        children: [
-          FormTitle(
-            name: 'New Activity',
-            isElevated: isTitleElevated,
-            onSave: () {
-              SmartCaseApi.smartPost(
-                  'api/cases/${file!.id}/activities', currentUser.token, {
-                "description": descriptionController.text.trim(),
-                "case_activity_status_id": activity!.id,
-                "employee_id": currentUser.id,
-                "date": dateController.text.trim(),
-                "billable": billable,
-                "from": startTimeController.text.trim(),
-                "to": endTimeController.text.trim(),
-                "to_be_notified": emails,
-              }, onError: () {
-                Toast.show("An error occurred",
-                    duration: Toast.lengthLong, gravity: Toast.bottom);
-              }, onSuccess: () {
-                Toast.show("Activity added successfully",
-                    duration: Toast.lengthLong, gravity: Toast.bottom);
-                Navigator.pop(context);
-              });
+    return Column(
+      children: [
+        FormTitle(
+          name: 'New Activity',
+          isElevated: isTitleElevated,
+          onSave: () {
+            SmartCaseApi.smartPost(
+                'api/cases/${file!.id}/activities', currentUser.token, {
+              "description": descriptionController.text.trim(),
+              "case_activity_status_id": activity!.id,
+              "employee_id": currentUser.id,
+              "date": dateController.text.trim(),
+              "billable": billable,
+              "from": startTimeController.text.trim(),
+              "to": endTimeController.text.trim(),
+              "to_be_notified": emails,
+            }, onError: () {
+              Toast.show("An error occurred",
+                  duration: Toast.lengthLong, gravity: Toast.bottom);
+            }, onSuccess: () {
+              Toast.show("Activity added successfully",
+                  duration: Toast.lengthLong, gravity: Toast.bottom);
+              Navigator.pop(context);
+            });
+          },
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
             },
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                FocusManager.instance.primaryFocus?.unfocus();
-              },
-              child: NotificationListener<ScrollNotification>(
-                onNotification: (scrollNotification) {
-                  if (scrollController.position.userScrollDirection ==
-                      ScrollDirection.reverse) {
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollController.position.userScrollDirection ==
+                    ScrollDirection.reverse) {
+                  setState(() {
+                    isTitleElevated = true;
+                  });
+                } else if (scrollController.position.userScrollDirection ==
+                    ScrollDirection.forward) {
+                  if (scrollController.position.pixels ==
+                      scrollController.position.maxScrollExtent) {
                     setState(() {
-                      isTitleElevated = true;
+                      isTitleElevated = false;
                     });
-                  } else if (scrollController.position.userScrollDirection ==
-                      ScrollDirection.forward) {
-                    if (scrollController.position.pixels ==
-                        scrollController.position.maxScrollExtent) {
-                      setState(() {
-                        isTitleElevated = false;
-                      });
-                    }
                   }
-                  return true;
-                },
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    Form(
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 50,
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(5),
-                            margin: const EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: TextButton(
-                              onPressed: _showSearchFileBottomSheet,
-                              child: Text(
-                                file?.fileName ?? 'Select file',
-                              ),
+                }
+                return true;
+              },
+              child: ListView(
+                controller: scrollController,
+                padding: const EdgeInsets.all(16),
+                children: [
+                  Form(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextButton(
+                            onPressed: _showSearchFileBottomSheet,
+                            child: Text(
+                              file?.fileName ?? 'Select file',
                             ),
                           ),
-                          Container(
-                            height: 50,
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(5),
-                            margin: const EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: TextButton(
-                              onPressed: _showSearchActivityBottomSheet,
-                              child: Text(
-                                activity?.name ?? 'Select activity status',
-                              ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextButton(
+                            onPressed: _showSearchActivityBottomSheet,
+                            child: Text(
+                              activity?.name ?? 'Select activity status',
                             ),
                           ),
-                          DateTimeAccordion2(
-                              dateController: dateController,
-                              startTimeController: startTimeController,
-                              endTimeController: endTimeController),
-                          _buildGroupedRadios(),
-                          CustomTextArea(
-                            key: globalKey,
-                            hint: 'Description',
-                            controller: descriptionController,
-                            onTap: () {
-                              Scrollable.ensureVisible(
-                                  globalKey.currentContext!);
+                        ),
+                        DateTimeAccordion2(
+                            dateController: dateController,
+                            startTimeController: startTimeController,
+                            endTimeController: endTimeController),
+                        _buildGroupedRadios(),
+                        CustomTextArea(
+                          key: globalKey,
+                          hint: 'Description',
+                          controller: descriptionController,
+                          onTap: () {
+                            Scrollable.ensureVisible(
+                                globalKey.currentContext!);
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        if (file != null)
+                          MultiSelectDropDown(
+                            showClearIcon: true,
+                            hint: 'Notify',
+                            onOptionSelected: (options) {
+                              for (var element in options) {
+                                emails.add(element.value!);
+                              }
                             },
+                            options: contacts
+                                .map((contact) => ValueItem(
+                                    label:
+                                        '${contact.name} - ${contact.email}',
+                                    value:
+                                        '${contact.name}|${contact.email}'))
+                                .toList(),
+                            selectionType: SelectionType.multi,
+                            chipConfig:
+                                const ChipConfig(wrapType: WrapType.wrap),
+                            borderColor: AppColors.white,
+                            optionTextStyle: const TextStyle(fontSize: 16),
+                            selectedOptionIcon:
+                                const Icon(Icons.check_circle),
                           ),
-                          const SizedBox(height: 10),
-                          if (file != null)
-                            MultiSelectDropDown(
-                              showClearIcon: true,
-                              hint: 'Notify',
-                              onOptionSelected: (options) {
-                                for (var element in options) {
-                                  emails.add(element.value!);
-                                }
-                              },
-                              options: contacts
-                                  .map((contact) => ValueItem(
-                                      label:
-                                          '${contact.name} - ${contact.email}',
-                                      value:
-                                          '${contact.name}|${contact.email}'))
-                                  .toList(),
-                              selectionType: SelectionType.multi,
-                              chipConfig:
-                                  const ChipConfig(wrapType: WrapType.wrap),
-                              borderColor: AppColors.white,
-                              optionTextStyle: const TextStyle(fontSize: 16),
-                              selectedOptionIcon:
-                                  const Icon(Icons.check_circle),
-                            ),
-                          const SizedBox(
-                              height:
-                                  300 /* MediaQuery.of(context).viewInsets.bottom */),
-                        ],
-                      ),
+                        const SizedBox(
+                            height:
+                                300 /* MediaQuery.of(context).viewInsets.bottom */),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

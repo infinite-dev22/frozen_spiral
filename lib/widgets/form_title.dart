@@ -24,14 +24,14 @@ class FormTitle extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-        color: AppColors.appBgColor,
+        color: isElevated ? Colors.white : AppColors.appBgColor,
         boxShadow: (isElevated)
             ? [
                 BoxShadow(
                   color: AppColors.shadowColor.withOpacity(.1),
                   spreadRadius: 1,
-                  blurRadius: 1.0,
-                  offset: const Offset(0.0, 1), // changes position of shadow
+                  blurRadius: 1,
+                  offset: const Offset(0.0, 2), // changes position of shadow
                 ),
               ]
             : null,
