@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_currency.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
@@ -54,6 +55,8 @@ class _RequisitionFormState extends State<RequisitionForm> {
   }
 
   _buildBody() {
+    NumberFormat formatter = NumberFormat('###,###,###,###,###,###,###,###,###');
+
     return Column(
       children: [
         FormTitle(
@@ -93,7 +96,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
                 ),
                 if (file != null)
                   SmartText(
-                      value: financialStatus.toString(),
+                      value: formatter.format(financialStatus).toString(),
                       icon: (financialStatus > 0)
                           ? Icons.arrow_upward_rounded
                           : (financialStatus < 0)
