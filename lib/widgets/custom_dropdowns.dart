@@ -160,18 +160,17 @@ class SearchableDropDown<T extends SmartModel> extends StatelessWidget {
       margin: const EdgeInsets.all(15),
       items: menuItems
           .map((item) => SearchableDropdownMenuItem(
-              value: item,
-              label: item.getName(),
-              child: Text(item.getName())))
+              value: item, label: item.getName(), child: Text(item.getName())))
           .toList(),
       onChanged: onChanged,
-      value: defaultValue,searchHintText: 'Search $hintText',
+      value: defaultValue,
+      searchHintText: 'Search $hintText',
     );
   }
 }
 
-class CustomDropdown<T extends SmartModel> extends StatelessWidget {
-  CustomDropdown(
+class CustomGenericDropdown<T extends SmartModel> extends StatelessWidget {
+  const CustomGenericDropdown(
       {super.key,
       required this.hintText,
       required this.menuItems,
@@ -182,8 +181,6 @@ class CustomDropdown<T extends SmartModel> extends StatelessWidget {
   final List<T> menuItems;
   final T? defaultValue;
   final Function(T?)? onChanged;
-
-  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -196,29 +193,6 @@ class CustomDropdown<T extends SmartModel> extends StatelessWidget {
         SizedBox(
           height: 50,
           child: DropdownButtonFormField2<T>(
-            dropdownSearchData: DropdownSearchData(
-              searchController: searchController,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 50,
-                  child: TextFormField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search $hintText',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              searchInnerWidgetHeight: 50,
-              searchMatchFn: (item, searchValue) => item.value
-                  .toString()
-                  .toLowerCase()
-                  .contains(searchValue.toLowerCase()),
-            ),
             value: defaultValue,
             isExpanded: true,
             decoration: InputDecoration(
@@ -249,6 +223,93 @@ class CustomDropdown<T extends SmartModel> extends StatelessWidget {
             validator: (value) {
               if (value == null) {
                 return 'Please select a $hintText';
+              }
+              return null;
+            },
+            onChanged: onChanged,
+            buttonStyleData: const ButtonStyleData(
+              padding: EdgeInsets.only(right: 8),
+            ),
+            iconStyleData: const IconStyleData(
+              icon: Icon(
+                Icons.arrow_drop_down,
+                color: Colors.black45,
+              ),
+              iconSize: 24,
+            ),
+            dropdownStyleData: DropdownStyleData(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            menuItemStyleData: const MenuItemStyleData(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+}
+
+class GenderDropdown extends StatelessWidget {
+  const GenderDropdown({
+    super.key,
+    this.onChanged,
+  });
+
+  final Function(int?)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 50,
+          child: DropdownButtonFormField2<int>(
+            isExpanded: true,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+              filled: true,
+              fillColor: AppColors.textBoxColor,
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            hint: const Text(
+              'Select gender',
+              style:
+                  TextStyle(color: AppColors.inActiveColor, fontSize: 15),
+            ),
+            items: const [
+              DropdownMenuItem<int>(
+                value: 1,
+                child: Text(
+                  'Male',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              DropdownMenuItem<int>(
+                value: 0,
+                child: Text(
+                  'Female',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a gender';
               }
               return null;
             },

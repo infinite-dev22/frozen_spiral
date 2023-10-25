@@ -69,7 +69,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
                 DateAccordion(
                   dateController: dateController,
                 ),
-                CustomDropdown<SmartCurrency>(
+                CustomGenericDropdown<SmartCurrency>(
                     hintText: 'currency',
                     menuItems: widget.currencies,
                     defaultValue: widget.currencies

@@ -292,7 +292,7 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
 
                                     endSelectedTime = DateFormat('h:mm a')
                                         .format(newTime
-                                        .add(const Duration(hours: 1)));
+                                            .add(const Duration(hours: 1)));
                                   } else if (isEndTime) {
                                     endSelectedDate =
                                         DateFormat('h:mm a').format(newTime);
@@ -305,7 +305,7 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                   : Container()
             ]),
           ),
-          const Divider(indent: 5, endIndent: 5,height: 0),
+          const Divider(indent: 5, endIndent: 5, height: 0),
           Card(
             color: AppColors.white,
             elevation: 0,
@@ -881,6 +881,98 @@ class _DateAccordionState extends State<DateAccordion> {
     super.initState();
 
     widget.dateController.text = selectedDate;
+    _showContent = false;
+  }
+}
+
+class DOBAccordion extends StatefulWidget {
+  const DOBAccordion({Key? key, required this.dateController, this.hint})
+      : super(key: key);
+
+  final TextEditingController dateController;
+  final String? hint;
+
+  @override
+  State<DOBAccordion> createState() => _DOBAccordionState();
+}
+
+class _DOBAccordionState extends State<DOBAccordion> {
+  late bool _showContent;
+
+  late final double _height = 280;
+
+  DateTime now = DateTime.now();
+
+  String? selectedDate;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: AppColors.white,
+      elevation: 0,
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Column(children: [
+        _buildDateField(selectedDate ?? widget.hint!),
+        _showContent
+            ? Container(
+                height: _height,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                child: CalendarDatePicker(
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(DateTime.now().year),
+                  lastDate: DateTime(DateTime.now().year + 99),
+                  onDateChanged: (DateTime newDate) {
+                    setState(() {
+                      selectedDate = DateFormat('dd/MM/yyyy').format(newDate);
+
+                      widget.dateController.text = selectedDate!;
+                    });
+                  },
+                ),
+              )
+            : Container()
+      ]),
+    );
+  }
+
+  _buildDateField(String date) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _showContent = !_showContent;
+        });
+      },
+      child: Container(
+        height: 50,
+        padding: const EdgeInsets.fromLTRB(15, 5, 8, 5),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(date),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(
+                  _showContent ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                  size: 25,
+                  color: Colors.black45,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
     _showContent = false;
   }
 }

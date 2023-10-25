@@ -3,9 +3,13 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/auth_text_field.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
+import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/profile/profile_detail_item.dart';
 import 'package:smart_case/widgets/profile/profile_master_item.dart';
 import 'package:smart_case/widgets/wide_button.dart';
+
+import '../widgets/custom_accordion.dart';
+import '../widgets/custom_dropdowns.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -23,14 +27,12 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController otherNameController = TextEditingController();
   TextEditingController genderController = TextEditingController();
-  TextEditingController titleController = TextEditingController();
   TextEditingController dateOfBirthController = TextEditingController();
   TextEditingController personalEmailController = TextEditingController();
   TextEditingController telephoneController = TextEditingController();
   TextEditingController socialSecurityNumberController =
       TextEditingController();
   TextEditingController tinNumberController = TextEditingController();
-  TextEditingController roleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -233,50 +235,63 @@ class _ProfilePageState extends State<ProfilePage> {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildEditTextFormField('First name', firstNameController),
-          _buildEditTextFormField('Last name', lastNameController),
-          _buildEditTextFormField('Other name', otherNameController),
-          _buildEditTextFormField('Gender', genderController),
-          _buildEditTextFormField('Title', titleController),
-          _buildEditTextFormField('Date of birth', dateOfBirthController),
-          _buildEditTextFormField('Personal email', personalEmailController),
-          _buildEditTextFormField('Telephone', telephoneController),
-          _buildEditTextFormField(
-              'Social Security Number', socialSecurityNumberController),
-          _buildEditTextFormField('Tin number', tinNumberController),
-          _buildEditTextFormField('Role', roleController),
-          WideButton(
-            name: 'Save',
-            onPressed: () =>
-                print('User Data:\n Old Password: ${oldPasswordController.text}'
-                    '\n New Password: ${newPasswordController.text}'
-                    '\n Confirm Password: ${confirmPasswordController.text}'),
+          SmartCaseTextField(
+            hint: 'First name',
+            controller: firstNameController,
           ),
+          SmartCaseTextField(
+            hint: 'Last name',
+            controller: lastNameController,
+          ),
+          SmartCaseTextField(
+            hint: 'Other name',
+            controller: otherNameController,
+          ),
+          GenderDropdown(onChanged: (value) {
+            genderController.text = value.toString();
+          }),
+          DOBAccordion(
+            dateController: dateOfBirthController,
+            hint: 'Date of birth',
+          ),
+          SmartCaseTextField(
+            hint: 'Personal email',
+            controller: personalEmailController,
+          ),
+          SmartCaseTextField(
+            hint: 'Telephone',
+            controller: telephoneController,
+          ),
+          SmartCaseTextField(
+            hint: 'Social Security Number',
+            controller: socialSecurityNumberController,
+          ),
+          SmartCaseTextField(
+            hint: 'Tin number',
+            controller: tinNumberController,
+          ),
+          const SizedBox(height: 300),
         ],
       ),
     );
   }
 
-  _buildEditTextFormField(String hint, TextEditingController controller) {
-    return Column(
-      children: [
-        TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: AppColors.textBoxColor,
-            hintText: hint,
-            hintStyle: const TextStyle(color: AppColors.inActiveColor),
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-      ],
-    );
+  _setUpProfileDetails() {
+    firstNameController.text = currentUser.firstName ?? '';
+    lastNameController.text = currentUser.lastName ?? '';
+    otherNameController.text = currentUser.middleName ?? '';
+    genderController.text = (currentUser.gender == 1) ? 'Male' : 'Female';
+    dateOfBirthController.text = currentUser.dateOfBirth ?? '';
+    personalEmailController.text = currentUser.personalEmail ?? '';
+    telephoneController.text = currentUser.telephone ?? '';
+    socialSecurityNumberController.text = currentUser.nssfNumber ?? '';
+    tinNumberController.text = currentUser.tinNumber ?? '';
+  }
+
+  @override
+  void initState() {
+    _setUpProfileDetails();
+
+    super.initState();
   }
 }
