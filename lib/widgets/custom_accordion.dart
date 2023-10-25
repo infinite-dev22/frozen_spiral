@@ -57,6 +57,8 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
                             selectedDate =
                                 DateFormat('dd/MM/yyyy').format(newDate);
                             widget.dateController.text = selectedDate;
+
+                            _showContent = false;
                           });
                         },
                       )
@@ -269,12 +271,16 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                                         startSelectedDate;
 
                                     endSelectedDate = startSelectedDate;
+
+                                    _showStartContent = false;
                                   } else if (isEndDate) {
                                     endSelectedDate = DateFormat('dd/MM/yyyy')
                                         .format(newDate);
 
                                     widget.endDateController.text =
                                         endSelectedDate;
+
+                                    _showStartContent = false;
                                   }
                                 });
                               },
@@ -294,7 +300,7 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                                         .format(newTime
                                             .add(const Duration(hours: 1)));
                                   } else if (isEndTime) {
-                                    endSelectedDate =
+                                    endSelectedTime =
                                         DateFormat('h:mm a').format(newTime);
                                     widget.endTimeController.text =
                                         endSelectedTime;
@@ -329,18 +335,22 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                                         .format(newDate);
                                     widget.startDateController.text =
                                         startSelectedDate;
+
+                                    _showEndContent = false;
                                   } else if (isEndDate) {
                                     endSelectedDate = DateFormat('dd/MM/yyyy')
                                         .format(newDate);
                                     widget.endDateController.text =
                                         endSelectedDate;
+
+                                    _showEndContent = false;
                                   }
                                 });
                               },
                             )
                           : CupertinoDatePicker(
                               mode: CupertinoDatePickerMode.time,
-                              initialDateTime: DateTime.now(),
+                              initialDateTime: DateFormat('h:mm a').parse(endSelectedTime),
                               onDateTimeChanged: (DateTime newTime) {
                                 setState(() {
                                   if (isEndDate) {
@@ -348,8 +358,8 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                                         DateFormat('h:mm a').format(newTime);
                                     widget.endDateController.text =
                                         endSelectedTime;
-                                  } else if (isEndDate) {
-                                    endSelectedDate =
+                                  } else if (isEndTime) {
+                                    endSelectedTime =
                                         DateFormat('h:mm a').format(newTime);
                                     widget.endTimeController.text =
                                         endSelectedTime;
@@ -622,6 +632,8 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                             selectedDate =
                                 DateFormat('dd/MM/yyyy').format(newDate);
                             widget.dateController.text = selectedDate;
+
+                            _showContent = false;
                           });
                         },
                       )
@@ -833,6 +845,8 @@ class _DateAccordionState extends State<DateAccordion> {
                       selectedDate = DateFormat('dd/MM/yyyy').format(newDate);
 
                       widget.dateController.text = selectedDate;
+
+                      _showContent = false;
                     });
                   },
                 ),
@@ -927,6 +941,8 @@ class _DOBAccordionState extends State<DOBAccordion> {
                       selectedDate = DateFormat('dd/MM/yyyy').format(newDate);
 
                       widget.dateController.text = selectedDate!;
+
+                      _showContent = false;
                     });
                   },
                 ),
