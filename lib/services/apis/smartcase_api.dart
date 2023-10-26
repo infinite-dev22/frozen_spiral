@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:smart_case/models/smart_activity.dart';
@@ -59,7 +58,6 @@ class SmartCaseApi {
           headers: {
             HttpHeaders.authorizationHeader: "Bearer $token",
           });
-      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
       if (response.statusCode == 200) {
         var decodedResponse =
@@ -115,7 +113,7 @@ class SmartCaseApi {
             "content-Type": "application/json",
             "Accept": "application/json",
           });
-
+      print(response.statusCode);
       if (response.statusCode == 200) {
         if (onSuccess != null) {
           onSuccess();
