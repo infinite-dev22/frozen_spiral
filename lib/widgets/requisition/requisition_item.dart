@@ -1,58 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:smart_case/models/smart_requisition.dart';
 import 'package:smart_case/widgets/requisition/reuisition_item_status.dart';
 
 import '../../theme/color.dart';
 
 class RequisitionItem extends StatelessWidget {
-  const RequisitionItem(
-      {super.key,
-      required this.fileName,
-      required this.requisitionNumber,
-      required this.dateCreated,
-      required this.color,
-      required this.padding,
-      required this.status,
-      required this.category,
-      required this.description,
-      required this.requesterName,
-      required this.supervisorName,
-      required this.amount,
-      this.financialStatus,
-      this.showFinancialStatus = false,
-      required this.statusCode,
-      required this.isMine, this.canApprove, this.canPay});
+  const RequisitionItem({
+    super.key,
+    required this.requisition,
+    required this.color,
+    required this.padding,
+    this.showActions = true,
+    this.showFinancialStatus = false,
+  });
 
-  final String fileName;
-  final String requisitionNumber;
-  final String category;
-  final String description;
-  final String requesterName;
-  final String supervisorName;
-  final String amount;
-  final String? financialStatus;
-  final String dateCreated;
-  final String statusCode;
-  final String? canApprove;
-  final bool showFinancialStatus;
-  final bool isMine;
-  final bool? canPay;
-
-  // final String clientName;
-  final String status;
+  final Requisition requisition;
+  final bool showActions;
   final Color color;
   final double padding;
+  final bool showFinancialStatus;
 
   @override
   Widget build(BuildContext context) {
-    return _buildBody();
+    return _buildBody(context);
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(
         padding,
-        0,
+        (showActions) ? 0 : padding,
         padding,
         padding,
       ),
@@ -74,71 +53,85 @@ class RequisitionItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 33,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
+          if (showActions)
+            Column(
               children: [
-                if (canApprove != null)
-                TextButton(
-                  onPressed: () {},
+                SizedBox(
+                  height: 33,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.recycling_rounded),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text('Process')
-                    ],
-                  ),
-                ),
-                if (canPay != null && canPay!)
-                TextButton(
-                  onPressed: () {},
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.money_rounded),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text('Pay out')
-                    ],
-                  ),
-                ),
-                if (isMine && statusCode == 'SUBMITTED')
-                  TextButton(
-                    onPressed: () {},
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(CupertinoIcons.pencil_ellipsis_rectangle),
-                        const SizedBox(
-                          width: 5,
+                      if (requisition.canApprove != null)
+                        TextButton(
+                          onPressed: () => Navigator.pushNamed(
+                              context, '/requisition',
+                              arguments: requisition),
+                          child: const Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.recycling_rounded),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('Process')
+                            ],
+                          ),
                         ),
-                        Text('Edit')
-                      ],
-                    ),
+                      if (requisition.canPay != null && requisition.canPay!)
+                        TextButton(
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/requisition'),
+                          child: const Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.money_rounded),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('Pay out')
+                            ],
+                          ),
+                        ),
+                      if (requisition.isMine &&
+                              requisition.canEdit &&
+                              requisition.requisitionStatus.code ==
+                                  'SUBMITTED' ||
+                          requisition.requisitionStatus.code == 'EDITED')
+                        TextButton(
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/requisition'),
+                          child: const Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(CupertinoIcons.pencil_ellipsis_rectangle),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('Edit')
+                            ],
+                          ),
+                        ),
+                    ],
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
               ],
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          _buildStringItem('File Name', fileName),
+          _buildStringItem('File Name', requisition.caseFile.fileName),
           const SizedBox(
             height: 10,
           ),
           if (showFinancialStatus)
             Column(
               children: [
-                _buildStringItem('Financial Status', financialStatus!),
+                _buildStringItem(
+                    'Financial Status', requisition.requisitionStatus.code),
                 const SizedBox(
                   height: 10,
                 ),
@@ -147,26 +140,28 @@ class RequisitionItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStringItem('Requisition Number', requisitionNumber),
-              _buildStringItem('Category', category),
+              _buildStringItem('Requisition Number', requisition.number),
+              _buildStringItem('Category', requisition.requisitionCategory),
             ],
           ),
           Text(
-            dateCreated,
+            DateFormat('dd/MM/yyyy').format(requisition.date),
             style: const TextStyle(color: AppColors.inActiveColor),
           ),
           const SizedBox(
             height: 10,
           ),
-          _buildStringItem('Description', description),
+          _buildStringItem('Description', requisition.description),
           const SizedBox(
             height: 10,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStringItem('Requester', requesterName),
-              _buildStringItem('Supervisor', supervisorName),
+              _buildStringItem('Requester',
+                  "${requisition.employee.firstName} ${requisition.employee.lastName}"),
+              _buildStringItem('Supervisor',
+                  "${requisition.supervisor.firstName} ${requisition.supervisor.lastName}"),
             ],
           ),
           const SizedBox(
@@ -175,9 +170,9 @@ class RequisitionItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStringItem('Amount', amount),
+              _buildStringItem('Amount', requisition.amount),
               RequisitionItemStatus(
-                  name: status,
+                  name: requisition.requisitionStatus.name,
                   bgColor: Colors.green,
                   horizontalPadding: 20,
                   verticalPadding: 5),
@@ -188,7 +183,7 @@ class RequisitionItem extends StatelessWidget {
     );
   }
 
-  _buildStringItem(String title, String data) {
+  _buildStringItem(String title, String? data) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -199,7 +194,7 @@ class RequisitionItem extends StatelessWidget {
           ),
         ),
         Text(
-          data,
+          data ?? 'Null',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),

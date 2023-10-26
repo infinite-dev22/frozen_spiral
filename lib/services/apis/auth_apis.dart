@@ -87,16 +87,16 @@ class AuthApis {
         }
       }
     }
-    // catch (e) {
-    //   if (onError != null) {
-    //     onError();
-    //   }
-    //
-    //   // For testing purposes only
-    //   if (onErrors != null) {
-    //     onErrors(e);
-    //   }
-    // }
+    catch (e) {
+      if (onError != null) {
+        onError();
+      }
+
+      // For testing purposes only
+      if (onErrors != null) {
+        onErrors(e);
+      }
+    }
     finally {
       client.close();
     }

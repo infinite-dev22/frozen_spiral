@@ -58,7 +58,6 @@ class SmartCaseApi {
           headers: {
             HttpHeaders.authorizationHeader: "Bearer $token",
           });
-      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
       if (response.statusCode == 200) {
         var decodedResponse =
