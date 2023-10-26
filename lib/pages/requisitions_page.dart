@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_requisition.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/loading/shimmers/requisition_shimmer.dart';
 import 'package:smart_case/widgets/requisition/requisition_item.dart';
 
+import '../models/smart_currency.dart';
 import '../services/apis/smartcase_api.dart';
 import '../util/smart_case_init.dart';
 import '../widgets/custom_appbar.dart';
@@ -20,6 +23,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
 
   List<Requisition> requisitions = List.empty(growable: true);
   List<Requisition> filteredRequisitions = List.empty(growable: true);
+  List<SmartCurrency> currencies = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +46,31 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   }
 
   _buildBody() {
-    return ListView.builder(
-      itemCount: requisitions.length,
-      padding: const EdgeInsets.all(10),
-      itemBuilder: (context, index) {
-        return RequisitionItem(
-          color: AppColors.white,
-          padding: 10,
-          requisition: requisitions.elementAt(index),
-        );
-      },
-    );
+    if ((requisitions.isNotEmpty)) {
+      return ListView.builder(
+        itemCount: requisitions.length,
+        padding: const EdgeInsets.all(10),
+        itemBuilder: (context, index) {
+          return RequisitionItem(
+            color: AppColors.white,
+            padding: 10,
+            requisition: requisitions.elementAt(index),
+            currencies: currencies,
+            showActions: true,
+          );
+        },
+      );
+    } else {
+      return ListView.builder(
+        itemCount: 4,
+        padding: const EdgeInsets.all(10),
+        itemBuilder: (context, index) => const RequisitionShimmer(),
+      );
+      return const SpinKitChasingDots(
+        color: AppColors.primary,
+        size: 50.0,
+      );
+    }
   }
 
   Future<void> _setUpData() async {
@@ -84,20 +102,19 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
             requisitionCategory: requisition['requisition_category']['name'],
             currency: requisition['currency']['code'],
             requisitionStatus: RequisitionStatus(
-                name: requisition['requisition_actions'][0]
-                    ['requisition_status']['name'],
-                code: requisition['requisition_actions'][0]
-                    ['requisition_status']['code']),
+                name: requisition['requisition_actions']
+                    .last['requisition_status']['name'],
+                code: requisition['requisition_actions']
+                    .last['requisition_status']['code']),
             requisitionWorkflow: requisition['requisition_workflow']))
         .toList();
-    // setState(() {
-    //   requisitions = null;
-    // });
+    setState(() {});
   }
 
   @override
   void initState() {
     _setUpData();
+    _loadCurrencies();
 
     filterController.text == 'Name';
 
@@ -113,5 +130,16 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
               .contains(value.toLowerCase())));
       setState(() {});
     }
+  }
+
+  _loadCurrencies() async {
+    Map currencyMap = await SmartCaseApi.smartFetch(
+        'api/admin/currencytypes', currentUser.token);
+    List? currencyList = currencyMap["currencytypes"];
+    setState(() {
+      currencies =
+          currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList();
+      currencyList = null;
+    });
   }
 }

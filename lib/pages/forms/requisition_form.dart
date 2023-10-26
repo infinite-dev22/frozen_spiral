@@ -21,8 +21,10 @@ class RequisitionForm extends StatefulWidget {
     super.key,
     this.onSave,
     required this.currencies,
+    this.requisition,
   });
 
+  final Requisition? requisition;
   final Function()? onSave;
   final List<SmartCurrency> currencies;
 
@@ -131,11 +133,12 @@ class _RequisitionFormState extends State<RequisitionForm> {
                             : (financialStatus < 0)
                                 ? AppColors.red
                                 : AppColors.blue),
-                  SearchableDropDown<SmartUser>(
-                    hintText: 'approver',
-                    menuItems: approvers,
-                    onChanged: _onTapSearchedApprover,
-                  ),
+                  if (file != null)
+                    SearchableDropDown<SmartUser>(
+                      hintText: 'approver',
+                      menuItems: approvers,
+                      onChanged: _onTapSearchedApprover,
+                    ),
                   Container(
                     height: 50,
                     width: double.infinity,
@@ -205,6 +208,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
                             .contains(value.toLowerCase())));
                       } else {
                         _loadFiles();
+                        setState(() {});
                         isLoading = true;
                       }
                     }
@@ -248,6 +252,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
                                 .contains(value.toLowerCase())));
                       } else {
                         _loadCategories();
+                        setState(() {});
                         isLoading = true;
                       }
                     }
@@ -262,19 +267,15 @@ class _RequisitionFormState extends State<RequisitionForm> {
 
   _loadFiles() async {
     files = await SmartCaseApi.fetchAllFiles(currentUser.token);
-    setState(() {});
   }
 
   _loadApprovers() async {
-    approvers.clear();
     Map usersMap =
         await SmartCaseApi.smartFetch('api/hr/employees', currentUser.token);
 
-    List? users = usersMap['search']['employees'];
-    setState(() {
-      approvers = users!.map((doc) => SmartUser.fromJson(doc)).toList();
-      users = null;
-    });
+    List users = usersMap['search']['employees'];
+
+    approvers = users.map((doc) => SmartUser.fromJson(doc)).toList();
   }
 
   _loadCategories() async {
@@ -282,12 +283,11 @@ class _RequisitionFormState extends State<RequisitionForm> {
         'api/admin/requisitionCategory', currentUser.token);
 
     List? categories = categoriesMap['requisitionCategory'];
-    setState(() {
-      this.categories = categories!
-          .map((doc) => SmartRequisitionCategory.fromJson(doc))
-          .toList();
-      categories = null;
-    });
+
+    this.categories = categories!
+        .map((doc) => SmartRequisitionCategory.fromJson(doc))
+        .toList();
+    categories = null;
   }
 
   _loadFileFinancialStatus() async {
@@ -296,16 +296,14 @@ class _RequisitionFormState extends State<RequisitionForm> {
         currentUser.token);
 
     int? financialStatus = financialStatusMap['caseFinancialStatus'];
-    setState(() {
-      this.financialStatus = financialStatus!;
-      financialStatus = null;
-    });
+
+    this.financialStatus = financialStatus!;
+    financialStatus = null;
   }
 
   _onTapSearchedFile(SmartFile value) {
     setState(() {
       file = value;
-      _loadApprovers();
       _loadFileFinancialStatus();
     });
   }
@@ -326,6 +324,15 @@ class _RequisitionFormState extends State<RequisitionForm> {
     setState(() {
       category = value;
     });
+  }
+
+  _fillFormsForEdit() {
+    if (widget.requisition != null) {
+      dateController.text =
+          DateFormat('dd/MM/yyyy').format(widget.requisition!.date);
+      amountController.text = widget.requisition!.amount;
+      descriptionController.text = widget.requisition!.description!;
+    }
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:smart_case/models/smart_requisition.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/requisition/requisition_item.dart';
+import 'package:toast/toast.dart';
 
 import '../../theme/color.dart';
 import '../../util/smart_case_init.dart';
@@ -19,6 +20,8 @@ class RequisitionViewBottomSheetContent extends StatefulWidget {
 
 class _RequisitionViewBottomSheetContentState
     extends State<RequisitionViewBottomSheetContent> {
+  final ToastContext toast = ToastContext();
+
   late Requisition requisition;
 
   TextEditingController commentController = TextEditingController();
@@ -27,7 +30,9 @@ class _RequisitionViewBottomSheetContentState
 
   @override
   Widget build(BuildContext context) {
+    toast.init(context);
     requisition = ModalRoute.of(context)!.settings.arguments as Requisition;
+    amountController.text = requisition.amount;
 
     return Scaffold(
       backgroundColor: AppColors.appBgColor,
@@ -62,7 +67,7 @@ class _RequisitionViewBottomSheetContentState
                   padding: 10,
                   requisition: requisition,
                 ),
-                _buildAmountHolder('10,000'),
+                _buildAmountHolder(),
                 CustomTextArea(
                   hint: "Add comments",
                   controller: commentController,
@@ -104,7 +109,7 @@ class _RequisitionViewBottomSheetContentState
     );
   }
 
-  Widget _buildAmountHolder(String amount) {
+  Widget _buildAmountHolder() {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.only(top: 10),
@@ -125,10 +130,6 @@ class _RequisitionViewBottomSheetContentState
         height: 50,
         child: TextFormField(
           decoration: InputDecoration(
-            label: const Text(
-              'Amount',
-              style: TextStyle(color: AppColors.inActiveColor, fontSize: 18),
-            ),
             filled: true,
             fillColor: AppColors.textBoxColor,
             hintStyle:
@@ -142,6 +143,14 @@ class _RequisitionViewBottomSheetContentState
           inputFormatters: [
             CurrencyInputFormatter(),
           ],
+          readOnly: (requisition.requisitionStatus.code == "PRIMARY_APPROVED" &&
+                  requisition.requisitionStatus.code == "APPROVED")
+              ? true
+              : false,
+          enabled: (requisition.requisitionStatus.code == "PRIMARY_APPROVED" &&
+                  requisition.requisitionStatus.code == "APPROVED")
+              ? false
+              : true,
           controller: amountController,
           autofocus: false,
           style: const TextStyle(
@@ -154,152 +163,131 @@ class _RequisitionViewBottomSheetContentState
   }
 
   Widget _buildButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        FilledButton(
-          onPressed: _approveRequisition,
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.resolveWith((states) => AppColors.green),
-          ),
-          child: const Text(
-            'Approve',
-          ),
-        ),
-        FilledButton(
-          onPressed: _returnRequisition,
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.resolveWith((states) => AppColors.orange),
-          ),
-          child: const Text(
-            'Return',
-          ),
-        ),
-        FilledButton(
-          onPressed: _rejectRequisition,
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.resolveWith((states) => AppColors.red),
-          ),
-          child: const Text(
-            'Reject',
-          ),
-        ),
-      ],
-    );
+    return (requisition.canPay == true)
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              FilledButton(
+                onPressed: _payoutRequisition,
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith(
+                      (states) => AppColors.green),
+                ),
+                child: const Text(
+                  'Pay out',
+                ),
+              ),
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              FilledButton(
+                onPressed: _approveRequisition,
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith(
+                      (states) => AppColors.green),
+                ),
+                child: const Text(
+                  'Approve',
+                ),
+              ),
+              FilledButton(
+                onPressed: _returnRequisition,
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith(
+                      (states) => AppColors.orange),
+                ),
+                child: const Text(
+                  'Return',
+                ),
+              ),
+              FilledButton(
+                onPressed: _rejectRequisition,
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith(
+                      (states) => AppColors.red),
+                ),
+                child: const Text(
+                  'Reject',
+                ),
+              ),
+            ],
+          );
+  }
+
+  _payoutRequisition() {
+    _submitData("PAID", 'Pay out successful');
   }
 
   _approveRequisition() {
-    if (requisition.canApprove == 'LV1') {
-      SmartCaseApi.smartPost(
-          'api/accounts/requisitions/${requisition.caseFile.id}/process',
-          currentUser.token, {
-        "forms": 1,
-        "payout_amount": amountController.text.trim(),
-        "action_comment": commentController.text.trim(),
-        "submit": "APPROVED"
-      });
-    } else if (requisition.canApprove == 'LV2') {
-      if (requisition.requisitionStatus.code == "SUBMITTED") {
-        SmartCaseApi.smartPost(
-            'api/accounts/requisitions/${requisition.caseFile.id}/process',
-            currentUser.token, {
-          "forms": 1,
-          "payout_amount": amountController.text.trim(),
-          "action_comment": commentController.text.trim(),
-          "submit": "PRIMARY_APPROVED"
-        });
-      } else if (requisition.requisitionStatus.code == "PRIMARY_APPROVED") {
-        SmartCaseApi.smartPost(
-            'api/accounts/requisitions/${requisition.caseFile.id}/process',
-            currentUser.token, {
-          "forms": 1,
-          "payout_amount": amountController.text.trim(),
-          "action_comment": commentController.text.trim(),
-          "submit": "APPROVED"
-        });
+    if (requisition.requisitionStatus.code == 'EDITED' ||
+        requisition.requisitionStatus.code == "SUBMITTED") {
+      if (requisition.canApprove == 'LV1') {
+        _submitData("APPROVED", 'Requisition approved');
+      } else if (requisition.canApprove == 'LV2') {
+        _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
       }
+    } else if (requisition.requisitionStatus.code == "PRIMARY_APPROVED") {
+      _submitData("SECONDARY_APPROVED", 'Requisition approved');
     }
   }
 
   _returnRequisition() {
-    if (requisition.canApprove == 'LVL1') {
-      SmartCaseApi.smartPost(
-          'api/accounts/requisitions/${requisition.caseFile.id}/process',
-          currentUser.token, {
-        "forms": 1,
-        "payout_amount": amountController.text.trim(),
-        "action_comment": commentController.text.trim(),
-        "submit": "RETURNED"
-      });
-    } else if (requisition.canApprove == 'LVL2') {
-      if (requisition.requisitionStatus.code == "SUBMITTED") {
-        SmartCaseApi.smartPost(
-            'api/accounts/requisitions/${requisition.caseFile.id}/process',
-            currentUser.token, {
-          "forms": 1,
-          "payout_amount": amountController.text.trim(),
-          "action_comment": commentController.text.trim(),
-          "submit": "PRIMARY_RETURNED"
-        });
-      } else if (requisition.requisitionStatus.code == "PRIMARY_RETURNED") {
-        SmartCaseApi.smartPost(
-            'api/accounts/requisitions/${requisition.caseFile.id}/process',
-            currentUser.token, {
-          "forms": 1,
-          "payout_amount": amountController.text.trim(),
-          "action_comment": commentController.text.trim(),
-          "submit": "RETURNED"
-        });
+    if (requisition.requisitionStatus.code == 'EDITED' ||
+        requisition.requisitionStatus.code == "SUBMITTED") {
+      if (requisition.canApprove == 'LVL1') {
+        _submitData("RETURNED", 'Action successful');
+      } else if (requisition.canApprove == 'LVL2') {
+        _submitData("PRIMARY_RETURNED", 'Action successful');
       }
+    } else if (requisition.requisitionStatus.code == "PRIMARY_RETURNED") {
+      _submitData("SECONDARY_RETURNED", 'Action successful');
     }
   }
 
   _rejectRequisition() {
-    if (requisition.canApprove == 'LVL1') {
-      SmartCaseApi.smartPost(
-          'api/accounts/requisitions/${requisition.caseFile.id}/process',
-          currentUser.token, {
+    if (requisition.requisitionStatus.code == 'EDITED' ||
+        requisition.requisitionStatus.code == "SUBMITTED") {
+      if (requisition.canApprove == 'LVL1') {
+        _submitData("REJECTED", 'Action successful');
+      } else if (requisition.canApprove == 'LVL2') {
+        _submitData("PRIMARY_REJECTED", 'Action successful');
+      }
+    } else if (requisition.requisitionStatus.code == "PRIMARY_REJECTED") {
+      _submitData("SECONDARY_REJECTED", 'Action successful');
+    }
+  }
+
+  _onSuccess(String text) {
+    Toast.show(text, duration: Toast.lengthLong, gravity: Toast.bottom);
+    Navigator.pop(context);
+  }
+
+  _onError() {
+    Toast.show("An error occurred",
+        duration: Toast.lengthLong, gravity: Toast.bottom);
+  }
+
+  _submitData(String value, String toastText) {
+    SmartCaseApi.smartPost(
+      'api/accounts/requisitions/${requisition.id}/process',
+      currentUser.token,
+      {
         "forms": 1,
         "payout_amount": amountController.text.trim(),
         "action_comment": commentController.text.trim(),
-        "submit": "REJECTED"
-      });
-    } else if (requisition.canApprove == 'LVL2') {
-      if (requisition.requisitionStatus.code == "SUBMITTED") {
-        SmartCaseApi.smartPost(
-            'api/accounts/requisitions/${requisition.caseFile.id}/process',
-            currentUser.token, {
-          "forms": 1,
-          "payout_amount": amountController.text.trim(),
-          "action_comment": commentController.text.trim(),
-          "submit": "PRIMARY_REJECTED"
-        });
-      } else if (requisition.requisitionStatus.code == "PRIMARY_REJECTED") {
-        SmartCaseApi.smartPost(
-            'api/accounts/requisitions/${requisition.caseFile.id}/process',
-            currentUser.token, {
-          "forms": 1,
-          "payout_amount": amountController.text.trim(),
-          "action_comment": commentController.text.trim(),
-          "submit": "REJECTED"
-        });
-      }
-    }
+        "submit": value,
+      },
+      onSuccess: () => _onSuccess(toastText),
+      onError: _onError,
+    );
   }
 
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void setState(VoidCallback fn) {
-    amountController.text = requisition.amount;
-
-    super.setState(fn);
   }
 }

@@ -258,7 +258,8 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                           vertical: 15, horizontal: 15),
                       child: (isStartDate)
                           ? CalendarDatePicker(
-                              initialDate: DateTime.now(),
+                              initialDate: DateFormat('dd/MM/yyyy')
+                                  .parse(startSelectedDate),
                               firstDate: DateTime(DateTime.now().year),
                               lastDate: DateTime(DateTime.now().year + 99),
                               onDateChanged: (DateTime newDate) {
@@ -271,6 +272,9 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                                         startSelectedDate;
 
                                     endSelectedDate = startSelectedDate;
+
+                                    widget.endDateController.text =
+                                        startSelectedDate;
 
                                     _showStartContent = false;
                                   } else if (isEndDate) {
@@ -287,21 +291,25 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                             )
                           : CupertinoDatePicker(
                               mode: CupertinoDatePickerMode.time,
-                              initialDateTime: DateTime.now(),
+                              initialDateTime: DateFormat('h:mm a').parse(startSelectedTime),
                               onDateTimeChanged: (DateTime newTime) {
                                 setState(() {
                                   if (isStartTime) {
                                     startSelectedTime =
                                         DateFormat('h:mm a').format(newTime);
-                                    widget.endDateController.text =
-                                        endSelectedTime;
 
                                     endSelectedTime = DateFormat('h:mm a')
                                         .format(newTime
                                             .add(const Duration(hours: 1)));
+
+                                    widget.startTimeController.text =
+                                        startSelectedTime;
+                                    widget.endTimeController.text =
+                                        endSelectedTime;
                                   } else if (isEndTime) {
                                     endSelectedTime =
                                         DateFormat('h:mm a').format(newTime);
+
                                     widget.endTimeController.text =
                                         endSelectedTime;
                                   }
@@ -325,21 +333,16 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                           vertical: 15, horizontal: 15),
                       child: (isEndDate)
                           ? CalendarDatePicker(
-                              initialDate: DateTime.now(),
+                              initialDate: DateFormat('dd/MM/yyyy')
+                                  .parse(endSelectedDate),
                               firstDate: DateTime(DateTime.now().year),
                               lastDate: DateTime(DateTime.now().year + 99),
                               onDateChanged: (DateTime newDate) {
                                 setState(() {
-                                  if (isStartDate) {
-                                    startSelectedDate = DateFormat('dd/MM/yyyy')
-                                        .format(newDate);
-                                    widget.startDateController.text =
-                                        startSelectedDate;
-
-                                    _showEndContent = false;
-                                  } else if (isEndDate) {
+                                  if (isEndDate) {
                                     endSelectedDate = DateFormat('dd/MM/yyyy')
                                         .format(newDate);
+
                                     widget.endDateController.text =
                                         endSelectedDate;
 
@@ -350,15 +353,11 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                             )
                           : CupertinoDatePicker(
                               mode: CupertinoDatePickerMode.time,
-                              initialDateTime: DateFormat('h:mm a').parse(endSelectedTime),
+                              initialDateTime:
+                                  DateFormat('h:mm a').parse(endSelectedTime),
                               onDateTimeChanged: (DateTime newTime) {
                                 setState(() {
-                                  if (isEndDate) {
-                                    startSelectedTime =
-                                        DateFormat('h:mm a').format(newTime);
-                                    widget.endDateController.text =
-                                        endSelectedTime;
-                                  } else if (isEndTime) {
+                                  if (isEndTime) {
                                     endSelectedTime =
                                         DateFormat('h:mm a').format(newTime);
                                     widget.endTimeController.text =
