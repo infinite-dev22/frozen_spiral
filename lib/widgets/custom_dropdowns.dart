@@ -141,6 +141,27 @@ class SearchableDropDown<T extends SmartModel> extends StatelessWidget {
   }
 
   _buildBody() {
+    // DropDownTextField(
+    //       // initialValue: "name4",
+    //       controller: controller,
+    //       clearOption: true,
+    //       // enableSearch: true,
+    //       // dropdownColor: Colors.green,
+    //       searchDecoration: InputDecoration(
+    //           hintText: "Select $hintText"),
+    //       validator: (value) {
+    //         if (value == null) {
+    //           return "Required field";
+    //         } else {
+    //           return null;
+    //         }
+    //       },
+    //       dropDownItemCount: menuItems.length,
+    //
+    //       dropDownList: menuItems.map((item) => DropDownValueModel(name: item.getName(), value: item.getId())).toList(),
+    //       onChanged: (value) => onChanged!(value),
+    //     )
+
     return SearchableDropdown<T>(
       backgroundDecoration: (child) => Container(
         width: double.infinity,
@@ -284,8 +305,7 @@ class GenderDropdown extends StatelessWidget {
             ),
             hint: const Text(
               'Select gender',
-              style:
-                  TextStyle(color: AppColors.inActiveColor, fontSize: 15),
+              style: TextStyle(color: AppColors.inActiveColor, fontSize: 15),
             ),
             items: const [
               DropdownMenuItem<int>(

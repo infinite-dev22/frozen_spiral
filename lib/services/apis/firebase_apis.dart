@@ -1,16 +1,11 @@
-import "dart:convert";
-import "dart:io";
-
-import "package:firebase_core/firebase_core.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/foundation.dart";
-import "package:http/http.dart" as http;
 
 import "../../util/smart_case_init.dart";
 
-class FirebaseApi {
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+FirebaseMessaging messaging = FirebaseMessaging.instance;
 
+class FirebaseApi {
   Future<void> initPushNotification() async {
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
@@ -22,7 +17,7 @@ class FirebaseApi {
       sound: true,
     );
 
-    final fcmToken = await FirebaseMessaging.instance.getToken();
+    final fcmToken = await messaging.getToken();
     await storage.write(key: "fcmToken", value: fcmToken);
     print("FCM Token: $fcmToken");
 
@@ -31,12 +26,12 @@ class FirebaseApi {
 }
 
 appFCMInit() {
-  FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
+  messaging.onTokenRefresh.listen((fcmToken) async {
     // TODO: If necessary send token to application server.
     // Note: This callback is fired at each app startup and whenever a new
     // token is generated.
 
-    final fcmToken = await FirebaseMessaging.instance.getToken();
+    final fcmToken = await messaging.getToken();
     await storage.write(key: "fcmToken", value: fcmToken);
   }).onError((err) {
     if (kDebugMode) {
@@ -61,10 +56,6 @@ handleForegroundMasseges() {
 
 @pragma("vm:entry-point")
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you"re going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
-
   print("Handling a background message: ${message.messageId}");
 
   if (message.notification != null) {
