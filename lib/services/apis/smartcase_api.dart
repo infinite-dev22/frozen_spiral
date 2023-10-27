@@ -87,7 +87,7 @@ class SmartCaseApi {
   static smartPost(String endPoint, String token, Object data,
       {Function()? onSuccess, Function()? onError}) async {
     var client = RetryClient(http.Client());
-
+    print(jsonEncode(data));
     try {
       // print(json.encode(data));
       // print(Uri.https(url.replaceRange(0, 8, ''), endPoint));
@@ -113,7 +113,8 @@ class SmartCaseApi {
             "content-Type": "application/json",
             "Accept": "application/json",
           });
-      print(response.statusCode);
+      print(response.bodyBytes);
+      print(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (response.statusCode == 200) {
         if (onSuccess != null) {
           onSuccess();
