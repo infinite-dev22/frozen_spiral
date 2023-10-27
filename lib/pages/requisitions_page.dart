@@ -4,6 +4,7 @@ import 'package:smart_case/models/smart_requisition.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/requisition/requisition_item.dart';
 
+import '../models/smart_currency.dart';
 import '../services/apis/smartcase_api.dart';
 import '../util/smart_case_init.dart';
 import '../widgets/custom_appbar.dart';
@@ -20,6 +21,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
 
   List<Requisition> requisitions = List.empty(growable: true);
   List<Requisition> filteredRequisitions = List.empty(growable: true);
+  List<SmartCurrency> currencies = List.empty(growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           color: AppColors.white,
           padding: 10,
           requisition: requisitions.elementAt(index),
+          currencies: currencies,
         );
       },
     );
@@ -98,6 +101,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   @override
   void initState() {
     _setUpData();
+    _loadCurrencies();
 
     filterController.text == 'Name';
 
@@ -113,5 +117,16 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
               .contains(value.toLowerCase())));
       setState(() {});
     }
+  }
+
+  _loadCurrencies() async {
+    Map currencyMap = await SmartCaseApi.smartFetch(
+        'api/admin/currencytypes', currentUser.token);
+    List? currencyList = currencyMap["currencytypes"];
+    setState(() {
+      currencies =
+          currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList();
+      currencyList = null;
+    });
   }
 }

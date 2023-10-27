@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_requisition.dart';
 import 'package:smart_case/widgets/requisition/reuisition_item_status.dart';
 
+import '../../models/smart_currency.dart';
+import '../../pages/forms/requisition_form.dart';
 import '../../theme/color.dart';
 
 class RequisitionItem extends StatelessWidget {
@@ -14,9 +16,12 @@ class RequisitionItem extends StatelessWidget {
     required this.padding,
     this.showActions = true,
     this.showFinancialStatus = false,
+    this.currencies,
   });
 
   final Requisition requisition;
+  final List<SmartCurrency>? currencies;
+
   final bool showActions;
   final Color color;
   final double padding;
@@ -101,8 +106,7 @@ class RequisitionItem extends StatelessWidget {
                                   'SUBMITTED' ||
                           requisition.requisitionStatus.code == 'EDITED')
                         TextButton(
-                          onPressed: () =>
-                              Navigator.pushNamed(context, '/requisition'),
+                          onPressed: () => _buildRequisitionForm(context),
                           child: const Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -200,6 +204,16 @@ class RequisitionItem extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  _buildRequisitionForm(BuildContext context) {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => RequisitionForm(currencies: currencies!),
     );
   }
 }

@@ -131,11 +131,12 @@ class _RequisitionFormState extends State<RequisitionForm> {
                             : (financialStatus < 0)
                                 ? AppColors.red
                                 : AppColors.blue),
-                  SearchableDropDown<SmartUser>(
-                    hintText: 'approver',
-                    menuItems: approvers,
-                    onChanged: _onTapSearchedApprover,
-                  ),
+                  if (file != null)
+                    SearchableDropDown<SmartUser>(
+                      hintText: 'approver',
+                      menuItems: approvers,
+                      onChanged: _onTapSearchedApprover,
+                    ),
                   Container(
                     height: 50,
                     width: double.infinity,
@@ -266,14 +267,12 @@ class _RequisitionFormState extends State<RequisitionForm> {
   }
 
   _loadApprovers() async {
-    approvers.clear();
     Map usersMap =
         await SmartCaseApi.smartFetch('api/hr/employees', currentUser.token);
 
-    List? users = usersMap['search']['employees'];
+    List users = usersMap['search']['employees'];
     setState(() {
-      approvers = users!.map((doc) => SmartUser.fromJson(doc)).toList();
-      users = null;
+      approvers = users.map((doc) => SmartUser.fromJson(doc)).toList();
     });
   }
 
@@ -305,7 +304,6 @@ class _RequisitionFormState extends State<RequisitionForm> {
   _onTapSearchedFile(SmartFile value) {
     setState(() {
       file = value;
-      _loadApprovers();
       _loadFileFinancialStatus();
     });
   }

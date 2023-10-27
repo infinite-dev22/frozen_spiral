@@ -71,7 +71,7 @@ class _DiaryFormState extends State<DiaryForm> {
         Expanded(
           child: GestureDetector(
             onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus();
+              // FocusManager.instance.primaryFocus?.unfocus();
             },
             child: NotificationListener<ScrollNotification>(
               onNotification: (scrollNotification) {
@@ -137,7 +137,6 @@ class _DiaryFormState extends State<DiaryForm> {
                   if (file != null)
                     Column(
                       children: [
-                        const SizedBox(height: 10),
                         MultiSelectDropDown(
                           showClearIcon: true,
                           hint: 'Select contact to notify',
@@ -166,26 +165,33 @@ class _DiaryFormState extends State<DiaryForm> {
                     dateController: reminderDateController,
                     timeController: reminderTimeController,
                   ),
-                  MultiSelectDropDown(
-                    hint: 'Remind me with',
-                    showClearIcon: true,
-                    onOptionSelected: (options) {
-                      for (var element in options) {
-                        employeeIds.add(element.value!);
-                      }
-                    },
-                    options: employees
-                        .map((employee) => ValueItem(
-                            label: employee.getName(),
-                            value: employee.id.toString()))
-                        .toList(),
-                    selectionType: SelectionType.multi,
-                    chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                    borderColor: AppColors.white,
-                    optionTextStyle: const TextStyle(fontSize: 16),
-                    selectedOptionIcon: const Icon(Icons.check_circle),
-                  ),
-                  const SizedBox(height: 10),
+                  if (file != null)
+                    Column(
+                      children: [
+                        MultiSelectDropDown(
+                          hint: 'Remind me with',
+                          searchEnabled: true,
+                          showClearIcon: true,
+                          dropdownHeight: 300,
+                          onOptionSelected: (options) {
+                            for (var element in options) {
+                              employeeIds.add(element.value!);
+                            }
+                          },
+                          options: employees
+                              .map((employee) => ValueItem(
+                                  label: employee.getName(),
+                                  value: employee.id.toString()))
+                              .toList(),
+                          selectionType: SelectionType.multi,
+                          chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                          borderColor: AppColors.white,
+                          optionTextStyle: const TextStyle(fontSize: 16),
+                          selectedOptionIcon: const Icon(Icons.check_circle),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                   CustomTextArea(
                     key: globalKey,
                     hint: 'Description',
