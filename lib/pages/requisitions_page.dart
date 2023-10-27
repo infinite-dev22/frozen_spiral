@@ -93,9 +93,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                     ['requisition_status']['code']),
             requisitionWorkflow: requisition['requisition_workflow']))
         .toList();
-    // setState(() {
-    //   requisitions = null;
-    // });
+     setState(() {});
   }
 
   @override
