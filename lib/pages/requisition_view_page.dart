@@ -222,7 +222,7 @@ class _RequisitionViewPageState
   }
 
   _payoutRequisition() {
-    _submitData("PAID", 'Pay out successful');
+    _submitData("PAY_OUT", 'Pay out successful');
   }
 
   _approveRequisition() {
