@@ -47,6 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         backgroundColor: AppColors.primary,
         title: AppBarContent(
+          canNavigate: true,
           isNetwork: currentUserImage != null ? true : false,
         ),
       ),

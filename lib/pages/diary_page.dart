@@ -29,7 +29,6 @@ class _DiaryPageState extends State<DiaryPage> {
     CalendarView.schedule
   ];
 
-
   final CalendarController _calendarController = CalendarController();
 
   final bool _showLeadingAndTrailingDates = true;
@@ -60,6 +59,7 @@ class _DiaryPageState extends State<DiaryPage> {
         ),
         backgroundColor: AppColors.primary,
         title: AppBarContent(
+          canNavigate: true,
           isNetwork: currentUserImage != null ? true : false,
         ),
       ),
@@ -258,7 +258,8 @@ Widget scheduleViewBuilder(
   return Stack(
     children: <Widget>[
       Image(
-          image: ExactAssetImage('assets/images/calendar_images/$monthName.png'),
+          image:
+              ExactAssetImage('assets/images/calendar_images/$monthName.png'),
           fit: BoxFit.cover,
           width: details.bounds.width,
           height: details.bounds.height),

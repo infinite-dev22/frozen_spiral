@@ -13,6 +13,7 @@ class AppBarContent extends StatelessWidget {
   AppBarContent(
       {super.key,
       this.searchable = false,
+      this.canNavigate = false,
       this.filterable = false,
       this.search = '',
       this.signOut,
@@ -20,6 +21,7 @@ class AppBarContent extends StatelessWidget {
       this.onChanged, this.filterController});
 
   final bool searchable;
+  final bool canNavigate;
   final bool filterable;
   final bool isNetwork;
   final String search;
@@ -52,13 +54,13 @@ class AppBarContent extends StatelessWidget {
       children: [
         Row(
           children: [
-            if (!searchable)
+            (!searchable && !canNavigate) ?
               const CustomSpacer(
                 width: 50,
                 height: 40,
                 radius: 10,
-                bgColor: AppColors.primary,
-              ),
+                bgColor: Colors.transparent,
+              ) : const SizedBox(),
             Expanded(
               child: searchable
                   ? CustomTextBox(

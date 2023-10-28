@@ -15,12 +15,10 @@ class RequisitionViewPage extends StatefulWidget {
   const RequisitionViewPage({super.key});
 
   @override
-  State<RequisitionViewPage> createState() =>
-      _RequisitionViewPageState();
+  State<RequisitionViewPage> createState() => _RequisitionViewPageState();
 }
 
-class _RequisitionViewPageState
-    extends State<RequisitionViewPage> {
+class _RequisitionViewPageState extends State<RequisitionViewPage> {
   final ToastContext toast = ToastContext();
 
   late Requisition requisition;
@@ -29,7 +27,7 @@ class _RequisitionViewPageState
   TextEditingController amountController = TextEditingController();
   bool isHeadElevated = false;
   NumberFormat formatter =
-  NumberFormat('###,###,###,###,###,###,###,###,###.##');
+      NumberFormat('###,###,###,###,###,###,###,###,###.##');
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +42,10 @@ class _RequisitionViewPageState
           color: AppColors.white,
         ),
         backgroundColor: AppColors.primary,
-        title:
-            AppBarContent(isNetwork: currentUser.avatar != null ? true : false),
+        title: AppBarContent(
+          isNetwork: currentUser.avatar != null ? true : false,
+          canNavigate: true,
+        ),
       ),
       body: _buildBody(),
     );
