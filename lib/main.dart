@@ -16,7 +16,7 @@ import 'package:smart_case/pages/tasks_page.dart';
 import 'package:smart_case/pages/welcome_page.dart';
 import 'package:smart_case/services/apis/firebase_apis.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/widgets/requisition/requisition_view_bottom_sheet_content.dart';
+import 'package:smart_case/pages/requisition_view_page.dart';
 
 import 'firebase_options.dart';
 
@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
         '/alerts': (context) => const AlertsPage(),
         '/locator': (context) => const LocatorPage(),
         '/profile': (context) => const ProfilePage(),
-        '/requisition': (context) => const RequisitionViewBottomSheetContent(),
+        '/requisition': (context) => const RequisitionViewPage(),
       },
     );
   }

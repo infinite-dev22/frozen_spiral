@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_requisition.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/requisition/requisition_item.dart';
 import 'package:toast/toast.dart';
 
-import '../../theme/color.dart';
-import '../../util/smart_case_init.dart';
-import '../custom_appbar.dart';
+import '../theme/color.dart';
+import '../util/smart_case_init.dart';
+import '../widgets/custom_appbar.dart';
 
-class RequisitionViewBottomSheetContent extends StatefulWidget {
-  const RequisitionViewBottomSheetContent({super.key});
+class RequisitionViewPage extends StatefulWidget {
+  const RequisitionViewPage({super.key});
 
   @override
-  State<RequisitionViewBottomSheetContent> createState() =>
-      _RequisitionViewBottomSheetContentState();
+  State<RequisitionViewPage> createState() =>
+      _RequisitionViewPageState();
 }
 
-class _RequisitionViewBottomSheetContentState
-    extends State<RequisitionViewBottomSheetContent> {
+class _RequisitionViewPageState
+    extends State<RequisitionViewPage> {
   final ToastContext toast = ToastContext();
 
   late Requisition requisition;
@@ -27,12 +28,14 @@ class _RequisitionViewBottomSheetContentState
   TextEditingController commentController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   bool isHeadElevated = false;
+  NumberFormat formatter =
+  NumberFormat('###,###,###,###,###,###,###,###,###.##');
 
   @override
   Widget build(BuildContext context) {
     toast.init(context);
     requisition = ModalRoute.of(context)!.settings.arguments as Requisition;
-    amountController.text = requisition.amount;
+    amountController.text = formatter.format(double.parse(requisition.amount));
 
     return Scaffold(
       backgroundColor: AppColors.appBgColor,

@@ -32,13 +32,15 @@ class RequisitionItem extends StatefulWidget {
 }
 
 class _RequisitionItemState extends State<RequisitionItem> {
+  NumberFormat formatter =
+      NumberFormat('###,###,###,###,###,###,###,###,###.##');
+
   @override
   Widget build(BuildContext context) {
     return _buildBody(context);
   }
 
   Widget _buildBody(BuildContext context) {
-    if (widget.requisition.canPay == true) print('${widget.requisition.number} - ${widget.requisition.canPay}');
     return Container(
       padding: EdgeInsets.fromLTRB(
         widget.padding,
@@ -185,7 +187,8 @@ class _RequisitionItemState extends State<RequisitionItem> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStringItem('Amount', widget.requisition.amount),
+              _buildStringItem('Amount',
+                  formatter.format(double.parse(widget.requisition.amount))),
               RequisitionItemStatus(
                   name: widget.requisition.requisitionStatus.name,
                   bgColor: Colors.green,
