@@ -59,10 +59,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
             itemCount: activities.length,
             itemBuilder: (context, index) {
               return ActivityItem(
-                name: activities[index].name,
-                date: activities[index].activityDate ?? 'Null',
-                doneBy:
-                    '${currentUser.firstName} ${currentUser.middleName ?? ''} ${currentUser.lastName}',
+                activity: activities[index],
                 padding: 20,
                 color: Colors.white,
               );
@@ -85,10 +82,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
             itemCount: filteredActivities.length,
             itemBuilder: (context, index) {
               return ActivityItem(
-                name: filteredActivities[index].name,
-                date: filteredActivities[index].activityDate ?? 'Null',
-                doneBy:
-                    '${currentUser.firstName} ${currentUser.middleName ?? ''} ${currentUser.lastName}',
+                activity: filteredActivities[index],
                 padding: 20,
                 color: Colors.white,
               );

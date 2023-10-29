@@ -24,7 +24,7 @@ class RequisitionForm extends StatefulWidget {
     this.requisition,
   });
 
-  final Requisition? requisition;
+  final SmartRequisition? requisition;
   final Function()? onSave;
   final List<SmartCurrency> currencies;
 
@@ -329,8 +329,8 @@ class _RequisitionFormState extends State<RequisitionForm> {
   _fillFormsForEdit() {
     if (widget.requisition != null) {
       dateController.text =
-          DateFormat('dd/MM/yyyy').format(widget.requisition!.date);
-      amountController.text = widget.requisition!.amount;
+          DateFormat('dd/MM/yyyy').format(widget.requisition!.date!);
+      amountController.text = widget.requisition!.amount!;
       descriptionController.text = widget.requisition!.description!;
     }
   }
@@ -348,7 +348,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
 
   _submitFormData() {
     SmartRequisition smartRequisition = SmartRequisition(
-      date: dateController.text.trim(),
+      date: DateFormat().parse(dateController.text.trim()),
       amounts: [amountController.text.trim()],
       payoutAmount: financialStatus.toString(),
       descriptions: [

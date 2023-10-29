@@ -1,6 +1,7 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:smart_case/models/smart_contact.dart';
 import 'package:smart_case/theme/color.dart';
@@ -17,7 +18,9 @@ import '../../widgets/custom_searchable_async_file_bottom_sheet_contents.dart';
 import '../../widgets/form_title.dart';
 
 class ActivityForm extends StatefulWidget {
-  const ActivityForm({super.key});
+  const ActivityForm({super.key, this.activity});
+
+  final SmartActivity? activity;
 
   @override
   State<ActivityForm> createState() => _ActivityFormState();
@@ -60,26 +63,7 @@ class _ActivityFormState extends State<ActivityForm> {
         FormTitle(
           name: 'New Activity',
           isElevated: isTitleElevated,
-          onSave: () {
-            SmartCaseApi.smartPost(
-                'api/cases/${file!.id}/activities', currentUser.token, {
-              "description": descriptionController.text.trim(),
-              "case_activity_status_id": activity!.id,
-              "employee_id": currentUser.id,
-              "date": dateController.text.trim(),
-              "billable": billable,
-              "from": startTimeController.text.trim(),
-              "to": endTimeController.text.trim(),
-              "to_be_notified": emails,
-            }, onError: () {
-              Toast.show("An error occurred",
-                  duration: Toast.lengthLong, gravity: Toast.bottom);
-            }, onSuccess: () {
-              Toast.show("Activity added successfully",
-                  duration: Toast.lengthLong, gravity: Toast.bottom);
-              Navigator.pop(context);
-            });
-          },
+          onSave: _submitForm,
         ),
         Expanded(
           child: GestureDetector(
@@ -153,8 +137,7 @@ class _ActivityFormState extends State<ActivityForm> {
                           hint: 'Description',
                           controller: descriptionController,
                           onTap: () {
-                            Scrollable.ensureVisible(
-                                globalKey.currentContext!);
+                            Scrollable.ensureVisible(globalKey.currentContext!);
                           },
                         ),
                         const SizedBox(height: 10),
@@ -169,18 +152,15 @@ class _ActivityFormState extends State<ActivityForm> {
                             },
                             options: contacts
                                 .map((contact) => ValueItem(
-                                    label:
-                                        '${contact.name} - ${contact.email}',
-                                    value:
-                                        '${contact.name}|${contact.email}'))
+                                    label: '${contact.name} - ${contact.email}',
+                                    value: '${contact.name}|${contact.email}'))
                                 .toList(),
                             selectionType: SelectionType.multi,
                             chipConfig:
                                 const ChipConfig(wrapType: WrapType.wrap),
                             borderColor: AppColors.white,
                             optionTextStyle: const TextStyle(fontSize: 16),
-                            selectedOptionIcon:
-                                const Icon(Icons.check_circle),
+                            selectedOptionIcon: const Icon(Icons.check_circle),
                           ),
                         const SizedBox(
                             height:
@@ -264,7 +244,7 @@ class _ActivityFormState extends State<ActivityForm> {
                     if (files.isNotEmpty) {
                       isLoading = false;
                       searchedList.addAll(files.where((smartFile) => smartFile
-                          .fileName
+                          .fileName!
                           .toLowerCase()
                           .contains(value.toLowerCase())));
                       setState(() {});
@@ -306,7 +286,7 @@ class _ActivityFormState extends State<ActivityForm> {
                     if (activities.isNotEmpty) {
                       isLoading = false;
                       searchedList.addAll(activities.where((activity) =>
-                          activity.name
+                          activity.name!
                               .toLowerCase()
                               .contains(value.toLowerCase())));
                       setState(() {});
@@ -349,6 +329,7 @@ class _ActivityFormState extends State<ActivityForm> {
   @override
   void initState() {
     _setUpData();
+    _fillInFormDataForEdit();
 
     super.initState();
   }
@@ -356,7 +337,6 @@ class _ActivityFormState extends State<ActivityForm> {
   Future<void> _setUpData() async {
     activities = await SmartCaseApi.fetchAllActivities(currentUser.token);
     files = await SmartCaseApi.fetchAllFiles(currentUser.token);
-    setState(() {});
   }
 
   _onTapSearchedActivity(SmartActivity value) {
@@ -369,6 +349,44 @@ class _ActivityFormState extends State<ActivityForm> {
     setState(() {
       file = value;
       _loadContacts();
+    });
+  }
+
+  _fillInFormDataForEdit() {
+    if (widget.activity != null) {
+      descriptionController.text = widget.activity!.description!;
+      dateController.text = widget.activity!.activityDate ?? '';
+      // To Do: lines below will be uncommented when activity class is re-written.
+      startTimeController.text = DateFormat('dd/MM/yyyy').format(widget.activity!.startTime!);
+      endTimeController.text = DateFormat('dd/MM/yyyy').format(widget.activity!.endTime!);
+      billable = widget.activity!.billable!;
+      file = widget.activity?.file;
+      setState(() {});
+    }
+  }
+
+  _submitForm() {
+    SmartActivity smartActivity = SmartActivity(
+      description: descriptionController.text.trim(),
+      caseActivityStatusId: activity!.id,
+      employeeId: currentUser.id,
+      date: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
+      billable: billable,
+      startTime: DateFormat('h:mm a').parse(startTimeController.text.trim()),
+      endTime: DateFormat('h:mm a').parse(endTimeController.text.trim()),
+      emails: emails,
+    );
+
+    SmartCaseApi.smartPost(
+        'api/cases/${file!.id}/activities',
+        currentUser.token,
+        SmartActivity.toActivityCreateJson(smartActivity), onError: () {
+      Toast.show("An error occurred",
+          duration: Toast.lengthLong, gravity: Toast.bottom);
+    }, onSuccess: () {
+      Toast.show("Activity added successfully",
+          duration: Toast.lengthLong, gravity: Toast.bottom);
+      Navigator.pop(context);
     });
   }
 }

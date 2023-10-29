@@ -61,17 +61,17 @@ class _FilesPageState extends State<FilesPage> {
             itemBuilder: (context, index) {
               return FileItem(
                 fileName: filteredFiles.isNotEmpty
-                    ? filteredFiles[index].fileName
-                    : files[index].fileName,
+                    ? filteredFiles[index].fileName!
+                    : files[index].fileName!,
                 fileNumber: filteredFiles.isNotEmpty
-                    ? filteredFiles[index].fileNumber
-                    : files[index].fileNumber,
+                    ? filteredFiles[index].fileNumber!
+                    : files[index].fileNumber!,
                 dateCreated: filteredFiles.isNotEmpty
                     ? filteredFiles[index].dateOpened
                     : files[index].dateOpened,
                 clientName: filteredFiles.isNotEmpty
-                    ? filteredFiles[index].clientName
-                    : files[index].clientName,
+                    ? filteredFiles[index].clientName!
+                    : files[index].clientName!,
                 color: Colors.white,
                 padding: 20,
                 status: filteredFiles.isNotEmpty
@@ -97,10 +97,10 @@ class _FilesPageState extends State<FilesPage> {
             itemCount: filteredFiles.length,
             itemBuilder: (context, index) {
               return FileItem(
-                fileName: filteredFiles[index].fileName,
-                fileNumber: filteredFiles[index].fileNumber,
+                fileName: filteredFiles[index].fileName!,
+                fileNumber: filteredFiles[index].fileNumber!,
                 dateCreated: filteredFiles[index].dateOpened,
-                clientName: filteredFiles[index].clientName,
+                clientName: filteredFiles[index].clientName!,
                 color: Colors.white,
                 padding: 20,
                 status: filteredFiles[index].status!,

@@ -1,20 +1,22 @@
 import 'package:smart_case/models/smart_model.dart';
 
 class SmartFile extends SmartModel {
-  int id;
-  String fileName;
-  String fileNumber;
+  int? id;
+  String? fileName;
+  String? fileNumber;
   dynamic dateOpened;
-  String clientName;
+  String? clientName;
   String? status;
+  String? courtFileNumber;
 
   SmartFile({
-    required this.id,
-    required this.fileName,
-    required this.fileNumber,
-    required this.dateOpened,
-    required this.clientName,
-    required this.status,
+    this.id,
+    this.fileName,
+    this.fileNumber,
+    this.dateOpened,
+    this.clientName,
+    this.status,
+    this.courtFileNumber,
   });
 
   factory SmartFile.fromJson(Map json) {
@@ -25,6 +27,7 @@ class SmartFile extends SmartModel {
       dateOpened: json["date_opened"],
       clientName: json["client_name"],
       status: json["Status"],
+      courtFileNumber: json["court_file_number"],
     );
   }
 
@@ -36,16 +39,17 @@ class SmartFile extends SmartModel {
       "date_opened": file.dateOpened,
       "client_name": file.clientName,
       "Status": file.status,
+      "court_file_number": file.courtFileNumber,
     };
   }
 
   @override
   int getId() {
-    return id;
+    return id!;
   }
 
   @override
   String getName() {
-    return fileName;
+    return fileName!;
   }
 }

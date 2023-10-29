@@ -1,21 +1,25 @@
 class SmartEmployee {
-  final int id;
-  final String title;
-  final String code;
+  final int? id;
+  final String? firstName;
+  final String? lastName;
+  final String? title;
+  final String? code;
   final String? description;
-  final int isActive;
-  final int createdBy;
+  final int? isActive;
+  final int? createdBy;
   final int? updatedBy;
   final String? createdAt;
   final String? updatedAt;
 
   SmartEmployee({
-    required this.id,
-    required this.title,
-    required this.code,
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.title,
+    this.code,
     this.description,
-    required this.isActive,
-    required this.createdBy,
+    this.isActive,
+    this.createdBy,
     this.updatedBy,
     this.createdAt,
     this.updatedAt,
@@ -24,6 +28,8 @@ class SmartEmployee {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'first_name': firstName,
+      'last_name': lastName,
       'title': title,
       'code': code,
       'description': description,
@@ -35,17 +41,19 @@ class SmartEmployee {
     };
   }
 
-  factory SmartEmployee.fromJson(Map<String, dynamic> doc) {
+  factory SmartEmployee.fromJson(Map<String, dynamic> json) {
     return SmartEmployee(
-      id: doc['id'],
-      title: doc['title'],
-      code: doc['code'],
-      description: doc['description'],
-      isActive: doc['is_active'],
-      createdBy: doc['created_by'],
-      updatedBy: doc['updated_by'],
-      createdAt: doc['created_at'],
-      updatedAt: doc['updated_at'],
+      id: json['id'],
+      firstName: json['first_name'] as String,
+      lastName: json['last_name'] as String,
+      title: json['title'],
+      code: json['code'],
+      description: json['description'],
+      isActive: json['is_active'],
+      createdBy: json['created_by'],
+      updatedBy: json['updated_by'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
     );
   }
 }

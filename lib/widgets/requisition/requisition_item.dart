@@ -19,7 +19,7 @@ class RequisitionItem extends StatefulWidget {
     this.currencies,
   });
 
-  final Requisition requisition;
+  final SmartRequisition requisition;
   final List<SmartCurrency>? currencies;
 
   final bool showActions;
@@ -112,11 +112,12 @@ class _RequisitionItemState extends State<RequisitionItem> {
                               ),
                             )
                           : Container(),
-                      if (widget.requisition.isMine &&
-                              widget.requisition.canEdit &&
-                              widget.requisition.requisitionStatus.code ==
+                      if (widget.requisition.isMine! &&
+                              widget.requisition.canEdit! &&
+                              widget.requisition.requisitionStatus!.code ==
                                   'SUBMITTED' ||
-                          widget.requisition.requisitionStatus.code == 'EDITED')
+                          widget.requisition.requisitionStatus!.code ==
+                              'EDITED')
                         TextButton(
                           onPressed: () => _buildRequisitionForm(context),
                           child: const Row(
@@ -139,7 +140,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
                 ),
               ],
             ),
-          _buildStringItem('File Name', widget.requisition.caseFile.fileName),
+          _buildStringItem('File Name', widget.requisition.caseFile!.fileName),
           const SizedBox(
             height: 10,
           ),
@@ -147,7 +148,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
             Column(
               children: [
                 _buildStringItem('Financial Status',
-                    widget.requisition.requisitionStatus.code),
+                    widget.requisition.requisitionStatus!.code),
                 const SizedBox(
                   height: 10,
                 ),
@@ -162,7 +163,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
             ],
           ),
           Text(
-            DateFormat('dd/MM/yyyy').format(widget.requisition.date),
+            DateFormat('dd/MM/yyyy').format(widget.requisition.date!),
             style: const TextStyle(color: AppColors.inActiveColor),
           ),
           const SizedBox(
@@ -176,9 +177,9 @@ class _RequisitionItemState extends State<RequisitionItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStringItem('Requester',
-                  "${widget.requisition.employee.firstName} ${widget.requisition.employee.lastName}"),
+                  "${widget.requisition.employee!.firstName} ${widget.requisition.employee!.lastName}"),
               _buildStringItem('Supervisor',
-                  "${widget.requisition.supervisor.firstName} ${widget.requisition.supervisor.lastName}"),
+                  "${widget.requisition.supervisor!.firstName} ${widget.requisition.supervisor!.lastName}"),
             ],
           ),
           const SizedBox(
@@ -188,9 +189,9 @@ class _RequisitionItemState extends State<RequisitionItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStringItem('Amount',
-                  formatter.format(double.parse(widget.requisition.amount))),
+                  formatter.format(double.parse(widget.requisition.amount!))),
               RequisitionItemStatus(
-                  name: widget.requisition.requisitionStatus.name,
+                  name: widget.requisition.requisitionStatus!.name,
                   bgColor: Colors.green,
                   horizontalPadding: 20,
                   verticalPadding: 5),

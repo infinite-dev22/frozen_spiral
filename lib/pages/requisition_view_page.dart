@@ -21,7 +21,7 @@ class RequisitionViewPage extends StatefulWidget {
 class _RequisitionViewPageState extends State<RequisitionViewPage> {
   final ToastContext toast = ToastContext();
 
-  late Requisition requisition;
+  late SmartRequisition requisition;
 
   TextEditingController commentController = TextEditingController();
   TextEditingController amountController = TextEditingController();
@@ -32,8 +32,9 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   @override
   Widget build(BuildContext context) {
     toast.init(context);
-    requisition = ModalRoute.of(context)!.settings.arguments as Requisition;
-    amountController.text = formatter.format(double.parse(requisition.amount));
+    requisition =
+        ModalRoute.of(context)!.settings.arguments as SmartRequisition;
+    amountController.text = formatter.format(double.parse(requisition.amount!));
 
     return Scaffold(
       backgroundColor: AppColors.appBgColor,
@@ -146,12 +147,13 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
           inputFormatters: [
             CurrencyInputFormatter(),
           ],
-          readOnly: (requisition.requisitionStatus.code == "PRIMARY_APPROVED" &&
-                  requisition.requisitionStatus.code == "APPROVED")
-              ? true
-              : false,
-          enabled: (requisition.requisitionStatus.code == "PRIMARY_APPROVED" &&
-                  requisition.requisitionStatus.code == "APPROVED")
+          readOnly:
+              (requisition.requisitionStatus!.code == "PRIMARY_APPROVED" &&
+                      requisition.requisitionStatus!.code == "APPROVED")
+                  ? true
+                  : false,
+          enabled: (requisition.requisitionStatus!.code == "PRIMARY_APPROVED" &&
+                  requisition.requisitionStatus!.code == "APPROVED")
               ? false
               : true,
           controller: amountController,
@@ -226,40 +228,40 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   _approveRequisition() {
-    if (requisition.requisitionStatus.code == 'EDITED' ||
-        requisition.requisitionStatus.code == "SUBMITTED") {
+    if (requisition.requisitionStatus!.code == 'EDITED' ||
+        requisition.requisitionStatus!.code == "SUBMITTED") {
       if (requisition.canApprove == 'LV1') {
         _submitData("APPROVED", 'Requisition approved');
       } else if (requisition.canApprove == 'LV2') {
         _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
       }
-    } else if (requisition.requisitionStatus.code == "PRIMARY_APPROVED") {
+    } else if (requisition.requisitionStatus!.code == "PRIMARY_APPROVED") {
       _submitData("SECONDARY_APPROVED", 'Requisition approved');
     }
   }
 
   _returnRequisition() {
-    if (requisition.requisitionStatus.code == 'EDITED' ||
-        requisition.requisitionStatus.code == "SUBMITTED") {
+    if (requisition.requisitionStatus!.code == 'EDITED' ||
+        requisition.requisitionStatus!.code == "SUBMITTED") {
       if (requisition.canApprove == 'LVL1') {
         _submitData("RETURNED", 'Action successful');
       } else if (requisition.canApprove == 'LVL2') {
         _submitData("PRIMARY_RETURNED", 'Action successful');
       }
-    } else if (requisition.requisitionStatus.code == "PRIMARY_RETURNED") {
+    } else if (requisition.requisitionStatus!.code == "PRIMARY_RETURNED") {
       _submitData("SECONDARY_RETURNED", 'Action successful');
     }
   }
 
   _rejectRequisition() {
-    if (requisition.requisitionStatus.code == 'EDITED' ||
-        requisition.requisitionStatus.code == "SUBMITTED") {
+    if (requisition.requisitionStatus!.code == 'EDITED' ||
+        requisition.requisitionStatus!.code == "SUBMITTED") {
       if (requisition.canApprove == 'LVL1') {
         _submitData("REJECTED", 'Action successful');
       } else if (requisition.canApprove == 'LVL2') {
         _submitData("PRIMARY_REJECTED", 'Action successful');
       }
-    } else if (requisition.requisitionStatus.code == "PRIMARY_REJECTED") {
+    } else if (requisition.requisitionStatus!.code == "PRIMARY_REJECTED") {
       _submitData("SECONDARY_REJECTED", 'Action successful');
     }
   }

@@ -240,7 +240,7 @@ class _DiaryFormState extends State<DiaryForm> {
                       if (files.isNotEmpty) {
                         isLoading = false;
                         searchedList.addAll(files.where((smartFile) => smartFile
-                            .fileName
+                            .fileName!
                             .toLowerCase()
                             .contains(value.toLowerCase())));
                       } else {
