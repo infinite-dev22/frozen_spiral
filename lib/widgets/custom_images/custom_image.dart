@@ -14,7 +14,6 @@ class CustomImage extends StatelessWidget {
     this.radius = 50,
     this.imageFit = BoxFit.cover,
     this.onClose,
-    this.onTap,
     this.isFile = false,
   });
 
@@ -30,7 +29,6 @@ class CustomImage extends StatelessWidget {
   final double radius;
   final BoxFit imageFit;
   final Function()? onClose;
-  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -38,29 +36,26 @@ class CustomImage extends StatelessWidget {
   }
 
   _buildImage() {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(radius),
-          image: (isNetwork)
-              ? DecorationImage(
-                  image: NetworkImage(file),
-                  fit: imageFit,
-                )
-              : (isFile)
-                  ? DecorationImage(
-                      image: FileImage(file),
-                      fit: imageFit,
-                    )
-                  : DecorationImage(
-                      image: AssetImage(file),
-                      fit: imageFit,
-                    ),
-        ),
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(radius),
+        image: (isNetwork)
+            ? DecorationImage(
+                image: NetworkImage(file),
+                fit: imageFit,
+              )
+            : (isFile)
+                ? DecorationImage(
+                    image: FileImage(file),
+                    fit: imageFit,
+                  )
+                : DecorationImage(
+                    image: AssetImage(file),
+                    fit: imageFit,
+                  ),
       ),
     );
   }

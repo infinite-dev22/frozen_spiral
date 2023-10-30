@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:smart_case/models/smart_activity.dart';
 
 import '../../theme/color.dart';
+import '../pages/forms/activity_form.dart';
+import '../util/smart_case_init.dart';
+import 'custom_icon_bottom.dart';
 
 class ActivityItem extends StatelessWidget {
-  const ActivityItem(
-      {super.key,
-      required this.name,
-      required this.date,
-      required this.doneBy,
-      required this.color,
-      required this.padding,
-      this.onPressed});
+  const ActivityItem({
+    super.key,
+    required this.activity,
+    required this.color,
+    required this.padding,
+  });
 
-  final String name;
-  final String date;
-  final String doneBy;
+  final SmartActivity activity;
   final Color color;
   final double padding;
-  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return _buildBody();
+    return _buildBody(context);
   }
 
-  _buildBody() {
+  _buildBody(BuildContext context) {
     return Stack(
       children: [
         Container(
           padding: EdgeInsets.all(padding),
+          margin: EdgeInsets.only(bottom: padding),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(
               Radius.circular(8),
@@ -46,7 +47,7 @@ class ActivityItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildStringItem('Activity Name', name),
+              _buildStringItem('Activity Name', activity.name),
               const SizedBox(
                 height: 10,
               ),
@@ -54,8 +55,15 @@ class ActivityItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildStringItem('Activity date', date),
-                  _buildStringItem('Done by', doneBy),
+                  _buildStringItem(
+                      'Activity date',
+                      activity.activityDate == null
+                          ? 'Null'
+                          : DateFormat("dd/MM/yyyy").format(
+                              DateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                                  .parse(activity.activityDate!))),
+                  _buildStringItem('Done by',
+                      '${currentUser.firstName} ${currentUser.middleName ?? ''} ${currentUser.lastName}'),
                 ],
               ),
             ],
@@ -65,11 +73,24 @@ class ActivityItem extends StatelessWidget {
           right: 0,
           top: 0,
           child: MaterialButton(
-            onPressed: onPressed,
-            child: _buildButtonData(),
+            onPressed: () => _onPressed(context),
+            child: const CustomIconButton(),
           ),
         ),
       ],
+    );
+  }
+
+  _onPressed(BuildContext context) {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      backgroundColor: AppColors.appBgColor,
+      builder: (context) => ActivityForm(
+        activity: activity,
+      ),
     );
   }
 
@@ -89,25 +110,6 @@ class ActivityItem extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-      ],
-    );
-  }
-
-  _buildButtonData() {
-    return const Row(
-      children: [
-        Icon(
-          Icons.mode_edit_rounded,
-          size: 15,
-          color: AppColors.darker,
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        Text(
-          'Edit',
-          style: TextStyle(color: AppColors.darker),
-        )
       ],
     );
   }

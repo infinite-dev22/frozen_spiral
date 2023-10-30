@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../theme/color.dart';
 import 'file_item_status.dart';
@@ -11,12 +12,14 @@ class FileItem extends StatelessWidget {
       required this.dateCreated,
       required this.clientName,
       required this.color,
-      required this.padding});
+      required this.padding,
+      required this.status});
 
   final String fileName;
   final String fileNumber;
   final String dateCreated;
   final String clientName;
+  final String status;
   final Color color;
   final double padding;
 
@@ -28,6 +31,7 @@ class FileItem extends StatelessWidget {
   _buildBody() {
     return Container(
       padding: EdgeInsets.all(padding),
+      margin: EdgeInsets.only(bottom: padding),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
           Radius.circular(8),
@@ -53,7 +57,7 @@ class FileItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStringItem('File Number', fileNumber),
-              _buildStringItem('Date opened', dateCreated),
+              _buildStringItem('Date opened', DateFormat("dd/MM/yyyy").format(DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(dateCreated))),
             ],
           ),
           const SizedBox(
@@ -63,8 +67,8 @@ class FileItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStringItem('Client Name', clientName),
-              const FileItemStatus(
-                  name: 'Mediation',
+              FileItemStatus(
+                  name: status,
                   bgColor: Colors.green,
                   horizontalPadding: 20,
                   verticalPadding: 5),

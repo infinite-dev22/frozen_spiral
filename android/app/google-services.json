@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "688632145485",
+    "project_id": "smartcase-238506",
+    "storage_bucket": "smartcase-238506.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688632145485:android:d9d24f5bd7d486b9811e04",
+        "android_client_info": {
+          "package_name": "com.infosec.smartCase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "688632145485-1iugsclafkqoe6dk20763uuk0uorhg4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgyWYccVEBr-N0_h27oESGk0eLY47mGF8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "688632145485-1iugsclafkqoe6dk20763uuk0uorhg4f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "688632145485-q9i94n7lt0474841l68vdd5bnsnsvc6r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smartcase.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688632145485:android:163a20fb124fce58811e04",
+        "android_client_info": {
+          "package_name": "com.smartcase.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "688632145485-1iugsclafkqoe6dk20763uuk0uorhg4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgyWYccVEBr-N0_h27oESGk0eLY47mGF8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "688632145485-1iugsclafkqoe6dk20763uuk0uorhg4f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "688632145485-q9i94n7lt0474841l68vdd5bnsnsvc6r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.smartcase.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

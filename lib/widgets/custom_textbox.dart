@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
 import 'package:smart_case/theme/color.dart';
 
 class CustomTextBox extends StatelessWidget {
@@ -8,7 +9,7 @@ class CustomTextBox extends StatelessWidget {
     this.prefix,
     this.controller,
     this.readOnly = false,
-    required this.onChanged,
+    this.onChanged,
     this.onTap,
     this.autoFocus = false,
   }) : super(key: key);
@@ -101,5 +102,182 @@ class CustomTextBox extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+class CustomTextArea extends StatelessWidget {
+  const CustomTextArea(
+      {super.key,
+      this.hint = '',
+      this.readOnly = false,
+      this.autoFocus = false,
+      this.controller,
+      this.onChanged,
+      this.minLines = 5,
+      this.onTap});
+
+  final String hint;
+  final bool readOnly;
+  final bool autoFocus;
+  final TextEditingController? controller;
+  final Function(String)? onChanged;
+  final Function()? onTap;
+  final int minLines;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Column(
+      children: [
+        TextFormField(
+          controller: controller,
+          readOnly: readOnly,
+          autofocus: autoFocus,
+          onChanged: onChanged,
+          minLines: minLines,
+          maxLines: 500,
+          onTap: onTap,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: AppColors.textBoxColor,
+            hintText: hint,
+            hintStyle: const TextStyle(color: AppColors.inActiveColor),
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SmartCaseTextField extends StatelessWidget {
+  const SmartCaseTextField(
+      {super.key, required this.hint, required this.controller});
+
+  final String hint;
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 50,
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: AppColors.textBoxColor,
+              hintText: hint,
+              hintStyle:
+                  const TextStyle(color: AppColors.inActiveColor, fontSize: 15),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+}
+
+class SmartCaseNumberField extends StatelessWidget {
+  const SmartCaseNumberField(
+      {super.key, required this.hint, required this.controller});
+
+  final String hint;
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 50,
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: AppColors.textBoxColor,
+              hintText: hint,
+              hintStyle:
+                  const TextStyle(color: AppColors.inActiveColor, fontSize: 15),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: [CurrencyInputFormatter()],
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+}
+
+class SmartText extends StatelessWidget {
+  const SmartText(
+      {super.key,
+      required this.value,
+      required this.icon,
+      required this.color});
+
+  final IconData icon;
+  final String value;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Container(
+      height: 50,
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: AppColors.textBoxColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: 20,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            value,
+            style: TextStyle(color: color, fontSize: 18),
+          ),
+        ],
+      ),
+    );
   }
 }
