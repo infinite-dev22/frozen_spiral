@@ -53,17 +53,18 @@ class SmartCaseApi {
     var client = RetryClient(http.Client());
 
     try {
-      var response = await client.get(
-          Uri.parse('${currentUser.url}/api/admin/caseActivityStatus'),
-          headers: {
-            HttpHeaders.authorizationHeader: "Bearer $token",
-          });
+      var response = await client
+          .get(Uri.parse('${currentUser.url}/api/activitiesindex'), headers: {
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      });
 
       if (response.statusCode == 200) {
         var decodedResponse =
             jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
-        List activityList = decodedResponse['caseActivityStatus']['data'];
+        List activityList = decodedResponse['caseActivites'];
+
+        print(activityList);
 
         List<SmartActivity> list =
             activityList.map((doc) => SmartActivity.fromJson(doc)).toList();
@@ -74,11 +75,13 @@ class SmartCaseApi {
           onError();
         }
       }
-    } catch (e) {
-      if (onError != null) {
-        onError();
-      }
-    } finally {
+    }
+    // catch (e) {
+    //   if (onError != null) {
+    //     onError();
+    //   }
+    // }
+    finally {
       client.close();
     }
     return [];
@@ -87,7 +90,6 @@ class SmartCaseApi {
   static smartPost(String endPoint, String token, Object data,
       {Function()? onSuccess, Function()? onError}) async {
     var client = RetryClient(http.Client());
-    // print(jsonEncode(data));
     try {
       // print(json.encode(data));
       // print(Uri.https(url.replaceRange(0, 8, ''), endPoint));
@@ -113,6 +115,49 @@ class SmartCaseApi {
             "content-Type": "application/json",
             "Accept": "application/json",
           });
+      print(response.statusCode);
+      print(response.headers);
+      print(response.body);
+      // print(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
+      if (response.statusCode == 200) {
+        if (onSuccess != null) {
+          onSuccess();
+        }
+      } else {
+        if (onError != null) {
+          onError();
+        }
+      }
+    }
+    // catch (e) {
+    //   if (onError != null) {
+    //     onError();
+    //   }
+    // }
+    finally {
+      client.close();
+    }
+    return [];
+  }
+
+  static smartPut(String endPoint, String token, Object data,
+      {Function()? onSuccess, Function()? onError}) async {
+    print(jsonEncode(data));
+
+    var client = RetryClient(http.Client());
+    try {
+      final encoding = Encoding.getByName('utf-8');
+      var response = await client.put(
+          Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint),
+          body: jsonEncode(data),
+          encoding: encoding,
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+            "content-Type": "application/json",
+            "Accept": "application/json",
+          });
+      print(response.statusCode);
+      print(response.headers);
       print(response.body);
       // print(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (response.statusCode == 200) {

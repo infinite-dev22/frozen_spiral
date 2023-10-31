@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_activity.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-import 'package:smart_case/widgets/activity_item.dart';
+import 'package:smart_case/widgets/activity_widget/activity_item.dart';
 
 import '../theme/color.dart';
 import '../widgets/custom_appbar.dart';

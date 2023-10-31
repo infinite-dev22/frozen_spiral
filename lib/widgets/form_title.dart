@@ -8,9 +8,11 @@ class FormTitle extends StatelessWidget {
     required this.name,
     this.onSave,
     this.isElevated = false,
+    this.addButtonText = 'Add',
   });
 
   final String name;
+  final String addButtonText;
   final Function()? onSave;
   final bool isElevated;
 
@@ -58,9 +60,9 @@ class FormTitle extends StatelessWidget {
           ),
           TextButton(
             onPressed: onSave,
-            child: const Text(
-              'Add',
-              style: TextStyle(
+            child: Text(
+              addButtonText,
+              style: const TextStyle(
                 color: AppColors.primary,
                 fontSize: 16,
               ),

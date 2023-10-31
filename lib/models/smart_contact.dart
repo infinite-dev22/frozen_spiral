@@ -1,6 +1,6 @@
 class SmartContact {
-  String name;
-  String email;
+  String? name;
+  String? email;
 
   SmartContact({required this.name, required this.email});
 

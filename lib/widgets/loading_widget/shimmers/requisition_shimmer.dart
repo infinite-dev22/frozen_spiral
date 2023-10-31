@@ -14,7 +14,7 @@ class RequisitionShimmer extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 5),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: LoadingSkeleton(
+        child: LoadingSkeleton(animationDuration: 4000,
           width: double.infinity,
           height: 275,
           child: Padding(
@@ -53,7 +53,8 @@ class RequisitionShimmer extends StatelessWidget {
                 const SizedBox(height: 3),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(50),
-                  child: LoadingSkeleton(width: 100, height: 20),
+                  child: LoadingSkeleton(
+                      width: 100, height: 20, animationDuration: 1500),
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -72,7 +73,8 @@ class RequisitionShimmer extends StatelessWidget {
                     _buildLoadStringItem(50, 100),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(50),
-                      child: LoadingSkeleton(width: 200, height: 20),
+                      child: LoadingSkeleton(
+                          width: 200, height: 20, animationDuration: 1500),
                     ),
                   ],
                 ),
@@ -90,12 +92,14 @@ class RequisitionShimmer extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
-          child: LoadingSkeleton(width: widthHeader, height: 20),
+          child: LoadingSkeleton(
+              width: widthHeader, height: 20, animationDuration: 1500),
         ),
         const SizedBox(height: 2),
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
-          child: LoadingSkeleton(width: widthContent, height: 20),
+          child: LoadingSkeleton(
+              width: widthContent, height: 20, animationDuration: 1500),
         ),
       ],
     );
@@ -104,7 +108,7 @@ class RequisitionShimmer extends StatelessWidget {
   _buildLoadActions() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(50),
-      child: LoadingSkeleton(width: 50, height: 20),
+      child: LoadingSkeleton(width: 50, height: 20, animationDuration: 1500),
     );
   }
 }

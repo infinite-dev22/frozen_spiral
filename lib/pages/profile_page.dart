@@ -5,8 +5,8 @@ import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/auth_text_field.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
-import 'package:smart_case/widgets/profile/profile_detail_item.dart';
-import 'package:smart_case/widgets/profile/profile_master_item.dart';
+import 'package:smart_case/widgets/profile_widget/profile_detail_item.dart';
+import 'package:smart_case/widgets/profile_widget/profile_master_item.dart';
 import 'package:smart_case/widgets/wide_button.dart';
 
 import '../widgets/custom_accordion.dart';

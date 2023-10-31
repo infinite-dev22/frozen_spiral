@@ -291,7 +291,8 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
                             )
                           : CupertinoDatePicker(
                               mode: CupertinoDatePickerMode.time,
-                              initialDateTime: DateFormat('h:mm a').parse(startSelectedTime),
+                              initialDateTime:
+                                  DateFormat('h:mm a').parse(startSelectedTime),
                               onDateTimeChanged: (DateTime newTime) {
                                 setState(() {
                                   if (isStartTime) {
@@ -623,7 +624,8 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 child: (isDate)
                     ? CalendarDatePicker(
-                        initialDate: DateTime.now(),
+                        initialDate:
+                            DateFormat('dd/MM/yyyy').parse(selectedDate),
                         firstDate: DateTime(DateTime.now().year),
                         lastDate: DateTime(DateTime.now().year + 99),
                         onDateChanged: (DateTime newDate) {
@@ -639,7 +641,8 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                     : (isStartTime)
                         ? CupertinoDatePicker(
                             mode: CupertinoDatePickerMode.time,
-                            initialDateTime: DateTime.now(),
+                            initialDateTime:
+                                DateFormat('h:mm a').parse(selectedStartTime),
                             onDateTimeChanged: (DateTime newTime) {
                               setState(() {
                                 selectedStartTime =
@@ -652,7 +655,7 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
                         : CupertinoDatePicker(
                             mode: CupertinoDatePickerMode.time,
                             initialDateTime:
-                                DateTime.now().add(const Duration(hours: 1)),
+                                DateFormat('h:mm a').parse(selectedEndTime),
                             onDateTimeChanged: (DateTime newTime) {
                               setState(() {
                                 selectedEndTime =
@@ -795,10 +798,18 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
 
   @override
   void initState() {
+    print(
+        'Not Empty: ${widget.dateController.text.isNotEmpty} ${widget.dateController.text} $selectedStartTime');
     super.initState();
-    widget.dateController.text = selectedDate;
-    widget.startTimeController.text = selectedStartTime;
-    widget.endTimeController.text = selectedEndTime;
+    widget.dateController.text.isNotEmpty
+        ? selectedDate = widget.dateController.text
+        : widget.dateController.text = selectedDate;
+    widget.startTimeController.text.isNotEmpty
+        ? selectedStartTime = widget.startTimeController.text
+        : widget.startTimeController.text = selectedStartTime;
+    widget.endTimeController.text.isNotEmpty
+        ? selectedEndTime = widget.endTimeController.text
+        : widget.endTimeController.text = selectedEndTime;
     _showContent = false;
   }
 }
@@ -824,6 +835,8 @@ class _DateAccordionState extends State<DateAccordion> {
 
   @override
   Widget build(BuildContext context) {
+    selectedDate = widget.dateController.text;
+
     return Card(
       color: AppColors.white,
       elevation: 0,
@@ -892,8 +905,10 @@ class _DateAccordionState extends State<DateAccordion> {
   @override
   void initState() {
     super.initState();
+    widget.dateController.text.isNotEmpty
+        ? selectedDate = widget.dateController.text
+        : widget.dateController.text = selectedDate;
 
-    widget.dateController.text = selectedDate;
     _showContent = false;
   }
 }

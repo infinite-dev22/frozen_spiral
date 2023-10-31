@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+import 'package:smart_case/models/smart_currency.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_file.dart';
 import 'package:smart_case/models/smart_model.dart';
@@ -59,10 +61,11 @@ class SmartRequisition {
   final SmartEmployee? employee;
   final SmartEmployee? supervisor;
   final SmartFile? caseFile;
-  final String? requisitionCategory;
-  final String? currency;
+  final String? requisitionCategoryName;
+  final SmartCurrency? currency;
   final SmartRequisitionStatus? requisitionStatus;
-  final dynamic requisitionWorkflow;
+  final SmartRequisitionCategory? requisitionCategory;
+  final int? caseFinancialStatus;
 
   SmartRequisition({
     this.id,
@@ -87,16 +90,17 @@ class SmartRequisition {
     this.employee,
     this.supervisor,
     this.caseFile,
-    this.requisitionCategory,
+    this.requisitionCategoryName,
     this.currency,
     this.requisitionStatus,
-    this.requisitionWorkflow,
+    this.requisitionCategory,
+    this.caseFinancialStatus,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'date': date,
+      'date': date?.toIso8601String(),
       'amount': amount,
       'description': description,
       'number': number,
@@ -117,10 +121,30 @@ class SmartRequisition {
       'employee': employee,
       'supervisor': supervisor,
       'case_file': caseFile,
-      'requisition_category': requisitionCategory,
+      'requisition_category': requisitionCategoryName,
       'currency': currency,
       'requisition_status': requisitionStatus,
-      'requisition_workflow': requisitionWorkflow,
+      // 'requisition_category': requisitionCategory,
+      'caseFinancialStatus': caseFinancialStatus,
+    };
+  }
+
+  // Convert the requisition class to a json object.
+  Map<String, dynamic> createRequisitionToJson() {
+    return {
+      'date': DateFormat('dd/MM/yyyy').format(date!),
+      'amount': amount,
+      'amounts': amounts,
+      'payout_amount': payoutAmount,
+      'description': description,
+      'descriptions': descriptions,
+      'employee_id': employeeId,
+      'supervisor_id': supervisorId,
+      'requisition_status_id': requisitionStatusId,
+      'requisition_category_id': requisitionCategoryId,
+      'requisition_category_ids': requisitionCategoryIds,
+      'case_file_ids': caseFileIds,
+      'currency_id': currencyId,
     };
   }
 
@@ -129,11 +153,11 @@ class SmartRequisition {
       id: json['id'] as int,
       date: DateTime.parse(json['date']),
       amount: json['amount'],
-      description: json['description'] as String,
-      number: json['number'] as String,
-      canApprove: json['canApprove'] as String,
-      canEdit: json['canEdit'] as bool,
-      isMine: json['isMine'] as bool,
+      description: json['description'],
+      number: json['number'],
+      canApprove: json['canApprove'],
+      canEdit: json['canEdit'],
+      isMine: json['isMine'],
       canPay: json['canPay'],
       amounts: json['amounts'],
       payoutAmount: json['payout_amount'],
@@ -148,11 +172,13 @@ class SmartRequisition {
       employee: SmartEmployee.fromJson(json['employee']),
       supervisor: SmartEmployee.fromJson(json['supervisor']),
       caseFile: SmartFile.fromJson(json['case_file']),
-      requisitionCategory: json['requisition_category'] as String,
-      currency: json['currency'] as String,
-      requisitionStatus:
-          SmartRequisitionStatus.fromJson(json['requisition_status']),
-      requisitionWorkflow: json['requisition_workflow'],
+      requisitionCategoryName: json['requisition_category']['name'],
+      currency: SmartCurrency.fromJson(json['currency']),
+      requisitionStatus: SmartRequisitionStatus.fromJson(
+          json['requisition_actions'].last['requisition_status']),
+      requisitionCategory:
+          SmartRequisitionCategory.fromJson(json['requisition_category']),
+      caseFinancialStatus: json['caseFinancialStatus'],
     );
   }
 }

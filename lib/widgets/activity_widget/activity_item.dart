@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_activity.dart';
 
-import '../../theme/color.dart';
-import '../pages/forms/activity_form.dart';
-import '../util/smart_case_init.dart';
-import 'custom_icon_bottom.dart';
+import '../../../theme/color.dart';
+import '../../pages/forms/activity_form.dart';
+import '../../util/smart_case_init.dart';
+import '../custom_icon_bottom.dart';
 
 class ActivityItem extends StatelessWidget {
   const ActivityItem({
@@ -47,7 +47,7 @@ class ActivityItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildStringItem('Activity Name', activity.name),
+              _buildStringItem('Activity Name', activity.name!),
               const SizedBox(
                 height: 10,
               ),

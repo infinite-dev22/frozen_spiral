@@ -15,8 +15,8 @@ class AsyncSearchableActivityBottomSheetContents extends StatefulWidget {
       required this.isLoading});
 
   final String hint;
-  final List<SmartActivity> list;
-  final Function(SmartActivity?)? onTap;
+  final List<SmartActivityStatus> list;
+  final Function(SmartActivityStatus?)? onTap;
   final Function(String)? onSearch;
   final bool isLoading;
 
@@ -48,7 +48,7 @@ class _AsyncSearchableActivityBottomSheetContentsState
             ? Expanded(
                 child: ListView.builder(
                   itemCount: widget.list.length,
-                  itemBuilder: (context, index) => SearchItem<SmartActivity>(
+                  itemBuilder: (context, index) => SearchItem<SmartActivityStatus>(
                     value: widget.list[index],
                     padding: 20,
                     color: AppColors.white,

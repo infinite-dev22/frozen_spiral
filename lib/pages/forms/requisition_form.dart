@@ -1,7 +1,9 @@
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_currency.dart';
+import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
@@ -9,7 +11,6 @@ import 'package:toast/toast.dart';
 
 import '../../models/smart_file.dart';
 import '../../models/smart_requisition.dart';
-import '../../models/user.dart';
 import '../../services/apis/smartcase_api.dart';
 import '../../theme/color.dart';
 import '../../util/smart_case_init.dart';
@@ -42,13 +43,15 @@ class _RequisitionFormState extends State<RequisitionForm> {
   final TextEditingController descriptionController = TextEditingController();
 
   List<SmartFile> files = List.empty(growable: true);
-  List<SmartUser> approvers = List.empty(growable: true);
+  List<SmartEmployee> approvers = List.empty(growable: true);
   List<SmartRequisitionCategory> categories = List.empty(growable: true);
   int financialStatus = 0;
 
+  NumberFormat formatter = NumberFormat('###,###,###,###,###,###,###,###,###');
+
   SmartFile? file;
   SmartCurrency? currency;
-  SmartUser? approver;
+  SmartEmployee? approver;
   SmartRequisitionCategory? category;
 
   @override
@@ -60,8 +63,11 @@ class _RequisitionFormState extends State<RequisitionForm> {
 
   _buildBody() {
     final ScrollController scrollController = ScrollController();
-    NumberFormat formatter =
-        NumberFormat('###,###,###,###,###,###,###,###,###');
+    final SingleValueDropDownController approversController =
+        SingleValueDropDownController(
+            data: approver != null
+                ? DropDownValueModel(value: approver, name: approver!.getName())
+                : null);
 
     return Column(
       children: [
@@ -69,6 +75,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
           name: 'New Requisition',
           onSave: _submitFormData,
           isElevated: isTitleElevated,
+          addButtonText: (widget.requisition == null) ? 'Add' : 'Update',
         ),
         Expanded(
           child: GestureDetector(
@@ -101,8 +108,9 @@ class _RequisitionFormState extends State<RequisitionForm> {
                   CustomGenericDropdown<SmartCurrency>(
                       hintText: 'currency',
                       menuItems: widget.currencies,
-                      defaultValue: widget.currencies
-                          .firstWhere((currency) => currency.code == 'UGX'),
+                      defaultValue: currency ??
+                          widget.currencies
+                              .firstWhere((currency) => currency.code == 'UGX'),
                       onChanged: _onTapSearchedCurrency),
                   Container(
                     height: 50,
@@ -133,12 +141,17 @@ class _RequisitionFormState extends State<RequisitionForm> {
                             : (financialStatus < 0)
                                 ? AppColors.red
                                 : AppColors.blue),
-                  if (file != null)
-                    SearchableDropDown<SmartUser>(
-                      hintText: 'approver',
-                      menuItems: approvers,
-                      onChanged: _onTapSearchedApprover,
-                    ),
+                  SearchableDropDown<SmartEmployee>(
+                    hintText: 'approver',
+                    menuItems: approvers.toSet().toList(),
+                    onChanged: (value) {
+                      print(approversController.dropDownValue?.value);
+                      _onTapSearchedApprover(
+                          approversController.dropDownValue?.value);
+                    },
+                    defaultValue: approver,
+                    controller: approversController,
+                  ),
                   Container(
                     height: 50,
                     width: double.infinity,
@@ -208,8 +221,8 @@ class _RequisitionFormState extends State<RequisitionForm> {
                             .contains(value.toLowerCase())));
                       } else {
                         _loadFiles();
-                        setState(() {});
                         isLoading = true;
+                        setState(() {});
                       }
                     }
                   });
@@ -270,12 +283,14 @@ class _RequisitionFormState extends State<RequisitionForm> {
   }
 
   _loadApprovers() async {
-    Map usersMap =
-        await SmartCaseApi.smartFetch('api/hr/employees', currentUser.token);
+    Map usersMap = await SmartCaseApi.smartFetch(
+        'api/hr/employees/requisitionApprovers', currentUser.token);
 
     List users = usersMap['search']['employees'];
 
-    approvers = users.map((doc) => SmartUser.fromJson(doc)).toList();
+    approvers = users.map((doc) => SmartEmployee.fromJson(doc)).toList();
+
+    print(approvers.length);
   }
 
   _loadCategories() async {
@@ -295,17 +310,17 @@ class _RequisitionFormState extends State<RequisitionForm> {
         'api/cases/${file!.getId()}/contactsandfinancialstatus/',
         currentUser.token);
 
-    int? financialStatus = financialStatusMap['caseFinancialStatus'];
+    int financialStatus = financialStatusMap['caseFinancialStatus'];
 
-    this.financialStatus = financialStatus!;
-    financialStatus = null;
+    this.financialStatus = financialStatus;
+    setState(() {});
   }
 
   _onTapSearchedFile(SmartFile value) {
     setState(() {
       file = value;
-      _loadFileFinancialStatus();
     });
+    _loadFileFinancialStatus();
   }
 
   _onTapSearchedCurrency(SmartCurrency? value) {
@@ -314,7 +329,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
     });
   }
 
-  _onTapSearchedApprover(SmartUser? value) {
+  _onTapSearchedApprover(SmartEmployee? value) {
     setState(() {
       approver = value;
     });
@@ -330,7 +345,12 @@ class _RequisitionFormState extends State<RequisitionForm> {
     if (widget.requisition != null) {
       dateController.text =
           DateFormat('dd/MM/yyyy').format(widget.requisition!.date!);
-      amountController.text = widget.requisition!.amount!;
+      currency = widget.requisition!.currency;
+      file = widget.requisition!.caseFile;
+      approver = widget.requisition!.supervisor;
+      category = widget.requisition!.requisitionCategory!;
+      amountController.text =
+          formatter.format(double.parse(widget.requisition!.amount!));
       descriptionController.text = widget.requisition!.description!;
     }
   }
@@ -340,6 +360,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
     _loadFiles();
     _loadApprovers();
     _loadCategories();
+    _fillFormsForEdit();
     currency =
         widget.currencies.firstWhere((currency) => currency.code == 'UGX');
 
@@ -348,9 +369,10 @@ class _RequisitionFormState extends State<RequisitionForm> {
 
   _submitFormData() {
     SmartRequisition smartRequisition = SmartRequisition(
-      date: DateFormat().parse(dateController.text.trim()),
+      date: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
+      amount: amountController.text.trim(),
       amounts: [amountController.text.trim()],
-      payoutAmount: financialStatus.toString(),
+      payoutAmount: amountController.toString(),
       descriptions: [
         descriptionController.text.trim(),
       ],
@@ -370,7 +392,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
     SmartCaseApi.smartPost(
       'api/accounts/cases/${file!.getId()}/requisitions',
       currentUser.token,
-      smartRequisition.toJson(),
+      smartRequisition.createRequisitionToJson(),
       onError: () {
         Toast.show("An error occurred",
             duration: Toast.lengthLong, gravity: Toast.bottom);

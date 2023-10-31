@@ -1,11 +1,11 @@
 import 'package:smart_case/models/smart_model.dart';
 
-class SmartCurrency extends SmartModel{
-  final int id;
-  final String name;
-  final String code;
-  final int isActive;
-  final int createdBy;
+class SmartCurrency extends SmartModel {
+  final int? id;
+  final String? name;
+  final String? code;
+  final int? isActive;
+  final int? createdBy;
   final int? updatedBy;
   final String? createdAt;
   final String? updatedAt;
@@ -49,11 +49,11 @@ class SmartCurrency extends SmartModel{
 
   @override
   int getId() {
-    return id;
+    return id!;
   }
 
   @override
   String getName() {
-    return name;
+    return name!;
   }
 }

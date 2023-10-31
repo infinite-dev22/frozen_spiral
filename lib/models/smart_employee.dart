@@ -1,4 +1,6 @@
-class SmartEmployee {
+import 'package:smart_case/models/smart_model.dart';
+
+class SmartEmployee extends SmartModel{
   final int? id;
   final String? firstName;
   final String? lastName;
@@ -55,5 +57,15 @@ class SmartEmployee {
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );
+  }
+
+  @override
+  int getId() {
+    return id!;
+  }
+
+  @override
+  String getName() {
+    return "$firstName $lastName";
   }
 }

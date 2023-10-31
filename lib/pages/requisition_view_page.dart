@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_requisition.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
-import 'package:smart_case/widgets/requisition/requisition_item.dart';
+import 'package:smart_case/widgets/requisition_widget/requisition_item.dart';
 import 'package:toast/toast.dart';
 
 import '../theme/color.dart';
@@ -70,6 +70,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
                   color: AppColors.white,
                   padding: 10,
                   requisition: requisition,
+                  showFinancialStatus: true,
                 ),
                 _buildAmountHolder(),
                 CustomTextArea(

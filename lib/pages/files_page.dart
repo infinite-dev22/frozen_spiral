@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_case/widgets/file/file_item.dart';
+import 'package:smart_case/widgets/file_widget/file_item.dart';
 
 import '../models/smart_file.dart';
 import '../services/apis/smartcase_api.dart';

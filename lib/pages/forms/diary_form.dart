@@ -44,12 +44,12 @@ class _DiaryFormState extends State<DiaryForm> {
   final ValueNotifier<SmartFile?> fileSelectedValue =
       ValueNotifier<SmartFile?>(null);
 
-  List<SmartActivity> activities = List.empty(growable: true);
+  List<SmartActivityStatus> activities = List.empty(growable: true);
   List<SmartFile> files = List.empty(growable: true);
   List<SmartContact> contacts = List.empty(growable: true);
   List<SmartUser> employees = List.empty(growable: true);
 
-  SmartActivity? activity;
+  SmartActivityStatus? activity;
   SmartFile? file;
 
   @override
@@ -258,7 +258,7 @@ class _DiaryFormState extends State<DiaryForm> {
   }
 
   _showSearchActivityBottomSheet() {
-    List<SmartActivity> searchedList = List.empty(growable: true);
+    List<SmartActivityStatus> searchedList = List.empty(growable: true);
     bool isLoading = false;
     return showModalBottomSheet(
         isScrollControlled: true,
@@ -282,7 +282,7 @@ class _DiaryFormState extends State<DiaryForm> {
                       if (activities.isNotEmpty) {
                         isLoading = false;
                         searchedList.addAll(activities.where((activity) =>
-                            activity.name
+                            activity.name!
                                 .toLowerCase()
                                 .contains(value.toLowerCase())));
                       } else {
@@ -300,7 +300,12 @@ class _DiaryFormState extends State<DiaryForm> {
   }
 
   _reloadActivities() async {
-    activities = await SmartCaseApi.fetchAllActivities(currentUser.token);
+      Map activitiesMap = await SmartCaseApi.smartFetch(
+          'api/admin/caseActivityStatus', currentUser.token);
+      List activityList = activitiesMap['caseActivityStatus']['data'];
+
+      activities =
+          activityList.map((doc) => SmartActivityStatus.fromJson(doc)).toList();
     setState(() {});
   }
 
@@ -330,12 +335,18 @@ class _DiaryFormState extends State<DiaryForm> {
   }
 
   Future<void> _setUpData() async {
-    activities = await SmartCaseApi.fetchAllActivities(currentUser.token);
+    Map activitiesMap = await SmartCaseApi.smartFetch(
+        'api/admin/caseActivityStatus', currentUser.token);
+    List activityList = activitiesMap['caseActivityStatus']['data'];
+
+    activities =
+        activityList.map((doc) => SmartActivityStatus.fromJson(doc)).toList();
+
     files = await SmartCaseApi.fetchAllFiles(currentUser.token);
     setState(() {});
   }
 
-  _onTapSearchedActivity(SmartActivity value) {
+  _onTapSearchedActivity(SmartActivityStatus value) {
     setState(() {
       activity = value;
     });
@@ -357,7 +368,7 @@ class _DiaryFormState extends State<DiaryForm> {
         endDate: endDateController.text.trim(),
         endTime: endTimeController.text.trim(),
         employeeId: currentUser.id,
-        caseActivityStatusId: activity!.id,
+        caseActivityStatusId: activity!.id!,
         calendarEventTypeId: 1,
         externalTypeId: 1,
         firmEvent: 'yes',
@@ -380,11 +391,8 @@ class _DiaryFormState extends State<DiaryForm> {
     Map employeesMap =
         await SmartCaseApi.smartFetch('api/hr/employees', currentUser.token);
 
-    List? employees = employeesMap["search"]["employees"];
-    setState(() {
-      this.employees =
-          employees!.map((doc) => SmartUser.fromJson(doc)).toList();
-      employees = null;
-    });
+    List employees = employeesMap["search"]["employees"];
+
+    this.employees = employees.map((doc) => SmartUser.fromJson(doc)).toList();
   }
 }

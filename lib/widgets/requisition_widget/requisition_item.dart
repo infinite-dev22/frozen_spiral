@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_requisition.dart';
-import 'package:smart_case/widgets/requisition/reuisition_item_status.dart';
+import 'package:smart_case/widgets/requisition_widget/reuisition_item_status.dart';
 
 import '../../models/smart_currency.dart';
 import '../../pages/forms/requisition_form.dart';
@@ -145,21 +145,24 @@ class _RequisitionItemState extends State<RequisitionItem> {
             height: 10,
           ),
           if (widget.showFinancialStatus)
-            Column(
-              children: [
-                _buildStringItem('Financial Status',
-                    widget.requisition.requisitionStatus!.code),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
+            if (widget.requisition.caseFinancialStatus != null)
+              Column(
+                children: [
+                  _buildStringItem(
+                      'Financial Status (UGX)',
+                      formatter.format(double.parse(
+                          widget.requisition.caseFinancialStatus.toString()))),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStringItem('Requisition Number', widget.requisition.number),
               _buildStringItem(
-                  'Category', widget.requisition.requisitionCategory),
+                  'Category', widget.requisition.requisitionCategory!.name),
             ],
           ),
           Text(
@@ -188,10 +191,13 @@ class _RequisitionItemState extends State<RequisitionItem> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStringItem('Amount',
+              _buildStringItem('Amount (UGX)',
                   formatter.format(double.parse(widget.requisition.amount!))),
               RequisitionItemStatus(
-                  name: widget.requisition.requisitionStatus!.name,
+                  name: widget.requisition.requisitionStatus!.name ==
+                          'SECONDARY_APPROVED'
+                      ? 'APPROVED'
+                      : widget.requisition.requisitionStatus!.name,
                   bgColor: Colors.green,
                   horizontalPadding: 20,
                   verticalPadding: 5),

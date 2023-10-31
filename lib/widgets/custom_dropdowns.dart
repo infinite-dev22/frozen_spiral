@@ -1,6 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:searchable_paginated_dropdown/searchable_paginated_dropdown.dart';
 
 import '../models/smart_model.dart';
 import '../theme/color.dart';
@@ -128,12 +128,14 @@ class SearchableDropDown<T extends SmartModel> extends StatelessWidget {
       required this.hintText,
       required this.menuItems,
       this.onChanged,
-      this.defaultValue});
+      this.defaultValue,
+      required this.controller});
 
   final String hintText;
   final List<T> menuItems;
   final T? defaultValue;
-  final Function(T?)? onChanged;
+  final Function(dynamic)? onChanged;
+  final SingleValueDropDownController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -141,51 +143,38 @@ class SearchableDropDown<T extends SmartModel> extends StatelessWidget {
   }
 
   _buildBody() {
-    // DropDownTextField(
-    //       // initialValue: "name4",
-    //       controller: controller,
-    //       clearOption: true,
-    //       // enableSearch: true,
-    //       // dropdownColor: Colors.green,
-    //       searchDecoration: InputDecoration(
-    //           hintText: "Select $hintText"),
-    //       validator: (value) {
-    //         if (value == null) {
-    //           return "Required field";
-    //         } else {
-    //           return null;
-    //         }
-    //       },
-    //       dropDownItemCount: menuItems.length,
-    //
-    //       dropDownList: menuItems.map((item) => DropDownValueModel(name: item.getName(), value: item.getId())).toList(),
-    //       onChanged: (value) => onChanged!(value),
-    //     )
-
-    return SearchableDropdown<T>(
-      backgroundDecoration: (child) => Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 10),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(10),
+    return Container(
+      height: 50,
+      margin: const EdgeInsets.only(bottom: 10),
+      child: DropDownTextField(
+        controller: controller,
+        enableSearch: true,
+        dropdownColor: Colors.white,
+        textFieldDecoration: InputDecoration(
+          filled: true,
+          fillColor: AppColors.textBoxColor,
+          hintText: 'Select $hintText',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide.none,
+          ),
         ),
-        child: child,
+        searchDecoration: InputDecoration(hintText: "Search $hintText"),
+        validator: (value) {
+          if (value == null) {
+            return "Required field";
+          } else {
+            return null;
+          }
+        },
+        dropDownItemCount: 6,
+        autovalidateMode: AutovalidateMode.always,
+        dropDownList: menuItems
+            .map(
+                (item) => DropDownValueModel(value: item, name: item.getName()))
+            .toList(),
+        onChanged: onChanged,
       ),
-      trailingIcon: const Icon(
-        Icons.arrow_drop_down,
-        size: 25,
-        color: Colors.black45,
-      ),
-      hintText: Text('Select $hintText'),
-      margin: const EdgeInsets.all(15),
-      items: menuItems
-          .map((item) => SearchableDropdownMenuItem(
-              value: item, label: item.getName(), child: Text(item.getName())))
-          .toList(),
-      onChanged: onChanged,
-      value: defaultValue,
-      searchHintText: 'Search $hintText',
     );
   }
 }
@@ -214,7 +203,6 @@ class CustomGenericDropdown<T extends SmartModel> extends StatelessWidget {
         SizedBox(
           height: 50,
           child: DropdownButtonFormField2<T>(
-            value: defaultValue,
             isExpanded: true,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(vertical: 16),
