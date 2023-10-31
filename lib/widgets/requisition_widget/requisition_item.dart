@@ -148,7 +148,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
             if (widget.requisition.caseFinancialStatus != null)
               Column(
                 children: [
-                  _buildStringItem(
+                  _buildFinancialStatusStringItem(
                       'Financial Status (UGX)',
                       formatter.format(double.parse(
                           widget.requisition.caseFinancialStatus.toString()))),
@@ -223,6 +223,34 @@ class _RequisitionItemState extends State<RequisitionItem> {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
+        ),
+      ],
+    );
+  }
+
+  _buildFinancialStatusStringItem(String title, String? data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: AppColors.inActiveColor,
+          ),
+        ),
+        Text(
+          data ?? 'Null',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: (double.parse(
+                          widget.requisition.caseFinancialStatus.toString()) >
+                      0)
+                  ? AppColors.green
+                  : (double.parse(widget.requisition.caseFinancialStatus
+                              .toString()) ==
+                          0)
+                      ? AppColors.blue
+                      : AppColors.red),
         ),
       ],
     );
