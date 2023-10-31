@@ -37,7 +37,6 @@ class _HomePageState extends State<HomePage> {
       // spacing between columns
       padding: const EdgeInsets.only(
         left: 16,
-        top: 16,
         right: 16,
         bottom: 16,
       ),
