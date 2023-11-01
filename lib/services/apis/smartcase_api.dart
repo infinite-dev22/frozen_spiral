@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:smart_case/models/smart_activity.dart';
@@ -182,15 +183,24 @@ class SmartCaseApi {
   }
 
   static Future<Map> smartFetch(String endPoint, String token,
-      {Function()? onSuccess, Function()? onError}) async {
+      {Map<String, dynamic>? body,
+      Function()? onSuccess,
+      Function()? onError}) async {
     var client = RetryClient(http.Client());
+    ;
 
     try {
       var response = await client.get(
-          Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint),
+          Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint, body),
           headers: {
             HttpHeaders.authorizationHeader: "Bearer $token",
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.acceptHeader: 'application/json'
           });
+
+      print(response.headers);
+      print(response.statusCode);
+      print(response.body);
 
       if (response.statusCode == 200) {
         var decodedResponse =
@@ -210,6 +220,44 @@ class SmartCaseApi {
     // }
     finally {
       client.close();
+    }
+    return {};
+  }
+
+  static Future smartDioFetch(String endPoint, String token,
+      {Map<String, dynamic>? body,
+      Function()? onSuccess,
+      Function()? onError}) async {
+    Dio dio = Dio();
+
+    try {
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers['accept'] = 'application/json';
+      dio.options.headers["authorization"] = "Bearer $token";
+      dio.options.followRedirects = false;
+
+      var response = await dio.get(
+        Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint).toString(),
+        data: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        var decodedResponse = jsonDecode(response.data);
+
+        return decodedResponse;
+      } else {
+        if (onError != null) {
+          onError();
+        }
+      }
+    }
+    // catch (e) {
+    //   if (onError != null) {
+    //     onError();
+    //   }
+    // }
+    finally {
+      dio.close();
     }
     return {};
   }

@@ -1,8 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:smart_case/models/smart_event.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../services/apis/smartcase_api.dart';
 import '../theme/color.dart';
 import '../util/smart_case_init.dart';
 import '../widgets/custom_appbar.dart';
@@ -15,9 +15,8 @@ class DiaryPage extends StatefulWidget {
 }
 
 class _DiaryPageState extends State<DiaryPage> {
-  final List<String> _subjectCollection = <String>[];
-  final List<Color> _colorCollection = <Color>[];
-  final _MeetingDataSource _events = _MeetingDataSource(<_Meeting>[]);
+  List<SmartEvent> events = List.empty(growable: true);
+  final _EventDataSource _events = _EventDataSource(<SmartEvent>[]);
   final DateTime _minDate =
           DateTime.now().subtract(const Duration(days: 365 ~/ 2)),
       _maxDate = DateTime.now().add(const Duration(days: 365 ~/ 2));
@@ -43,7 +42,7 @@ class _DiaryPageState extends State<DiaryPage> {
   @override
   void initState() {
     _calendarController.view = CalendarView.month;
-    addAppointmentDetails();
+    _fetchEvents();
     super.initState();
   }
 
@@ -75,47 +74,32 @@ class _DiaryPageState extends State<DiaryPage> {
   /// view or switched to different calendar view, based on the view changed
   /// details new appointment collection added to the calendar
   void _onViewChanged(ViewChangedDetails visibleDatesChangedDetails) {
-    final List<_Meeting> appointment = <_Meeting>[];
+    final List<SmartEvent> appointment = <SmartEvent>[];
     _events.appointments.clear();
-    final Random random = Random();
 
     /// Creates new appointment collection based on
     /// the visible dates in calendar.
-    if (_calendarController.view != CalendarView.schedule) {
-      for (int i = 0; i < visibleDatesChangedDetails.visibleDates.length; i++) {
-        final DateTime date = visibleDatesChangedDetails.visibleDates[i];
-        final int count = 1 + random.nextInt(3);
-        for (int j = 0; j < count; j++) {
-          final DateTime startDate =
-              DateTime(date.year, date.month, date.day, 8 + random.nextInt(8));
-          appointment.add(_Meeting(
-            _subjectCollection[random.nextInt(7)],
-            startDate,
-            startDate.add(Duration(hours: random.nextInt(3))),
-            _colorCollection[random.nextInt(9)],
-            false,
+    if (events.isNotEmpty) {
+      if (_calendarController.view != CalendarView.schedule) {
+        for (int i = 0; i < events.length; i++) {
+          appointment.add(SmartEvent(
+            title: events[i].title,
+            startDate: events[i].startDate,
+            endDate: events[i].endDate,
+            startTime: events[i].startTime,
+            endTime: events[i].endTime,
+            backgroundColor: events[i].backgroundColor,
           ));
         }
-      }
-    } else {
-      final DateTime rangeStartDate =
-          DateTime.now().add(const Duration(days: -(365 ~/ 2)));
-      final DateTime rangeEndDate =
-          DateTime.now().add(const Duration(days: 365));
-      for (DateTime i = rangeStartDate;
-          i.isBefore(rangeEndDate);
-          i = i.add(const Duration(days: 1))) {
-        final DateTime date = i;
-        final int count = 1 + random.nextInt(3);
-        for (int j = 0; j < count; j++) {
-          final DateTime startDate =
-              DateTime(date.year, date.month, date.day, 8 + random.nextInt(8));
-          appointment.add(_Meeting(
-            _subjectCollection[random.nextInt(7)],
-            startDate,
-            startDate.add(Duration(hours: random.nextInt(3))),
-            _colorCollection[random.nextInt(9)],
-            false,
+      } else {
+        for (int i = 0; i < events.length; i++) {
+          appointment.add(SmartEvent(
+            title: events[i].title,
+            startDate: events[i].startDate,
+            endDate: events[i].endDate,
+            startTime: events[i].startTime,
+            endTime: events[i].endTime,
+            backgroundColor: events[i].backgroundColor,
           ));
         }
       }
@@ -130,29 +114,21 @@ class _DiaryPageState extends State<DiaryPage> {
     _events.notifyListeners(CalendarDataSourceAction.reset, appointment);
   }
 
-  /// Creates the required appointment details as a list.
-  void addAppointmentDetails() {
-    _subjectCollection.add('General Meeting');
-    _subjectCollection.add('Plan Execution');
-    _subjectCollection.add('Project Plan');
-    _subjectCollection.add('Consulting');
-    _subjectCollection.add('Support');
-    _subjectCollection.add('Development Meeting');
-    _subjectCollection.add('Scrum');
-    _subjectCollection.add('Project Completion');
-    _subjectCollection.add('Release updates');
-    _subjectCollection.add('Performance Check');
-
-    _colorCollection.add(const Color(0xFF0F8644));
-    _colorCollection.add(const Color(0xFF8B1FA9));
-    _colorCollection.add(const Color(0xFFD20100));
-    _colorCollection.add(const Color(0xFFFC571D));
-    _colorCollection.add(const Color(0xFF36B37B));
-    _colorCollection.add(const Color(0xFF01A1EF));
-    _colorCollection.add(const Color(0xFF3D4FB5));
-    _colorCollection.add(const Color(0xFFE47C73));
-    _colorCollection.add(const Color(0xFF636363));
-    _colorCollection.add(const Color(0xFF0A8043));
+  _fetchEvents() async {
+    var now = DateTime.now();
+    var eventsList = await SmartCaseApi.smartDioFetch(
+        'api/calendar/events', currentUser.token,
+        body: {
+          "start": "${now.year}-${now.month}-01",
+          "end":
+              "${now.year}-${now.month}-${DateTime(now.year, now.month + 1, 0).day}",
+          "viewRdbtn": "all",
+          "isFirmEventRdbtn": "ALLEVENTS",
+          "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"]
+        });
+    List currencyList = eventsList;
+    events = currencyList.map((doc) => SmartEvent.fromJson(doc)).toList();
+    print(events);
   }
 
   /// Allows/Restrict switching to previous/next views through swipe interaction
@@ -280,55 +256,42 @@ Widget scheduleViewBuilder(
 /// An object to set the appointment collection data source to collection, which
 /// used to map the custom appointment data to the calendar appointment, and
 /// allows to add, remove or reset the appointment collection.
-class _MeetingDataSource extends CalendarDataSource<_Meeting> {
-  _MeetingDataSource(this.source);
+class _EventDataSource extends CalendarDataSource<SmartEvent> {
+  _EventDataSource(this.source);
 
-  List<_Meeting> source;
+  List<SmartEvent> source;
 
   @override
   List<dynamic> get appointments => source;
 
   @override
   DateTime getStartTime(int index) {
-    return source[index].from;
+    return source[index].startTime!;
   }
 
   @override
   DateTime getEndTime(int index) {
-    return source[index].to;
-  }
-
-  @override
-  bool isAllDay(int index) {
-    return source[index].isAllDay;
+    return source[index].endTime!;
   }
 
   @override
   String getSubject(int index) {
-    return source[index].eventName;
+    return source[index].title!;
   }
 
   @override
   Color getColor(int index) {
-    return source[index].background;
+    return HexColor.fromHex(source[index].backgroundColor!);
   }
 
   @override
-  _Meeting convertAppointmentToObject(
-      _Meeting eventName, Appointment appointment) {
-    return _Meeting(appointment.subject, appointment.startTime,
-        appointment.endTime, appointment.color, appointment.isAllDay);
+  SmartEvent convertAppointmentToObject(
+      SmartEvent eventName, Appointment appointment) {
+    return SmartEvent(
+        description: appointment.subject,
+        startTime: appointment.startTime,
+        endTime: appointment.endTime,
+        backgroundColor:
+            HexColor(appointment.color).toHex(leadingHashSign: true));
   }
-}
-
-/// Custom business object class which contains properties to hold the detailed
-/// information about the event data which will be rendered in calendar.
-class _Meeting {
-  _Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
-  String eventName;
-  DateTime from;
-  DateTime to;
-  Color background;
-  bool isAllDay;
 }

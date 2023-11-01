@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/models/user.dart';
@@ -300,12 +301,12 @@ class _DiaryFormState extends State<DiaryForm> {
   }
 
   _reloadActivities() async {
-      Map activitiesMap = await SmartCaseApi.smartFetch(
-          'api/admin/caseActivityStatus', currentUser.token);
-      List activityList = activitiesMap['caseActivityStatus']['data'];
+    Map activitiesMap = await SmartCaseApi.smartFetch(
+        'api/admin/caseActivityStatus', currentUser.token);
+    List activityList = activitiesMap['caseActivityStatus']['data'];
 
-      activities =
-          activityList.map((doc) => SmartActivityStatus.fromJson(doc)).toList();
+    activities =
+        activityList.map((doc) => SmartActivityStatus.fromJson(doc)).toList();
     setState(() {});
   }
 
@@ -363,19 +364,23 @@ class _DiaryFormState extends State<DiaryForm> {
     SmartEvent smartEvent = SmartEvent(
         title: activity!.getName(),
         description: descriptionController.text.trim(),
-        startDate: startDateController.text.trim(),
-        startTime: startTimeController.text.trim(),
-        endDate: endDateController.text.trim(),
-        endTime: endTimeController.text.trim(),
+        startDate:
+            DateFormat('dd/MM/yyyy').parse(startDateController.text.trim()),
+        startTime: DateFormat('h:mm a').parse(startTimeController.text.trim()),
+        endDate: DateFormat('dd/MM/yyyy').parse(endDateController.text.trim()),
+        endTime: DateFormat('h:mm a').parse(endTimeController.text.trim()),
         employeeId: currentUser.id,
         caseActivityStatusId: activity!.id!,
         calendarEventTypeId: 1,
         externalTypeId: 1,
         firmEvent: 'yes',
-        notifyOnDate: reminderDateController.text.trim(),
-        notifyOnTime: reminderTimeController.text.trim(),
+        notifyOnDate:
+            DateFormat('dd/MM/yyyy').parse(reminderDateController.text.trim()),
+        notifyOnTime:
+            DateFormat('h:mm a').parse(reminderTimeController.text.trim()),
         employeeIds: employeeIds,
         toBeNotified: emails);
+
     SmartCaseApi.smartPost(
         'api/calendar', currentUser.token, smartEvent.toJson(), onError: () {
       Toast.show("An error occurred",
