@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_event.dart';
+import 'package:smart_case/pages/event_view.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../services/apis/smartcase_api.dart';
@@ -16,7 +17,8 @@ class DiaryPage extends StatefulWidget {
   State<DiaryPage> createState() => _DiaryPageState();
 }
 
-late Map<DateTime, List<SmartEvent>> _dataCollection;
+Map<DateTime, List<SmartEvent>> _dataCollection =
+    <DateTime, List<SmartEvent>>{};
 
 class _DiaryPageState extends State<DiaryPage> {
   List<SmartEvent> _events = List.empty(growable: true);
@@ -33,7 +35,7 @@ class _DiaryPageState extends State<DiaryPage> {
 
   final bool _showLeadingAndTrailingDates = true;
   final bool _showDatePickerButton = true;
-  final bool _allowViewNavigation = true;
+  bool _allowViewNavigation = true;
   final bool _showCurrentTimeIndicator = true;
 
   final ViewNavigationMode _viewNavigationMode = ViewNavigationMode.snap;
@@ -166,7 +168,12 @@ class _DiaryPageState extends State<DiaryPage> {
           showTimeIndicator: true),
       showTodayButton: true,
       onTap: (calendarTapDetails) {
-        print(calendarTapDetails.appointments);
+        if (calendarTapDetails.appointments!.length == 1) {
+          _allowViewNavigation = false;
+          _buildEventView(calendarTapDetails.appointments![0]);
+        } else {
+          _allowViewNavigation = true;
+        }
       },
       controller: calendarController,
       dataSource: _EventDataSource(_events),
@@ -284,10 +291,16 @@ class _DiaryPageState extends State<DiaryPage> {
       final DateTime date = i;
       for (int j = 0; j < _events.length; j++) {
         final SmartEvent event = SmartEvent(
-          title: _events[j].description,
+          title: _events[j].title,
           startDate: _events[j].startDate,
           endDate: _events[j].endDate,
           backgroundColor: _events[j].backgroundColor,
+          notifyOnDate: _events[j].notifyOnDate,
+          toBeNotified: _events[j].toBeNotified,
+          fullName: _events[j].fullName,
+          isAllDay: false,
+          description: _events[j].description,
+          url: _events[j].url,
         );
 
         if (dataCollection.containsKey(date)) {
@@ -301,6 +314,17 @@ class _DiaryPageState extends State<DiaryPage> {
     }
     setState(() {});
     return dataCollection;
+  }
+
+  _buildEventView(SmartEvent event) {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.white,
+      context: context,
+      builder: (context) => EventView(event: event),
+    );
   }
 }
 

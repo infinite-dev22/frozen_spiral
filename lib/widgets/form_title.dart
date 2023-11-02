@@ -74,13 +74,15 @@ class FormTitle extends StatelessWidget {
   }
 }
 
-class CalendarFormTitle extends StatelessWidget {
-  const CalendarFormTitle({
+class CalendarViewTitle extends StatelessWidget {
+  const CalendarViewTitle({
     super.key,
+    required this.title,
     this.onPressed,
     this.isElevated = false,
   });
 
+  final String title;
   final Function()? onPressed;
   final bool isElevated;
 
@@ -92,9 +94,6 @@ class CalendarFormTitle extends StatelessWidget {
   _buildBody(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-        color: isElevated ? Colors.white : AppColors.appBgColor,
         boxShadow: (isElevated)
             ? [
                 BoxShadow(
@@ -114,6 +113,13 @@ class CalendarFormTitle extends StatelessWidget {
             icon: const Icon(
               Icons.close_rounded,
               color: AppColors.red,
+            ),
+          ),
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
             ),
           ),
           IconButton(
