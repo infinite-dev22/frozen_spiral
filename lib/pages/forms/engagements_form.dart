@@ -1,48 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
+import 'package:smart_case/models/smart_employee.dart';
+import 'package:smart_case/models/smart_engagement.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:toast/toast.dart';
 
+import '../../models/smart_client.dart';
+import '../../services/apis/smartcase_api.dart';
+import '../../util/smart_case_init.dart';
+import '../../widgets/custom_accordion.dart';
+import '../../widgets/custom_searchable_async_bottom_sheet_contents.dart';
+import '../../widgets/custom_textbox.dart';
 import '../../widgets/form_title.dart';
 
 class EngagementForm extends StatefulWidget {
-  const EngagementForm(
-      {super.key,
-      required this.firstNameController,
-      required this.lastNameController,
-      required this.otherNameController,
-      required this.genderController,
-      required this.titleController,
-      required this.dateOfBirthController,
-      required this.personalEmailController,
-      required this.telephoneController,
-      required this.socialSecurityNumberController,
-      required this.tinNumberController,
-      required this.roleController,
-      this.onSave});
+  final SmartEngagement? engagement;
 
-  final TextEditingController firstNameController;
-  final TextEditingController lastNameController;
-  final TextEditingController otherNameController;
-  final TextEditingController genderController;
-  final TextEditingController titleController;
-  final TextEditingController dateOfBirthController;
-  final TextEditingController personalEmailController;
-  final TextEditingController telephoneController;
-  final TextEditingController socialSecurityNumberController;
-  final TextEditingController tinNumberController;
-  final TextEditingController roleController;
-
-  final Function()? onSave;
+  const EngagementForm({super.key, this.engagement});
 
   @override
   State<EngagementForm> createState() => _EngagementFormState();
 }
 
 class _EngagementFormState extends State<EngagementForm> {
+  final globalKey = GlobalKey();
+  final ToastContext toast = ToastContext();
   bool isTitleElevated = false;
+
+  TextEditingController costController = TextEditingController();
+  TextEditingController costDescriptionController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController startTimeController = TextEditingController();
+  TextEditingController endTimeController = TextEditingController();
+
+  final ValueNotifier<SmartClient?> clientSelectedValue =
+      ValueNotifier<SmartClient?>(null);
+  final ValueNotifier<SmartEngagementType?> fileSelectedValue =
+      ValueNotifier<SmartEngagementType?>(null);
+
+  List<SmartClient> clients = List.empty(growable: true);
+  List<SmartEngagementType> engagementTypes = List.empty(growable: true);
+
+  SmartClient? client;
+  SmartEngagementType? engagementType;
 
   @override
   Widget build(BuildContext context) {
+    toast.init(context);
+
     return _buildBody();
   }
 
@@ -51,9 +58,10 @@ class _EngagementFormState extends State<EngagementForm> {
     return Column(
       children: [
         FormTitle(
-          name: 'New Engagement',
-          onSave: () {},
+          name: '${(widget.engagement == null) ? 'New' : 'Edit'} Engagement',
+          addButtonText: (widget.engagement == null) ? 'Add' : 'Update',
           isElevated: isTitleElevated,
+          onSave: () => _submitForm(),
         ),
         Expanded(
           child: GestureDetector(
@@ -82,25 +90,65 @@ class _EngagementFormState extends State<EngagementForm> {
                 controller: scrollController,
                 padding: const EdgeInsets.all(16),
                 children: [
-                  _buildEditTextFormField(
-                      'First name', widget.firstNameController),
-                  _buildEditTextFormField(
-                      'Last name', widget.lastNameController),
-                  _buildEditTextFormField(
-                      'Other name', widget.otherNameController),
-                  _buildEditTextFormField('Gender', widget.genderController),
-                  _buildEditTextFormField('Title', widget.titleController),
-                  _buildEditTextFormField(
-                      'Date of birth', widget.dateOfBirthController),
-                  _buildEditTextFormField(
-                      'Personal email', widget.personalEmailController),
-                  _buildEditTextFormField(
-                      'Telephone', widget.telephoneController),
-                  _buildEditTextFormField('Social Security Number',
-                      widget.socialSecurityNumberController),
-                  _buildEditTextFormField(
-                      'Tin number', widget.tinNumberController),
-                  _buildEditTextFormField('Role', widget.roleController),
+                  Form(
+                    child: Column(
+                      children: [
+                        DateTimeAccordion2(
+                            dateController: dateController,
+                            startTimeController: startTimeController,
+                            endTimeController: endTimeController),
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextButton(
+                            onPressed: _showSearchClientBottomSheet,
+                            child: Text(
+                              client?.getName() ?? 'Select client',
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextButton(
+                            onPressed: _showSearchEngagementTypeBottomSheet,
+                            child: Text(
+                              engagementType?.getName() ??
+                                  'Select engagement type',
+                            ),
+                          ),
+                        ),
+                        SmartCaseTextField(
+                            hint: 'Cost', controller: costController),
+                        SmartCaseTextField(
+                            hint: 'Cost description',
+                            controller: costDescriptionController),
+                        CustomTextArea(
+                          key: globalKey,
+                          hint: 'Description',
+                          controller: descriptionController,
+                          onTap: () {
+                            Scrollable.ensureVisible(globalKey.currentContext!);
+                          },
+                        ),
+                        const SizedBox(
+                            height:
+                                300 /* MediaQuery.of(context).viewInsets.bottom */),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -110,26 +158,160 @@ class _EngagementFormState extends State<EngagementForm> {
     );
   }
 
-  _buildEditTextFormField(String hint, TextEditingController controller) {
-    return Column(
-      children: [
-        TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: AppColors.textBoxColor,
-            hintText: hint,
-            hintStyle: const TextStyle(color: AppColors.inActiveColor),
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-      ],
+  _showSearchClientBottomSheet() {
+    List<SmartClient> searchedList = List.empty(growable: true);
+    bool isLoading = false;
+    return showModalBottomSheet(
+        isScrollControlled: true,
+        constraints: BoxConstraints.expand(
+            height: MediaQuery.of(context).size.height * .8),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return AsyncSearchableBottomSheetContents(
+                hint: "Search clients",
+                list: searchedList,
+                onTap: (value) {
+                  client = null;
+                  _onTapSearchedClient(value!);
+                  Navigator.pop(context);
+                },
+                onSearch: (value) {
+                  searchedList.clear();
+                  if (value.length > 2) {
+                    if (clients.isNotEmpty) {
+                      isLoading = false;
+                      searchedList.addAll(clients.where((smartClient) =>
+                          smartClient
+                              .getName()
+                              .toLowerCase()
+                              .contains(value.toLowerCase())));
+                      setState(() {});
+                    } else {
+                      _reloadClients();
+                      isLoading = true;
+                      setState(() {});
+                    }
+                  }
+                },
+                isLoading: isLoading,
+              );
+            },
+          );
+        });
+  }
+
+  _showSearchEngagementTypeBottomSheet() {
+    List<SmartEngagementType> searchedList = List.empty(growable: true);
+    bool isLoading = false;
+    return showModalBottomSheet(
+        isScrollControlled: true,
+        constraints: BoxConstraints.expand(
+            height: MediaQuery.of(context).size.height * .8),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return AsyncSearchableBottomSheetContents(
+                hint: "Search engagement types",
+                list: searchedList,
+                onTap: (value) {
+                  Navigator.pop(context);
+                  _onTapSearchedEngagementType(value!);
+                },
+                onSearch: (value) {
+                  searchedList.clear();
+                  if (value.length > 2) {
+                    if (engagementTypes.isNotEmpty) {
+                      isLoading = false;
+                      searchedList.addAll(engagementTypes.where(
+                          (engagementType) => engagementType.name!
+                              .toLowerCase()
+                              .contains(value.toLowerCase())));
+                      setState(() {});
+                    } else {
+                      _reloadEngagementTypes();
+                      isLoading = true;
+                      setState(() {});
+                    }
+                  }
+                },
+                isLoading: isLoading,
+              );
+            },
+          );
+        });
+  }
+
+  _onTapSearchedEngagementType(SmartEngagementType value) {
+    setState(() {
+      engagementType = value;
+    });
+  }
+
+  _onTapSearchedClient(SmartClient value) {
+    setState(() {
+      client = value;
+    });
+  }
+
+  _reloadEngagementTypes() async {
+    Map engagementTypesMap = await SmartCaseApi.smartFetch(
+        'api/admin/engagementypes', currentUser.token);
+    List engagementTypeList = engagementTypesMap['engagementypes'];
+
+    engagementTypes = engagementTypeList
+        .map((doc) => SmartEngagementType.fromJson(doc))
+        .toList();
+    setState(() {});
+  }
+
+  _reloadClients() async {
+    Map clientsMap =
+        await SmartCaseApi.smartFetch('api/crm/clients', currentUser.token);
+    List clientList = clientsMap['clients'];
+
+    clients = clientList.map((doc) => SmartClient.fromJson(doc)).toList();
+    setState(() {});
+  }
+
+  _submitForm() {
+    SmartEngagement smartEngagement = SmartEngagement(
+      cost: costController.text.trim(),
+      costDescription: costDescriptionController.text.trim(),
+      description: descriptionController.text.trim(),
+      date: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
+      from: DateFormat('h:mm a').parse(startTimeController.text.trim()),
+      to: DateFormat('h:mm a').parse(endTimeController.text.trim()),
+      engagementTypeId: engagementType!.id,
+      clientId: client!.id,
+      isNextEngagement: 0,
+      notifyOn: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
+      notifyOnAt: DateFormat('h:mm a').parse(startTimeController.text.trim()),
+      notifyWith: [SmartEmployee(id: 1)],
+      doneBy: [SmartEmployee(id: 1)],
     );
+
+    (widget.engagement == null)
+        ? SmartCaseApi.smartPost(
+            'api/crm/engagements', currentUser.token, smartEngagement.toCreateJson(),
+            onError: () {
+            Toast.show("An error occurred",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+          }, onSuccess: () {
+            Toast.show("Engagement added successfully",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+            Navigator.pop(context);
+          })
+        : SmartCaseApi.smartPut('api/crm/engagements/${widget.engagement!.id}',
+            currentUser.token, smartEngagement.toCreateJson(), onError: () {
+            Toast.show("An error occurred",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+          }, onSuccess: () {
+            Toast.show("Engagement updated successfully",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+            Navigator.pop(context);
+          });
   }
 }

@@ -303,19 +303,7 @@ class _RootPageState extends State<RootPage> {
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
-      builder: (context) => EngagementForm(
-        firstNameController: firstNameController,
-        lastNameController: lastNameController,
-        otherNameController: otherNameController,
-        genderController: genderController,
-        titleController: titleController,
-        dateOfBirthController: dateOfBirthController,
-        personalEmailController: personalEmailController,
-        telephoneController: telephoneController,
-        socialSecurityNumberController: socialSecurityNumberController,
-        tinNumberController: tinNumberController,
-        roleController: roleController,
-      ),
+      builder: (context) => const EngagementForm(),
     );
   }
 

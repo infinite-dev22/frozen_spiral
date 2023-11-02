@@ -3,6 +3,8 @@ import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/widgets/custom_icon_holder.dart';
 import 'package:smart_case/widgets/form_title.dart';
 
+import 'forms/diary_form.dart';
+
 class EventView extends StatelessWidget {
   final SmartEvent event;
 
@@ -13,13 +15,18 @@ class EventView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildBody();
+    print("Length: ${event.toBeNotified?.length}");
+    return _buildBody(context);
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context) {
     return Column(
       children: [
-        CalendarViewTitle(title: event.title!),
+        CalendarViewTitle(
+            title: event.title!,
+            onPressed: () {
+              _buildDairyForm(context);
+            }),
         Expanded(
           child: ListView(
             padding: const EdgeInsets.only(
@@ -167,6 +174,16 @@ class EventView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  _buildDairyForm(BuildContext context) {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => DiaryForm(event: event),
     );
   }
 }
