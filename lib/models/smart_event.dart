@@ -22,6 +22,7 @@ class SmartEvent {
   final DateTime? notifyOnTime;
   final List<String>? employeeIds;
   final List? toBeNotified;
+  final bool? isAllDay;
 
   SmartEvent({
     this.id,
@@ -45,6 +46,7 @@ class SmartEvent {
     this.notifyOnTime,
     this.employeeIds,
     this.toBeNotified,
+    this.isAllDay,
   });
 
   Map<String, dynamic> toJson() {
@@ -74,17 +76,36 @@ class SmartEvent {
       description: doc['description'],
       url: doc['url'],
       editable: doc['editable'],
-      startDate: DateTime.parse(
-          DateFormat('dd/MM/yyyy').format(DateTime.parse(doc['start']))),
-      startTime: DateTime.parse(
-          DateFormat('h:mm a').format(DateTime.parse(doc['start']))),
-      endDate: DateTime.parse(
-          DateFormat('dd/MM/yyyy').format(DateTime.parse(doc['end']))),
-      endTime: DateTime.parse(
-          DateFormat('h:mm a').format(DateTime.parse(doc['end']))),
+      startDate: DateTime.parse(doc['start']),
+      startTime: DateFormat('h:mm a')
+          .parse(DateFormat('h:mm a').format(DateTime.parse(doc['start']))),
+      endDate: DateTime.parse(doc['end']),
+      endTime: DateFormat('h:mm a')
+          .parse(DateFormat('h:mm a').format(DateTime.parse(doc['end']))),
       backgroundColor: doc['backgroundColor'],
       borderColor: doc['borderColor'],
       fullName: doc['full_name'],
     );
   }
+
+  // factory SmartEvent.fromJson(Map<String, dynamic> doc) {
+  //   return SmartEvent(
+  //     id: doc['id'],
+  //     title: doc['title'],
+  //     description: doc['description'],
+  //     url: doc['url'],
+  //     editable: doc['editable'],
+  //     startDate: DateFormat('dd/MM/yyyy')
+  //         .parse(DateFormat('dd/MM/yyyy').format(DateTime.parse(doc['start']))),
+  //     startTime: DateFormat('h:mm a')
+  //         .parse(DateFormat('h:mm a').format(DateTime.parse(doc['start']))),
+  //     endDate: DateFormat('dd/MM/yyyy')
+  //         .parse(DateFormat('dd/MM/yyyy').format(DateTime.parse(doc['end']))),
+  //     endTime: DateFormat('h:mm a')
+  //         .parse(DateFormat('h:mm a').format(DateTime.parse(doc['end']))),
+  //     backgroundColor: doc['backgroundColor'],
+  //     borderColor: doc['borderColor'],
+  //     fullName: doc['full_name'],
+  //   );
+  // }
 }

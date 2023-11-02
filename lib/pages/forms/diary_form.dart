@@ -344,7 +344,6 @@ class _DiaryFormState extends State<DiaryForm> {
         activityList.map((doc) => SmartActivityStatus.fromJson(doc)).toList();
 
     files = await SmartCaseApi.fetchAllFiles(currentUser.token);
-    setState(() {});
   }
 
   _onTapSearchedActivity(SmartActivityStatus value) {

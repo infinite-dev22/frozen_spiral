@@ -37,6 +37,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
   final globalKey = GlobalKey();
   final ToastContext toast = ToastContext();
   bool isTitleElevated = false;
+  bool isActivityLoading = false;
 
   final TextEditingController dateController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
@@ -192,7 +193,6 @@ class _RequisitionFormState extends State<RequisitionForm> {
 
   _showSearchFileBottomSheet() {
     List<SmartFile> searchedList = List.empty(growable: true);
-    bool isLoading = false;
     return showModalBottomSheet(
         isScrollControlled: true,
         constraints: BoxConstraints.expand(
@@ -210,24 +210,22 @@ class _RequisitionFormState extends State<RequisitionForm> {
                   Navigator.pop(context);
                 },
                 onSearch: (value) {
-                  setState(() {
-                    searchedList.clear();
-                    if (value.length > 2) {
-                      if (files.isNotEmpty) {
-                        isLoading = false;
-                        searchedList.addAll(files.where((smartFile) => smartFile
-                            .getName()
-                            .toLowerCase()
-                            .contains(value.toLowerCase())));
-                      } else {
-                        _loadFiles();
-                        isLoading = true;
-                        setState(() {});
-                      }
+                  searchedList.clear();
+                  if (value.length > 2) {
+                    if (files.isNotEmpty) {
+                      isActivityLoading = false;
+                      searchedList.addAll(files.where((smartFile) => smartFile
+                          .getName()
+                          .toLowerCase()
+                          .contains(value.toLowerCase())));
+                      setState(() {});
+                    } else {
+                      _reloadFiles();
+                      isActivityLoading = true;
                     }
-                  });
+                  }
                 },
-                isLoading: isLoading,
+                isLoading: isActivityLoading,
               );
             },
           );
@@ -278,6 +276,11 @@ class _RequisitionFormState extends State<RequisitionForm> {
         });
   }
 
+  _reloadFiles() async {
+    files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+    setState(() {});
+  }
+
   _loadFiles() async {
     files = await SmartCaseApi.fetchAllFiles(currentUser.token);
   }
@@ -289,8 +292,6 @@ class _RequisitionFormState extends State<RequisitionForm> {
     List users = usersMap['search']['employees'];
 
     approvers = users.map((doc) => SmartEmployee.fromJson(doc)).toList();
-
-    print(approvers.length);
   }
 
   _loadCategories() async {

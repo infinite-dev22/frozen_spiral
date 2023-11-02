@@ -6,6 +6,7 @@ import '../services/apis/smartcase_api.dart';
 import '../theme/color.dart';
 import '../util/smart_case_init.dart';
 import '../widgets/custom_appbar.dart';
+import 'forms/diary_form.dart';
 
 class DiaryPage extends StatefulWidget {
   const DiaryPage({super.key});
@@ -14,12 +15,11 @@ class DiaryPage extends StatefulWidget {
   State<DiaryPage> createState() => _DiaryPageState();
 }
 
+late Map<DateTime, List<SmartEvent>> _dataCollection;
+
 class _DiaryPageState extends State<DiaryPage> {
-  List<SmartEvent> events = List.empty(growable: true);
-  final _EventDataSource _events = _EventDataSource(<SmartEvent>[]);
-  final DateTime _minDate =
-          DateTime.now().subtract(const Duration(days: 365 ~/ 2)),
-      _maxDate = DateTime.now().add(const Duration(days: 365 ~/ 2));
+  List<SmartEvent> _events = List.empty(growable: true);
+  late _EventDataSource _eventsDataSource;
 
   final List<CalendarView> _allowedViews = <CalendarView>[
     CalendarView.day,
@@ -35,21 +35,27 @@ class _DiaryPageState extends State<DiaryPage> {
   final bool _allowViewNavigation = true;
   final bool _showCurrentTimeIndicator = true;
 
-  ViewNavigationMode _viewNavigationMode = ViewNavigationMode.snap;
+  final ViewNavigationMode _viewNavigationMode = ViewNavigationMode.snap;
   final bool _showWeekNumber = false;
-  int _numberOfDays = -1;
+  final int _numberOfDays = -1;
 
   @override
   void initState() {
+    _fetchEvents().then((value) => _dataCollection = value);
+    _eventsDataSource = _EventDataSource(<SmartEvent>[]);
     _calendarController.view = CalendarView.month;
-    _fetchEvents();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Widget calendar = _getGettingStartedCalendar(_calendarController,
-        _events, _onViewChanged, _minDate, _maxDate, scheduleViewBuilder);
+    final Widget calendar = _getGettingStartedCalendar(
+      _calendarController,
+      _eventsDataSource,
+      _onViewChanged,
+      scheduleViewBuilder,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -62,11 +68,30 @@ class _DiaryPageState extends State<DiaryPage> {
           isNetwork: currentUserImage != null ? true : false,
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _buildDairyForm,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add),
+      ),
       body: Row(children: <Widget>[
         Expanded(
-          child: Container(color: AppColors.white, child: calendar),
+          child: Container(
+            color: AppColors.white,
+            child: calendar,
+          ),
         )
       ]),
+    );
+  }
+
+  _buildDairyForm() {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => const DiaryForm(),
     );
   }
 
@@ -74,95 +99,43 @@ class _DiaryPageState extends State<DiaryPage> {
   /// view or switched to different calendar view, based on the view changed
   /// details new appointment collection added to the calendar
   void _onViewChanged(ViewChangedDetails visibleDatesChangedDetails) {
-    final List<SmartEvent> appointment = <SmartEvent>[];
-    _events.appointments.clear();
+    final List<SmartEvent> appointments = <SmartEvent>[];
+    _eventsDataSource.appointments.clear();
+    _fetchEvents();
+    print(appointments.length);
 
     /// Creates new appointment collection based on
     /// the visible dates in calendar.
-    if (events.isNotEmpty) {
+    if (_events.isNotEmpty) {
       if (_calendarController.view != CalendarView.schedule) {
-        for (int i = 0; i < events.length; i++) {
-          appointment.add(SmartEvent(
-            title: events[i].title,
-            startDate: events[i].startDate,
-            endDate: events[i].endDate,
-            startTime: events[i].startTime,
-            endTime: events[i].endTime,
-            backgroundColor: events[i].backgroundColor,
+        for (int i = 0; i < _events.length; i++) {
+          appointments.add(SmartEvent(
+            title: _events[i].title,
+            startDate: _events[i].startDate,
+            endDate: _events[i].endDate,
+            backgroundColor: _events[i].backgroundColor,
           ));
         }
       } else {
-        for (int i = 0; i < events.length; i++) {
-          appointment.add(SmartEvent(
-            title: events[i].title,
-            startDate: events[i].startDate,
-            endDate: events[i].endDate,
-            startTime: events[i].startTime,
-            endTime: events[i].endTime,
-            backgroundColor: events[i].backgroundColor,
+        for (int i = 0; i < _events.length; i++) {
+          appointments.add(SmartEvent(
+            title: _events[i].title,
+            startDate: _events[i].startDate,
+            endDate: _events[i].endDate,
+            backgroundColor: _events[i].backgroundColor,
           ));
         }
       }
     }
 
-    for (int i = 0; i < appointment.length; i++) {
-      _events.appointments.add(appointment[i]);
-    }
+    _eventsDataSource.appointments = appointments;
 
     /// Resets the newly created appointment collection to render
     /// the appointments on the visible dates.
-    _events.notifyListeners(CalendarDataSourceAction.reset, appointment);
-  }
-
-  _fetchEvents() async {
-    var now = DateTime.now();
-    var eventsList = await SmartCaseApi.smartDioFetch(
-        'api/calendar/events', currentUser.token,
-        body: {
-          "start": "${now.year}-${now.month}-01",
-          "end":
-              "${now.year}-${now.month}-${DateTime(now.year, now.month + 1, 0).day}",
-          "viewRdbtn": "all",
-          "isFirmEventRdbtn": "ALLEVENTS",
-          "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"]
-        });
-    List currencyList = eventsList;
-    events = currencyList.map((doc) => SmartEvent.fromJson(doc)).toList();
-    print(events);
-  }
-
-  /// Allows/Restrict switching to previous/next views through swipe interaction
-  void onViewNavigationModeChange(String value) {
-    if (value == 'snap') {
-      _viewNavigationMode = ViewNavigationMode.snap;
-    } else if (value == 'none') {
-      _viewNavigationMode = ViewNavigationMode.none;
-    }
-    setState(() {
-      /// update the view navigation mode changes
-    });
-  }
-
-  /// Allows to switching the days count customization in calendar.
-  void customNumberOfDaysInView(String value) {
-    if (value == 'default') {
-      _numberOfDays = -1;
-    } else if (value == '1 day') {
-      _numberOfDays = 1;
-    } else if (value == '2 days') {
-      _numberOfDays = 2;
-    } else if (value == '3 days') {
-      _numberOfDays = 3;
-    } else if (value == '4 days') {
-      _numberOfDays = 4;
-    } else if (value == '5 days') {
-      _numberOfDays = 5;
-    } else if (value == '6 days') {
-      _numberOfDays = 6;
-    } else if (value == '7 days') {
-      _numberOfDays = 7;
-    }
-    setState(() {});
+    _eventsDataSource.notifyListeners(
+      CalendarDataSourceAction.reset,
+      appointments,
+    );
   }
 
   /// Returns the calendar widget based on the properties passed.
@@ -170,22 +143,33 @@ class _DiaryPageState extends State<DiaryPage> {
       [CalendarController? calendarController,
       CalendarDataSource? calendarDataSource,
       ViewChangedCallback? viewChangedCallback,
-      DateTime? minDate,
-      DateTime? maxDate,
       dynamic scheduleViewBuilder]) {
     return SfCalendar(
       controller: calendarController,
-      dataSource: calendarDataSource,
+      dataSource: _EventDataSource(_events),
       allowedViews: _allowedViews,
       scheduleViewMonthHeaderBuilder: scheduleViewBuilder,
       showDatePickerButton: _showDatePickerButton,
       allowViewNavigation: _allowViewNavigation,
       showCurrentTimeIndicator: _showCurrentTimeIndicator,
+      loadMoreWidgetBuilder:
+          (BuildContext context, LoadMoreCallback loadMoreAppointments) {
+        return FutureBuilder<void>(
+          future: loadMoreAppointments(),
+          builder: (BuildContext context, AsyncSnapshot<void> snapShot) {
+            return Container(
+                height: _calendarController.view == CalendarView.schedule
+                    ? 50
+                    : double.infinity,
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator());
+          },
+        );
+      },
       onViewChanged: viewChangedCallback,
       blackoutDatesTextStyle: const TextStyle(
           decoration: TextDecoration.lineThrough, color: Colors.red),
-      minDate: minDate,
-      maxDate: maxDate,
       monthViewSettings: MonthViewSettings(
           appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
           showTrailingAndLeadingDates: _showLeadingAndTrailingDates),
@@ -195,6 +179,53 @@ class _DiaryPageState extends State<DiaryPage> {
       viewNavigationMode: _viewNavigationMode,
       showWeekNumber: _showWeekNumber,
     );
+  }
+
+  Future<Map<DateTime, List<SmartEvent>>> _fetchEvents() async {
+    _events.clear();
+
+    var now = DateTime.now();
+    var responseEventsList = await SmartCaseApi.smartDioFetch(
+        'api/calendar/events', currentUser.token,
+        body: {
+          "start": "${now.year}-${now.month}-01",
+          "end":
+              "${now.year}-${now.month}-${DateTime(now.year, now.month + 1, 0).day}",
+          "viewRdbtn": "all",
+          "isFirmEventRdbtn": "ALLEVENTS",
+          "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"]
+        });
+    List eventsList = responseEventsList;
+    _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
+
+    var _dataCollection = <DateTime, List<SmartEvent>>{};
+    final DateTime today = DateTime.now();
+    final DateTime rangeStartDate = DateTime(today.year, today.month, today.day)
+        .add(const Duration(days: -1000));
+    final DateTime rangeEndDate = DateTime(today.year, today.month, today.day)
+        .add(const Duration(days: 1000));
+    for (DateTime i = rangeStartDate;
+        i.isBefore(rangeEndDate);
+        i = i.add(const Duration(days: 1))) {
+      final DateTime date = i;
+      for (int j = 0; j < _events.length; j++) {
+        final SmartEvent event = SmartEvent(
+          title: _events[j].title,
+          startDate: _events[j].startDate,
+          endDate: _events[j].endDate,
+          backgroundColor: _events[j].backgroundColor,
+        );
+
+        if (_dataCollection.containsKey(date)) {
+          final List<SmartEvent> events = _dataCollection[date]!;
+          events.add(event);
+          _dataCollection[date] = events;
+        } else {
+          _dataCollection[date] = [event];
+        }
+      }
+    }
+    return _dataCollection;
   }
 }
 
@@ -229,7 +260,9 @@ String _getMonthDate(int month) {
 
 /// Returns the builder for schedule view.
 Widget scheduleViewBuilder(
-    BuildContext buildContext, ScheduleViewMonthHeaderDetails details) {
+  BuildContext buildContext,
+  ScheduleViewMonthHeaderDetails details,
+) {
   final String monthName = _getMonthDate(details.date.month);
   return Stack(
     children: <Widget>[
@@ -260,18 +293,24 @@ class _EventDataSource extends CalendarDataSource<SmartEvent> {
   _EventDataSource(this.source);
 
   List<SmartEvent> source;
+  List<SmartEvent> events = List.empty(growable: true);
 
   @override
   List<dynamic> get appointments => source;
 
   @override
   DateTime getStartTime(int index) {
-    return source[index].startTime!;
+    return source[index].startDate!;
   }
 
   @override
   DateTime getEndTime(int index) {
-    return source[index].endTime!;
+    return source[index].endDate!;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return false;
   }
 
   @override
@@ -288,10 +327,40 @@ class _EventDataSource extends CalendarDataSource<SmartEvent> {
   SmartEvent convertAppointmentToObject(
       SmartEvent eventName, Appointment appointment) {
     return SmartEvent(
-        description: appointment.subject,
-        startTime: appointment.startTime,
-        endTime: appointment.endTime,
-        backgroundColor:
-            HexColor(appointment.color).toHex(leadingHashSign: true));
+      description: appointment.subject,
+      startTime: appointment.startTime,
+      endTime: appointment.endTime,
+      backgroundColor: HexColor(appointment.color).toHex(leadingHashSign: true),
+      isAllDay: false,
+    );
+  }
+
+  @override
+  Future<void> handleLoadMore(DateTime startDate, DateTime endDate) async {
+    final List<SmartEvent> events = <SmartEvent>[];
+
+    DateTime appStartDate =
+        DateTime(startDate.year, startDate.month, startDate.day);
+    DateTime appEndDate = DateTime(endDate.year, endDate.month, endDate.day,
+        DateTime(endDate.year, endDate.month + 1, 0).day);
+
+    while (appStartDate.isBefore(appEndDate)) {
+      final List<SmartEvent>? data = _dataCollection[appStartDate];
+      if (data == null) {
+        appStartDate = appStartDate.add(const Duration(days: 1));
+        continue;
+      }
+
+      for (final SmartEvent event in data) {
+        if (appointments.contains(event)) {
+          continue;
+        }
+        events.add(event);
+      }
+      appStartDate = appStartDate.add(const Duration(days: 1));
+    }
+
+    appointments.addAll(events);
+    notifyListeners(CalendarDataSourceAction.add, events);
   }
 }

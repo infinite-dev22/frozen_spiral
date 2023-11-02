@@ -411,8 +411,6 @@ class _ActivityFormState extends State<ActivityForm> {
       emails: emails,
     );
 
-    print('${file!.id}/activities/${widget.activity!.id}');
-
     (widget.activity == null)
         ? SmartCaseApi.smartPost(
             'api/cases/${file!.id}/activities',

@@ -187,7 +187,6 @@ class SmartCaseApi {
       Function()? onSuccess,
       Function()? onError}) async {
     var client = RetryClient(http.Client());
-    ;
 
     try {
       var response = await client.get(
@@ -198,9 +197,9 @@ class SmartCaseApi {
             HttpHeaders.acceptHeader: 'application/json'
           });
 
-      print(response.headers);
-      print(response.statusCode);
-      print(response.body);
+      // print(response.headers);
+      // print(response.statusCode);
+      // print(response.body);
 
       if (response.statusCode == 200) {
         var decodedResponse =
