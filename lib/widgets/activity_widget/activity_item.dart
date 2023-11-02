@@ -5,7 +5,7 @@ import 'package:smart_case/models/smart_activity.dart';
 import '../../../theme/color.dart';
 import '../../pages/forms/activity_form.dart';
 import '../../util/smart_case_init.dart';
-import '../custom_icon_bottom.dart';
+import '../custom_icon_button.dart';
 
 class ActivityItem extends StatelessWidget {
   const ActivityItem({

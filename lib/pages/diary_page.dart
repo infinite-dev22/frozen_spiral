@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_event.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -99,9 +100,17 @@ class _DiaryPageState extends State<DiaryPage> {
   /// view or switched to different calendar view, based on the view changed
   /// details new appointment collection added to the calendar
   void _onViewChanged(ViewChangedDetails visibleDatesChangedDetails) {
+    visibleDatesChangedDetails.visibleDates.sort();
+    var minDate = DateFormat('yyyy-MM-dd')
+        .format(visibleDatesChangedDetails.visibleDates.first);
+    var maxDate = DateFormat('yyyy-MM-dd')
+        .format(visibleDatesChangedDetails.visibleDates.last);
+
+    print("Start Date: $minDate\nEnd Date: $maxDate");
+
     final List<SmartEvent> appointments = <SmartEvent>[];
-    _eventsDataSource.appointments.clear();
-    _fetchEvents();
+    // _eventsDataSource.appointments.clear();
+    _fetchEventsDynamic(minDate: minDate, maxDate: maxDate);
     print(appointments.length);
 
     /// Creates new appointment collection based on
@@ -110,7 +119,7 @@ class _DiaryPageState extends State<DiaryPage> {
       if (_calendarController.view != CalendarView.schedule) {
         for (int i = 0; i < _events.length; i++) {
           appointments.add(SmartEvent(
-            title: _events[i].title,
+            title: _events[i].description,
             startDate: _events[i].startDate,
             endDate: _events[i].endDate,
             backgroundColor: _events[i].backgroundColor,
@@ -119,7 +128,7 @@ class _DiaryPageState extends State<DiaryPage> {
       } else {
         for (int i = 0; i < _events.length; i++) {
           appointments.add(SmartEvent(
-            title: _events[i].title,
+            title: _events[i].description,
             startDate: _events[i].startDate,
             endDate: _events[i].endDate,
             backgroundColor: _events[i].backgroundColor,
@@ -136,6 +145,11 @@ class _DiaryPageState extends State<DiaryPage> {
       CalendarDataSourceAction.reset,
       appointments,
     );
+
+    _eventsDataSource.notifyListeners(
+      CalendarDataSourceAction.addResource,
+      appointments,
+    );
   }
 
   /// Returns the calendar widget based on the properties passed.
@@ -145,6 +159,15 @@ class _DiaryPageState extends State<DiaryPage> {
       ViewChangedCallback? viewChangedCallback,
       dynamic scheduleViewBuilder]) {
     return SfCalendar(
+      allowAppointmentResize: true,
+      dragAndDropSettings: const DragAndDropSettings(
+          allowScroll: true,
+          autoNavigateDelay: Duration(microseconds: 500),
+          showTimeIndicator: true),
+      showTodayButton: true,
+      onTap: (calendarTapDetails) {
+        print(calendarTapDetails.appointments);
+      },
       controller: calendarController,
       dataSource: _EventDataSource(_events),
       allowedViews: _allowedViews,
@@ -181,15 +204,17 @@ class _DiaryPageState extends State<DiaryPage> {
     );
   }
 
-  Future<Map<DateTime, List<SmartEvent>>> _fetchEvents() async {
+  Future<Map<DateTime, List<SmartEvent>>> _fetchEvents(
+      {String? minDate, String? maxDate}) async {
     _events.clear();
+    _dataCollection.clear();
 
     var now = DateTime.now();
     var responseEventsList = await SmartCaseApi.smartDioFetch(
         'api/calendar/events', currentUser.token,
         body: {
-          "start": "${now.year}-${now.month}-01",
-          "end":
+          "start": minDate ?? "${now.year}-${now.month}-01",
+          "end": maxDate ??
               "${now.year}-${now.month}-${DateTime(now.year, now.month + 1, 0).day}",
           "viewRdbtn": "all",
           "isFirmEventRdbtn": "ALLEVENTS",
@@ -198,7 +223,7 @@ class _DiaryPageState extends State<DiaryPage> {
     List eventsList = responseEventsList;
     _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
 
-    var _dataCollection = <DateTime, List<SmartEvent>>{};
+    var dataCollection = <DateTime, List<SmartEvent>>{};
     final DateTime today = DateTime.now();
     final DateTime rangeStartDate = DateTime(today.year, today.month, today.day)
         .add(const Duration(days: -1000));
@@ -210,22 +235,72 @@ class _DiaryPageState extends State<DiaryPage> {
       final DateTime date = i;
       for (int j = 0; j < _events.length; j++) {
         final SmartEvent event = SmartEvent(
-          title: _events[j].title,
+          title: _events[j].description,
           startDate: _events[j].startDate,
           endDate: _events[j].endDate,
           backgroundColor: _events[j].backgroundColor,
         );
 
-        if (_dataCollection.containsKey(date)) {
-          final List<SmartEvent> events = _dataCollection[date]!;
+        if (dataCollection.containsKey(date)) {
+          final List<SmartEvent> events = dataCollection[date]!;
           events.add(event);
-          _dataCollection[date] = events;
+          dataCollection[date] = events;
         } else {
-          _dataCollection[date] = [event];
+          dataCollection[date] = [event];
         }
       }
     }
-    return _dataCollection;
+    return dataCollection;
+  }
+
+  Future<Map<DateTime, List<SmartEvent>>> _fetchEventsDynamic(
+      {String? minDate, String? maxDate}) async {
+    _events.clear();
+    _dataCollection.clear();
+
+    var now = DateTime.now();
+    var responseEventsList = await SmartCaseApi.smartDioFetch(
+        'api/calendar/events', currentUser.token,
+        body: {
+          "start": minDate ?? "${now.year}-${now.month}-01",
+          "end": maxDate ??
+              "${now.year}-${now.month}-${DateTime(now.year, now.month + 1, 0).day}",
+          "viewRdbtn": "all",
+          "isFirmEventRdbtn": "ALLEVENTS",
+          "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"]
+        });
+    List eventsList = responseEventsList;
+    _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
+
+    var dataCollection = <DateTime, List<SmartEvent>>{};
+    final DateTime today = DateTime.now();
+    final DateTime rangeStartDate = DateTime(today.year, today.month, today.day)
+        .add(const Duration(days: -1000));
+    final DateTime rangeEndDate = DateTime(today.year, today.month, today.day)
+        .add(const Duration(days: 1000));
+    for (DateTime i = rangeStartDate;
+        i.isBefore(rangeEndDate);
+        i = i.add(const Duration(days: 1))) {
+      final DateTime date = i;
+      for (int j = 0; j < _events.length; j++) {
+        final SmartEvent event = SmartEvent(
+          title: _events[j].description,
+          startDate: _events[j].startDate,
+          endDate: _events[j].endDate,
+          backgroundColor: _events[j].backgroundColor,
+        );
+
+        if (dataCollection.containsKey(date)) {
+          final List<SmartEvent> events = dataCollection[date]!;
+          events.add(event);
+          dataCollection[date] = events;
+        } else {
+          dataCollection[date] = [event];
+        }
+      }
+    }
+    setState(() {});
+    return dataCollection;
   }
 }
 

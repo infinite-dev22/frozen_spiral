@@ -73,3 +73,58 @@ class FormTitle extends StatelessWidget {
     );
   }
 }
+
+class CalendarFormTitle extends StatelessWidget {
+  const CalendarFormTitle({
+    super.key,
+    this.onPressed,
+    this.isElevated = false,
+  });
+
+  final Function()? onPressed;
+  final bool isElevated;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody(context);
+  }
+
+  _buildBody(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        color: isElevated ? Colors.white : AppColors.appBgColor,
+        boxShadow: (isElevated)
+            ? [
+                BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0.0, 2), // changes position of shadow
+                ),
+              ]
+            : null,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(
+              Icons.close_rounded,
+              color: AppColors.red,
+            ),
+          ),
+          IconButton(
+            onPressed: onPressed,
+            icon: const Icon(
+              Icons.edit_outlined,
+              color: AppColors.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
