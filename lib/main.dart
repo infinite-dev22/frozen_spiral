@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:smart_case/pages/activities_page.dart';
 import 'package:smart_case/pages/diary_page.dart';
 import 'package:smart_case/pages/engagements_page.dart';
@@ -10,13 +11,13 @@ import 'package:smart_case/pages/locator_page.dart';
 import 'package:smart_case/pages/notifications_page.dart';
 import 'package:smart_case/pages/profile_page.dart';
 import 'package:smart_case/pages/reports_page.dart';
+import 'package:smart_case/pages/requisition_view_page.dart';
 import 'package:smart_case/pages/requisitions_page.dart';
 import 'package:smart_case/pages/root_page.dart';
 import 'package:smart_case/pages/tasks_page.dart';
 import 'package:smart_case/pages/welcome_page.dart';
 import 'package:smart_case/services/apis/firebase_apis.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/pages/requisition_view_page.dart';
 
 import 'firebase_options.dart';
 
@@ -30,6 +31,8 @@ Future<void> main() async {
   appFCMInit();
   handleForegroundMasseges();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  InAppNotifications.init();
 
   runApp(const MyApp());
 }

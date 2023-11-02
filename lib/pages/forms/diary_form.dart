@@ -22,9 +22,11 @@ class DiaryForm extends StatefulWidget {
   const DiaryForm({
     super.key,
     this.event,
+    this.activity,
   });
 
   final SmartEvent? event;
+  final SmartActivityStatus? activity;
 
   @override
   State<DiaryForm> createState() => _DiaryFormState();
@@ -43,7 +45,7 @@ class _DiaryFormState extends State<DiaryForm> {
   final TextEditingController reminderDateController = TextEditingController();
   final TextEditingController reminderTimeController = TextEditingController();
   List emails = List.empty(growable: true);
-  List<String> employeeIds = List.empty(growable: true);
+  List<int?> employeeIds = List.empty(growable: true);
 
   final ValueNotifier<SmartActivity?> activitySelectedValue =
       ValueNotifier<SmartActivity?>(null);
@@ -66,11 +68,13 @@ class _DiaryFormState extends State<DiaryForm> {
   }
 
   _buildBody() {
+    print("File: $file");
     final ScrollController scrollController = ScrollController();
     return Column(
       children: [
         FormTitle(
           name: '${widget.event != null ? "Edit" : "New"} Calendar Event',
+          addButtonText: widget.event != null ? "Update" : "Add",
           onSave: _submitFormData,
           isElevated: isTitleElevated,
         ),
@@ -181,7 +185,7 @@ class _DiaryFormState extends State<DiaryForm> {
                           dropdownHeight: 300,
                           onOptionSelected: (options) {
                             for (var element in options) {
-                              employeeIds.add(element.value!);
+                              employeeIds.add(int.parse(element.value!));
                             }
                           },
                           options: employees
@@ -386,15 +390,26 @@ class _DiaryFormState extends State<DiaryForm> {
         employeeIds: employeeIds,
         toBeNotified: emails);
 
-    SmartCaseApi.smartPost(
-        'api/calendar', currentUser.token, smartEvent.toJson(), onError: () {
-      Toast.show("An error occurred",
-          duration: Toast.lengthLong, gravity: Toast.bottom);
-    }, onSuccess: () {
-      Toast.show("Event added successfully",
-          duration: Toast.lengthLong, gravity: Toast.bottom);
-      Navigator.pop(context);
-    });
+    (widget.event == null)
+        ? SmartCaseApi.smartPost(
+            'api/calendar', currentUser.token, smartEvent.toJson(),
+            onError: () {
+            Toast.show("An error occurred",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+          }, onSuccess: () {
+            Toast.show("Event added successfully",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+          })
+        : SmartCaseApi.smartPut('api/calendar/${widget.event!.id}',
+            currentUser.token, smartEvent.toJson(), onError: () {
+            Toast.show("An error occurred",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+          }, onSuccess: () {
+            Toast.show("Event updated successfully",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+          });
+
+    Navigator.pop(context);
   }
 
   _loadEmployees() async {
@@ -409,21 +424,22 @@ class _DiaryFormState extends State<DiaryForm> {
   _fillDataForUpdate() {
     if (widget.event != null) {
       // To be uncommented after smart event class rewrite.
-      // activity = widget.event.activity;
-      // descriptionController.text = widget.event!.description!;
-      // startDateController.text =
-      //     DateFormat('dd/MM/yyyy').format(widget.event!.startDate!);
-      // endDateController.text =
-      //     DateFormat('dd/MM/yyyy').format(widget.event!.endDate!);
-      // startTimeController.text =
-      //     DateFormat('h:mm a').format(widget.event!.startTime!);
-      // endTimeController.text =
-      //     DateFormat('h:mm a').format(widget.event!.endTime!);
-      // reminderDateController.text =
-      //     DateFormat('dd/MM/yyyy').format(widget.event!.notifyOnDate!);
-      // reminderTimeController.text =
-      //     DateFormat('h:mm a').format(widget.event!.notifyOnTime!);
-      // employeeIds = widget.event!.employeeIds!;
+      activity = widget.activity!;
+      descriptionController.text = widget.event!.description!;
+      startDateController.text =
+          DateFormat('dd/MM/yyyy').format(widget.event!.startDate!);
+      endDateController.text =
+          DateFormat('dd/MM/yyyy').format(widget.event!.endDate!);
+      startTimeController.text =
+          DateFormat('h:mm a').format(widget.event!.startTime!);
+      endTimeController.text =
+          DateFormat('h:mm a').format(widget.event!.endTime!);
+      reminderDateController.text =
+          DateFormat('dd/MM/yyyy').format(widget.event!.notifyOnDate!);
+      reminderTimeController.text =
+          DateFormat('h:mm a').format(widget.event!.notifyOnTime!);
+      employeeIds = widget.event!.employeeIds!;
+      file = widget.event!.file!;
       // emails = widget.event!.toBeNotified!;
     }
   }

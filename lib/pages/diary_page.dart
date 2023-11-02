@@ -33,7 +33,7 @@ class _DiaryPageState extends State<DiaryPage> {
 
   final CalendarController _calendarController = CalendarController();
 
-  final bool _showLeadingAndTrailingDates = true;
+  final bool _showLeadingAndTrailingDates = false;
   final bool _showDatePickerButton = true;
   bool _allowViewNavigation = true;
   final bool _showCurrentTimeIndicator = true;
@@ -44,7 +44,12 @@ class _DiaryPageState extends State<DiaryPage> {
 
   @override
   void initState() {
+    // if (preloadedEvents.isEmpty) {
     _fetchEvents().then((value) => _dataCollection = value);
+    // } else if (preloadedEvents.isNotEmpty) {
+    //   _dataCollection = preloadedEvents;
+    //   setState(() {});
+    // }
     _eventsDataSource = _EventDataSource(<SmartEvent>[]);
     _calendarController.view = CalendarView.month;
 
@@ -335,7 +340,7 @@ class _DiaryPageState extends State<DiaryPage> {
       useSafeArea: true,
       backgroundColor: Colors.white,
       context: context,
-      builder: (context) => EventView(event: event),
+      builder: (context) => EventView(eventId: event.id!),
     );
   }
 }

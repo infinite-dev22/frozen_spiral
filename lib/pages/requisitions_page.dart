@@ -4,6 +4,7 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/loading_widget/shimmers/requisition_shimmer.dart';
 import 'package:smart_case/widgets/requisition_widget/requisition_item.dart';
 
+import '../data/global_data.dart';
 import '../models/smart_currency.dart';
 import '../services/apis/smartcase_api.dart';
 import '../util/smart_case_init.dart';
@@ -34,6 +35,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         title: AppBarContent(
           searchable: true,
           filterable: true,
+          canNavigate: true,
           search: 'requisitions',
           filterController: filterController,
           onChanged: _searchActivities,
@@ -69,16 +71,21 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   }
 
   Future<void> _setUpData() async {
-    Map requisitionMap = await SmartCaseApi.smartFetch(
-        'api/accounts/cases/requisitions/allapi', currentUser.token);
-    List requisitions = requisitionMap['search']['requisitions'];
+    if (preloadedRequisitions.isEmpty) {
+      Map requisitionMap = await SmartCaseApi.smartFetch(
+          'api/accounts/cases/requisitions/allapi', currentUser.token);
+      List requisitions = requisitionMap['search']['requisitions'];
 
-    if (requisitions.isNotEmpty) {
-      this.requisitions = requisitions
-          .map(
-            (requisition) => SmartRequisition.fromJson(requisition),
-          )
-          .toList();
+      if (requisitions.isNotEmpty) {
+        this.requisitions = requisitions
+            .map(
+              (requisition) => SmartRequisition.fromJson(requisition),
+            )
+            .toList();
+        setState(() {});
+      }
+    } else if (preloadedRequisitions.isNotEmpty) {
+      requisitions = preloadedRequisitions;
       setState(() {});
     }
   }

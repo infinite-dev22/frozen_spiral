@@ -74,7 +74,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
       children: [
         FormTitle(
           name: 'New Requisition',
-          onSave: _submitFormData,
+          onSave: () => _submitFormData(),
           isElevated: isTitleElevated,
           addButtonText: (widget.requisition == null) ? 'Add' : 'Update',
         ),
@@ -401,8 +401,9 @@ class _RequisitionFormState extends State<RequisitionForm> {
       onSuccess: () {
         Toast.show("Requisition added successfully",
             duration: Toast.lengthLong, gravity: Toast.bottom);
-        Navigator.pop(context);
       },
     );
+
+    Navigator.pop(context);
   }
 }

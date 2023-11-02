@@ -30,7 +30,6 @@ class CustomTextBox extends StatelessWidget {
   _buildTextField() {
     return Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.only(bottom: 3),
       height: 40,
       decoration: BoxDecoration(
         color: AppColors.appBgColor,
@@ -46,6 +45,8 @@ class CustomTextBox extends StatelessWidget {
         ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: TextField(
