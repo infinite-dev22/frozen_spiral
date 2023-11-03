@@ -108,12 +108,21 @@ class _DiaryPageState extends State<DiaryPage> {
     var maxDate = DateFormat('yyyy-MM-dd')
         .format(visibleDatesChangedDetails.visibleDates.last);
 
-    print("Start Date: $minDate\nEnd Date: $maxDate");
+    print("$minDate to $maxDate");
 
     final List<SmartEvent> appointments = <SmartEvent>[];
     // _eventsDataSource.appointments.clear();
-    _fetchEventsDynamic(minDate: minDate, maxDate: maxDate);
-    print(appointments.length);
+
+    if (_calendarController.view == CalendarView.month ||
+        _calendarController.view == CalendarView.week) {
+      _fetchEventsDynamic(minDate: minDate, maxDate: maxDate);
+    } else if (_calendarController.view == CalendarView.day) {
+      _fetchEventsDynamic(
+          minDate: minDate,
+          maxDate: DateFormat('yyyy-MM-dd').format(visibleDatesChangedDetails
+              .visibleDates.last
+              .add(const Duration(days: 1))));
+    }
 
     /// Creates new appointment collection based on
     /// the visible dates in calendar.
@@ -168,11 +177,14 @@ class _DiaryPageState extends State<DiaryPage> {
           showTimeIndicator: true),
       showTodayButton: true,
       onTap: (calendarTapDetails) {
-        if (calendarTapDetails.appointments!.length == 1) {
-          _allowViewNavigation = false;
-          _buildEventView(calendarTapDetails.appointments![0]);
-        } else {
-          _allowViewNavigation = true;
+        print(calendarTapDetails.appointments);
+        if (calendarTapDetails.appointments != null) {
+          if (calendarTapDetails.appointments!.length == 1) {
+            _allowViewNavigation = false;
+            _buildEventView(calendarTapDetails.appointments![0]);
+          } else {
+            _allowViewNavigation = true;
+          }
         }
       },
       controller: calendarController,
@@ -225,7 +237,7 @@ class _DiaryPageState extends State<DiaryPage> {
               "${now.year}-${now.month}-${DateTime(now.year, now.month + 1, 0).day}",
           "viewRdbtn": "all",
           "isFirmEventRdbtn": "ALLEVENTS",
-          "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"]
+          "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"],
         });
     List eventsList = responseEventsList;
     _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();

@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:smart_case/models/smart_file.dart';
 
 class SmartEvent {
   final int? id;
@@ -23,6 +24,7 @@ class SmartEvent {
   final List<String>? employeeIds;
   final List? toBeNotified;
   final bool? isAllDay;
+  final SmartFile? file;
 
   SmartEvent({
     this.id,
@@ -47,6 +49,7 @@ class SmartEvent {
     this.employeeIds,
     this.toBeNotified,
     this.isAllDay,
+    this.file,
   });
 
   Map<String, dynamic> toJson() {

@@ -19,7 +19,12 @@ import '../../widgets/custom_textbox.dart';
 import '../../widgets/form_title.dart';
 
 class DiaryForm extends StatefulWidget {
-  const DiaryForm({super.key});
+  const DiaryForm({
+    super.key,
+    this.event,
+  });
+
+  final SmartEvent? event;
 
   @override
   State<DiaryForm> createState() => _DiaryFormState();
@@ -65,7 +70,7 @@ class _DiaryFormState extends State<DiaryForm> {
     return Column(
       children: [
         FormTitle(
-          name: 'New Calendar Event',
+          name: '${widget.event != null ? "Edit" : "New"} Calendar Event',
           onSave: _submitFormData,
           isElevated: isTitleElevated,
         ),
@@ -331,6 +336,7 @@ class _DiaryFormState extends State<DiaryForm> {
   void initState() {
     _setUpData();
     _loadEmployees();
+    _fillDataForUpdate();
 
     super.initState();
   }
@@ -398,5 +404,27 @@ class _DiaryFormState extends State<DiaryForm> {
     List employees = employeesMap["search"]["employees"];
 
     this.employees = employees.map((doc) => SmartUser.fromJson(doc)).toList();
+  }
+
+  _fillDataForUpdate() {
+    if (widget.event != null) {
+      // To be uncommented after smart event class rewrite.
+      // activity = widget.event.activity;
+      // descriptionController.text = widget.event!.description!;
+      // startDateController.text =
+      //     DateFormat('dd/MM/yyyy').format(widget.event!.startDate!);
+      // endDateController.text =
+      //     DateFormat('dd/MM/yyyy').format(widget.event!.endDate!);
+      // startTimeController.text =
+      //     DateFormat('h:mm a').format(widget.event!.startTime!);
+      // endTimeController.text =
+      //     DateFormat('h:mm a').format(widget.event!.endTime!);
+      // reminderDateController.text =
+      //     DateFormat('dd/MM/yyyy').format(widget.event!.notifyOnDate!);
+      // reminderTimeController.text =
+      //     DateFormat('h:mm a').format(widget.event!.notifyOnTime!);
+      // employeeIds = widget.event!.employeeIds!;
+      // emails = widget.event!.toBeNotified!;
+    }
   }
 }
