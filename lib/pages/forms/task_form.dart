@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_task.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
+import 'package:toast/toast.dart';
 
 import '../../models/smart_file.dart';
 import '../../services/apis/smartcase_api.dart';
@@ -10,20 +14,20 @@ import '../../theme/color.dart';
 import '../../util/smart_case_init.dart';
 import '../../widgets/custom_accordion.dart';
 import '../../widgets/custom_searchable_async_bottom_sheet_contents.dart';
-import '../../widgets/custom_searchable_async_file_bottom_sheet_contents.dart';
 import '../../widgets/form_title.dart';
 
 class TaskForm extends StatefulWidget {
-  const TaskForm({super.key, this.onSave, this.task});
+  const TaskForm({super.key, this.task});
 
   final SmartTask? task;
-  final Function()? onSave;
 
   @override
   State<TaskForm> createState() => _TaskFormState();
 }
 
 class _TaskFormState extends State<TaskForm> {
+  final ToastContext toast = ToastContext();
+
   bool isTitleElevated = false;
   bool isAssigneeLoading = false;
 
@@ -34,13 +38,15 @@ class _TaskFormState extends State<TaskForm> {
   List<SmartEmployee> assignees = List.empty(growable: true);
 
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
+  final TextEditingController dueDateController = TextEditingController();
   final TextEditingController startTimeController = TextEditingController();
   final TextEditingController endTimeController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    toast.init(context);
+
     return _buildBody();
   }
 
@@ -51,7 +57,8 @@ class _TaskFormState extends State<TaskForm> {
       children: [
         FormTitle(
           name: '${(widget.task == null) ? "New" : "Edit"} Task',
-          onSave: () {},
+          addButtonText: (widget.task == null) ? 'Add' : 'Update',
+          onSave: () => _submitForm(),
           isElevated: isTitleElevated,
         ),
         Expanded(
@@ -92,7 +99,7 @@ class _TaskFormState extends State<TaskForm> {
                     child: TextButton(
                       onPressed: _showSearchFileBottomSheet,
                       child: Text(
-                        widget.task?.caseFile?.fileName ?? 'Select file',
+                        file?.fileName ?? 'Select file',
                       ),
                     ),
                   ),
@@ -108,13 +115,12 @@ class _TaskFormState extends State<TaskForm> {
                     child: TextButton(
                       onPressed: _showSearchAssigneeBottomSheet,
                       child: Text(
-                        widget.task?.assignees?[1].getName() ??
-                            'Select assignee',
+                        assignee?.getName() ?? 'Select assignee',
                       ),
                     ),
                   ),
                   DateTimeAccordion2(
-                      dateController: dateController,
+                      dateController: dueDateController,
                       startTimeController: startTimeController,
                       endTimeController: endTimeController),
                   CustomTextArea(
@@ -139,7 +145,7 @@ class _TaskFormState extends State<TaskForm> {
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return AsyncSearchableSmartFileBottomSheetContents(
+              return AsyncSearchableBottomSheetContents(
                 hint: "Search file",
                 list: searchedList,
                 onTap: (value) {
@@ -185,7 +191,6 @@ class _TaskFormState extends State<TaskForm> {
                 hint: "Search assignee",
                 list: searchedList,
                 onTap: (value) {
-                  file = null;
                   _onTapSearchedAssignee(value!);
                   Navigator.pop(context);
                 },
@@ -249,5 +254,42 @@ class _TaskFormState extends State<TaskForm> {
 
     _loadFiles();
     _loadAssignees();
+  }
+
+  _submitForm() {
+    SmartTask smartTask = SmartTask(
+      taskName: nameController.text.trim(),
+      description: descriptionController.text.trim(),
+      matter: 1,
+      caseStatus: 'TASK',
+      priority: 'High',
+      dueAt: DateFormat('dd/MM/yyyy').parse(dueDateController.text.trim()),
+      estimatedTime:
+          DateFormat('h:mm a').parse(startTimeController.text.trim()),
+      assignees: [SmartEmployee(id: 1)],
+    );
+    
+    jsonEncode(smartTask.toCreateJson());
+
+    (widget.task == null)
+        ? SmartCaseApi.smartPost(
+            'api/crm/tasks', currentUser.token, smartTask.toCreateJson(),
+            onError: () {
+            Toast.show("An error occurred",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+          }, onSuccess: () {
+            Toast.show("Engagement added successfully",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+            Navigator.pop(context);
+          })
+        : SmartCaseApi.smartPut('api/crm/tasks/${widget.task!.id}',
+            currentUser.token, smartTask.toCreateJson(), onError: () {
+            Toast.show("An error occurred",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+          }, onSuccess: () {
+            Toast.show("Engagement updated successfully",
+                duration: Toast.lengthLong, gravity: Toast.bottom);
+            Navigator.pop(context);
+          });
   }
 }

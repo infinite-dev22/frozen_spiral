@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:full_picker/full_picker.dart';
+import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/auth_text_field.dart';
@@ -8,6 +11,7 @@ import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/profile_widget/profile_detail_item.dart';
 import 'package:smart_case/widgets/profile_widget/profile_master_item.dart';
 import 'package:smart_case/widgets/wide_button.dart';
+import 'package:toast/toast.dart';
 
 import '../widgets/custom_accordion.dart';
 import '../widgets/custom_dropdowns.dart';
@@ -21,6 +25,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final ToastContext toast = ToastContext();
   bool isTitleElevated = false;
 
   TextEditingController oldPasswordController = TextEditingController();
@@ -40,6 +45,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    toast.init(context);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -92,23 +99,33 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   _changePhotoTapped() {
-    return showModalBottomSheet(
-      enableDrag: true,
+    return FullPicker(
       context: context,
-      builder: (context) => _buildChangePhotoBottomSheetButtons(),
-    );
-  }
-
-  _buildChangePhotoBottomSheetButtons() {
-    return Column(
-      children: [
-        FormTitle(
-          name: 'Change Photo',
-          onSave: () {},
-        ),
-        const WideButton(name: 'Take Photo'),
-        const WideButton(name: 'Select Photo'),
-      ],
+      prefixName: "Profile Photo",
+      file: false,
+      image: true,
+      video: false,
+      videoCamera: false,
+      imageCamera: true,
+      voiceRecorder: false,
+      videoCompressor: false,
+      imageCropper: true,
+      multiFile: false,
+      url: false,
+      onError: (int value) {
+        if (kDebugMode) {
+          print(" ----  onError ----=$value");
+        }
+      },
+      onSelected: (value) {
+        SmartCaseApi.uploadProfilePicture(value.file.first!, onError: () {
+          Toast.show("An error occurred",
+              duration: Toast.lengthLong, gravity: Toast.bottom);
+        }, onSuccess: () {
+          Toast.show("Profile photo updated successfully",
+              duration: Toast.lengthLong, gravity: Toast.bottom);
+        });
+      },
     );
   }
 

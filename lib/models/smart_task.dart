@@ -1,5 +1,5 @@
+import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_employee.dart';
-
 import 'package:smart_case/models/smart_file.dart';
 
 class SmartTask {
@@ -13,12 +13,12 @@ class SmartTask {
   final DateTime? dueAt;
   final int? taskStatus;
   final DateTime? endDate;
-  final String? estimatedTime;
-  final String? createdAt;
+  final DateTime? estimatedTime;
+  final DateTime? createdAt;
   final List<SmartEmployee>? assignees;
   final SmartEmployee? assigner;
   final SmartFile? caseFile;
-  final dynamic taskStatuses;
+  final SmartTaskStatus? taskStatuses;
 
   SmartTask({
     this.id,
@@ -48,15 +48,29 @@ class SmartTask {
       matter: json['matter'],
       caseStatus: json['case_status'],
       priority: json['priority'],
-      dueAt: json['due_at'],
+      dueAt: DateFormat('dd/MM/yyyy').parse(DateFormat('dd/MM/yyyy')
+          .format(DateFormat('yy-MM-dd').parse(json['due_at']))),
       taskStatus: json['task_status'],
-      endDate: json['end_date'],
-      estimatedTime: json['estimated_time'],
-      createdAt: json['created_at'],
-      assignees: (json['assignees'] as List).map((e) => SmartEmployee.fromJson(e)).toList(),
-      assigner: SmartEmployee.fromJson(json['assigner']),
-      caseFile: SmartFile.fromJson(json['case_file']),
-      taskStatuses: json['task_statuses'],
+      endDate: (json['end_date'] != null)
+          ? DateFormat('dd/MM/yyyy').parse(DateFormat('dd/MM/yyyy')
+              .format(DateFormat('dd-MM-yyyy').parse(json['end_date'])))
+          : null,
+      estimatedTime: DateFormat('h:mm a').parse(DateFormat('h:mm a')
+          .format(DateFormat('h:mm a').parse(json['estimated_time']))),
+      createdAt: DateFormat('dd/MM/yyyy').parse(DateFormat('dd/MM/yyyy')
+          .format(DateFormat('dd-MM-yyyy').parse(json['created_at']))),
+      assignees: (json['assignees'] as List?)
+          ?.map((e) => SmartEmployee.fromJson(e))
+          .toList(),
+      assigner: json['assigner'] != null
+          ? SmartEmployee.fromJson(json['assigner'])
+          : null,
+      caseFile: json['case_file'] != null
+          ? SmartFile.fromJson(json['case_file'])
+          : null,
+      taskStatuses: json['task_statuses'] != null
+          ? SmartTaskStatus.fromJson(json['task_statuses'])
+          : null,
     );
   }
 
@@ -74,9 +88,52 @@ class SmartTask {
       'assignees': assignees,
       'assigner': assigner?.toJson(),
       'case_file': SmartFile.toJson(caseFile!),
-      'task_statuses': taskStatuses != null
-          ? List<dynamic>.from(taskStatuses.map((x) => x.toJson()))
-          : null,
+      'task_statuses': taskStatuses,
+    };
+  }
+
+  Map<String, dynamic> toCreateJson() {
+    return {
+      "formtype": "index",
+      'task_name': taskName,
+      'description': description,
+      'matter': matter,
+      'case_status': caseStatus,
+      'priority': priority,
+      'due_at': dueAt?.toIso8601String(),
+      'task_status': taskStatus,
+      'estimated_time': estimatedTime?.toIso8601String(),
+      'assignees': assignees,
+    };
+  }
+}
+
+class SmartTaskStatus {
+  int? id;
+  String? name;
+  String? code;
+  String? description;
+
+  SmartTaskStatus({
+    this.id,
+    this.name,
+    this.code,
+    this.description,
+  });
+
+  SmartTaskStatus.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    code = json['code'];
+    description = json['description'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'code': code,
+      'description': description,
     };
   }
 }

@@ -2,6 +2,7 @@ import 'package:smart_case/models/smart_model.dart';
 
 class SmartFile extends SmartModel {
   int? id;
+  final int? clientId;
   String? fileName;
   String? fileNumber;
   dynamic dateOpened;
@@ -11,6 +12,7 @@ class SmartFile extends SmartModel {
 
   SmartFile({
     this.id,
+    this.clientId,
     this.fileName,
     this.fileNumber,
     this.dateOpened,
@@ -22,6 +24,7 @@ class SmartFile extends SmartModel {
   factory SmartFile.fromJson(Map json) {
     return SmartFile(
       id: json["id"],
+      clientId: json["client_id"],
       fileName: json["file_name"],
       fileNumber: json["file_number"],
       dateOpened: json["date_opened"],
