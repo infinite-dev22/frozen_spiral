@@ -280,7 +280,6 @@ class _TaskFormState extends State<TaskForm> {
           }, onSuccess: () {
             Toast.show("Engagement added successfully",
                 duration: Toast.lengthLong, gravity: Toast.bottom);
-            Navigator.pop(context);
           })
         : SmartCaseApi.smartPut('api/crm/tasks/${widget.task!.id}',
             currentUser.token, smartTask.toCreateJson(), onError: () {
@@ -289,7 +288,8 @@ class _TaskFormState extends State<TaskForm> {
           }, onSuccess: () {
             Toast.show("Engagement updated successfully",
                 duration: Toast.lengthLong, gravity: Toast.bottom);
-            Navigator.pop(context);
           });
+
+    Navigator.pop(context);
   }
 }

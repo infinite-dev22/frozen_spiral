@@ -4,6 +4,7 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/theme/color.dart';
 
 import '../models/smart_currency.dart';
@@ -324,8 +325,52 @@ class _RootPageState extends State<RootPage> {
     // as initState() must not be async
     setupInteractedMessage();
 
+    // _preloadData();
+    _preloadRequisitionsData();
+    _preloadEventsData();
     _loadCurrencies();
 
     super.initState();
+  }
+
+  _preloadData() async {
+    await SmartCaseApi.fetchAllEvents(currentUser.token, onSuccess: () {
+      print('Success');
+    }, onError: () {
+      print('Error');
+    }).then((value) {
+      preloadedEvents = value;
+      setState(() {});
+    });
+    await SmartCaseApi.fetchAllRequisitions(currentUser.token, onSuccess: () {
+      print("Success");
+    }, onError: () {
+      print("Error");
+    }).then((value) {
+      preloadedRequisitions = value;
+      setState(() {});
+    });
+  }
+
+  _preloadEventsData() async {
+    await SmartCaseApi.fetchAllEvents(currentUser.token, onSuccess: () {
+      print('Success');
+    }, onError: () {
+      print('Error');
+    }).then((value) {
+      preloadedEvents = value;
+      setState(() {});
+    });
+  }
+
+  _preloadRequisitionsData() async {
+    await SmartCaseApi.fetchAllRequisitions(currentUser.token, onSuccess: () {
+      print("Success");
+    }, onError: () {
+      print("Error");
+    }).then((value) {
+      preloadedRequisitions = value;
+      setState(() {});
+    });
   }
 }

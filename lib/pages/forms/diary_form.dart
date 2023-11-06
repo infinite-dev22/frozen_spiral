@@ -393,8 +393,9 @@ class _DiaryFormState extends State<DiaryForm> {
     }, onSuccess: () {
       Toast.show("Event added successfully",
           duration: Toast.lengthLong, gravity: Toast.bottom);
-      Navigator.pop(context);
     });
+
+    Navigator.pop(context);
   }
 
   _loadEmployees() async {

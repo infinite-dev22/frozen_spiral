@@ -1,6 +1,7 @@
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:smart_case/models/smart_contact.dart';
@@ -419,9 +420,24 @@ class _ActivityFormState extends State<ActivityForm> {
             Toast.show("An error occurred",
                 duration: Toast.lengthLong, gravity: Toast.bottom);
           }, onSuccess: () {
-            Toast.show("Activity added successfully",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
-            Navigator.pop(context);
+            // Toast.show("Activity added successfully",
+            //     duration: Toast.lengthLong, gravity: Toast.bottom);
+
+            InAppNotifications.show(
+                title: 'SmartCase - upload',
+                leading: const Icon(
+                  Icons.fact_check,
+                  color: Colors.green,
+                  size: 50,
+                ),
+                ending: const Icon(
+                  Icons.arrow_right_alt,
+                  color: Colors.red,
+                ),
+                description: 'Activity added successfully',
+                onTap: () {
+                  // Do whatever you need!
+                });
           })
         : SmartCaseApi.smartPut(
             'api/cases/${file!.id}/activities/${widget.activity!.id}',
@@ -432,7 +448,8 @@ class _ActivityFormState extends State<ActivityForm> {
           }, onSuccess: () {
             Toast.show("Activity updated successfully",
                 duration: Toast.lengthLong, gravity: Toast.bottom);
-            Navigator.pop(context);
           });
+
+    Navigator.pop(context);
   }
 }

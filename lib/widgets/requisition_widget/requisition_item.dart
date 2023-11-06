@@ -196,9 +196,31 @@ class _RequisitionItemState extends State<RequisitionItem> {
               RequisitionItemStatus(
                   name: widget.requisition.requisitionStatus!.name ==
                           'SECONDARY_APPROVED'
-                      ? 'APPROVED'
-                      : widget.requisition.requisitionStatus!.name,
-                  bgColor: Colors.green,
+                      ? 'Approved'
+                      : widget.requisition.requisitionStatus!.name ==
+                              'SECONDARY_REJECTED'
+                          ? 'Rejected'
+                          : widget.requisition.requisitionStatus!.name ==
+                                  'SECONDARY_RETURNED'
+                              ? 'Returned'
+                              : widget.requisition.requisitionStatus!.name,
+                  bgColor: widget.requisition.requisitionStatus!.name
+                          .toLowerCase()
+                          .contains('approved')
+                      ? AppColors.green
+                      : widget.requisition.requisitionStatus!.name
+                              .toLowerCase()
+                              .contains('rejected')
+                          ? AppColors.red
+                          : widget.requisition.requisitionStatus!.name
+                                  .toLowerCase()
+                                  .contains('returned')
+                              ? AppColors.orange
+                              : widget.requisition.requisitionStatus!.name
+                                      .toLowerCase()
+                                      .contains('paid')
+                                  ? AppColors.purple
+                                  : AppColors.blue,
                   horizontalPadding: 20,
                   verticalPadding: 5),
             ],

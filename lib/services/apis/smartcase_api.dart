@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
@@ -11,12 +12,12 @@ import 'package:smart_case/models/smart_file.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../models/smart_event.dart';
+import '../../models/smart_requisition.dart';
+
 class SmartCaseApi {
   static Future<List<SmartFile>> fetchAllFiles(String token,
-      {Function()? onSuccess,
-      Function()? onNoUser,
-      Function()? onWrongPassword,
-      Function()? onError}) async {
+      {Function()? onSuccess, Function()? onError}) async {
     var client = RetryClient(http.Client());
 
     try {
@@ -42,6 +43,9 @@ class SmartCaseApi {
     } catch (e) {
       if (onError != null) {
         onError();
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } finally {
       client.close();
@@ -50,10 +54,7 @@ class SmartCaseApi {
   }
 
   static Future<List<SmartActivity>> fetchAllActivities(String token,
-      {Function()? onSuccess,
-      Function()? onNoUser,
-      Function()? onWrongPassword,
-      Function()? onError}) async {
+      {Function()? onSuccess, Function()? onError}) async {
     var client = RetryClient(http.Client());
 
     try {
@@ -72,6 +73,49 @@ class SmartCaseApi {
 
         List<SmartActivity> list =
             activityList.map((doc) => SmartActivity.fromJson(doc)).toList();
+
+        return list;
+      } else {
+        if (onError != null) {
+          onError();
+        }
+      }
+    } catch (e) {
+      if (onError != null) {
+        onError();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    } finally {
+      client.close();
+    }
+    return [];
+  }
+
+  static Future<List<SmartRequisition>> fetchAllRequisitions(String token,
+      {Function()? onSuccess, Function()? onError}) async {
+    var client = RetryClient(http.Client());
+
+    try {
+      var response = await client.get(
+          Uri.parse(
+              '${currentUser.url}/api/accounts/cases/requisitions/allapi'),
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer $token",
+          });
+
+      if (response.statusCode == 200) {
+        var decodedResponse =
+            jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        List requisitionList = decodedResponse['search']['requisitions'];
+
+        print("Requisitions: $requisitionList");
+
+        List<SmartRequisition> list = requisitionList
+            .map((doc) => SmartRequisition.fromJson(doc))
+            .toList();
 
         return list;
       } else {
@@ -294,6 +338,58 @@ class SmartCaseApi {
     finally {
       client.close();
     }
+  }
+
+  static Future<Map<DateTime, List<SmartEvent>>> fetchAllEvents(String token,
+      {Function()? onSuccess, Function()? onError}) async {
+    final DateTime today = DateTime.now();
+
+    var responseEventsList = await SmartCaseApi.smartDioFetch(
+        'api/calendar/events', currentUser.token,
+        body: {
+          "start": "${today.year}-${today.month}-01",
+          "end":
+              "${today.year}-${today.month}-${DateTime(today.year, today.month + 1, 0).day}",
+          "viewRdbtn": "all",
+          "isFirmEventRdbtn": "ALLEVENTS",
+          "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"],
+        },
+        onSuccess: onSuccess,
+        onError: onError);
+    List eventsList = responseEventsList;
+
+    print("Events: $eventsList");
+
+    List<SmartEvent> events =
+        eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
+
+    var dataCollection = <DateTime, List<SmartEvent>>{};
+    final DateTime rangeStartDate = DateTime(today.year, today.month, today.day)
+        .add(const Duration(days: -1000));
+    final DateTime rangeEndDate = DateTime(today.year, today.month, today.day)
+        .add(const Duration(days: 1000));
+    for (DateTime i = rangeStartDate;
+        i.isBefore(rangeEndDate);
+        i = i.add(const Duration(days: 1))) {
+      final DateTime date = i;
+      for (int j = 0; j < events.length; j++) {
+        final SmartEvent event = SmartEvent(
+          title: events[j].description,
+          startDate: events[j].startDate,
+          endDate: events[j].endDate,
+          backgroundColor: events[j].backgroundColor,
+        );
+
+        if (dataCollection.containsKey(date)) {
+          final List<SmartEvent> events = dataCollection[date]!;
+          events.add(event);
+          dataCollection[date] = events;
+        } else {
+          dataCollection[date] = [event];
+        }
+      }
+    }
+    return dataCollection;
   }
 
   static Future<File> compressImage(String photoId, File image) async {

@@ -17,6 +17,7 @@ class AppColors {
   static const blue = Color.fromRGBO(0, 116, 227, 1);
   static const green = Colors.green;
   static const orange = Colors.orange;
+  static const purple = Colors.purple;
 }
 
 extension HexColor on Color {

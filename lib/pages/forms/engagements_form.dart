@@ -294,15 +294,13 @@ class _EngagementFormState extends State<EngagementForm> {
     );
 
     (widget.engagement == null)
-        ? SmartCaseApi.smartPost(
-            'api/crm/engagements', currentUser.token, smartEngagement.toCreateJson(),
-            onError: () {
+        ? SmartCaseApi.smartPost('api/crm/engagements', currentUser.token,
+            smartEngagement.toCreateJson(), onError: () {
             Toast.show("An error occurred",
                 duration: Toast.lengthLong, gravity: Toast.bottom);
           }, onSuccess: () {
             Toast.show("Engagement added successfully",
                 duration: Toast.lengthLong, gravity: Toast.bottom);
-            Navigator.pop(context);
           })
         : SmartCaseApi.smartPut('api/crm/engagements/${widget.engagement!.id}',
             currentUser.token, smartEngagement.toCreateJson(), onError: () {
@@ -311,7 +309,8 @@ class _EngagementFormState extends State<EngagementForm> {
           }, onSuccess: () {
             Toast.show("Engagement updated successfully",
                 duration: Toast.lengthLong, gravity: Toast.bottom);
-            Navigator.pop(context);
           });
+
+    Navigator.pop(context);
   }
 }
