@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:marquee/marquee.dart';
+import 'package:smart_case/models/smart_activity.dart';
 import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/widgets/custom_icon_holder.dart';
 import 'package:smart_case/widgets/form_title.dart';
 
 import '../services/apis/smartcase_api.dart';
 import '../util/smart_case_init.dart';
+import '../widgets/custom_images/custom_image.dart';
 import 'forms/diary_form.dart';
 
 class EventView extends StatefulWidget {
@@ -23,6 +25,7 @@ class EventView extends StatefulWidget {
 
 class _EventViewState extends State<EventView> {
   SmartEvent? event;
+  SmartActivityStatus? activityStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +50,19 @@ class _EventViewState extends State<EventView> {
                   children: [
                     Column(
                       children: [
-                        const CustomIconHolder(
-                          width: 100,
-                          height: 100,
-                          radius: 100,
-                          graphic: Icons.person_2_rounded,
-                        ),
+                        (event!.url != null && event!.url!.isNotEmpty)
+                            ? CustomImage(
+                                event!.url!,
+                                isFile: false,
+                                isNetwork: true,
+                              )
+                            : const CustomIconHolder(
+                                width: 100,
+                                height: 100,
+                                radius: 100,
+                                size: 70,
+                                graphic: Icons.person_2_rounded,
+                              ),
                         const SizedBox(height: 5),
                         Text(
                           event!.fullName!,
@@ -75,12 +85,12 @@ class _EventViewState extends State<EventView> {
                         Column(
                           children: [
                             Text(
-                              'from: ${DateFormat('dd/MM/yyyy h:mm a').format(DateFormat('dd-MM-yy h:mm a').parse(DateFormat('yy-MM-dd h:mm a').format(event!.startDate!)))}',
+                              'from: ${DateFormat('dd/MM/yyyy - h:mm a').format(DateFormat('dd-MM-yy - h:mm a').parse(DateFormat('yy-MM-dd - h:mm a').format(event!.startDate!)))}',
                               style: const TextStyle(fontSize: 18),
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'to:   ${DateFormat('dd/MM/yyyy h:mm a').format(DateFormat('dd-MM-yy h:mm a').parse(DateFormat('yy-MM-dd h:mm a').format(event!.endDate!)))}',
+                              'to:   ${DateFormat('dd/MM/yyyy - h:mm a').format(DateFormat('dd-MM-yy - h:mm a').parse(DateFormat('yy-MM-dd - h:mm a').format(event!.endDate!)))}',
                               style: const TextStyle(fontSize: 18),
                             ),
                           ],
@@ -155,9 +165,9 @@ class _EventViewState extends State<EventView> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              DateFormat('dd/MM/yyyy h:mm a').format(
-                                  DateFormat('dd-MM-yy h:mm a').parse(
-                                      DateFormat('yy-MM-dd h:mm a')
+                              DateFormat('dd/MM/yyyy - h:mm a').format(
+                                  DateFormat('dd-MM-yy - h:mm a').parse(
+                                      DateFormat('yy-MM-dd - h:mm a')
                                           .format(event!.notifyOnDate!))),
                               style: const TextStyle(fontSize: 18),
                             ),
@@ -208,17 +218,30 @@ class _EventViewState extends State<EventView> {
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
-      builder: (context) => DiaryForm(event: event),
+      builder: (context) => DiaryForm(
+        event: event,
+        activity: activityStatus,
+      ),
     );
   }
 
   _fetchEvent() async {
-    Map response = await SmartCaseApi.smartFetch(
+    // get event.
+    Map eventResponse = await SmartCaseApi.smartFetch(
         'api/calendar/${widget.eventId}', currentUser.token);
-    print(response);
-    event = SmartEvent.fromJsonView(response);
+    event = SmartEvent.fromJsonView(eventResponse);
+    print(eventResponse);
+    // get activity status attached to the event.
+    Map activityStatusResponse = await SmartCaseApi.smartFetch(
+        'api/admin/caseActivityStatus/${event!.activityStatusId!}',
+        currentUser.token);
+    print(activityStatusResponse);
+    activityStatus = SmartActivityStatus.fromJson(
+        activityStatusResponse['caseActivityStatus']);
     setState(() {});
   }
+
+  _fetchActivityStatus() async {}
 
   @override
   void initState() {

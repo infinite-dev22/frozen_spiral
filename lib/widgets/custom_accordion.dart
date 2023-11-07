@@ -187,8 +187,12 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
   void initState() {
     super.initState();
 
-    widget.dateController.text = selectedDate;
-    widget.timeController.text = selectedTime;
+    widget.dateController.text.isNotEmpty
+        ? selectedDate = widget.dateController.text
+        : widget.dateController.text = selectedDate;
+    widget.timeController.text.isNotEmpty
+        ? selectedTime = widget.timeController.text
+        : widget.timeController.text = selectedTime;
     _showContent = false;
   }
 }
@@ -567,10 +571,18 @@ class _DoubleDateTimeAccordionState extends State<DoubleDateTimeAccordion> {
   void initState() {
     super.initState();
 
-    widget.startDateController.text = startSelectedDate;
-    widget.startTimeController.text = startSelectedTime;
-    widget.endDateController.text = endSelectedDate;
-    widget.endTimeController.text = endSelectedTime;
+    widget.startDateController.text.isNotEmpty
+        ? startSelectedDate = widget.startDateController.text
+        : widget.startDateController.text = startSelectedDate;
+    widget.startTimeController.text.isNotEmpty
+        ? startSelectedTime = widget.startTimeController.text
+        : widget.startTimeController.text = startSelectedTime;
+    widget.endDateController.text.isNotEmpty
+        ? endSelectedDate = widget.endDateController.text
+        : widget.endDateController.text = endSelectedDate;
+    widget.endTimeController.text.isNotEmpty
+        ? endSelectedTime = widget.endTimeController.text
+        : widget.endTimeController.text = endSelectedTime;
     _showStartContent = false;
     _showEndContent = false;
   }
@@ -798,9 +810,8 @@ class _DateTimeAccordion2State extends State<DateTimeAccordion2> {
 
   @override
   void initState() {
-    print(
-        'Not Empty: ${widget.dateController.text.isNotEmpty} ${widget.dateController.text} $selectedStartTime');
     super.initState();
+
     widget.dateController.text.isNotEmpty
         ? selectedDate = widget.dateController.text
         : widget.dateController.text = selectedDate;

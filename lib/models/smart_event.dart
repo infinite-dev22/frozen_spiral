@@ -24,12 +24,12 @@ class SmartEvent {
   final String? firmEvent;
   final DateTime? notifyOnDate;
   final DateTime? notifyOnTime;
-  final List<String>? employeeIds;
+  final List<int?>? employeeIds;
   final List? toBeNotified;
   final List<SmartEmployee>? toNotify;
   final bool? isAllDay;
   final SmartFile? file;
-  final int? activityStatusId;
+  final dynamic activityStatusId;
 
   SmartEvent({
     this.id,
@@ -81,16 +81,23 @@ class SmartEvent {
 
   factory SmartEvent.fromJsonView(Map<dynamic, dynamic> doc) {
     Map<String, dynamic> param = jsonDecode(doc["calendarEvents"]['params']);
-    Map toNotifyMap = doc['toNotify'];
+    var toNotifyMap = doc['toNotify'];
     List<SmartEmployee> toNotifyList = List.empty(growable: true);
-    toNotifyMap.forEach((key, value) {
-      toNotifyList.add(SmartEmployee.fromJson(value["employee"]));
-    });
+    try {
+      toNotifyMap.forEach((key, value) {
+        toNotifyList.add(SmartEmployee.fromJson(value["employee"]));
+      });
+    } catch (e) {
+      toNotifyMap.forEach((value) {
+        toNotifyList.add(SmartEmployee.fromJson(value["employee"]));
+      });
+    }
+
     return SmartEvent(
       id: doc["calendarEvents"]['id'],
       title: doc["calendarEvents"]['title'],
       description: doc["calendarEvents"]['description'],
-      url: doc["calendarEvents"]['url'],
+      url: doc['avatar'],
       editable: doc["calendarEvents"]['editable'],
       startDate: DateTime.parse(doc["calendarEvents"]['start']),
       startTime: DateFormat('h:mm a').parse(DateFormat('h:mm a')
@@ -109,6 +116,7 @@ class SmartEvent {
       notifyOnDate: DateTime.parse(doc['notifyOn']),
       notifyOnTime: DateTime.parse(doc['notifyOn']),
       toNotify: toNotifyList,
+      employeeIds: toNotifyList.map((e) => e.id).toList(),
     );
   }
 
