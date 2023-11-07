@@ -63,7 +63,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
       );
     } else {
       return ListView.builder(
-        itemCount: 4,
+        itemCount: 3,
         padding: const EdgeInsets.all(10),
         itemBuilder: (context, index) => const RequisitionShimmer(),
       );

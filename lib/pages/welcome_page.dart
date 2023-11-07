@@ -188,7 +188,7 @@ class _WelcomePageState extends State<WelcomePage> {
       });
 
       AuthApis.requestReset(
-        'api/password/email',
+        emailController.text,
         onError: () {
           FocusManager.instance.primaryFocus?.unfocus();
           Toast.show("An error occurred",

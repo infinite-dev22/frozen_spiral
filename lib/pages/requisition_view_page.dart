@@ -201,7 +201,9 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
                 ),
               ),
               FilledButton(
-                onPressed: _returnRequisition,
+                onPressed: () {
+                  print("");
+                  _returnRequisition();},
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith(
                       (states) => AppColors.orange),
@@ -239,6 +241,8 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
     } else if (requisition.requisitionStatus!.code == "PRIMARY_APPROVED") {
       _submitData("SECONDARY_APPROVED", 'Requisition approved');
     }
+
+    Navigator.pop(context);
   }
 
   _returnRequisition() {
@@ -278,6 +282,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   _submitData(String value, String toastText) {
+    print(value);
     SmartCaseApi.smartPost(
       'api/accounts/requisitions/${requisition.id}/process',
       currentUser.token,

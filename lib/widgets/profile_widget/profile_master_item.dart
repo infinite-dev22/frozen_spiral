@@ -69,12 +69,12 @@ class ProfileMasterItem extends StatelessWidget {
                 isFile: isFile,
                 isNetwork: isNetwork,
               )
-            : CustomIconHolder(
-                width: 45,
-                height: 45,
+            : const CustomIconHolder(
+                width: 150,
+                height: 150,
                 graphic: Icons.account_circle,
-                radius: 50,
-                size: 35,
+                radius: 100,
+                size: 150,
               ),
         const SizedBox(
           height: 10,
