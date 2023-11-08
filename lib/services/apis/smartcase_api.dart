@@ -151,9 +151,9 @@ class SmartCaseApi {
         Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint).toString(),
         data: json.encode(data),
       );
-      print(response.statusCode);
-      print(response.headers);
-      print(response.data);
+      // print(response.statusCode);
+      // print(response.headers);
+      // print(response.data);
       // print(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (response.statusCode == 200) {
         if (onSuccess != null) {
@@ -276,9 +276,10 @@ class SmartCaseApi {
       );
 
       if (response.statusCode == 200) {
-        var decodedResponse = jsonDecode(response.data);
+        // var decodedResponse = jsonDecode(response.data);
 
-        return decodedResponse;
+        return response.data;
+        // return decodedResponse;
       } else {
         if (onError != null) {
           onError();

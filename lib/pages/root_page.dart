@@ -326,8 +326,8 @@ class _RootPageState extends State<RootPage> {
     setupInteractedMessage();
 
     // _preloadData();
-    _preloadRequisitionsData();
-    _preloadEventsData();
+    // _preloadRequisitionsData();
+    // _preloadEventsData();
     _loadCurrencies();
 
     super.initState();

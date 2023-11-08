@@ -201,9 +201,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
                 ),
               ),
               FilledButton(
-                onPressed: () {
-                  print("");
-                  _returnRequisition();},
+                onPressed: _returnRequisition,
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith(
                       (states) => AppColors.orange),
@@ -227,18 +225,18 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   _payoutRequisition() {
-    _submitData("PAY_OUT", 'Pay out successful');
+    _submitData("PAID", 'Pay out successful');
   }
 
   _approveRequisition() {
-    if (requisition.requisitionStatus!.code == 'EDITED' ||
-        requisition.requisitionStatus!.code == "SUBMITTED") {
-      if (requisition.canApprove == 'LV1') {
+    if (requisition!.requisitionStatus!.code == 'EDITED' ||
+        requisition!.requisitionStatus!.code == "SUBMITTED") {
+      if (requisition!.canApprove == 'LV1') {
         _submitData("APPROVED", 'Requisition approved');
-      } else if (requisition.canApprove == 'LV2') {
+      } else if (requisition!.canApprove == 'LV2') {
         _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
       }
-    } else if (requisition.requisitionStatus!.code == "PRIMARY_APPROVED") {
+    } else if (requisition!.requisitionStatus!.code == "PRIMARY_APPROVED") {
       _submitData("SECONDARY_APPROVED", 'Requisition approved');
     }
 
@@ -246,45 +244,44 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   _returnRequisition() {
-    if (requisition.requisitionStatus!.code == 'EDITED' ||
-        requisition.requisitionStatus!.code == "SUBMITTED") {
-      if (requisition.canApprove == 'LVL1') {
+    if (requisition!.requisitionStatus!.code == 'EDITED' ||
+        requisition!.requisitionStatus!.code == "SUBMITTED") {
+      if (requisition!.canApprove == 'LV1') {
         _submitData("RETURNED", 'Action successful');
-      } else if (requisition.canApprove == 'LVL2') {
+      } else if (requisition!.canApprove == 'LV2') {
         _submitData("PRIMARY_RETURNED", 'Action successful');
       }
-    } else if (requisition.requisitionStatus!.code == "PRIMARY_RETURNED") {
+    } else if (requisition!.requisitionStatus!.code == "PRIMARY_RETURNED") {
       _submitData("SECONDARY_RETURNED", 'Action successful');
     }
   }
 
   _rejectRequisition() {
-    if (requisition.requisitionStatus!.code == 'EDITED' ||
-        requisition.requisitionStatus!.code == "SUBMITTED") {
-      if (requisition.canApprove == 'LVL1') {
+    if (requisition!.requisitionStatus!.code == 'EDITED' ||
+        requisition!.requisitionStatus!.code == "SUBMITTED") {
+      if (requisition!.canApprove == 'LV1') {
         _submitData("REJECTED", 'Action successful');
-      } else if (requisition.canApprove == 'LVL2') {
+      } else if (requisition!.canApprove == 'LV2') {
         _submitData("PRIMARY_REJECTED", 'Action successful');
       }
-    } else if (requisition.requisitionStatus!.code == "PRIMARY_REJECTED") {
+    } else if (requisition!.requisitionStatus!.code == "PRIMARY_REJECTED") {
       _submitData("SECONDARY_REJECTED", 'Action successful');
     }
   }
 
   _onSuccess(String text) {
     Toast.show(text, duration: Toast.lengthLong, gravity: Toast.bottom);
-    Navigator.pop(context);
   }
 
   _onError() {
     Toast.show("An error occurred",
         duration: Toast.lengthLong, gravity: Toast.bottom);
+    setState(() {});
   }
 
   _submitData(String value, String toastText) {
-    print(value);
     SmartCaseApi.smartPost(
-      'api/accounts/requisitions/${requisition.id}/process',
+      'api/accounts/requisitions/${requisition!.id}/process',
       currentUser.token,
       {
         "forms": 1,
@@ -300,5 +297,16 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  _setupData() async {
+    await SmartCaseApi.smartDioFetch(
+        "api/accounts/cases/$fileId/requisitions/$requisitionId",
+        currentUser.token, onError: () {
+      _onError();
+    }).then((value) {
+      requisition = SmartRequisition.fromJsonToView(value['requisition']);
+      setState(() {});
+    });
   }
 }
