@@ -181,6 +181,37 @@ class SmartRequisition {
       caseFinancialStatus: json['caseFinancialStatus'],
     );
   }
+
+  factory SmartRequisition.fromJsonToView(Map<String, dynamic> json) {
+    return SmartRequisition(
+      id: json['id'] as int,
+      date: DateTime.parse(json['date']),
+      amount: json['amount'],
+      description: json['description'],
+      number: json['number'],
+      canApprove: json['canApprove'],
+      canEdit: json['canEdit'],
+      isMine: json['isMine'],
+      canPay: json['canPay'],
+      amounts: json['amounts'],
+      payoutAmount: json['payout_amount'],
+      descriptions: json['descriptions'],
+      employeeId: json['employee_id'],
+      supervisorId: json['supervisor_id'],
+      requisitionStatusId: json['requisition_status_id'],
+      requisitionCategoryId: json['requisition_category_id'],
+      requisitionCategoryIds: json['requisition_category_ids'],
+      caseFileIds: json['case_file_ids'],
+      currencyId: json['currency_id'],
+      employee: SmartEmployee.fromJson(json['employee']),
+      supervisor: SmartEmployee.fromJson(json['supervisor']),
+      caseFile: SmartFile.fromJson(json['case_file']),
+      currency: SmartCurrency.fromJson(json['currency']),
+      requisitionStatus: SmartRequisitionStatus.fromJson(
+          json['requisition_actions'].last['requisition_status']),
+      caseFinancialStatus: json['caseFinancialStatus'],
+    );
+  }
 }
 
 class SmartRequisitionStatus {

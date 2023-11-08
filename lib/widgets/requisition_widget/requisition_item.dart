@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_case/data/screen_arguments.dart';
 import 'package:smart_case/models/smart_requisition.dart';
 import 'package:smart_case/widgets/requisition_widget/reuisition_item_status.dart';
 
@@ -78,9 +79,13 @@ class _RequisitionItemState extends State<RequisitionItem> {
                       if (widget.requisition.canApprove != null)
                         TextButton(
                           onPressed: () => Navigator.pushNamed(
-                                  context, '/requisition',
-                                  arguments: widget.requisition)
-                              .then((_) => setState(() {})),
+                            context,
+                            '/requisition',
+                            arguments: ScreenArguments(
+                              widget.requisition.id!,
+                              widget.requisition.caseFile!.id!,
+                            ),
+                          ).then((_) => setState(() {})),
                           child: const Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
