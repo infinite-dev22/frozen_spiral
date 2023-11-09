@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_requisition.dart';
+import 'package:smart_case/pages/requisitions_page.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/requisition_widget/requisition_item.dart';
@@ -21,7 +22,8 @@ class RequisitionViewPage extends StatefulWidget {
 class _RequisitionViewPageState extends State<RequisitionViewPage> {
   final ToastContext toast = ToastContext();
 
-  late SmartRequisition requisition;
+  SmartRequisition? requisition;
+  late int requisitionId;
 
   TextEditingController commentController = TextEditingController();
   TextEditingController amountController = TextEditingController();
@@ -32,9 +34,17 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   @override
   Widget build(BuildContext context) {
     toast.init(context);
-    requisition =
-        ModalRoute.of(context)!.settings.arguments as SmartRequisition;
-    amountController.text = formatter.format(double.parse(requisition.amount!));
+    try {
+      String requisitionIdAsString =
+          ModalRoute.of(context)!.settings.arguments as String;
+      requisitionId = int.parse(requisitionIdAsString);
+    } catch (e) {
+      requisitionId = ModalRoute.of(context)!.settings.arguments as int;
+    }
+
+    if (requisition == null) {
+      _setupData();
+    }
 
     return Scaffold(
       backgroundColor: AppColors.appBgColor,
@@ -54,37 +64,41 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
 
   Widget _buildBody() {
     final ScrollController scrollController = ScrollController();
-    return Column(
-      children: [
-        _buildHead('Process Requisition'),
-        Expanded(
-          child: GestureDetector(
-            onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-            child: ListView(
-              controller: scrollController,
-              padding: const EdgeInsets.all(16),
-              children: [
-                RequisitionItem(
-                  color: AppColors.white,
-                  padding: 10,
-                  requisition: requisition,
-                  showFinancialStatus: true,
+    return (requisition != null)
+        ? Column(
+            children: [
+              _buildHead('Process Requisition'),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  child: ListView(
+                    controller: scrollController,
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      RequisitionItem(
+                        color: AppColors.white,
+                        padding: 10,
+                        requisition: requisition!,
+                        showFinancialStatus: true,
+                      ),
+                      _buildAmountHolder(),
+                      CustomTextArea(
+                        hint: "Add comments",
+                        controller: commentController,
+                      ),
+                      const SizedBox(height: 20),
+                      _buildButtons(),
+                    ],
+                  ),
                 ),
-                _buildAmountHolder(),
-                CustomTextArea(
-                  hint: "Add comments",
-                  controller: commentController,
-                ),
-                const SizedBox(height: 20),
-                _buildButtons(),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+              ),
+            ],
+          )
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
   }
 
   Widget _buildHead(String name) {
@@ -146,17 +160,20 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
           ),
           keyboardType: TextInputType.number,
           inputFormatters: [
-            CurrencyInputFormatter(),
+            CurrencyInputFormatter(mantissaLength: 0),
           ],
           readOnly:
-              (requisition.requisitionStatus!.code == "PRIMARY_APPROVED" &&
-                      requisition.requisitionStatus!.code == "APPROVED")
+              ((requisition!.requisitionStatus!.code == "PRIMARY_APPROVED" &&
+                          requisition!.requisitionStatus!.code == "APPROVED") ||
+                      requisition!.requisitionStatus!.code == "APPROVED")
                   ? true
                   : false,
-          enabled: (requisition.requisitionStatus!.code == "PRIMARY_APPROVED" &&
-                  requisition.requisitionStatus!.code == "APPROVED")
-              ? false
-              : true,
+          enabled:
+              ((requisition!.requisitionStatus!.code == "PRIMARY_APPROVED" &&
+                          requisition!.requisitionStatus!.code == "APPROVED") ||
+                      requisition!.requisitionStatus!.code == "APPROVED")
+                  ? false
+                  : true,
           controller: amountController,
           autofocus: false,
           style: const TextStyle(
@@ -169,7 +186,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   Widget _buildButtons() {
-    return (requisition.canPay == true)
+    return (requisition!.canPay == true)
         ? Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -226,17 +243,19 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
 
   _payoutRequisition() {
     _submitData("PAID", 'Pay out successful');
+
+    Navigator.pop(context);
   }
 
   _approveRequisition() {
-    if (requisition.requisitionStatus!.code == 'EDITED' ||
-        requisition.requisitionStatus!.code == "SUBMITTED") {
-      if (requisition.canApprove == 'LV1') {
+    if (requisition!.requisitionStatus!.code == 'EDITED' ||
+        requisition!.requisitionStatus!.code == "SUBMITTED") {
+      if (requisition!.canApprove == 'LV1') {
         _submitData("APPROVED", 'Requisition approved');
-      } else if (requisition.canApprove == 'LV2') {
+      } else if (requisition!.canApprove == 'LV2') {
         _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
       }
-    } else if (requisition.requisitionStatus!.code == "PRIMARY_APPROVED") {
+    } else if (requisition!.requisitionStatus!.code == "PRIMARY_APPROVED") {
       _submitData("SECONDARY_APPROVED", 'Requisition approved');
     }
 
@@ -244,29 +263,33 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   _returnRequisition() {
-    if (requisition.requisitionStatus!.code == 'EDITED' ||
-        requisition.requisitionStatus!.code == "SUBMITTED") {
-      if (requisition.canApprove == 'LV1') {
+    if (requisition!.requisitionStatus!.code == 'EDITED' ||
+        requisition!.requisitionStatus!.code == "SUBMITTED") {
+      if (requisition!.canApprove == 'LV1') {
         _submitData("RETURNED", 'Action successful');
-      } else if (requisition.canApprove == 'LV2') {
+      } else if (requisition!.canApprove == 'LV2') {
         _submitData("PRIMARY_RETURNED", 'Action successful');
       }
-    } else if (requisition.requisitionStatus!.code == "PRIMARY_RETURNED") {
+    } else if (requisition!.requisitionStatus!.code == "PRIMARY_RETURNED") {
       _submitData("SECONDARY_RETURNED", 'Action successful');
     }
+
+    Navigator.pop(context);
   }
 
   _rejectRequisition() {
-    if (requisition.requisitionStatus!.code == 'EDITED' ||
-        requisition.requisitionStatus!.code == "SUBMITTED") {
-      if (requisition.canApprove == 'LV1') {
+    if (requisition!.requisitionStatus!.code == 'EDITED' ||
+        requisition!.requisitionStatus!.code == "SUBMITTED") {
+      if (requisition!.canApprove == 'LV1') {
         _submitData("REJECTED", 'Action successful');
-      } else if (requisition.canApprove == 'LV2') {
+      } else if (requisition!.canApprove == 'LV2') {
         _submitData("PRIMARY_REJECTED", 'Action successful');
       }
-    } else if (requisition.requisitionStatus!.code == "PRIMARY_REJECTED") {
+    } else if (requisition!.requisitionStatus!.code == "PRIMARY_REJECTED") {
       _submitData("SECONDARY_REJECTED", 'Action successful');
     }
+
+    Navigator.pop(context);
   }
 
   _onSuccess(String text) {
@@ -281,7 +304,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
 
   _submitData(String value, String toastText) {
     SmartCaseApi.smartPost(
-      'api/accounts/requisitions/${requisition.id}/process',
+      'api/accounts/requisitions/${requisition!.id}/process',
       currentUser.token,
       {
         "forms": 1,
@@ -294,19 +317,25 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
+  _navigateBack() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const RequisitionsPage(),
+      ),
+    );
   }
 
-  // _setupData() async {
-  //   await SmartCaseApi.smartDioFetch(
-  //       "api/accounts/cases/$fileId/requisitions/$requisitionId",
-  //       currentUser.token, onError: () {
-  //     _onError();
-  //   }).then((value) {
-  //     requisition = SmartRequisition.fromJsonToView(value['requisition']);
-  //     setState(() {});
-  //   });
-  // }
+  _setupData() async {
+    await SmartCaseApi.smartDioFetch(
+        "api/accounts/requisitions/$requisitionId/process", currentUser.token,
+        onError: () {
+      _onError();
+    }).then((value) {
+      requisition = SmartRequisition.fromJsonToView(value['requisition']);
+      amountController.text =
+          formatter.format(double.parse(requisition!.amount!));
+      setState(() {});
+    });
+  }
 }

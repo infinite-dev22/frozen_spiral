@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_case/services/apis/auth_apis.dart';
 import 'package:smart_case/theme/color.dart';
@@ -216,13 +217,20 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   _signUserIn() async {
+    final box = GetSecureStorage(
+        password: 'infosec_technologies_ug_smart_case_law_manager');
+
     FocusManager.instance.primaryFocus?.unfocus();
     Navigator.popUntil(context, (route) => false);
     Navigator.pushNamed(context, '/root');
 
-    await storage.write(key: 'email', value: emailController.text.trim());
-    await storage.write(key: 'name', value: currentUser.firstName);
-    await storage.write(key: 'image', value: currentUser.avatar);
+    // await storage.write(key: 'email', value: emailController.text.trim());
+    // await storage.write(key: 'name', value: currentUser.firstName);
+    // await storage.write(key: 'image', value: currentUser.avatar);
+
+    box.write('email', emailController.text.trim());
+    box.write('name', currentUser.firstName);
+    box.write('image', currentUser.avatar);
   }
 
   _handleWrongEmail() {
@@ -257,16 +265,21 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   _getCurrentUserData() async {
-    String? email = await storage.read(key: 'email');
-    String? name = await storage.read(key: 'name');
-    String? image = await storage.read(key: 'image');
-    String? fcmToken = await storage.read(key: 'fcmToken');
+    final box = GetSecureStorage(
+        password: 'infosec_technologies_ug_smart_case_law_manager');
+
+    // String? email = await storage.read(key: 'email');
+    // String? name = await storage.read(key: 'name');
+    // String? image = await storage.read(key: '');
+
+    String? email = box.read('email');
+    String? name = box.read('name');
+    String? image = box.read('image');
 
     setState(() {
       currentUserEmail = email;
       currentUsername = name;
       currentUserImage = image;
-      currentUserFcmToken = fcmToken;
     });
   }
 

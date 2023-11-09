@@ -73,7 +73,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
     return Column(
       children: [
         FormTitle(
-          name: 'New Requisition',
+          name: '${(widget.requisition == null) ? 'New' : 'Edit'} Requisition',
           onSave: () => _submitFormData(),
           isElevated: isTitleElevated,
           addButtonText: (widget.requisition == null) ? 'Add' : 'Update',
@@ -353,6 +353,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
       amountController.text =
           formatter.format(double.parse(widget.requisition!.amount!));
       descriptionController.text = widget.requisition!.description!;
+      _loadFileFinancialStatus();
     }
   }
 

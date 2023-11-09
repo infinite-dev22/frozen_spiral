@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_engagement.dart';
 import 'package:smart_case/widgets/engagement_widget/engagement_item.dart';
@@ -42,20 +43,27 @@ class _EngagementsPageState extends State<EngagementsPage> {
   }
 
   _buildBody() {
-    return (engagements.isNotEmpty)
-        ? ListView.builder(
-            padding: const EdgeInsets.only(
-              left: 10,
-              top: 16,
-              right: 10,
-              bottom: 80,
-            ),
-            itemCount: engagements.length,
-            itemBuilder: (context, index) =>
-                EngagementItem(engagement: engagements[index]),
-          )
+    return (kDebugMode)
+        ? (engagements.isNotEmpty)
+            ? ListView.builder(
+                padding: const EdgeInsets.only(
+                  left: 10,
+                  top: 16,
+                  right: 10,
+                  bottom: 80,
+                ),
+                itemCount: engagements.length,
+                itemBuilder: (context, index) =>
+                    EngagementItem(engagement: engagements[index]),
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              )
         : const Center(
-            child: CircularProgressIndicator(),
+            child: Text(
+              'Coming soon...',
+              style: TextStyle(color: AppColors.inActiveColor),
+            ),
           );
   }
 

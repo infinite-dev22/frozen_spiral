@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:smart_case/models/user.dart';
@@ -106,9 +107,16 @@ class AuthApis {
   static signOutUser(
       {required Function(void) onSuccess,
       required Function(Object object, StackTrace stackTrace) onError}) async {
-    await storage.delete(key: 'email').then(onSuccess).onError(onError);
-    await storage.delete(key: 'name').then(onSuccess).onError(onError);
-    await storage.delete(key: 'image').then(onSuccess).onError(onError);
+    final box = GetSecureStorage(
+        password: 'infosec_technologies_ug_smart_case_law_manager');
+
+    // await storage.delete(key: 'email').then(onSuccess).onError(onError);
+    // await storage.delete(key: 'name').then(onSuccess).onError(onError);
+    // await storage.delete(key: 'image').then(onSuccess).onError(onError);
+
+    // box.remove('email');
+    // box.remove('name');
+    // box.remove('image');
   }
 
   static requestReset(String email,

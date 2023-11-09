@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_task.dart';
 
@@ -42,7 +43,7 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   _buildBody() {
-    return (tasks.isNotEmpty)
+    return (kDebugMode) ? (tasks.isNotEmpty)
         ? ListView.builder(
             padding: const EdgeInsets.only(
               left: 10,
@@ -57,6 +58,9 @@ class _TasksPageState extends State<TasksPage> {
             })
         : const Center(
             child: CircularProgressIndicator(),
+          )
+        : const Center(
+            child: Text('Coming soon...', style: TextStyle(color: AppColors.inActiveColor),),
           );
   }
 

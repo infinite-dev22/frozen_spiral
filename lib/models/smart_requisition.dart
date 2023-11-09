@@ -152,7 +152,7 @@ class SmartRequisition {
     return SmartRequisition(
       id: json['id'] as int,
       date: DateTime.parse(json['date']),
-      amount: json['amount'],
+      amount: json['payout_amount'],
       description: json['description'],
       number: json['number'],
       canApprove: json['canApprove'],
@@ -200,6 +200,8 @@ class SmartRequisition {
       supervisorId: json['supervisor_id'],
       requisitionStatusId: json['requisition_status_id'],
       requisitionCategoryId: json['requisition_category_id'],
+      requisitionCategory:
+          SmartRequisitionCategory.fromJson(json['requisition_category']),
       requisitionCategoryIds: json['requisition_category_ids'],
       caseFileIds: json['case_file_ids'],
       currencyId: json['currency_id'],
@@ -207,8 +209,8 @@ class SmartRequisition {
       supervisor: SmartEmployee.fromJson(json['supervisor']),
       caseFile: SmartFile.fromJson(json['case_file']),
       currency: SmartCurrency.fromJson(json['currency']),
-      requisitionStatus: SmartRequisitionStatus.fromJson(
-          json['requisition_actions'].last['requisition_status']),
+      requisitionStatus:
+          SmartRequisitionStatus.fromJson(json['requisition_status']),
       caseFinancialStatus: json['caseFinancialStatus'],
     );
   }

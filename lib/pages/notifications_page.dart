@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/theme/color.dart';
@@ -30,7 +31,7 @@ class _AlertsPageState extends State {
 
   _buildBody() {
     final Random random = Random();
-    return (true)
+    return (kDebugMode)
         ? ListView.builder(
             itemCount: 10,
             padding: const EdgeInsets.all(10),
@@ -45,7 +46,12 @@ class _AlertsPageState extends State {
             },
           )
         : const Center(
-            child: Text('Your alerts appear here'),
+            child: Text(
+              'Coming soon...',
+              style: TextStyle(
+                color: AppColors.inActiveColor,
+              ),
+            ),
           );
   }
 }
