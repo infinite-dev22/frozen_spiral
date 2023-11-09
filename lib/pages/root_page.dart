@@ -177,6 +177,7 @@ class _RootPageState extends State<RootPage> {
       // formerly 80.
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
+      alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -351,7 +352,7 @@ class _RootPageState extends State<RootPage> {
     // Get any messages which caused the application to open from
     // a terminated state.
     RemoteMessage? initialMessage =
-    await FirebaseMessaging.instance.getInitialMessage();
+        await FirebaseMessaging.instance.getInitialMessage();
 
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
@@ -379,8 +380,7 @@ class _RootPageState extends State<RootPage> {
     //       arguments: message.data['task']);
     // }
     if (page.toLowerCase() == "event") {
-      Navigator.pushNamed(context, '/event',
-          arguments: message.data['event']);
+      Navigator.pushNamed(context, '/event', arguments: message.data['event']);
     }
   }
 }

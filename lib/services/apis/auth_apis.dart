@@ -114,9 +114,9 @@ class AuthApis {
     // await storage.delete(key: 'name').then(onSuccess).onError(onError);
     // await storage.delete(key: 'image').then(onSuccess).onError(onError);
 
-    // box.remove('email');
-    // box.remove('name');
-    // box.remove('image');
+    box.remove('email');
+    box.remove('name');
+    box.remove('image');
   }
 
   static requestReset(String email,

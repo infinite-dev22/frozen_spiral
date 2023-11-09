@@ -1,8 +1,6 @@
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/foundation.dart";
 
-import "../../util/smart_case_init.dart";
-
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 class FirebaseApi {
@@ -18,7 +16,6 @@ class FirebaseApi {
     );
 
     final fcmToken = await messaging.getToken();
-    await storage.write(key: "fcmToken", value: fcmToken);
     print("FCM Token: $fcmToken");
 
     print("User granted permission: ${settings.authorizationStatus}");
@@ -32,7 +29,6 @@ appFCMInit() {
     // token is generated.
 
     final fcmToken = await messaging.getToken();
-    await storage.write(key: "fcmToken", value: fcmToken);
   }).onError((err) {
     if (kDebugMode) {
       print(err);

@@ -19,6 +19,13 @@ class _FilesPageState extends State<FilesPage> {
 
   List<SmartFile> files = List.empty(growable: true);
   List<SmartFile> filteredFiles = List.empty(growable: true);
+  final List<String>? filters = [
+    "Name",
+    "Client",
+    "Status",
+    "File Number",
+    "File Number (Court)",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +42,7 @@ class _FilesPageState extends State<FilesPage> {
           search: 'files',
           filterController: filterController,
           onChanged: _searchFiles,
+          filters: filters,
         ),
       ),
       body: _buildBody(),
@@ -56,27 +64,16 @@ class _FilesPageState extends State<FilesPage> {
               right: 10,
               bottom: 80,
             ),
-            itemCount:
-                filteredFiles.isNotEmpty ? filteredFiles.length : files.length,
+            itemCount: files.length,
             itemBuilder: (context, index) {
               return FileItem(
-                fileName: filteredFiles.isNotEmpty
-                    ? filteredFiles[index].fileName!
-                    : files[index].fileName!,
-                fileNumber: filteredFiles.isNotEmpty
-                    ? filteredFiles[index].fileNumber!
-                    : files[index].fileNumber!,
-                dateCreated: filteredFiles.isNotEmpty
-                    ? filteredFiles[index].dateOpened
-                    : files[index].dateOpened,
-                clientName: filteredFiles.isNotEmpty
-                    ? filteredFiles[index].clientName!
-                    : files[index].clientName!,
+                fileName: files[index].fileName!,
+                fileNumber: files[index].fileNumber!,
+                dateCreated: files[index].dateOpened,
+                clientName: files[index].clientName!,
                 color: Colors.white,
                 padding: 20,
-                status: filteredFiles.isNotEmpty
-                    ? filteredFiles[index].status!
-                    : files[index].status!,
+                status: files[index].status!,
               );
             },
           )
@@ -103,7 +100,7 @@ class _FilesPageState extends State<FilesPage> {
                 clientName: filteredFiles[index].clientName!,
                 color: Colors.white,
                 padding: 20,
-                status: filteredFiles[index].status!,
+                status: filteredFiles[index].status ?? "N/A",
               );
             },
           )
@@ -127,7 +124,24 @@ class _FilesPageState extends State<FilesPage> {
 
   _searchFiles(String value) {
     filteredFiles.clear();
-    if (filterController.text == 'Name') {
+    if (filterController.text == 'Client') {
+      filteredFiles.addAll(files.where((smartFile) =>
+          smartFile.clientName!.toLowerCase().contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Status') {
+      filteredFiles.addAll(files.where((smartFile) =>
+          smartFile.status!.toLowerCase().contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'File Number') {
+      filteredFiles.addAll(files.where((smartFile) =>
+          smartFile.fileNumber!.toLowerCase().contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'File Number (Court)') {
+      filteredFiles.addAll(files.where((smartFile) => smartFile.courtFileNumber!
+          .toLowerCase()
+          .contains(value.toLowerCase())));
+      setState(() {});
+    } else {
       filteredFiles.addAll(files.where((smartFile) =>
           smartFile.getName().toLowerCase().contains(value.toLowerCase())));
       setState(() {});

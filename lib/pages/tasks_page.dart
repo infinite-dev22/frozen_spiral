@@ -22,6 +22,13 @@ class _TasksPageState extends State<TasksPage> {
 
   List<SmartTask> tasks = List.empty(growable: true);
   List<SmartTask> filteredTasks = List.empty(growable: true);
+  final List<String>? filters = [
+    "Name",
+    "File",
+    "Priority",
+    "Assigner",
+    "Status",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +43,8 @@ class _TasksPageState extends State<TasksPage> {
           filterable: true,
           search: 'tasks',
           filterController: filterController,
+          filters: filters,
+          onChanged: _searchFiles,
         ),
       ),
       body: _buildBody(),
@@ -43,7 +52,20 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   _buildBody() {
-    return (kDebugMode) ? (tasks.isNotEmpty)
+    return (kDebugMode)
+        ? (filteredTasks.isEmpty)
+            ? _buildNonSearchedBody()
+            : _buildSearchedBody()
+        : const Center(
+            child: Text(
+              'Coming soon...',
+              style: TextStyle(color: AppColors.inActiveColor),
+            ),
+          );
+  }
+
+  _buildNonSearchedBody() {
+    return (tasks.isNotEmpty)
         ? ListView.builder(
             padding: const EdgeInsets.only(
               left: 10,
@@ -58,9 +80,25 @@ class _TasksPageState extends State<TasksPage> {
             })
         : const Center(
             child: CircularProgressIndicator(),
-          )
+          );
+  }
+
+  _buildSearchedBody() {
+    return (filteredTasks.isNotEmpty)
+        ? ListView.builder(
+            padding: const EdgeInsets.only(
+              left: 10,
+              top: 16,
+              right: 10,
+              bottom: 80,
+            ),
+            itemCount: filteredTasks.length,
+            itemBuilder: (context, index) {
+              // getUser(filteredTasks[index].caseFile!.clientId!);
+              return TaskItem(task: filteredTasks[index]);
+            })
         : const Center(
-            child: Text('Coming soon...', style: TextStyle(color: AppColors.inActiveColor),),
+            child: CircularProgressIndicator(),
           );
   }
 
@@ -79,6 +117,33 @@ class _TasksPageState extends State<TasksPage> {
         'api/crm/clients/$userId', currentUser.token);
     client = SmartClient.fromJson(response["client"]);
     setState(() {});
+  }
+
+  _searchFiles(String value) {
+    filteredTasks.clear();
+    if (filterController.text == 'File') {
+      filteredTasks.addAll(tasks.where((smartTask) => smartTask.caseFile!
+          .getName()
+          .toLowerCase()
+          .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Priority') {
+      filteredTasks.addAll(tasks.where((smartTask) =>
+          smartTask.priority!.toLowerCase().contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Assigner') {
+      filteredTasks.addAll(tasks.where((smartTask) =>
+          smartTask.assigner!.getName().contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Status (Task)') {
+      filteredTasks.addAll(tasks.where((smartTask) =>
+          smartTask.caseStatus!.toLowerCase().contains(value.toLowerCase())));
+      setState(() {});
+    } else {
+      filteredTasks.addAll(tasks.where((smartTask) =>
+          smartTask.getName().toLowerCase().contains(value.toLowerCase())));
+      setState(() {});
+    }
   }
 
   @override

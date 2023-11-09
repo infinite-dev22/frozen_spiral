@@ -23,6 +23,18 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   List<SmartRequisition> requisitions = List.empty(growable: true);
   List<SmartRequisition> filteredRequisitions = List.empty(growable: true);
   List<SmartCurrency> currencies = List.empty(growable: true);
+  final List<String>? filters = [
+    "File",
+    "Number",
+    "Category",
+    "Currency",
+    "Requester",
+    "Supervisor",
+    "Amount",
+    "Amount (Payout)",
+    "Status",
+    "Status (Financial)",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +50,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           canNavigate: true,
           search: 'requisitions',
           filterController: filterController,
+          filters: filters,
           onChanged: _searchActivities,
         ),
       ),
@@ -105,6 +118,72 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     if (filterController.text == 'Name') {
       filteredRequisitions.addAll(requisitions.where((requisition) =>
           requisition.caseFile!.fileName!
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    }
+
+    if (filterController.text == 'Number') {
+      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
+          smartRequisition.number!
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Category') {
+      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
+          smartRequisition.requisitionCategory!
+              .getName()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Currency') {
+      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
+          smartRequisition.currency!.name!
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Requester') {
+      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
+          smartRequisition.employee!
+              .getName()
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Supervisor') {
+      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
+          smartRequisition.supervisor!
+              .getName()
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Amount') {
+      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
+          smartRequisition.amount!
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Amount (Payout)') {
+      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
+          smartRequisition.payoutAmount!
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Status') {
+      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
+          smartRequisition.requisitionStatus!.name
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Status (Financial)') {
+      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
+          smartRequisition.caseFinancialStatus
+              .toString()
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else {
+      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
+          smartRequisition.caseFile!
+              .getName()
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});

@@ -44,22 +44,30 @@ class _WelcomePageState extends State<WelcomePage> {
   _buildBody() {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: ListView(
+      child: Column(
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CustomImage(
-                "assets/images/splash.png",
-                trBackground: true,
-                isNetwork: false,
-                width: MediaQuery.of(context).size.width * .6,
-                imageFit: BoxFit.contain,
-                radius: 0,
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CustomImage(
+                    "assets/images/splash.png",
+                    trBackground: true,
+                    isNetwork: false,
+                    width: MediaQuery.of(context).size.width * .6,
+                    imageFit: BoxFit.contain,
+                    radius: 0,
+                  ),
+                  const SizedBox(height: 40),
+                  (showLogin) ? _buildLoginBody() : _buildPasswordResetBody(),
+                ],
               ),
-              const SizedBox(height: 40),
-              (showLogin) ? _buildLoginBody() : _buildPasswordResetBody(),
+            ),
+          ),
+          Column(
+            children: [
               const SizedBox(height: 10),
               _buildTextWithLink('contact us: ', 'info@infosectechno.com'),
               const SizedBox(height: 8),
@@ -71,7 +79,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   color: AppColors.inActiveColor,
                   fontWeight: FontWeight.w300,
                 ),
-              )
+              ),
             ],
           ),
         ],
@@ -228,7 +236,10 @@ class _WelcomePageState extends State<WelcomePage> {
     // await storage.write(key: 'name', value: currentUser.firstName);
     // await storage.write(key: 'image', value: currentUser.avatar);
 
-    box.write('email', emailController.text.trim());
+    if (currentUserEmail == null && currentUserEmail!.isEmpty) {
+      box.write('email', emailController.text.trim());
+    }
+
     box.write('name', currentUser.firstName);
     box.write('image', currentUser.avatar);
   }

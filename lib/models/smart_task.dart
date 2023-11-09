@@ -1,8 +1,9 @@
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_file.dart';
+import 'package:smart_case/models/smart_model.dart';
 
-class SmartTask {
+class SmartTask extends SmartModel {
   final int? id;
   final String? formType;
   final String? taskName;
@@ -105,6 +106,16 @@ class SmartTask {
       'estimated_time': estimatedTime?.toIso8601String(),
       'assignees': assignees,
     };
+  }
+
+  @override
+  int getId() {
+    return id!;
+  }
+
+  @override
+  String getName() {
+    return taskName!;
   }
 }
 

@@ -18,7 +18,7 @@ class AppBarContent extends StatelessWidget {
       this.signOut,
       this.isNetwork = false,
       this.onChanged,
-      this.filterController});
+      this.filterController, this.filters});
 
   final bool searchable;
   final bool canNavigate;
@@ -28,13 +28,7 @@ class AppBarContent extends StatelessWidget {
   final Function()? signOut;
   final Function(String)? onChanged;
   final TextEditingController? filterController;
-
-  final List<String> filters = [
-    "Name",
-    "Type",
-    "Location",
-    "Date Added",
-  ];
+  final List<String>? filters;
 
   final List<String> profileActions = [
     "Profile",
@@ -85,7 +79,7 @@ class AppBarContent extends StatelessWidget {
             ),
             filterable
                 ? CustomDropdownFilter(
-                    menuItems: filters,
+                    menuItems: filters!,
                     bgColor: Colors.white,
                     icon: Icons.filter_list_rounded,
                     onChanged: (value) {

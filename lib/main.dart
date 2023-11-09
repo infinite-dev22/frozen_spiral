@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
 import 'package:smart_case/pages/activities_page.dart';
@@ -38,10 +37,10 @@ Future<void> main() async {
   handleForegroundMasseges();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  InAppNotifications.init();
   setupLocator();
 
-  await GetSecureStorage.init(password: 'infosec_technologies_ug_smart_case_law_manager');
+  await GetSecureStorage.init(
+      password: 'infosec_technologies_ug_smart_case_law_manager');
 
   runApp(const MyApp());
 }
