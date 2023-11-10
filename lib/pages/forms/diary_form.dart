@@ -7,9 +7,9 @@ import 'package:smart_case/models/user.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:toast/toast.dart';
 
-import '../../models/smart_activity.dart';
+import '../../database/activity/activity_model.dart';
 import '../../models/smart_contact.dart';
-import '../../models/smart_file.dart';
+import '../../database/file/file_model.dart';
 import '../../services/apis/smartcase_api.dart';
 import '../../util/smart_case_init.dart';
 import '../../widgets/custom_accordion.dart';
@@ -422,7 +422,7 @@ class _DiaryFormState extends State<DiaryForm> {
 
   _fillDataForUpdate() {
     if (widget.event != null) {
-      // To be uncommented after smart event class rewrite.
+      // To be uncommented after smart file class rewrite.
       activity = widget.activity!;
       descriptionController.text = widget.event!.description!;
       startDateController.text =
@@ -439,7 +439,7 @@ class _DiaryFormState extends State<DiaryForm> {
           DateFormat('h:mm a').format(widget.event!.notifyOnTime!);
       employeeIds = widget.event!.employeeIds!;
       file = widget.event!.file!;
-      // emails = widget.event!.toBeNotified!;
+      // emails = widget.file!.toBeNotified!;
     }
   }
 }

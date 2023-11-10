@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:smart_case/models/smart_file.dart';
+import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_model.dart';
 
 class SmartActivity extends SmartModel {

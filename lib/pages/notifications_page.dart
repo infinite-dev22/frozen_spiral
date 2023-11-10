@@ -1,12 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/notification_item.dart';
+
+import '../models/local/notifications.dart';
 
 class AlertsPage extends StatefulWidget {
   const AlertsPage({super.key});
@@ -30,21 +30,31 @@ class _AlertsPageState extends State {
   }
 
   _buildBody() {
-    final Random random = Random();
     return (kDebugMode)
-        ? ListView.builder(
-            itemCount: 10,
-            padding: const EdgeInsets.all(10),
-            itemBuilder: (context, index) {
-              String time = DateFormat('h:mm a').format(
-                  DateTime.now().add(Duration(minutes: random.nextInt(200))));
-              return NotificationItem(
-                  title: "Test notification $index",
-                  time: time,
-                  body:
-                      "Cumque earum ut magnam aut. Molestiae eum nisi eum est dolorum ut architecto. Est doloremque harum aut voluptas dolores saepe. Molestiae velit assumenda sit cupiditate et fugiat quos. Quibusdam recusandae ipsum aspernatur nisi maxime dolorum. Officiis nihil illum accusantium iusto illo pariatur. Ratione hic blanditiis sunt incidunt est. In et distinctio laborum nobis et. Alias eius consectetur repudiandae deserunt deserunt impedit consequuntur eum.");
-            },
-          )
+        ? ValueListenableBuilder(
+            valueListenable:
+                Hive.box<Notifications>('notifications').listenable(),
+            builder: (context, Box<Notifications> box, _) {
+              if (box.values.isEmpty) {
+                return const Center(child: Text("Your alerts appear here"));
+              } else {
+                return ListView.builder(
+                  itemCount: box.values.length,
+                  padding: const EdgeInsets.only(right: 10),
+                  itemBuilder: (context, index) {
+                    var result = box.getAt(index);
+                    return NotificationItem(
+                      title: result!.title!,
+                      time: result.time ?? "",
+                      body: result.body!,
+                      onDismissed: () {
+                        _deleteItem(index);
+                      },
+                    );
+                  },
+                );
+              }
+            })
         : const Center(
             child: Text(
               'Coming soon...',
@@ -53,5 +63,12 @@ class _AlertsPageState extends State {
               ),
             ),
           );
+  }
+
+  _deleteItem(int index) async {
+    await Hive.box<Notifications>('notifications').deleteAt(index).whenComplete(
+        () => ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Dismissed'))));
+    setState(() {});
   }
 }

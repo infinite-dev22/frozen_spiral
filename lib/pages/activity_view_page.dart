@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_case/models/smart_activity.dart';
+import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/widgets/text_item.dart';
 
 import '../theme/color.dart';

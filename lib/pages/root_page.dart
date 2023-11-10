@@ -12,7 +12,7 @@ import '../services/apis/smartcase_apis/requisition_api.dart';
 import '../util/smart_case_init.dart';
 import '../widgets/bottom_bar_item.dart';
 import 'activities_page.dart';
-import 'files_page.dart';
+import 'file_page.dart';
 import 'forms/activity_form.dart';
 import 'forms/diary_form.dart';
 import 'forms/engagements_form.dart';
@@ -336,8 +336,8 @@ class _RootPageState extends State<RootPage> {
     //   Navigator.pushNamed(context, '/task',
     //       arguments: message.data['task']);
     // }
-    if (page.toLowerCase() == "event") {
-      Navigator.pushNamed(context, '/event', arguments: message.data['event']);
+    if (page.toLowerCase() == "file") {
+      Navigator.pushNamed(context, '/file', arguments: message.data['file']);
     }
   }
 }

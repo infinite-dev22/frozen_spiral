@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -25,10 +26,11 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   final ToastContext toast = ToastContext();
 
-  bool isAuthingUser = true;
+  bool isAuthingUser = false;
   bool showLogin = true;
   bool isSendingResetRequest = false;
 
+  late String email;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -170,18 +172,15 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   _onPressed() {
-    if (EmailValidator.validate(
-        currentUserEmail != '' && currentUserEmail != null
-            ? currentUserEmail!
-            : emailController.text)) {
+    if (EmailValidator.validate(emailController.text.isNotEmpty
+        ? emailController.text.trim()
+        : email)) {
       setState(() {
-        isAuthingUser = false;
+        isAuthingUser = true;
       });
 
       AuthApis.signInUser(
-          currentUserEmail != '' && currentUserEmail != null
-              ? currentUserEmail!
-              : emailController.text.trim(),
+          emailController.text.isNotEmpty ? emailController.text.trim() : email,
           passwordController.text.trim(),
           onSuccess: _signUserIn,
           onNoUser: _handleWrongEmail,
@@ -240,10 +239,8 @@ class _WelcomePageState extends State<WelcomePage> {
     // await storage.write(key: 'name', value: currentUser.firstName);
     // await storage.write(key: 'image', value: currentUser.avatar);
 
-    if (currentUserEmail == null && currentUserEmail.toString().isEmpty) {
-      box.write('email', emailController.text.trim());
-    }
-
+    box.write('email',
+        emailController.text.isNotEmpty ? emailController.text.trim() : email);
     box.write('name', currentUser.firstName);
     box.write('image', currentUser.avatar);
   }
@@ -252,14 +249,14 @@ class _WelcomePageState extends State<WelcomePage> {
     Toast.show("User not found",
         duration: Toast.lengthLong, gravity: Toast.bottom);
     setState(() {
-      isAuthingUser = true;
+      isAuthingUser = false;
     });
   }
 
   _handleErrors(e) {
     Toast.show(e.toString(), duration: Toast.lengthLong, gravity: Toast.bottom);
     setState(() {
-      isAuthingUser = true;
+      isAuthingUser = false;
     });
   }
 
@@ -267,7 +264,7 @@ class _WelcomePageState extends State<WelcomePage> {
     Toast.show("Incorrect password",
         duration: Toast.lengthLong, gravity: Toast.bottom);
     setState(() {
-      isAuthingUser = true;
+      isAuthingUser = false;
     });
   }
 
@@ -275,7 +272,7 @@ class _WelcomePageState extends State<WelcomePage> {
     Toast.show("An error occurred",
         duration: Toast.lengthLong, gravity: Toast.bottom);
     setState(() {
-      isAuthingUser = true;
+      isAuthingUser = false;
     });
   }
 
@@ -292,7 +289,7 @@ class _WelcomePageState extends State<WelcomePage> {
     String? image = box.read('image');
 
     setState(() {
-      currentUserEmail = email;
+      emailController.text = email ?? "";
       currentUsername = name;
       currentUserImage = image;
     });
@@ -310,7 +307,7 @@ class _WelcomePageState extends State<WelcomePage> {
         AuthTextField(
           controller: emailController,
           hintText: 'email',
-          enabled: isAuthingUser,
+          enabled: !isAuthingUser,
           obscureText: false,
           isEmail: true,
           style: const TextStyle(color: AppColors.white),
@@ -358,9 +355,8 @@ class _WelcomePageState extends State<WelcomePage> {
                 ? const SizedBox(
                     height: 25,
                     width: 25,
-                    child: CircularProgressIndicator(
+                    child: CupertinoActivityIndicator(
                       color: AppColors.gray45,
-                      strokeWidth: 2,
                     ),
                   )
                 : const Text(
@@ -388,11 +384,11 @@ class _WelcomePageState extends State<WelcomePage> {
         const SizedBox(
           height: 30,
         ),
-        (currentUserEmail == null || currentUserEmail == '')
+        (emailController.text == '')
             ? AuthTextField(
-                controller: emailController,
+                onChanged: (value) => email = value,
                 hintText: 'email',
-                enabled: isAuthingUser,
+                enabled: !isAuthingUser,
                 obscureText: false,
                 isEmail: true,
                 style: const TextStyle(color: AppColors.gray45),
@@ -416,7 +412,7 @@ class _WelcomePageState extends State<WelcomePage> {
         AuthPasswordTextField(
           controller: passwordController,
           hintText: 'password',
-          enabled: isAuthingUser,
+          enabled: !isAuthingUser,
           borderSide: const BorderSide(color: AppColors.gray45),
           style: const TextStyle(color: AppColors.gray45),
           fillColor: AppColors.primary,
@@ -426,15 +422,16 @@ class _WelcomePageState extends State<WelcomePage> {
           height: 10,
         ),
         (isAuthingUser)
-            ? WideButton(
+            ? const CupertinoActivityIndicator(
+                color: AppColors.gray45,
+                radius: 20,
+              )
+            : WideButton(
                 name: 'Login',
                 onPressed: _onPressed,
                 bgColor: AppColors.gray45,
                 textStyle:
                     const TextStyle(color: AppColors.primary, fontSize: 20),
-              )
-            : const CircularProgressIndicator(
-                color: AppColors.gray45,
               ),
         const SizedBox(
           height: 10,

@@ -73,7 +73,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
               body = const CupertinoActivityIndicator();
             } else if (mode == LoadStatus.failed) {
               body = const Text("Load Failed! Pull up to retry");
-            }  else if (mode == LoadStatus.noMore) {
+            } else if (mode == LoadStatus.noMore) {
               body = const Text("That's all for now");
             } else {
               body = const Text("No more Data");
@@ -87,7 +87,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         controller: _refreshController,
         child: _buildBody(),
         onLoading: _onLoading,
-        onRefresh: _onRefresh,enableTwoLevel: true,
+        onRefresh: _onRefresh,
+        enableTwoLevel: true,
       ),
     );
   }

@@ -37,15 +37,11 @@ class AuthApis {
           bool userSuccess = userDataDecodedResponse['success'] as bool;
 
           userDataDecodedResponse['url'] = url;
+          print("Stored Token: $currentUserFcmToken");
 
           if (userSuccess) {
             currentUser = CurrentSmartUser.fromJson(userDataDecodedResponse);
 
-            // await SmartCaseApi.smartPost(
-            //     'api/save/fcm/token', currentUser.token, {
-            //   'fcm_token': currentUserFcmToken,
-            //   'email': email
-            // });
             await client.post(
                 Uri.parse('https://app.smartcase.co.ug/api/save/fcm/token'),
                 body: jsonEncode(
@@ -88,16 +84,16 @@ class AuthApis {
         }
       }
     }
-    catch (e) {
-      if (onError != null) {
-        onError();
-      }
-
-      // For testing purposes only
-      if (onErrors != null) {
-        onErrors(e);
-      }
-    }
+    // catch (e) {
+    //   if (onError != null) {
+    //     onError();
+    //   }
+    //
+    //   // For testing purposes only
+    //   if (onErrors != null) {
+    //     onErrors(e);
+    //   }
+    // }
     finally {
       client.close();
     }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_case/models/smart_activity.dart';
+import 'package:smart_case/database/activity/activity_model.dart';
 
 import '../../../theme/color.dart';
 import '../../pages/forms/activity_form.dart';

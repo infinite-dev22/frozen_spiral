@@ -18,6 +18,7 @@ class AppColors {
   static const green = Colors.green;
   static const orange = Colors.orange;
   static const purple = Colors.purple;
+  static const transparent = Colors.transparent;
 }
 
 extension HexColor on Color {

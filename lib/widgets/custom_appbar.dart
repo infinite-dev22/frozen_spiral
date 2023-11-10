@@ -18,7 +18,8 @@ class AppBarContent extends StatelessWidget {
       this.signOut,
       this.isNetwork = false,
       this.onChanged,
-      this.filterController, this.filters});
+      this.filterController,
+      this.filters});
 
   final bool searchable;
   final bool canNavigate;
@@ -116,7 +117,8 @@ class AppBarContent extends StatelessWidget {
     }
     if (value == 'Sign out') {
       AuthApis.signOutUser(onSuccess: (value) {
-        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        Navigator.popUntil(context, (route) => false);
+        Navigator.pushNamed(context, '/');
       }, onError: (Object object, StackTrace stackTrace) {
         Toast.show("An error occurred",
             duration: Toast.lengthLong, gravity: Toast.bottom);

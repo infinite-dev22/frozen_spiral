@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smart_case/widgets/file_widget/file_item.dart';
 
-import '../models/smart_file.dart';
+import '../database/file/file_model.dart';
 import '../services/apis/smartcase_api.dart';
+import '../services/apis/smartcase_apis/file_api.dart';
 import '../theme/color.dart';
 import '../util/smart_case_init.dart';
 import '../widgets/custom_appbar.dart';
@@ -15,6 +18,8 @@ class FilesPage extends StatefulWidget {
 }
 
 class _FilesPageState extends State<FilesPage> {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   TextEditingController filterController = TextEditingController();
 
   List<SmartFile> files = List.empty(growable: true);
@@ -45,7 +50,38 @@ class _FilesPageState extends State<FilesPage> {
           filters: filters,
         ),
       ),
-      body: _buildBody(),
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: const WaterDropHeader(
+            refresh: CupertinoActivityIndicator(),
+            waterDropColor: AppColors.primary),
+        footer: CustomFooter(
+          builder: (context, mode) {
+            Widget body;
+            if (mode == LoadStatus.idle) {
+              body = const Text("more data");
+            } else if (mode == LoadStatus.loading) {
+              body = const CupertinoActivityIndicator();
+            } else if (mode == LoadStatus.failed) {
+              body = const Text("Load Failed! Pull up to retry");
+            } else if (mode == LoadStatus.noMore) {
+              body = const Text("That's all for now");
+            } else {
+              body = const Text("No more Data");
+            }
+            return SizedBox(
+              height: 15,
+              child: Center(child: body),
+            );
+          },
+        ),
+        controller: _refreshController,
+        child: _buildBody(),
+        onLoading: _onLoading,
+        onRefresh: _onRefresh,
+        enableTwoLevel: true,
+      ),
     );
   }
 
@@ -73,7 +109,7 @@ class _FilesPageState extends State<FilesPage> {
                 clientName: files[index].clientName!,
                 color: Colors.white,
                 padding: 20,
-                status: files[index].status!,
+                status: files[index].status ?? 'N/A',
               );
             },
           )
@@ -146,5 +182,32 @@ class _FilesPageState extends State<FilesPage> {
           smartFile.getName().toLowerCase().contains(value.toLowerCase())));
       setState(() {});
     }
+  }
+
+  void _onRefresh() async {
+    FileApi.fetchAll()
+        .then((value) => {
+              _refreshController.refreshCompleted(),
+              if (mounted) setState(() {})
+            })
+        .onError((error, stackTrace) => {
+              _refreshController.refreshFailed(),
+              if (mounted) setState(() {}),
+            });
+  }
+
+  void _onLoading() async {
+    FileApi.fetchAll()
+        .then((value) => {
+              if (value.isNotEmpty)
+                _refreshController.loadComplete()
+              else if (value.isEmpty)
+                _refreshController.loadNoData(),
+              if (mounted) setState(() {})
+            })
+        .onError((error, stackTrace) => {
+              _refreshController.loadFailed(),
+              if (mounted) setState(() {}),
+            });
   }
 }

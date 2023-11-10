@@ -7,8 +7,8 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:smart_case/models/smart_activity.dart';
-import 'package:smart_case/models/smart_file.dart';
+import 'package:smart_case/database/activity/activity_model.dart';
+import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:uuid/uuid.dart';
 

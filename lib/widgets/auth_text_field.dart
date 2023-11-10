@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
 
 class AuthTextField extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String hintText;
   final bool obscureText;
   final bool isEmail;
@@ -10,10 +10,11 @@ class AuthTextField extends StatelessWidget {
   final Color fillColor;
   final TextStyle? style;
   final bool enabled;
+  final Function(String)? onChanged;
 
   const AuthTextField({
     super.key,
-    required this.controller,
+    this.controller,
     required this.hintText,
     required this.obscureText,
     this.isEmail = false,
@@ -21,6 +22,7 @@ class AuthTextField extends StatelessWidget {
     this.fillColor = AppColors.textBoxColor,
     this.style,
     this.enabled = true,
+    this.onChanged,
   });
 
   @override
@@ -31,6 +33,7 @@ class AuthTextField extends StatelessWidget {
         validator: (val) =>
             val!.isEmpty ? 'Required field, Please fill in.' : null,
         controller: controller,
+        onChanged: onChanged,
         obscureText: obscureText,
         style: style,
         enabled: enabled,

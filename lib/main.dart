@@ -2,13 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
+import 'package:smart_case/models/local/notifications.dart';
 import 'package:smart_case/pages/activities_page.dart';
 import 'package:smart_case/pages/activity_view_page.dart';
 import 'package:smart_case/pages/diary_page.dart';
 import 'package:smart_case/pages/engagements_page.dart';
 import 'package:smart_case/pages/event_view.dart';
-import 'package:smart_case/pages/files_page.dart';
+import 'package:smart_case/pages/file_page.dart';
 import 'package:smart_case/pages/home_page.dart';
 import 'package:smart_case/pages/locator_page.dart';
 import 'package:smart_case/pages/notifications_page.dart';
@@ -23,6 +25,7 @@ import 'package:smart_case/services/apis/firebase_apis.dart';
 import 'package:smart_case/services/navigation/locator.dart';
 import 'package:smart_case/services/navigation/navigator_service.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 
 import 'firebase_options.dart';
 
@@ -41,6 +44,12 @@ Future<void> main() async {
 
   await GetSecureStorage.init(
       password: 'infosec_technologies_ug_smart_case_law_manager');
+
+  await Hive.initFlutter();
+  if (!Hive.isAdapterRegistered(1)) {
+    Hive.registerAdapter(NotificationsAdapter());
+  }
+  localStorage = await Hive.openBox<Notifications>('notifications');
 
   runApp(const MyApp());
 }
@@ -106,7 +115,7 @@ class MyApp extends StatelessWidget {
           '/locator': (context) => const LocatorPage(),
           '/profile': (context) => const ProfilePage(),
           '/requisition': (context) => const RequisitionViewPage(),
-          '/event': (context) => const EventView(),
+          '/file': (context) => const EventView(),
           '/activity': (context) => const ActivityViewPage(),
         },
       ),
