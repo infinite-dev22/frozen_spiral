@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_engagement.dart';
 import 'package:smart_case/widgets/engagement_widget/engagement_item.dart';
@@ -21,6 +22,14 @@ class _EngagementsPageState extends State<EngagementsPage> {
 
   List<SmartEngagement> engagements = List.empty(growable: true);
   List<SmartEngagement> filteredEngagements = List.empty(growable: true);
+  final List<String>? filters = [
+    "Client",
+    "Type",
+    "Cost",
+    "Done By",
+    "Description (Cost)",
+    "Date",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +44,8 @@ class _EngagementsPageState extends State<EngagementsPage> {
           filterable: true,
           search: 'engagements',
           filterController: filterController,
+          onChanged: _searchFiles,
+          filters: filters,
         ),
       ),
       body: _buildBody(),
@@ -42,6 +53,19 @@ class _EngagementsPageState extends State<EngagementsPage> {
   }
 
   _buildBody() {
+    return (kDebugMode)
+        ? (filteredEngagements.isEmpty)
+            ? _buildNonSearchedBody()
+            : _buildSearchedBody()
+        : const Center(
+            child: Text(
+              'Coming soon...',
+              style: TextStyle(color: AppColors.inActiveColor),
+            ),
+          );
+  }
+
+  _buildNonSearchedBody() {
     return (engagements.isNotEmpty)
         ? ListView.builder(
             padding: const EdgeInsets.only(
@@ -53,6 +77,24 @@ class _EngagementsPageState extends State<EngagementsPage> {
             itemCount: engagements.length,
             itemBuilder: (context, index) =>
                 EngagementItem(engagement: engagements[index]),
+          )
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
+  }
+
+  _buildSearchedBody() {
+    return (filteredEngagements.isNotEmpty)
+        ? ListView.builder(
+            padding: const EdgeInsets.only(
+              left: 10,
+              top: 16,
+              right: 10,
+              bottom: 80,
+            ),
+            itemCount: filteredEngagements.length,
+            itemBuilder: (context, index) =>
+                EngagementItem(engagement: filteredEngagements[index]),
           )
         : const Center(
             child: CircularProgressIndicator(),
@@ -75,6 +117,48 @@ class _EngagementsPageState extends State<EngagementsPage> {
         'api/crm/clients/$userId', currentUser.token);
     client = SmartClient.fromJson(response["client"]);
     setState(() {});
+  }
+
+  _searchFiles(String value) {
+    filteredEngagements.clear();
+    if (filterController.text == 'Type') {
+      filteredEngagements.addAll(engagements.where((smartEngagement) =>
+          smartEngagement.engagementType!
+              .getName()
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Cost') {
+      filteredEngagements.addAll(engagements.where((smartEngagement) =>
+          smartEngagement.cost!.toLowerCase().contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Done By') {
+      filteredEngagements.addAll(engagements.where((smartEngagement) =>
+          smartEngagement.doneBy!.last
+              .getName()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Description (Cost)') {
+      filteredEngagements.addAll(engagements.where((smartEngagement) =>
+          smartEngagement.costDescription!
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'Date') {
+      filteredEngagements.addAll(engagements.where((smartEngagement) =>
+          smartEngagement.date!
+              .toString()
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else {
+      filteredEngagements.addAll(engagements.where((smartEngagement) =>
+          smartEngagement.client!
+              .getName()
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    }
   }
 
   @override

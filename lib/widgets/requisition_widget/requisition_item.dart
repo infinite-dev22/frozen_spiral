@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_case/data/screen_arguments.dart';
 import 'package:smart_case/models/smart_requisition.dart';
 import 'package:smart_case/widgets/requisition_widget/reuisition_item_status.dart';
 
@@ -70,76 +69,85 @@ class _RequisitionItemState extends State<RequisitionItem> {
           if (widget.showActions)
             Column(
               children: [
-                SizedBox(
-                  height: 33,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (widget.requisition.canApprove != null)
-                        TextButton(
-                          onPressed: () => Navigator.pushNamed(
-                            context,
-                            '/requisition',
-                            arguments: ScreenArguments(
-                              widget.requisition.id!,
-                              widget.requisition.caseFile!.id!,
-                            ),
-                          ).then((_) => setState(() {})),
-                          child: const Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.recycling_rounded),
-                              SizedBox(
-                                width: 5,
+                (widget.requisition.canApprove == null &&
+                        (widget.requisition.canPay == false ||
+                            widget.requisition.canPay == null) &&
+                        (!widget.requisition.isMine! &&
+                                !widget.requisition.canEdit! &&
+                                widget.requisition.requisitionStatus!.code !=
+                                    'SUBMITTED' ||
+                            widget.requisition.requisitionStatus!.code !=
+                                'EDITED'))
+                    ? Container()
+                    : SizedBox(
+                        height: 33,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (widget.requisition.canApprove != null)
+                              TextButton(
+                                onPressed: () => Navigator.pushNamed(
+                                  context,
+                                  '/requisition',
+                                  arguments: widget.requisition.id!,
+                                ).then((_) => setState(() {})),
+                                child: const Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.recycling_rounded),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text('Process')
+                                  ],
+                                ),
                               ),
-                              Text('Process')
-                            ],
-                          ),
+                            if (widget.requisition.canPay == true)
+                              TextButton(
+                                onPressed: () => Navigator.pushNamed(
+                                  context,
+                                  '/requisition',
+                                  arguments: widget.requisition.id,
+                                ).then((_) => setState(() {})),
+                                child: const Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.money_rounded),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text('Pay out')
+                                  ],
+                                ),
+                              ),
+                            if (widget.requisition.isMine! &&
+                                    widget.requisition.canEdit! &&
+                                    widget.requisition.requisitionStatus!
+                                            .code ==
+                                        'SUBMITTED' ||
+                                widget.requisition.requisitionStatus!.code ==
+                                    'EDITED')
+                              TextButton(
+                                onPressed: () => _buildRequisitionForm(context),
+                                child: const Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(CupertinoIcons
+                                        .pencil_ellipsis_rectangle),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text('Edit')
+                                  ],
+                                ),
+                              ),
+                          ],
                         ),
-                      (widget.requisition.canPay == true)
-                          ? TextButton(
-                              onPressed: () => Navigator.pushNamed(
-                                      context, '/requisition',
-                                      arguments: widget.requisition)
-                                  .then((_) => setState(() {})),
-                              child: const Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.money_rounded),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text('Pay out')
-                                ],
-                              ),
-                            )
-                          : Container(),
-                      if (widget.requisition.isMine! &&
-                              widget.requisition.canEdit! &&
-                              widget.requisition.requisitionStatus!.code ==
-                                  'SUBMITTED' ||
-                          widget.requisition.requisitionStatus!.code ==
-                              'EDITED')
-                        TextButton(
-                          onPressed: () => _buildRequisitionForm(context),
-                          child: const Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(CupertinoIcons.pencil_ellipsis_rectangle),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text('Edit')
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+                      ),
                 const SizedBox(
                   height: 10,
                 ),

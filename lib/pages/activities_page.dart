@@ -19,6 +19,12 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
 
   List<SmartActivity> activities = List.empty(growable: true);
   List<SmartActivity> filteredActivities = List.empty(growable: true);
+  final List<String>? filters = [
+    "Name",
+    "File Name",
+    "File Number",
+    "File Number (Court)",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +41,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
           search: 'activities',
           filterController: filterController,
           onChanged: _searchActivities,
+          filters: filters,
         ),
       ),
       body: _buildBody(),
@@ -108,7 +115,26 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
 
   _searchActivities(String value) {
     filteredActivities.clear();
-    if (filterController.text == 'Name') {
+    if (filterController.text == 'File Name') {
+      filteredActivities.addAll(activities.where((smartActivity) =>
+          smartActivity.file!
+              .getName()
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'File Number') {
+      filteredActivities.addAll(activities.where((smartActivity) =>
+          smartActivity.fileNumber!
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else if (filterController.text == 'File Number (Court)') {
+      filteredActivities.addAll(activities.where((smartActivity) =>
+          smartActivity.courtFileNumber!
+              .toLowerCase()
+              .contains(value.toLowerCase())));
+      setState(() {});
+    } else {
       filteredActivities.addAll(activities.where((smartActivity) =>
           smartActivity.getName().toLowerCase().contains(value.toLowerCase())));
       setState(() {});

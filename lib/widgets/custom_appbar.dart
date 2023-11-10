@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/services/apis/auth_apis.dart';
-import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:toast/toast.dart';
 
@@ -18,7 +17,8 @@ class AppBarContent extends StatelessWidget {
       this.search = '',
       this.signOut,
       this.isNetwork = false,
-      this.onChanged, this.filterController});
+      this.onChanged,
+      this.filterController, this.filters});
 
   final bool searchable;
   final bool canNavigate;
@@ -28,13 +28,7 @@ class AppBarContent extends StatelessWidget {
   final Function()? signOut;
   final Function(String)? onChanged;
   final TextEditingController? filterController;
-
-  final List<String> filters = [
-    "Name",
-    "Type",
-    "Location",
-    "Date Added",
-  ];
+  final List<String>? filters;
 
   final List<String> profileActions = [
     "Profile",
@@ -54,13 +48,14 @@ class AppBarContent extends StatelessWidget {
       children: [
         Row(
           children: [
-            (!searchable && !canNavigate) ?
-              const CustomSpacer(
-                width: 50,
-                height: 40,
-                radius: 10,
-                bgColor: Colors.transparent,
-              ) : const SizedBox(),
+            (!searchable && !canNavigate)
+                ? const CustomSpacer(
+                    width: 50,
+                    height: 40,
+                    radius: 10,
+                    bgColor: Colors.transparent,
+                  )
+                : const SizedBox(),
             Expanded(
               child: searchable
                   ? CustomTextBox(
@@ -84,7 +79,7 @@ class AppBarContent extends StatelessWidget {
             ),
             filterable
                 ? CustomDropdownFilter(
-                    menuItems: filters,
+                    menuItems: filters!,
                     bgColor: Colors.white,
                     icon: Icons.filter_list_rounded,
                     onChanged: (value) {
@@ -121,8 +116,7 @@ class AppBarContent extends StatelessWidget {
     }
     if (value == 'Sign out') {
       AuthApis.signOutUser(onSuccess: (value) {
-        Navigator.popUntil(context, (route) => false);
-        Navigator.pushNamed(context, '/');
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
       }, onError: (Object object, StackTrace stackTrace) {
         Toast.show("An error occurred",
             duration: Toast.lengthLong, gravity: Toast.bottom);

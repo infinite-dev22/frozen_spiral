@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_event.dart';
@@ -244,7 +246,7 @@ class _DiaryPageState extends State<DiaryPage> {
           "isFirmEventRdbtn": "ALLEVENTS",
           "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"],
         });
-    List eventsList = responseEventsList;
+    List eventsList = jsonDecode(responseEventsList);
     _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
 
     var dataCollection = <DateTime, List<SmartEvent>>{};
@@ -293,7 +295,7 @@ class _DiaryPageState extends State<DiaryPage> {
           "isFirmEventRdbtn": "ALLEVENTS",
           "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"]
         });
-    List eventsList = responseEventsList;
+    List eventsList = jsonDecode(responseEventsList);
     _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
 
     var dataCollection = <DateTime, List<SmartEvent>>{};

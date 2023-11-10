@@ -87,34 +87,6 @@ class _RootPageState extends State<RootPage> {
     ];
   }
 
-  // It is assumed that all messages contain a data field with the key 'type'
-  Future<void> setupInteractedMessage() async {
-    // Get any messages which caused the application to open from
-    // a terminated state.
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-
-    // If the message also contains a data property with a "type" of "chat",
-    // navigate to a chat screen
-    if (initialMessage != null) {
-      _handleMessage(initialMessage);
-    }
-
-    // Also handle any interaction when the app is in the background via a
-    // Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-  }
-
-  void _handleMessage(RemoteMessage message) {
-    if (message.data['type'] == 'chat') {
-      Navigator.pushNamed(
-        context,
-        '/chat',
-        arguments: const AlertsPage(),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,6 +177,7 @@ class _RootPageState extends State<RootPage> {
       // formerly 80.
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
+      alignment: AlignmentDirectional.center,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -372,5 +345,42 @@ class _RootPageState extends State<RootPage> {
       preloadedRequisitions = value;
       setState(() {});
     });
+  }
+
+// It is assumed that all messages contain a data field with the key 'type'
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    String page = message.data['page'];
+    if (page.toLowerCase() == "requisition") {
+      Navigator.pushNamed(context, '/requisition',
+          arguments: message.data['requisition']);
+    }
+    if (page.toLowerCase() == "activity") {
+      Navigator.pushNamed(context, '/activity',
+          arguments: message.data['activity']);
+    }
+    // if (page.toLowerCase() == "task") {
+    //   Navigator.pushNamed(context, '/task',
+    //       arguments: message.data['task']);
+    // }
+    if (page.toLowerCase() == "event") {
+      Navigator.pushNamed(context, '/event', arguments: message.data['event']);
+    }
   }
 }

@@ -9,14 +9,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.11"
-  animated_custom_dropdown:
-    dependency: "direct main"
-    description:
-      name: animated_custom_dropdown
-      sha256: "1b4394c31b98094bce2889aa7115beeba1462645056f0e1709a9c99c0c7fcd85"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.0"
   archive:
     dependency: transitive
     description:
@@ -121,14 +113,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
-  clean_calendar:
-    dependency: "direct main"
-    description:
-      name: clean_calendar
-      sha256: "236a1082a38425ee5af43142e4dfe1c22dd07ed3832061cb2fd13c12a5ce0fb3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   clock:
     dependency: transitive
     description:
@@ -169,6 +153,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  cryptography:
+    dependency: transitive
+    description:
+      name: cryptography
+      sha256: d146b76d33d94548cf035233fbc2f4338c1242fa119013bead807d033fc4ae05
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.7.0"
   csslib:
     dependency: transitive
     description:
@@ -217,14 +209,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.9"
-  dropdown_search:
-    dependency: "direct main"
-    description:
-      name: dropdown_search
-      sha256: "55106e8290acaa97ed15bea1fdad82c3cf0c248dd410e651f5a8ac6870f783ab"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.6"
   dropdown_textfield:
     dependency: "direct main"
     description:
@@ -233,14 +217,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
-  easy_loading_button:
-    dependency: "direct main"
-    description:
-      name: easy_loading_button
-      sha256: "8620b2b03ade420644ba27640678b6fda4a9be6e54cccd4cb1f6c258cd7de0ea"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.2"
   elegant_notification:
     dependency: "direct main"
     description:
@@ -406,14 +382,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.3+2"
-  flutter_inapp_notifications:
-    dependency: "direct main"
-    description:
-      name: flutter_inapp_notifications
-      sha256: "616a6007831993bf204541ac551869f394e0c950f6d4f1bd89421e8500366b53"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -454,54 +422,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.17"
-  flutter_secure_storage:
-    dependency: "direct main"
-    description:
-      name: flutter_secure_storage
-      sha256: ffdbb60130e4665d2af814a0267c481bcf522c41ae2e43caf69fa0146876d685
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.0.0"
-  flutter_secure_storage_linux:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_linux
-      sha256: "3d5032e314774ee0e1a7d0a9f5e2793486f0dff2dd9ef5a23f4e3fb2a0ae6a9e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
-  flutter_secure_storage_macos:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_macos
-      sha256: bd33935b4b628abd0b86c8ca20655c5b36275c3a3f5194769a7b3f37c905369c
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
-  flutter_secure_storage_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_platform_interface
-      sha256: "0d4d3a5dd4db28c96ae414d7ba3b8422fd735a8255642774803b2532c9a61d7e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
-  flutter_secure_storage_web:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_web
-      sha256: "30f84f102df9dcdaa2241866a958c2ec976902ebdaa8883fbfe525f1f2f3cf20"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.2"
-  flutter_secure_storage_windows:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_windows
-      sha256: "5809c66f9dd3b4b93b0a6e2e8561539405322ee767ac2f64d084e2ab5429d108"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -536,6 +456,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.6"
+  get:
+    dependency: transitive
+    description:
+      name: get
+      sha256: e4e7335ede17452b391ed3b2ede016545706c01a02292a6c97619705e7d2a85e
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.6.6"
+  get_it:
+    dependency: "direct main"
+    description:
+      name: get_it
+      sha256: f79870884de16d689cf9a7d15eedf31ed61d750e813c538a6efb92660fea83c3
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.6.4"
+  get_secure_storage:
+    dependency: "direct main"
+    description:
+      name: get_secure_storage
+      sha256: "63c9e1b3bdd01bb778414a0b278f6bfd2b0c848717c6510d1bfc78560952ab2b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   google_fonts:
     dependency: "direct main"
     description:
@@ -648,6 +592,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.1"
+  local_session_timeout:
+    dependency: "direct main"
+    description:
+      name: local_session_timeout
+      sha256: "8655e3ec5e56eab6ee67bd6246414c993f928320bfde5e221739697981ce3641"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
   marquee:
     dependency: "direct main"
     description:
@@ -856,14 +808,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
-  scrollable_positioned_list:
-    dependency: "direct main"
-    description:
-      name: scrollable_positioned_list
-      sha256: "1b54d5f1329a1e263269abc9e2543d90806131aa14fe7c6062a8054d57249287"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.8"
   searchable_paginated_dropdown:
     dependency: "direct main"
     description:

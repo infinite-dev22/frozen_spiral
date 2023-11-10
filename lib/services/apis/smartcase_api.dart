@@ -145,7 +145,7 @@ class SmartCaseApi {
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers['Accept'] = 'application/json';
       dio.options.headers["authorization"] = "Bearer $token";
-      dio.options.followRedirects = false;
+      // dio.options.followRedirects = false;
 
       var response = await dio.post(
         Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint).toString(),
@@ -155,7 +155,7 @@ class SmartCaseApi {
       // print(response.headers);
       // print(response.data);
       // print(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 302) {
         if (onSuccess != null) {
           onSuccess();
         }
