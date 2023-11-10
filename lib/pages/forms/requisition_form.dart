@@ -9,8 +9,8 @@ import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:toast/toast.dart';
 
+import '../../database/requisition/requisition_model.dart';
 import '../../models/smart_file.dart';
-import '../../models/smart_requisition.dart';
 import '../../services/apis/smartcase_api.dart';
 import '../../theme/color.dart';
 import '../../util/smart_case_init.dart';
@@ -146,7 +146,6 @@ class _RequisitionFormState extends State<RequisitionForm> {
                     hintText: 'approver',
                     menuItems: approvers.toSet().toList(),
                     onChanged: (value) {
-                      print(approversController.dropDownValue?.value);
                       _onTapSearchedApprover(
                           approversController.dropDownValue?.value);
                     },

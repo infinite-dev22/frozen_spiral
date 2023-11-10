@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_case/models/smart_requisition.dart';
-import 'package:smart_case/pages/requisitions_page.dart';
+import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/requisition_widget/requisition_item.dart';
@@ -317,14 +316,14 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
     );
   }
 
-  _navigateBack() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const RequisitionsPage(),
-      ),
-    );
-  }
+  // _navigateBack() {
+  //   Navigator.pushReplacement(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const RequisitionsPage(),
+  //     ),
+  //   );
+  // }
 
   _setupData() async {
     await SmartCaseApi.smartDioFetch(

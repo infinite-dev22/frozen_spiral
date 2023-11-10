@@ -9,7 +9,6 @@ part 'file_state.dart';
 class FileBloc extends Bloc<FileEvent, FileState> {
   FileBloc() : super(FileInitial());
 
-  @override
   Stream<FileState> mapEventToState(
     FileEvent event,
   ) async* {

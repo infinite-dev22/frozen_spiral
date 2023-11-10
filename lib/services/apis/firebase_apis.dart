@@ -1,6 +1,8 @@
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/foundation.dart";
 
+import "../../util/smart_case_init.dart";
+
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 class FirebaseApi {
@@ -16,9 +18,9 @@ class FirebaseApi {
     );
 
     final fcmToken = await messaging.getToken();
-    print("FCM Token: $fcmToken");
-
-    print("User granted permission: ${settings.authorizationStatus}");
+    if (kDebugMode) {
+      print("FCM Token: $fcmToken");
+    }
   }
 }
 
@@ -28,7 +30,7 @@ appFCMInit() {
     // Note: This callback is fired at each app startup and whenever a new
     // token is generated.
 
-    final fcmToken = await messaging.getToken();
+    currentUserFcmToken = await messaging.getToken();
   }).onError((err) {
     if (kDebugMode) {
       print(err);
@@ -38,26 +40,34 @@ appFCMInit() {
 
 handleForegroundMasseges() {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print("Got a message whilst in the foreground!");
-    print("Message data: ${message.data}");
+    if (kDebugMode) {
+      print("Got a message whilst in the foreground!");
+      print("Message data: ${message.data}");
+    }
 
     if (message.notification != null) {
-      print("Message also contained a notification: "
+      if (kDebugMode) {
+        print("Message also contained a notification: "
           "Title:\n${message.notification?.title}\n"
           "Body:\n${message.notification?.body}\n"
           "Data:\n${message.data}");
+      }
     }
   });
 }
 
 @pragma("vm:entry-point")
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
+  if (kDebugMode) {
+    print("Handling a background message: ${message.messageId}");
+  }
 
   if (message.notification != null) {
-    print("Message also contained a notification: "
+    if (kDebugMode) {
+      print("Message also contained a notification: "
         "Title:\n${message.notification?.title}\n"
         "Body:\n${message.notification?.body}\n"
         "Data:\n${message.data}");
+    }
   }
 }

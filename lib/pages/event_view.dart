@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:marquee/marquee.dart';
@@ -226,7 +227,7 @@ class _EventViewState extends State<EventView> {
             ],
           )
         : const Center(
-            child: CircularProgressIndicator(),
+            child: CupertinoActivityIndicator(radius: 20),
           );
   }
 
@@ -244,16 +245,12 @@ class _EventViewState extends State<EventView> {
   }
 
   _fetchEvent() async {
-    // get event.
     Map eventResponse = await SmartCaseApi.smartFetch(
         'api/calendar/${widget.eventId}', currentUser.token);
     event = SmartEvent.fromJsonView(eventResponse);
-    print(eventResponse);
-    // get activity status attached to the event.
     Map activityStatusResponse = await SmartCaseApi.smartFetch(
         'api/admin/caseActivityStatus/${event!.activityStatusId!}',
         currentUser.token);
-    print(activityStatusResponse);
     activityStatus = SmartActivityStatus.fromJson(
         activityStatusResponse['caseActivityStatus']);
     setState(() {});

@@ -50,7 +50,7 @@ class _ActivityViewPageState extends State<ActivityViewPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextItem(title: "Activity Date:", data: activity!.date!.toString()),
-            TextItem(title: "Done By:", data: "Coming soon..."),
+            const TextItem(title: "Done By:", data: "Coming soon..."),
           ],
         ),
         Row(

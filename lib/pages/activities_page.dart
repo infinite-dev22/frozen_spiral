@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_activity.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
@@ -73,7 +74,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
             },
           )
         : const Center(
-            child: CircularProgressIndicator(),
+            child: CupertinoActivityIndicator(radius: 20),
           );
   }
 

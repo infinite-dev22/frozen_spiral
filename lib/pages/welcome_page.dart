@@ -27,7 +27,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   bool isAuthingUser = true;
   bool showLogin = true;
-  bool isSendingResetRequest = true;
+  bool isSendingResetRequest = false;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -42,47 +42,51 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   _buildBody() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CustomImage(
-                    "assets/images/splash.png",
-                    trBackground: true,
-                    isNetwork: false,
-                    width: MediaQuery.of(context).size.width * .6,
-                    imageFit: BoxFit.contain,
-                    radius: 0,
-                  ),
-                  const SizedBox(height: 40),
-                  (showLogin) ? _buildLoginBody() : _buildPasswordResetBody(),
-                ],
-              ),
-            ),
-          ),
-          Column(
-            children: [
-              const SizedBox(height: 10),
-              _buildTextWithLink('contact us: ', 'info@infosectechno.com'),
-              const SizedBox(height: 8),
-              _buildTextWithAction('+256 (0)770456789'),
-              const SizedBox(height: 8),
-              Text(
-                'copyright @ ${DateTime.now().year} SmartCase Manager',
-                style: const TextStyle(
-                  color: AppColors.inActiveColor,
-                  fontWeight: FontWeight.w300,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .82,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CustomImage(
+                      "assets/images/splash.png",
+                      trBackground: true,
+                      isNetwork: false,
+                      width: MediaQuery.of(context).size.width * .6,
+                      imageFit: BoxFit.contain,
+                      radius: 0,
+                    ),
+                    const SizedBox(height: 40),
+                    (showLogin) ? _buildLoginBody() : _buildPasswordResetBody(),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ],
+            ),
+            Column(
+              children: [
+                const SizedBox(height: 10),
+                _buildTextWithLink('contact us: ', 'info@infosectechno.com'),
+                const SizedBox(height: 8),
+                _buildTextWithAction('+256 (0)770456789'),
+                const SizedBox(height: 8),
+                Text(
+                  'copyright @ ${DateTime.now().year} SmartCase Manager',
+                  style: const TextStyle(
+                    color: AppColors.inActiveColor,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -193,7 +197,7 @@ class _WelcomePageState extends State<WelcomePage> {
   _onResetPressed() {
     if (EmailValidator.validate(emailController.text.trim())) {
       setState(() {
-        isSendingResetRequest = false;
+        isSendingResetRequest = true;
       });
 
       AuthApis.requestReset(
@@ -213,7 +217,7 @@ class _WelcomePageState extends State<WelcomePage> {
           Toast.show("Reset password link sent on your email",
               duration: Toast.lengthLong, gravity: Toast.bottom);
           setState(() {
-            isSendingResetRequest = true;
+            isSendingResetRequest = false;
             showLogin = true;
           });
         },
@@ -236,7 +240,7 @@ class _WelcomePageState extends State<WelcomePage> {
     // await storage.write(key: 'name', value: currentUser.firstName);
     // await storage.write(key: 'image', value: currentUser.avatar);
 
-    if (currentUserEmail == null && currentUserEmail!.isEmpty) {
+    if (currentUserEmail == null && currentUserEmail.toString().isEmpty) {
       box.write('email', emailController.text.trim());
     }
 
@@ -351,17 +355,17 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
             onPressed: _onResetPressed,
             child: isSendingResetRequest
-                ? const Text(
-                    'Proceed',
-                    style: TextStyle(color: AppColors.gray45, fontSize: 20),
-                  )
-                : const SizedBox(
+                ? const SizedBox(
                     height: 25,
                     width: 25,
                     child: CircularProgressIndicator(
                       color: AppColors.gray45,
                       strokeWidth: 2,
                     ),
+                  )
+                : const Text(
+                    'Proceed',
+                    style: TextStyle(color: AppColors.gray45, fontSize: 20),
                   ),
           ),
         ],

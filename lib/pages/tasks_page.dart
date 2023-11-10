@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_task.dart';
@@ -79,7 +80,7 @@ class _TasksPageState extends State<TasksPage> {
               return TaskItem(task: tasks[index]);
             })
         : const Center(
-            child: CircularProgressIndicator(),
+            child: CupertinoActivityIndicator(radius: 20),
           );
   }
 
@@ -98,7 +99,7 @@ class _TasksPageState extends State<TasksPage> {
               return TaskItem(task: filteredTasks[index]);
             })
         : const Center(
-            child: CircularProgressIndicator(),
+            child: Text('No result found'),
           );
   }
 

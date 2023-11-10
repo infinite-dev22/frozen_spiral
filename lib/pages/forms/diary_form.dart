@@ -68,7 +68,6 @@ class _DiaryFormState extends State<DiaryForm> {
   }
 
   _buildBody() {
-    print("File: $file");
     final ScrollController scrollController = ScrollController();
     return Column(
       children: [

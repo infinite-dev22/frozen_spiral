@@ -79,7 +79,7 @@ class CustomDropdownAction extends StatelessWidget {
   final List<String> menuItems;
   final Function(String?)? onChanged;
   final Color bgColor;
-  final image;
+  final dynamic image;
   final bool isNetwork;
 
   @override

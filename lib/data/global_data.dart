@@ -1,5 +1,5 @@
-import '../models/smart_event.dart';
-import '../models/smart_requisition.dart';
+import 'package:smart_case/database/requisition/requisition_model.dart';
+import 'package:smart_case/models/smart_event.dart';
 
 Map<DateTime, List<SmartEvent>> preloadedEvents =
 <DateTime, List<SmartEvent>>{};
