@@ -57,7 +57,10 @@ class FileItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStringItem('File Number', fileNumber),
-              _buildStringItem('Date opened', DateFormat("dd/MM/yyyy").format(DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(dateCreated))),
+              _buildStringItem(
+                  'Date opened',
+                  DateFormat("dd/MM/yyyy").format(
+                      DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(dateCreated))),
             ],
           ),
           const SizedBox(
@@ -68,7 +71,8 @@ class FileItem extends StatelessWidget {
             children: [
               _buildStringItem('Client Name', clientName),
               FileItemStatus(
-                  name: status,
+                  name:
+                      status.contains('OUT OF COURT') ? 'Out Of Court' : status,
                   bgColor: Colors.green,
                   horizontalPadding: 20,
                   verticalPadding: 5),

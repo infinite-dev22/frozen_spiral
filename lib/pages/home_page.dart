@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smart_case/data/data.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/module_item.dart';
@@ -26,33 +25,33 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _buildBody() {
-    return GridView.count(
-      shrinkWrap: true,
-      crossAxisCount: 2,
-      // number of items in each row
-      mainAxisSpacing: 20,
-      // spacing between rows
-      crossAxisSpacing: 20,
-      // spacing between columns
-      padding: const EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: 16,
-      ),
-      // padding around the grid
-      children: modules
-          .map(
-            (item) => ModuleItem(
-                name: item['name'],
-                color: Colors.white,
-                padding: 20,
-                icon: item['icon'],
-                onTap: () => print('Tapped')),
-          )
-          .toList(),
-    );
-  }
+  // _buildBody() {
+  //   return GridView.count(
+  //     shrinkWrap: true,
+  //     crossAxisCount: 2,
+  //     // number of items in each row
+  //     mainAxisSpacing: 20,
+  //     // spacing between rows
+  //     crossAxisSpacing: 20,
+  //     // spacing between columns
+  //     padding: const EdgeInsets.only(
+  //       left: 16,
+  //       right: 16,
+  //       bottom: 16,
+  //     ),
+  //     // padding around the grid
+  //     children: modules
+  //         .map(
+  //           (item) => ModuleItem(
+  //               name: item['name'],
+  //               color: Colors.white,
+  //               padding: 20,
+  //               icon: item['icon'],
+  //               onTap: () => print('Tapped')),
+  //         )
+  //         .toList(),
+  //   );
+  // }
 
   _buildGridColumns() {
     double cardPadding = MediaQuery.of(context).size.height * .038;

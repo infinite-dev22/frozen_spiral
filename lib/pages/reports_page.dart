@@ -11,6 +11,8 @@ class ReportsPage extends StatefulWidget {
 }
 
 class _ReportsPageState extends State<ReportsPage> {
+  List<String> filters = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +25,7 @@ class _ReportsPageState extends State<ReportsPage> {
           searchable: true,
           filterable: true,
           search: 'reports',
+          filters: filters,
         ),
       ),
       body: _buildBody(),

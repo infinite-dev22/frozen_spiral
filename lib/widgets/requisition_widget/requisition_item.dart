@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_case/models/smart_requisition.dart';
+import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/widgets/requisition_widget/reuisition_item_status.dart';
 
 import '../../models/smart_currency.dart';

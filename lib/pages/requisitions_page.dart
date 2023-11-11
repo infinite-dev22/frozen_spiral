@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_case/models/smart_requisition.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_case/database/requisition/requisition_model.dart';
+import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/loading_widget/shimmers/requisition_shimmer.dart';
 import 'package:smart_case/widgets/requisition_widget/requisition_item.dart';
@@ -18,9 +21,10 @@ class RequisitionsPage extends StatefulWidget {
 }
 
 class _RequisitionsPageState extends State<RequisitionsPage> {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   TextEditingController filterController = TextEditingController();
 
-  List<SmartRequisition> requisitions = List.empty(growable: true);
   List<SmartRequisition> filteredRequisitions = List.empty(growable: true);
   List<SmartCurrency> currencies = List.empty(growable: true);
   final List<String>? filters = [
@@ -54,20 +58,56 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           onChanged: _searchActivities,
         ),
       ),
-      body: _buildBody(),
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: const WaterDropHeader(
+            refresh: CupertinoActivityIndicator(),
+            waterDropColor: AppColors.primary),
+        footer: CustomFooter(
+          builder: (context, mode) {
+            Widget body;
+            if (mode == LoadStatus.idle) {
+              body = const Text("more data");
+            } else if (mode == LoadStatus.loading) {
+              body = const CupertinoActivityIndicator();
+            } else if (mode == LoadStatus.failed) {
+              body = const Text("Load Failed! Pull up to retry");
+            }  else if (mode == LoadStatus.noMore) {
+              body = const Text("That's all for now");
+            } else {
+              body = const Text("No more Data");
+            }
+            return SizedBox(
+              height: 15,
+              child: Center(child: body),
+            );
+          },
+        ),
+        controller: _refreshController,
+        child: _buildBody(),
+        onLoading: _onLoading,
+        onRefresh: _onRefresh,enableTwoLevel: true,
+      ),
     );
   }
 
   _buildBody() {
-    if ((requisitions.isNotEmpty)) {
+    return (filteredRequisitions.isNotEmpty)
+        ? _buildSearchedBody()
+        : _buildNonSearchedBody();
+  }
+
+  _buildNonSearchedBody() {
+    if ((preloadedRequisitions.isNotEmpty)) {
       return ListView.builder(
-        itemCount: requisitions.length,
+        itemCount: preloadedRequisitions.length,
         padding: const EdgeInsets.all(10),
         itemBuilder: (context, index) {
           return RequisitionItem(
             color: AppColors.white,
             padding: 10,
-            requisition: requisitions.elementAt(index),
+            requisition: preloadedRequisitions.elementAt(index),
             currencies: currencies,
             showActions: true,
             showFinancialStatus: true,
@@ -83,106 +123,98 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     }
   }
 
-  Future<void> _setUpData() async {
-    if (preloadedRequisitions.isEmpty) {
-      Map requisitionMap = await SmartCaseApi.smartFetch(
-          'api/accounts/cases/requisitions/allapi', currentUser.token);
-      List requisitions = requisitionMap['search']['requisitions'];
-
-      if (requisitions.isNotEmpty) {
-        this.requisitions = requisitions
-            .map(
-              (requisition) => SmartRequisition.fromJson(requisition),
-            )
-            .toList();
-        setState(() {});
-      }
-    } else if (preloadedRequisitions.isNotEmpty) {
-      requisitions = preloadedRequisitions;
-      setState(() {});
+  _buildSearchedBody() {
+    if ((filteredRequisitions.isNotEmpty)) {
+      return ListView.builder(
+        itemCount: filteredRequisitions.length,
+        padding: const EdgeInsets.all(10),
+        itemBuilder: (context, index) {
+          return RequisitionItem(
+            color: AppColors.white,
+            padding: 10,
+            requisition: filteredRequisitions.elementAt(index),
+            currencies: currencies,
+            showActions: true,
+            showFinancialStatus: true,
+          );
+        },
+      );
+    } else {
+      return Center(
+        child: Text("Requisition with ${filterController.text} can't be found"),
+      );
     }
   }
 
   @override
   void initState() {
-    _setUpData();
+    RequisitionApi.fetchAll();
     _loadCurrencies();
-
-    filterController.text == 'Name';
 
     super.initState();
   }
 
   _searchActivities(String value) {
     filteredRequisitions.clear();
-    if (filterController.text == 'Name') {
-      filteredRequisitions.addAll(requisitions.where((requisition) =>
-          requisition.caseFile!.fileName!
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    }
-
     if (filterController.text == 'Number') {
-      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
-          smartRequisition.number!
+      filteredRequisitions.addAll(preloadedRequisitions.where(
+          (smartRequisition) => smartRequisition.number!
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'Category') {
-      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
-          smartRequisition.requisitionCategory!
-              .getName()
+      filteredRequisitions.addAll(preloadedRequisitions.where(
+          (smartRequisition) => smartRequisition.requisitionCategory!.name
               .contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'Currency') {
-      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
-          smartRequisition.currency!.name!
+      filteredRequisitions.addAll(preloadedRequisitions.where(
+          (smartRequisition) => smartRequisition.currency!.name!
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'Requester') {
-      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
-          smartRequisition.employee!
+      filteredRequisitions.addAll(preloadedRequisitions.where(
+          (smartRequisition) => smartRequisition.employee!
               .getName()
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'Supervisor') {
-      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
-          smartRequisition.supervisor!
+      filteredRequisitions.addAll(preloadedRequisitions.where(
+          (smartRequisition) => smartRequisition.supervisor!
               .getName()
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'Amount') {
-      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
-          smartRequisition.amount!
+      filteredRequisitions.addAll(preloadedRequisitions.where(
+          (smartRequisition) => smartRequisition.amount!
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'Amount (Payout)') {
-      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
-          smartRequisition.payoutAmount!
+      filteredRequisitions.addAll(preloadedRequisitions.where(
+          (smartRequisition) => smartRequisition.payoutAmount!
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'Status') {
-      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
-          smartRequisition.requisitionStatus!.name
+      filteredRequisitions.addAll(preloadedRequisitions.where(
+          (smartRequisition) => smartRequisition.requisitionStatus!.name
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'Status (Financial)') {
-      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
-          smartRequisition.caseFinancialStatus
+      filteredRequisitions.addAll(preloadedRequisitions.where(
+          (smartRequisition) => smartRequisition.caseFinancialStatus
               .toString()
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else {
-      filteredRequisitions.addAll(requisitions.where((smartRequisition) =>
-          smartRequisition.caseFile!
+      filteredRequisitions.addAll(preloadedRequisitions.where(
+          (smartRequisition) => smartRequisition.caseFile!
               .getName()
               .toLowerCase()
               .contains(value.toLowerCase())));
@@ -199,5 +231,32 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList();
       currencyList = null;
     });
+  }
+
+  void _onRefresh() async {
+    RequisitionApi.fetchAll()
+        .then((value) => {
+              _refreshController.refreshCompleted(),
+              if (mounted) setState(() {})
+            })
+        .onError((error, stackTrace) => {
+              _refreshController.refreshFailed(),
+              if (mounted) setState(() {}),
+            });
+  }
+
+  void _onLoading() async {
+    RequisitionApi.fetchAll()
+        .then((value) => {
+              if (value.isNotEmpty)
+                _refreshController.loadComplete()
+              else if (value.isEmpty)
+                _refreshController.loadNoData(),
+              if (mounted) setState(() {})
+            })
+        .onError((error, stackTrace) => {
+              _refreshController.loadFailed(),
+              if (mounted) setState(() {}),
+            });
   }
 }

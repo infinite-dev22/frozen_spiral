@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_engagement.dart';
@@ -79,7 +80,7 @@ class _EngagementsPageState extends State<EngagementsPage> {
                 EngagementItem(engagement: engagements[index]),
           )
         : const Center(
-            child: CircularProgressIndicator(),
+            child: CupertinoActivityIndicator(radius: 20),
           );
   }
 
@@ -97,7 +98,7 @@ class _EngagementsPageState extends State<EngagementsPage> {
                 EngagementItem(engagement: filteredEngagements[index]),
           )
         : const Center(
-            child: CircularProgressIndicator(),
+            child: Text('No result found'),
           );
   }
 

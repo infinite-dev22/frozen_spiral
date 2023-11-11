@@ -71,6 +71,7 @@ dependencies:
   local_session_timeout: ^2.3.2
   get_it: ^7.6.4
   get_secure_storage: ^1.0.4
+  pull_to_refresh: ^2.0.0
 
 dev_dependencies:
   flutter_test:

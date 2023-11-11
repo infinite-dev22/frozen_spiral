@@ -115,8 +115,6 @@ class _DiaryPageState extends State<DiaryPage> {
     var maxDate = DateFormat('yyyy-MM-dd')
         .format(visibleDatesChangedDetails.visibleDates.last);
 
-    print("$minDate to $maxDate");
-
     final List<SmartEvent> appointments = <SmartEvent>[];
     // _eventsDataSource.appointments.clear();
 
@@ -184,7 +182,6 @@ class _DiaryPageState extends State<DiaryPage> {
           showTimeIndicator: true),
       showTodayButton: true,
       onTap: (calendarTapDetails) {
-        print(calendarTapDetails.appointments);
         if (calendarTapDetails.appointments != null) {
           if (calendarTapDetails.appointments!.length == 1) {
             _allowViewNavigation = false;

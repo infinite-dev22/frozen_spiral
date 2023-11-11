@@ -376,9 +376,6 @@ class _ActivityFormState extends State<ActivityForm> {
         billable = 'no';
       }
 
-      print(widget.activity!.activityDate!);
-      print(DateFormat('yy-MM-dd').parse(widget.activity!.activityDate!));
-
       descriptionController.text = widget.activity!.description!;
       dateController.text = widget.activity!.activityDate != null
           ? DateFormat('dd/MM/yyyy').format(
@@ -391,10 +388,6 @@ class _ActivityFormState extends State<ActivityForm> {
       endTimeController.text = widget.activity!.endTime != null
           ? DateFormat('h:mm a').format(widget.activity!.endTime!)
           : "";
-
-      print(
-          "Date: ${dateController.text}\nStart Time: ${startTimeController.text}\nStart Time: ${endTimeController.text}");
-
       _loadContacts();
     }
   }

@@ -12,8 +12,8 @@ import 'package:smart_case/models/smart_file.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../database/requisition/requisition_model.dart';
 import '../../models/smart_event.dart';
-import '../../models/smart_requisition.dart';
 
 class SmartCaseApi {
   static Future<List<SmartFile>> fetchAllFiles(String token,
@@ -69,8 +69,6 @@ class SmartCaseApi {
 
         List activityList = decodedResponse['caseActivites'];
 
-        print(activityList);
-
         List<SmartActivity> list =
             activityList.map((doc) => SmartActivity.fromJson(doc)).toList();
 
@@ -111,8 +109,6 @@ class SmartCaseApi {
 
         List requisitionList = decodedResponse['search']['requisitions'];
 
-        print("Requisitions: $requisitionList");
-
         List<SmartRequisition> list = requisitionList
             .map((doc) => SmartRequisition.fromJson(doc))
             .toList();
@@ -123,13 +119,14 @@ class SmartCaseApi {
           onError();
         }
       }
-    }
-    // catch (e) {
-    //   if (onError != null) {
-    //     onError();
-    //   }
-    // }
-    finally {
+    } catch (e) {
+      if (onError != null) {
+        onError();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    } finally {
       client.close();
     }
     return [];
@@ -139,7 +136,6 @@ class SmartCaseApi {
       {Function()? onSuccess, Function()? onError}) async {
     var client = RetryClient(http.Client());
 
-    print(jsonEncode(data));
     try {
       Dio dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
@@ -151,10 +147,7 @@ class SmartCaseApi {
         Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint).toString(),
         data: json.encode(data),
       );
-      // print(response.statusCode);
-      // print(response.headers);
-      // print(response.data);
-      // print(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
+
       if (response.statusCode == 200 || response.statusCode == 302) {
         if (onSuccess != null) {
           onSuccess();
@@ -164,13 +157,14 @@ class SmartCaseApi {
           onError();
         }
       }
-    }
-    // catch (e) {
-    //   if (onError != null) {
-    //     onError();
-    //   }
-    // }
-    finally {
+    } catch (e) {
+      if (onError != null) {
+        onError();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    } finally {
       client.close();
     }
     return [];
@@ -178,8 +172,6 @@ class SmartCaseApi {
 
   static smartPut(String endPoint, String token, Object data,
       {Function()? onSuccess, Function()? onError}) async {
-    print(jsonEncode(data));
-
     var client = RetryClient(http.Client());
     try {
       final encoding = Encoding.getByName('utf-8');
@@ -192,10 +184,7 @@ class SmartCaseApi {
             "content-Type": "application/json",
             "Accept": "application/json",
           });
-      print(response.statusCode);
-      print(response.headers);
-      print(response.body);
-      // print(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
+
       if (response.statusCode == 200) {
         if (onSuccess != null) {
           onSuccess();
@@ -205,13 +194,14 @@ class SmartCaseApi {
           onError();
         }
       }
-    }
-    // catch (e) {
-    //   if (onError != null) {
-    //     onError();
-    //   }
-    // }
-    finally {
+    } catch (e) {
+      if (onError != null) {
+        onError();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    } finally {
       client.close();
     }
     return [];
@@ -232,10 +222,6 @@ class SmartCaseApi {
             HttpHeaders.acceptHeader: 'application/json'
           });
 
-      // print(response.headers);
-      // print(response.statusCode);
-      // print(response.body);
-
       if (response.statusCode == 200) {
         var decodedResponse =
             jsonDecode(utf8.decode(response.bodyBytes)) as Map;
@@ -246,13 +232,14 @@ class SmartCaseApi {
           onError();
         }
       }
-    }
-    // catch (e) {
-    //   if (onError != null) {
-    //     onError();
-    //   }
-    // }
-    finally {
+    } catch (e) {
+      if (onError != null) {
+        onError();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    } finally {
       client.close();
     }
     return {};
@@ -276,22 +263,20 @@ class SmartCaseApi {
       );
 
       if (response.statusCode == 200) {
-        // var decodedResponse = jsonDecode(response.data);
-
         return response.data;
-        // return decodedResponse;
       } else {
         if (onError != null) {
           onError();
         }
       }
-    }
-    // catch (e) {
-    //   if (onError != null) {
-    //     onError();
-    //   }
-    // }
-    finally {
+    } catch (e) {
+      if (onError != null) {
+        onError();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    } finally {
       dio.close();
     }
     return {};
@@ -317,10 +302,6 @@ class SmartCaseApi {
       dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
       var response = await dio.post(url.toString(), data: formData);
 
-      print(response.statusCode);
-      print(response.headers);
-      print(response.data);
-      // print(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (response.statusCode == 200) {
         if (onSuccess != null) {
           onSuccess();
@@ -330,13 +311,14 @@ class SmartCaseApi {
           onError();
         }
       }
-    }
-    // catch (e) {
-    //   if (onError != null) {
-    //     onError();
-    //   }
-    // }
-    finally {
+    } catch (e) {
+      if (onError != null) {
+        onError();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    } finally {
       client.close();
     }
   }
@@ -358,8 +340,6 @@ class SmartCaseApi {
         onSuccess: onSuccess,
         onError: onError);
     List eventsList = responseEventsList;
-
-    print("Events: $eventsList");
 
     List<SmartEvent> events =
         eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();

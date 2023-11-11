@@ -17,7 +17,7 @@ class ProfileMasterItem extends StatelessWidget {
     required this.lastName,
   });
 
-  final image;
+  final dynamic image;
   final bool isFile;
   final bool isNetwork;
   final Color color;

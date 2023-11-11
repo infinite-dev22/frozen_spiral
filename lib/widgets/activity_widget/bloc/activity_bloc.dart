@@ -11,7 +11,6 @@ part 'activity_state.dart';
 class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   ActivityBloc() : super(ActivityInitial());
 
-  @override
   Stream<ActivityState> mapEventToState(
     ActivityEvent event,
   ) async* {

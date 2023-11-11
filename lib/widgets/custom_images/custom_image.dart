@@ -17,7 +17,7 @@ class CustomImage extends StatelessWidget {
     this.isFile = false,
   });
 
-  final file;
+  final dynamic file;
   final double width;
   final double height;
   final double borderWidth;

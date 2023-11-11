@@ -22,7 +22,7 @@ class CustomIconHolder extends StatelessWidget {
   final double? size;
   final bool isImage;
   final bool isProfile;
-  final graphic;
+  final dynamic graphic;
 
   @override
   Widget build(BuildContext context) {
