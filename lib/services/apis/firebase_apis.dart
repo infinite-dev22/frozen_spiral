@@ -1,5 +1,7 @@
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/foundation.dart";
+import "package:intl/intl.dart";
+import "package:smart_case/models/local/notifications.dart";
 
 import "../../util/smart_case_init.dart";
 
@@ -17,9 +19,10 @@ class FirebaseApi {
       sound: true,
     );
 
-    final fcmToken = await messaging.getToken();
+    currentUserFcmToken = await messaging.getToken();
+
     if (kDebugMode) {
-      print("FCM Token: $fcmToken");
+      print("FCM Token: $currentUserFcmToken");
     }
   }
 }
@@ -40,6 +43,8 @@ appFCMInit() {
 
 handleForegroundMasseges() {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    _storeForegroundNotification(message);
+
     if (kDebugMode) {
       print("Got a message whilst in the foreground!");
       print("Message data: ${message.data}");
@@ -48,12 +53,21 @@ handleForegroundMasseges() {
     if (message.notification != null) {
       if (kDebugMode) {
         print("Message also contained a notification: "
-          "Title:\n${message.notification?.title}\n"
-          "Body:\n${message.notification?.body}\n"
-          "Data:\n${message.data}");
+            "Title:\n${message.notification?.title}\n"
+            "Body:\n${message.notification?.body}\n"
+            "Data:\n${message.data}");
       }
     }
   });
+}
+
+_storeForegroundNotification(RemoteMessage message) async {
+  String time = DateFormat('h:mm a').format(DateTime.now());
+
+  await localStorage?.add(Notifications(
+      title: message.notification?.title,
+      body: message.notification?.body,
+      time: time));
 }
 
 @pragma("vm:entry-point")
@@ -65,9 +79,9 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (message.notification != null) {
     if (kDebugMode) {
       print("Message also contained a notification: "
-        "Title:\n${message.notification?.title}\n"
-        "Body:\n${message.notification?.body}\n"
-        "Data:\n${message.data}");
+          "Title:\n${message.notification?.title}\n"
+          "Body:\n${message.notification?.body}\n"
+          "Data:\n${message.data}");
     }
   }
 }
