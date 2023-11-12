@@ -41,39 +41,43 @@ class RequisitionApi {
     preloadedRequisitions = requisitions;
   }
 
-  static post({Function()? onSuccess, Function()? onError}) async {
+  static post(Map<String, dynamic> data, int id,
+      {Function()? onSuccess, Function()? onError}) async {
     RequisitionRepo requisitionRepo = RequisitionRepo();
-    List<SmartRequisition> requisitions = List.empty(growable: true);
+    // List<SmartRequisition> requisitions = List.empty(growable: true);
 
-    Map response = await requisitionRepo.fetchAll();
-    List requisitionsMap = response['search']['requisitions'];
-
-    if (requisitionsMap.isNotEmpty) {
-      requisitions = requisitionsMap
-          .map(
-            (requisition) => SmartRequisition.fromJson(requisition),
-          )
-          .toList();
-    }
-
-    preloadedRequisitions = requisitions;
+    var response = await requisitionRepo.post(data, id);
+    // List requisitionsMap = response['search']['requisitions'];
+    //
+    // if (requisitionsMap.isNotEmpty) {
+    //   requisitions = requisitionsMap
+    //       .map(
+    //         (requisition) => SmartRequisition.fromJson(requisition),
+    //       )
+    //       .toList();
+    // }
+    //
+    // preloadedRequisitions = requisitions;
+    return response;
   }
 
-  static put({Function()? onSuccess, Function()? onError}) async {
+  static put(Map<String, dynamic> data, int id,
+      {Function()? onSuccess, Function()? onError}) async {
     RequisitionRepo requisitionRepo = RequisitionRepo();
-    List<SmartRequisition> requisitions = List.empty(growable: true);
+    // List<SmartRequisition> requisitions = List.empty(growable: true);
 
-    Map response = await requisitionRepo.fetchAll();
-    List requisitionsMap = response['search']['requisitions'];
-
-    if (requisitionsMap.isNotEmpty) {
-      requisitions = requisitionsMap
-          .map(
-            (requisition) => SmartRequisition.fromJson(requisition),
-          )
-          .toList();
-    }
-
-    preloadedRequisitions = requisitions;
+    var response = await requisitionRepo.put(data, id);
+    // List requisitionsMap = response['search']['requisitions'];
+    //
+    // if (requisitionsMap.isNotEmpty) {
+    //   requisitions = requisitionsMap
+    //       .map(
+    //         (requisition) => SmartRequisition.fromJson(requisition),
+    //       )
+    //       .toList();
+    // }
+    //
+    // preloadedRequisitions = requisitions;
+    return response;
   }
 }

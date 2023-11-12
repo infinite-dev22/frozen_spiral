@@ -14,8 +14,8 @@ class RequisitionBloc extends Bloc<RequisitionEvent, RequisitionState> {
       : super(const RequisitionState()) {
     on<GetRequisitions>(_mapGetRequisitionsEventToState);
     on<GetRequisition>(_mapGetRequisitionEventToState);
-    on<PostRequisition>(_mapPostRequisitionEventToState);
-    on<PutRequisition>(_mapPutRequisitionEventToState);
+    // on<PostRequisition>(_mapPostRequisitionEventToState);
+    // on<PutRequisition>(_mapPutRequisitionEventToState);
     on<SelectRequisition>(_mapSelectRequisitionEventToState);
   }
 
@@ -53,37 +53,37 @@ class RequisitionBloc extends Bloc<RequisitionEvent, RequisitionState> {
     }
   }
 
-  void _mapPostRequisitionEventToState(
-      PostRequisition event, Emitter<RequisitionState> emit) async {
-    emit(state.copyWith(status: RequisitionStatus.loading));
+  // void _mapPostRequisitionEventToState(
+  //     PostRequisition file, Emitter<RequisitionState> emit) async {
+  //   emit(state.copyWith(status: RequisitionStatus.loading));
+  //
+  //   try {
+  //     final requisitions = await RequisitionApi.post();
+  //
+  //     emit(
+  //       state.copyWith(
+  //           status: RequisitionStatus.success, requisitions: requisitions),
+  //     );
+  //   } catch (error) {
+  //     emit(state.copyWith(status: RequisitionStatus.error));
+  //   }
+  // }
 
-    try {
-      final requisitions = await RequisitionApi.post();
-
-      emit(
-        state.copyWith(
-            status: RequisitionStatus.success, requisitions: requisitions),
-      );
-    } catch (error) {
-      emit(state.copyWith(status: RequisitionStatus.error));
-    }
-  }
-
-  void _mapPutRequisitionEventToState(
-      PutRequisition event, Emitter<RequisitionState> emit) async {
-    emit(state.copyWith(status: RequisitionStatus.loading));
-
-    try {
-      final requisitions = await RequisitionApi.put();
-
-      emit(
-        state.copyWith(
-            status: RequisitionStatus.success, requisitions: requisitions),
-      );
-    } catch (error) {
-      emit(state.copyWith(status: RequisitionStatus.error));
-    }
-  }
+  // void _mapPutRequisitionEventToState(
+  //     PutRequisition file, Emitter<RequisitionState> emit) async {
+  //   emit(state.copyWith(status: RequisitionStatus.loading));
+  //
+  //   try {
+  //     final requisitions = await RequisitionApi.put();
+  //
+  //     emit(
+  //       state.copyWith(
+  //           status: RequisitionStatus.success, requisitions: requisitions),
+  //     );
+  //   } catch (error) {
+  //     emit(state.copyWith(status: RequisitionStatus.error));
+  //   }
+  // }
 
   void _mapSelectRequisitionEventToState(
       SelectRequisition event, Emitter<RequisitionState> emit) async {

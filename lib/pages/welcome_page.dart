@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -358,9 +359,8 @@ class _WelcomePageState extends State<WelcomePage> {
                 ? const SizedBox(
                     height: 25,
                     width: 25,
-                    child: CircularProgressIndicator(
+                    child: CupertinoActivityIndicator(
                       color: AppColors.gray45,
-                      strokeWidth: 2,
                     ),
                   )
                 : const Text(
@@ -433,8 +433,9 @@ class _WelcomePageState extends State<WelcomePage> {
                 textStyle:
                     const TextStyle(color: AppColors.primary, fontSize: 20),
               )
-            : const CircularProgressIndicator(
+            : const CupertinoActivityIndicator(
                 color: AppColors.gray45,
+                radius: 20,
               ),
         const SizedBox(
           height: 10,

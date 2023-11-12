@@ -7,7 +7,7 @@ part 'engagement_state.dart';
 class EngagementBloc extends Bloc<EngagementEvent, EngagementState> {
   EngagementBloc() : super(EngagementInitial()) {
     on<EngagementEvent>((event, emit) {
-      // TODO: implement event handler
+      // TODO: implement file handler
     });
   }
 }

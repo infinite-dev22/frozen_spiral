@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../models/smart_activity.dart';
+import '../../../database/activity/activity_model.dart';
 
 part 'activity_event.dart';
 part 'activity_state.dart';

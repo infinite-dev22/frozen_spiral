@@ -10,7 +10,7 @@ import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:toast/toast.dart';
 
 import '../../database/requisition/requisition_model.dart';
-import '../../models/smart_file.dart';
+import '../../database/file/file_model.dart';
 import '../../services/apis/smartcase_api.dart';
 import '../../theme/color.dart';
 import '../../util/smart_case_init.dart';

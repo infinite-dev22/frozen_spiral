@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:marquee/marquee.dart';
-import 'package:smart_case/models/smart_activity.dart';
+import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/widgets/custom_icon_holder.dart';
 import 'package:smart_case/widgets/form_title.dart';
@@ -257,11 +257,11 @@ class _EventViewState extends State<EventView> {
   }
 
   _setupData() async {
-    // get event.
+    // get file.
     Map eventResponse = await SmartCaseApi.smartFetch(
         'api/calendar/$eventId', currentUser.token);
     event = SmartEvent.fromJsonView(eventResponse);
-    // get activity status attached to the event.
+    // get activity status attached to the file.
     Map activityStatusResponse = await SmartCaseApi.smartFetch(
         'api/admin/caseActivityStatus/${event!.activityStatusId!}',
         currentUser.token);

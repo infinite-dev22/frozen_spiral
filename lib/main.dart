@@ -8,7 +8,7 @@ import 'package:smart_case/pages/activity_view_page.dart';
 import 'package:smart_case/pages/diary_page.dart';
 import 'package:smart_case/pages/engagements_page.dart';
 import 'package:smart_case/pages/event_view.dart';
-import 'package:smart_case/pages/files_page.dart';
+import 'package:smart_case/pages/file_page.dart';
 import 'package:smart_case/pages/home_page.dart';
 import 'package:smart_case/pages/locator_page.dart';
 import 'package:smart_case/pages/notifications_page.dart';
@@ -106,7 +106,7 @@ class MyApp extends StatelessWidget {
           '/locator': (context) => const LocatorPage(),
           '/profile': (context) => const ProfilePage(),
           '/requisition': (context) => const RequisitionViewPage(),
-          '/event': (context) => const EventView(),
+          '/file': (context) => const EventView(),
           '/activity': (context) => const ActivityViewPage(),
         },
       ),

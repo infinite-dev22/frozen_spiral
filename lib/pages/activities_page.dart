@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_case/models/smart_activity.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/activity_widget/activity_item.dart';
 
+import '../services/apis/smartcase_apis/activity_api.dart';
 import '../theme/color.dart';
 import '../widgets/custom_appbar.dart';
 
@@ -16,6 +18,8 @@ class ActivitiesPage extends StatefulWidget {
 }
 
 class _ActivitiesPageState extends State<ActivitiesPage> {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   TextEditingController filterController = TextEditingController();
 
   List<SmartActivity> activities = List.empty(growable: true);
@@ -45,7 +49,38 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
           filters: filters,
         ),
       ),
-      body: _buildBody(),
+      body: SmartRefresher(
+        enablePullDown: true,
+        header: const WaterDropHeader(
+            refresh: CupertinoActivityIndicator(),
+            waterDropColor: AppColors.primary),
+        // footer: CustomFooter(
+        //   height: 0,
+        //   builder: (context, mode) {
+        //     Widget body;
+        //     if (mode == LoadStatus.idle) {
+        //       body = const Text("more data");
+        //     } else if (mode == LoadStatus.loading) {
+        //       body = const CupertinoActivityIndicator();
+        //     } else if (mode == LoadStatus.failed) {
+        //       body = const Text("Load Failed! Pull up to retry");
+        //     } else if (mode == LoadStatus.noMore) {
+        //       body = const Text("That's all for now");
+        //     } else {
+        //       body = const Text("No more Data");
+        //     }
+        //     return SizedBox(
+        //       height: 15,
+        //       child: Center(child: body),
+        //     );
+        //   },
+        // ),
+        controller: _refreshController,
+        child: _buildBody(),
+        onLoading: _onLoading,
+        onRefresh: _onRefresh,
+        enableTwoLevel: true,
+      ),
     );
   }
 
@@ -140,5 +175,32 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
           smartActivity.getName().toLowerCase().contains(value.toLowerCase())));
       setState(() {});
     }
+  }
+
+  void _onRefresh() async {
+    ActivityApi.fetchAll()
+        .then((value) => {
+              _refreshController.refreshCompleted(),
+              if (mounted) setState(() {})
+            })
+        .onError((error, stackTrace) => {
+              _refreshController.refreshFailed(),
+              if (mounted) setState(() {}),
+            });
+  }
+
+  void _onLoading() async {
+    ActivityApi.fetchAll()
+        .then((value) => {
+              if (value.isNotEmpty)
+                _refreshController.loadComplete()
+              else if (value.isEmpty)
+                _refreshController.loadNoData(),
+              if (mounted) setState(() {})
+            })
+        .onError((error, stackTrace) => {
+              _refreshController.loadFailed(),
+              if (mounted) setState(() {}),
+            });
   }
 }
