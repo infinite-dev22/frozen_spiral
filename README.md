@@ -1,5 +1,25 @@
 # **SmartCase Manager Mobile App**
 ## **ScreenShots**
+![Splash Screen](images/splash_screen.png)
+![Login With Email & Password](images/login_one.png)
+![Login With Password Only](images/login_two.png)
+![Reset Password](images/request_password_reset.png)
+![Home](images/home.png)
+![Files](images/files.png)
+![Activities](images/activities.png)
+![Alerts](images/alerts.png)
+![Locator](images/locator.png)
+![User Profile](images/profile.png)
+![Requisitions](images/requisitions.png)
+![Requisition Processing](images/requisition_process.png)
+![Requisition Editing and Adding](images/requisition_form.png)
+![Calendar Events](images/events.png)
+![Calendar Events Day](images/event_day_view.png)
+![Calendar Events Week](images/event_week_view.png)
+![Calendar Events Schedule](images/event_schedule_view.png)
+![Calendar Event Details](images/event_detail_view.png)
+![Calendar Event Editing and Adding](images/event_form.png)
+![Item Select Search Bottom Sheet](images/item_search_sheet.png)
 
 ## **Overview**
 
