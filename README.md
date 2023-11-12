@@ -3,7 +3,7 @@
 ![Splash Screen](images/splash_screen.png)
 ![Login With Email & Password](images/login_one.png)
 ![Login With Password Only](images/login_two.png)
-![Reset Password](images/request_password_reset.png)
+![Reset Password](images/reset_password.png)
 ![Home](images/home.png)
 ![Files](images/files.png)
 ![Activities](images/activities.png)
