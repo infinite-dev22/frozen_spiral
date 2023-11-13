@@ -225,6 +225,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.2"
+  connectivity_plus:
+    dependency: transitive
+    description:
+      name: connectivity_plus
+      sha256: "77a180d6938f78ca7d2382d2240eb626c0f6a735d0bfdce227d8ffb80f95c48b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.2"
+  connectivity_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: connectivity_plus_platform_interface
+      sha256: cf1d1c28f4416f8c654d7dc3cd638ec586076255d407cef3ddbdaf178272a71a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.4"
   convert:
     dependency: transitive
     description:
@@ -289,6 +305,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.3"
+  dbus:
+    dependency: transitive
+    description:
+      name: dbus
+      sha256: "6f07cba3f7b3448d42d015bfd3d53fe12e5b36da2423f23838efc1d5fb31a263"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.8"
+  device_info_plus:
+    dependency: transitive
+    description:
+      name: device_info_plus
+      sha256: "7035152271ff67b072a211152846e9f1259cf1be41e34cd3e0b5463d2d6b8419"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.1.0"
+  device_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: device_info_plus_platform_interface
+      sha256: d3b01d5868b50ae571cd1dc6e502fc94d956b665756180f7b16ead09e836fd64
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   dio:
     dependency: "direct main"
     description:
@@ -297,6 +337,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.3"
+  dio_cache_interceptor:
+    dependency: "direct main"
+    description:
+      name: dio_cache_interceptor
+      sha256: "7c0cb435963f08aa751ae8769b360d462f01160adc1d2d5b80e3b8c450b386e3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.4"
   double_back_to_close:
     dependency: "direct main"
     description:
@@ -433,6 +481,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.5.12"
+  firebase_storage:
+    dependency: transitive
+    description:
+      name: firebase_storage
+      sha256: "4cce7efd856dfb98b0e0ffe3ee22039133f940e3a3cb00bfa7ce42bfebc17311"
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.4.1"
+  firebase_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_storage_platform_interface
+      sha256: f8cd0343fbf0b53fd5d85172cdb3311206bf71500d538e29941f440cc034a0aa
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.1"
+  firebase_storage_web:
+    dependency: transitive
+    description:
+      name: firebase_storage_web
+      sha256: ea654cf19e2cb60acfd90e3f439aedbb36852b37b0c4521fbbd8569c80d65624
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.12"
   fixnum:
     dependency: transitive
     description:
@@ -856,6 +928,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  nm:
+    dependency: transitive
+    description:
+      name: nm
+      sha256: "2c9aae4127bdc8993206464fcc063611e0e36e72018696cd9631023a31b24254"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
+  ntp:
+    dependency: transitive
+    description:
+      name: ntp
+      sha256: "198db73e5059b334b50dbe8c626011c26576778ee9fc53f4c55c1d89d08ed2d2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   package_config:
     dependency: transitive
     description:
@@ -920,6 +1008,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  paulonia_cache_image:
+    dependency: "direct main"
+    description:
+      name: paulonia_cache_image
+      sha256: adf7cbdd8ce090c633cc20a0b0583c947844c05917d925749259786beb065cc0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
+  paulonia_utils:
+    dependency: transitive
+    description:
+      name: paulonia_utils
+      sha256: fe3bbaa1c6af0a34489ae73091c644453efeebf90783078b1ac593f21e43b213
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   petitparser:
     dependency: transitive
     description:
@@ -1349,6 +1453,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.9"
+  win32_registry:
+    dependency: transitive
+    description:
+      name: win32_registry
+      sha256: "41fd8a189940d8696b1b810efb9abcf60827b6cbfab90b0c43e8439e3a39d85a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   xdg_directories:
     dependency: transitive
     description:

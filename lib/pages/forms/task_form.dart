@@ -3,18 +3,20 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_task.dart';
+import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
+import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/custom_accordion.dart';
+import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
+import 'package:smart_case/widgets/form_title.dart';
 import 'package:toast/toast.dart';
 
-import '../../database/file/file_model.dart';
-import '../../services/apis/smartcase_api.dart';
-import '../../theme/color.dart';
-import '../../util/smart_case_init.dart';
-import '../../widgets/custom_accordion.dart';
-import '../../widgets/custom_searchable_async_bottom_sheet_contents.dart';
-import '../../widgets/form_title.dart';
+import '../../widgets/better_toast.dart';
 
 class TaskForm extends StatefulWidget {
   const TaskForm({super.key, this.task});
@@ -219,12 +221,12 @@ class _TaskFormState extends State<TaskForm> {
   }
 
   _reloadFiles() async {
-    files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+    files = await FileApi.fetchAll();
     setState(() {});
   }
 
   _loadFiles() async {
-    files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+    files = await FileApi.fetchAll();
   }
 
   _loadAssignees() async {
@@ -268,26 +270,22 @@ class _TaskFormState extends State<TaskForm> {
           DateFormat('h:mm a').parse(startTimeController.text.trim()),
       assignees: [SmartEmployee(id: 1)],
     );
-    
+
     jsonEncode(smartTask.toCreateJson());
 
     (widget.task == null)
         ? SmartCaseApi.smartPost(
             'api/crm/tasks', currentUser.token, smartTask.toCreateJson(),
             onError: () {
-            Toast.show("An error occurred",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "An error occurred");
           }, onSuccess: () {
-            Toast.show("Engagement added successfully",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "Engagement added successfully");
           })
         : SmartCaseApi.smartPut('api/crm/tasks/${widget.task!.id}',
             currentUser.token, smartTask.toCreateJson(), onError: () {
-            Toast.show("An error occurred",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "An error occurred");
           }, onSuccess: () {
-            Toast.show("Engagement updated successfully",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "Engagement updated successfully");
           });
 
     Navigator.pop(context);

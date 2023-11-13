@@ -2,95 +2,21 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/database/requisition/requisition_model.dart';
+import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../database/requisition/requisition_model.dart';
-import '../../models/smart_event.dart';
-
 class SmartCaseApi {
-  static Future<List<SmartFile>> fetchAllFiles(String token,
-      {Function()? onSuccess, Function()? onError}) async {
-    var client = RetryClient(http.Client());
-
-    try {
-      var response = await client
-          .get(Uri.parse('${currentUser.url}/api/cases?'), headers: {
-        HttpHeaders.authorizationHeader: "Bearer $token",
-      });
-
-      if (response.statusCode == 200) {
-        var decodedResponse =
-            jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-        List fileList = decodedResponse['search']['caseFiles']['original'];
-
-        List<SmartFile> list =
-            fileList.map((doc) => SmartFile.fromJson(doc)).toList();
-
-        return list;
-      } else {
-        if (onError != null) {
-          onError();
-        }
-      }
-    } catch (e) {
-      if (onError != null) {
-        onError();
-        if (kDebugMode) {
-          print(e);
-        }
-      }
-    } finally {
-      client.close();
-    }
-    return [];
-  }
-
-  static Future<List<SmartActivity>> fetchAllActivities(String token,
-      {Function()? onSuccess, Function()? onError}) async {
-    var client = RetryClient(http.Client());
-
-    try {
-      var response = await client
-          .get(Uri.parse('${currentUser.url}/api/activitiesindex'), headers: {
-        HttpHeaders.authorizationHeader: "Bearer $token",
-      });
-
-      if (response.statusCode == 200) {
-        var decodedResponse =
-            jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-
-        List activityList = decodedResponse['caseActivites'];
-
-        List<SmartActivity> list =
-            activityList.map((doc) => SmartActivity.fromJson(doc)).toList();
-
-        return list;
-      } else {
-        if (onError != null) {
-          onError();
-        }
-      }
-    } catch (e) {
-      if (onError != null) {
-        onError();
-        if (kDebugMode) {
-          print(e);
-        }
-      }
-    } finally {
-      client.close();
-    }
-    return [];
-  }
-
   static Future<List<SmartRequisition>> fetchAllRequisitions(String token,
       {Function()? onSuccess, Function()? onError}) async {
     var client = RetryClient(http.Client());
@@ -137,7 +63,7 @@ class SmartCaseApi {
     var client = RetryClient(http.Client());
 
     try {
-      Dio dio = Dio();
+      Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers['Accept'] = 'application/json';
       dio.options.headers["authorization"] = "Bearer $token";
@@ -249,7 +175,7 @@ class SmartCaseApi {
       {Map<String, dynamic>? body,
       Function()? onSuccess,
       Function()? onError}) async {
-    Dio dio = Dio();
+    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';
@@ -289,7 +215,7 @@ class SmartCaseApi {
 
     var client = RetryClient(http.Client());
     try {
-      Dio dio = Dio();
+      Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
       Uri url = Uri.https(currentUser.url.replaceRange(0, 8, ''),
           'api/hr/employees/update_avatarSubmit');
 

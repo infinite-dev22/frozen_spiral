@@ -74,6 +74,8 @@ dependencies:
   pull_to_refresh: ^2.0.0
   hive_flutter: ^1.1.0
   flutter_slidable: ^3.0.1
+  paulonia_cache_image: ^1.1.0
+  dio_cache_interceptor: ^3.4.4
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
+import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:smart_case/models/local/notifications.dart';
 import 'package:smart_case/pages/activities_page.dart';
 import 'package:smart_case/pages/activity_view_page.dart';
@@ -50,6 +51,8 @@ Future<void> main() async {
     Hive.registerAdapter(NotificationsAdapter());
   }
   localStorage = await Hive.openBox<Notifications>('notifications');
+
+  await PCacheImage.init(enableInMemory: true, maxInMemoryImages: 1);
 
   runApp(const MyApp());
 }

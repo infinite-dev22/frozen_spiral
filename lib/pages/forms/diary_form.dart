@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:smart_case/database/activity/activity_model.dart';
+import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/models/smart_contact.dart';
 import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/models/user.dart';
+import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/custom_accordion.dart';
+import 'package:smart_case/widgets/custom_searchable_async_activity_bottom_sheet_contents.dart';
+import 'package:smart_case/widgets/custom_searchable_async_file_bottom_sheet_contents.dart';
+import 'package:smart_case/widgets/custom_textbox.dart';
+import 'package:smart_case/widgets/form_title.dart';
 import 'package:toast/toast.dart';
 
-import '../../database/activity/activity_model.dart';
-import '../../models/smart_contact.dart';
-import '../../database/file/file_model.dart';
-import '../../services/apis/smartcase_api.dart';
-import '../../util/smart_case_init.dart';
-import '../../widgets/custom_accordion.dart';
-import '../../widgets/custom_searchable_async_activity_bottom_sheet_contents.dart';
-import '../../widgets/custom_searchable_async_file_bottom_sheet_contents.dart';
-import '../../widgets/custom_textbox.dart';
-import '../../widgets/form_title.dart';
+import '../../widgets/better_toast.dart';
 
 class DiaryForm extends StatefulWidget {
   const DiaryForm({
@@ -319,7 +321,7 @@ class _DiaryFormState extends State<DiaryForm> {
   }
 
   _reloadFiles() async {
-    files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+    files = await FileApi.fetchAll();
     setState(() {});
   }
 
@@ -352,7 +354,7 @@ class _DiaryFormState extends State<DiaryForm> {
     activities =
         activityList.map((doc) => SmartActivityStatus.fromJson(doc)).toList();
 
-    files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+    files = await FileApi.fetchAll();
   }
 
   _onTapSearchedActivity(SmartActivityStatus value) {
@@ -393,19 +395,15 @@ class _DiaryFormState extends State<DiaryForm> {
         ? SmartCaseApi.smartPost(
             'api/calendar', currentUser.token, smartEvent.toJson(),
             onError: () {
-            Toast.show("An error occurred",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "An error occurred");
           }, onSuccess: () {
-            Toast.show("Event added successfully",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "Event added successfully");
           })
         : SmartCaseApi.smartPut('api/calendar/${widget.event!.id}',
             currentUser.token, smartEvent.toJson(), onError: () {
-            Toast.show("An error occurred",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "An error occurred");
           }, onSuccess: () {
-            Toast.show("Event updated successfully",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "Event updated successfully");
           });
 
     Navigator.pop(context);

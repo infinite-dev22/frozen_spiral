@@ -3,7 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  connectivity_plus
   firebase_core
+  firebase_storage
   record_windows
   url_launcher_windows
 )

@@ -144,7 +144,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
   }
 
   Future<void> _setUpData() async {
-    activities = await SmartCaseApi.fetchAllActivities(currentUser.token);
+    activities = await ActivityApi.fetchAll();
     filterController.text == 'Name';
     setState(() {});
   }

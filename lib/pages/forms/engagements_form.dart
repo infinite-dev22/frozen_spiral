@@ -9,6 +9,7 @@ import 'package:toast/toast.dart';
 import '../../models/smart_client.dart';
 import '../../services/apis/smartcase_api.dart';
 import '../../util/smart_case_init.dart';
+import '../../widgets/better_toast.dart';
 import '../../widgets/custom_accordion.dart';
 import '../../widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import '../../widgets/custom_textbox.dart';
@@ -296,19 +297,15 @@ class _EngagementFormState extends State<EngagementForm> {
     (widget.engagement == null)
         ? SmartCaseApi.smartPost('api/crm/engagements', currentUser.token,
             smartEngagement.toCreateJson(), onError: () {
-            Toast.show("An error occurred",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "An error occurred");
           }, onSuccess: () {
-            Toast.show("Engagement added successfully",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "Engagement added successfully");
           })
         : SmartCaseApi.smartPut('api/crm/engagements/${widget.engagement!.id}',
             currentUser.token, smartEngagement.toCreateJson(), onError: () {
-            Toast.show("An error occurred",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "An error occurred");
           }, onSuccess: () {
-            Toast.show("Engagement updated successfully",
-                duration: Toast.lengthLong, gravity: Toast.bottom);
+            BetterToast(text: "Engagement updated successfully");
           });
 
     Navigator.pop(context);

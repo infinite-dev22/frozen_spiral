@@ -9,6 +9,7 @@ import 'package:toast/toast.dart';
 
 import '../theme/color.dart';
 import '../util/smart_case_init.dart';
+import '../widgets/better_toast.dart';
 import '../widgets/custom_appbar.dart';
 
 class RequisitionViewPage extends StatefulWidget {
@@ -292,12 +293,11 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   _onSuccess(String text) {
-    Toast.show(text, duration: Toast.lengthLong, gravity: Toast.bottom);
+    BetterToast(text: text);
   }
 
   _onError() {
-    Toast.show("An error occurred",
-        duration: Toast.lengthLong, gravity: Toast.bottom);
+    BetterToast(text: "An error occurred");
     setState(() {});
   }
 

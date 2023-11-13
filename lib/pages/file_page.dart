@@ -153,7 +153,7 @@ class _FilesPageState extends State<FilesPage> {
   }
 
   Future<void> _setUpData() async {
-    files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+    files = await FileApi.fetchAll();
     filterController.text == 'Name';
     setState(() {});
   }
@@ -197,7 +197,7 @@ class _FilesPageState extends State<FilesPage> {
   }
 
   void _onLoading() async {
-    FileApi.fetchAll()
+    await FileApi.fetchAll()
         .then((value) => {
               if (value.isNotEmpty)
                 _refreshController.loadComplete()

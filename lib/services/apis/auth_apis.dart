@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
+import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:smart_case/models/user.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
@@ -109,7 +110,7 @@ class AuthApis {
     // await storage.delete(key: 'email').then(onSuccess).onError(onError);
     // await storage.delete(key: 'name').then(onSuccess).onError(onError);
     // await storage.delete(key: 'image').then(onSuccess).onError(onError);
-
+    await PCacheImage.clearAllCacheImages();
     box.remove('email');
     box.remove('name');
     box.remove('image');

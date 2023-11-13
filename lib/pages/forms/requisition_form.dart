@@ -2,20 +2,22 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/models/smart_currency.dart';
 import 'package:smart_case/models/smart_employee.dart';
+import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
+import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
+import 'package:smart_case/widgets/form_title.dart';
 import 'package:toast/toast.dart';
 
-import '../../database/requisition/requisition_model.dart';
-import '../../database/file/file_model.dart';
-import '../../services/apis/smartcase_api.dart';
-import '../../theme/color.dart';
-import '../../util/smart_case_init.dart';
-import '../../widgets/custom_searchable_async_bottom_sheet_contents.dart';
-import '../../widgets/form_title.dart';
+import '../../services/apis/smartcase_apis/file_api.dart';
+import '../../widgets/better_toast.dart';
 
 class RequisitionForm extends StatefulWidget {
   const RequisitionForm({
@@ -276,12 +278,12 @@ class _RequisitionFormState extends State<RequisitionForm> {
   }
 
   _reloadFiles() async {
-    files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+    files = await FileApi.fetchAll();
     setState(() {});
   }
 
   _loadFiles() async {
-    files = await SmartCaseApi.fetchAllFiles(currentUser.token);
+    files = await FileApi.fetchAll();
   }
 
   _loadApprovers() async {
@@ -390,19 +392,34 @@ class _RequisitionFormState extends State<RequisitionForm> {
       ],
     );
 
-    SmartCaseApi.smartPost(
-      'api/accounts/cases/${file!.getId()}/requisitions',
-      currentUser.token,
-      smartRequisition.createRequisitionToJson(),
-      onError: () {
-        Toast.show("An error occurred",
-            duration: Toast.lengthLong, gravity: Toast.bottom);
-      },
-      onSuccess: () {
-        Toast.show("Requisition added successfully",
-            duration: Toast.lengthLong, gravity: Toast.bottom);
-      },
-    );
+    (widget.requisition == null)
+        ? SmartCaseApi.smartPost(
+            'api/accounts/cases/${file!.getId()}/requisitions',
+            currentUser.token,
+            smartRequisition.createRequisitionToJson(),
+            onError: () {
+              BetterToast(text: "An error occurred");
+            },
+            onSuccess: () {
+              Toast.show("Requisition added successfully",
+                  duration: Toast.lengthLong, gravity: Toast.bottom);
+              BetterToast(text: "Requisition added successfully");
+            },
+          )
+        : SmartCaseApi.smartPut(
+            'api/accounts/cases/${file!.getId()}/requisitions/'
+            '${widget.requisition!.id}',
+            currentUser.token,
+            smartRequisition.createRequisitionToJson(),
+            onError: () {
+              BetterToast(text: "An error occurred");
+            },
+            onSuccess: () {
+              Toast.show("Requisition updated successfully",
+                  duration: Toast.lengthLong, gravity: Toast.bottom);
+              BetterToast(text: "Requisition updated successfully");
+            },
+          );
 
     Navigator.pop(context);
   }
