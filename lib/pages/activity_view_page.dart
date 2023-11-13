@@ -19,9 +19,13 @@ class _ActivityViewPageState extends State<ActivityViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    String activityIdAsString =
-        ModalRoute.of(context)!.settings.arguments as String;
-    activityId = int.parse(activityIdAsString);
+    if (activity == null) {
+      activity = ModalRoute.of(context)!.settings.arguments as SmartActivity;
+    } else {
+      String activityIdAsString =
+          ModalRoute.of(context)!.settings.arguments as String;
+      activityId = int.parse(activityIdAsString);
+    }
 
     return Scaffold(
       backgroundColor: AppColors.appBgColor,
@@ -40,29 +44,35 @@ class _ActivityViewPageState extends State<ActivityViewPage> {
   }
 
   Widget _buildBody() {
-    return Column(
-      children: [
-        TextItem(title: "Activity Name:", data: activity!.getName()),
-        const Divider(indent: 10, endIndent: 10),
-        TextItem(title: "Case File Name:", data: activity!.file!.fileName!),
-        const Divider(indent: 10, endIndent: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextItem(title: "Activity Date:", data: activity!.date!.toString()),
-            const TextItem(title: "Done By:", data: "Coming soon..."),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextItem(title: "From:", data: activity!.startTime.toString()),
-            TextItem(title: "To:", data: activity!.endTime.toString()),
-          ],
-        ),
-        const Divider(indent: 10, endIndent: 10),
-        TextItem(title: "Description:", data: activity!.description!),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextItem(title: "Activity Name:", data: activity!.getName()),
+          const Divider(indent: 10, endIndent: 10),
+          TextItem(title: "Case File Name:", data: activity!.file!.fileName!),
+          const Divider(indent: 10, endIndent: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextItem(
+                  title: "Activity Date:", data: activity!.date!.toString()),
+              const TextItem(title: "Done By:", data: "Coming soon..."),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextItem(title: "From:", data: activity!.startTime.toString()),
+              TextItem(title: "To:", data: activity!.endTime.toString()),
+            ],
+          ),
+          const Divider(indent: 10, endIndent: 10),
+          TextItem(title: "Description:", data: activity!.description!),
+        ],
+      ),
     );
   }
 

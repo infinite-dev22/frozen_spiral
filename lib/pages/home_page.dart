@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/module_item.dart';
+import 'package:toast/toast.dart';
 
 import '../util/smart_case_init.dart';
 
@@ -13,8 +14,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ToastContext toast = ToastContext();
+
   @override
   Widget build(BuildContext context) {
+    toast.init(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -102,12 +106,12 @@ class _HomePageState extends State<HomePage> {
                 width: 20,
               ),
               Expanded(
-                child: ModuleItem(
+                child: ModuleItem2(
                   name: 'Tasks',
                   color: Colors.white,
                   padding: cardPadding,
                   icon: Icons.task_outlined,
-                  onTap: () => Navigator.pushNamed(context, '/tasks'),
+                  // onTap: () => Navigator.pushNamed(context, '/tasks'),
                 ),
               ),
             ],
@@ -118,24 +122,26 @@ class _HomePageState extends State<HomePage> {
           Row(
             children: [
               Expanded(
-                child: ModuleItem(
+                child: ModuleItem2(
                   name: 'Engagements',
                   color: Colors.white,
                   padding: cardPadding,
                   icon: Icons.handshake_outlined,
-                  onTap: () => Navigator.pushNamed(context, '/engagements'),
+                  onTap: () => Toast.show("Coming soon...",
+                      duration: Toast.lengthLong, gravity: Toast.bottom),
+                  // onTap: () => Navigator.pushNamed(context, '/engagements'),
                 ),
               ),
               const SizedBox(
                 width: 20,
               ),
               Expanded(
-                child: ModuleItem(
+                child: ModuleItem2(
                   name: 'Reports',
                   color: Colors.white,
                   padding: cardPadding,
                   icon: Icons.bar_chart_rounded,
-                  onTap: () => Navigator.pushNamed(context, '/reports'),
+                  // onTap: () => Navigator.pushNamed(context, '/reports'),
                 ),
               ),
             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as mu;
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
@@ -42,8 +43,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return mu.Scaffold(
+      appBar: mu.AppBar(
         iconTheme: const IconThemeData(
           color: AppColors.white,
         ),
@@ -58,38 +59,51 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           onChanged: _searchActivities,
         ),
       ),
-      body: SmartRefresher(
-        enablePullDown: true,
-        enablePullUp: true,
-        header: const WaterDropHeader(
-            refresh: CupertinoActivityIndicator(),
-            waterDropColor: AppColors.primary),
-        footer: CustomFooter(
-          builder: (context, mode) {
-            Widget body;
-            if (mode == LoadStatus.idle) {
-              body = const Text("more data");
-            } else if (mode == LoadStatus.loading) {
-              body = const CupertinoActivityIndicator();
-            } else if (mode == LoadStatus.failed) {
-              body = const Text("Load Failed! Pull up to retry");
-            } else if (mode == LoadStatus.noMore) {
-              body = const Text("That's all for now");
-            } else {
-              body = const Text("No more Data");
-            }
-            return SizedBox(
-              height: 15,
-              child: Center(child: body),
-            );
-          },
-        ),
-        controller: _refreshController,
-        child: _buildBody(),
-        onLoading: _onLoading,
+
+      body: LiquidPullToRefresh(
         onRefresh: _onRefresh,
-        enableTwoLevel: true,
+        color: AppColors.primary,
+        backgroundColor: AppColors.white,
+        child: _buildBody(),
+        showChildOpacityTransition: false,
       ),
+      // body: mu.RefreshIndicator(
+      //   onRefresh: _onRefresh,
+      //   child: _buildBody(),
+      // ),
+
+      // body: SmartRefresher(
+      //   enablePullDown: true,
+      //   enablePullUp: true,
+      //   header: const WaterDropHeader(
+      //       refresh: CupertinoActivityIndicator(),
+      //       waterDropColor: AppColors.primary),
+      //   footer: CustomFooter(
+      //     builder: (context, mode) {
+      //       Widget body;
+      //       if (mode == LoadStatus.idle) {
+      //         body = const Text("more data");
+      //       } else if (mode == LoadStatus.loading) {
+      //         body = const CupertinoActivityIndicator();
+      //       } else if (mode == LoadStatus.failed) {
+      //         body = const Text("Load Failed! Pull up to retry");
+      //       } else if (mode == LoadStatus.noMore) {
+      //         body = const Text("That's all for now");
+      //       } else {
+      //         body = const Text("No more Data");
+      //       }
+      //       return SizedBox(
+      //         height: 15,
+      //         child: Center(child: body),
+      //       );
+      //     },
+      //   ),
+      //   controller: _refreshController,
+      //   child: _buildBody(),
+      //   onLoading: _onLoading,
+      //   onRefresh: _onRefresh,
+      //   enableTwoLevel: true,
+      // ),
     );
   }
 
@@ -234,30 +248,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     });
   }
 
-  void _onRefresh() async {
-    RequisitionApi.fetchAll()
-        .then((value) => {
-              _refreshController.refreshCompleted(),
-              if (mounted) setState(() {})
-            })
-        .onError((error, stackTrace) => {
-              _refreshController.refreshFailed(),
-              if (mounted) setState(() {}),
-            });
-  }
-
-  void _onLoading() async {
-    RequisitionApi.fetchAll()
-        .then((value) => {
-              if (value.isNotEmpty)
-                _refreshController.loadComplete()
-              else if (value.isEmpty)
-                _refreshController.loadNoData(),
-              if (mounted) setState(() {})
-            })
-        .onError((error, stackTrace) => {
-              _refreshController.loadFailed(),
-              if (mounted) setState(() {}),
-            });
+  Future<void> _onRefresh() async {
+    await RequisitionApi.fetchAll();
   }
 }

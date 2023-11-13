@@ -76,6 +76,8 @@ dependencies:
   flutter_slidable: ^3.0.1
   paulonia_cache_image: ^1.1.0
   dio_cache_interceptor: ^3.4.4
+  custom_refresh_indicator: ^3.0.0
+  liquid_pull_to_refresh: ^3.0.1
 
 dev_dependencies:
   flutter_test:
