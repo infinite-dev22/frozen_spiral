@@ -1,6 +1,6 @@
 class ScreenArguments {
-  final int requisitionId;
-  final int fileId;
+  final dynamic fieldOne;
+  final dynamic fieldTwo;
 
-  ScreenArguments(this.requisitionId, this.fileId);
+  ScreenArguments(this.fieldOne, this.fieldTwo);
 }

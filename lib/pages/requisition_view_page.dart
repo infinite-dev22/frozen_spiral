@@ -1,15 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/requisition_widget/requisition_item.dart';
-import 'package:toast/toast.dart';
 
 import '../theme/color.dart';
 import '../util/smart_case_init.dart';
-import '../widgets/better_toast.dart';
 import '../widgets/custom_appbar.dart';
 
 class RequisitionViewPage extends StatefulWidget {
@@ -20,8 +21,6 @@ class RequisitionViewPage extends StatefulWidget {
 }
 
 class _RequisitionViewPageState extends State<RequisitionViewPage> {
-  final ToastContext toast = ToastContext();
-
   SmartRequisition? requisition;
   late int requisitionId;
 
@@ -33,7 +32,6 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    toast.init(context);
     try {
       String requisitionIdAsString =
           ModalRoute.of(context)!.settings.arguments as String;
@@ -97,7 +95,10 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
             ],
           )
         : const Center(
-            child: CircularProgressIndicator(),
+            child: CupertinoActivityIndicator(
+              color: AppColors.gray45,
+              radius: 20,
+            ),
           );
   }
 
@@ -293,15 +294,38 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   _onSuccess(String text) {
-    BetterToast(text: text);
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   _onError() {
-    BetterToast(text: "An error occurred");
-    setState(() {});
+    Fluttertoast.showToast(
+        msg: "An error occurred",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    if (mounted) setState(() {});
   }
 
   _submitData(String value, String toastText) {
+    // RequisitionApi.post({
+    //   "forms": 1,
+    //   "payout_amount": amountController.text.trim(),
+    //   "action_comment": commentController.text.trim(),
+    //   "submit": value,
+    // }, requisition!.id!,
+    //         onError: _onError, onSuccess: () => _onSuccess(toastText))
+    //     .onError((error, stackTrace) => _onError());
+
     SmartCaseApi.smartPost(
       'api/accounts/requisitions/${requisition!.id}/process',
       currentUser.token,
@@ -316,25 +340,14 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
     );
   }
 
-  // _navigateBack() {
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => const RequisitionsPage(),
-  //     ),
-  //   );
-  // }
-
   _setupData() async {
-    await SmartCaseApi.smartDioFetch(
-        "api/accounts/requisitions/$requisitionId/process", currentUser.token,
-        onError: () {
+    await RequisitionApi.fetch(requisitionId, onError: () {
       _onError();
-    }).then((value) {
-      requisition = SmartRequisition.fromJsonToView(value['requisition']);
+    }).then((requisition) {
+      this.requisition = requisition;
       amountController.text =
-          formatter.format(double.parse(requisition!.amount!));
-      setState(() {});
+          formatter.format(double.parse(requisition.amount!));
+      if (mounted) setState(() {});
     });
   }
 }

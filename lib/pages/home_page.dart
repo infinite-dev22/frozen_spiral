@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/module_item.dart';
-import 'package:toast/toast.dart';
 
 import '../util/smart_case_init.dart';
+import '../widgets/better_toast.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,11 +14,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final ToastContext toast = ToastContext();
-
   @override
   Widget build(BuildContext context) {
-    toast.init(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
@@ -127,8 +124,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                   padding: cardPadding,
                   icon: Icons.handshake_outlined,
-                  onTap: () => Toast.show("Coming soon...",
-                      duration: Toast.lengthLong, gravity: Toast.bottom),
+                  onTap: () => const BetterSuccessToast(text: "Coming soon..."),
                   // onTap: () => Navigator.pushNamed(context, '/engagements'),
                 ),
               ),

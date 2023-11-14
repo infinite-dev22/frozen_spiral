@@ -1,79 +1,62 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/retry.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:smart_case/models/user.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
+import '../../data/global_data.dart';
+
 class AuthApis {
-  static signInUser(String email, String password,
-      {Function()? onSuccess,
-      Function()? onNoUser,
-      Function()? onWrongPassword,
-      Function()? onError,
-      Function(dynamic e)? onErrors}) async {
-    var client = RetryClient(http.Client());
+  static Future uploadFCMToken(String email) async {
+    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    dio.options.headers['content-Type'] = 'application/json';
+    dio.options.headers['Accept'] = 'application/json';
+    dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
+    dio.options.followRedirects = false;
+
     try {
-      var response = await client
-          .post(Uri.https('app.smartcase.co.ug', 'api/login'), body: {
-        'email': email,
-      });
-      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-      bool success = decodedResponse['success'] as bool;
+      await dio.post('https://app.smartcase.co.ug/api/save/fcm/token',
+          data: jsonEncode({'fcm_token': currentUserFcmToken, 'email': email}));
+    } finally {
+      dio.close();
+    }
+  }
+
+  static Future<CurrentSmartUser?> signInUser(
+    String url,
+    String email,
+    String password, {
+    Function()? onSuccess,
+    Function()? onWrongPassword,
+    Function()? onError,
+  }) async {
+    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    dio.options.headers['content-Type'] = 'application/json';
+    dio.options.headers['Accept'] = 'application/json';
+    dio.options.followRedirects = false;
+
+    try {
+      var response = await dio.post(
+          Uri.https(url.replaceRange(0, 8, ''), 'api/login').toString(),
+          data: jsonEncode({'email': email, 'password': password}));
 
       if (response.statusCode == 200) {
+        bool success = response.data['success'] as bool;
+
         if (success) {
-          String url = decodedResponse['user']['app_url'];
+          response.data['url'] = url;
+          var user = CurrentSmartUser.fromJson(response.data);
+          currentUser = user;
 
-          var userData = await client.post(
-              Uri.https(url.replaceRange(0, 8, ''), 'api/login'),
-              body: {'email': email, 'password': password});
-
-          var userDataDecodedResponse =
-              jsonDecode(utf8.decode(userData.bodyBytes)) as Map;
-
-          bool userSuccess = userDataDecodedResponse['success'] as bool;
-
-          userDataDecodedResponse['url'] = url;
-          print("Stored Token: $currentUserFcmToken");
-
-          if (userSuccess) {
-            currentUser = CurrentSmartUser.fromJson(userDataDecodedResponse);
-
-            await client.post(
-                Uri.parse('https://app.smartcase.co.ug/api/save/fcm/token'),
-                body: jsonEncode(
-                    {'fcm_token': currentUserFcmToken, 'email': email}),
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                      "Bearer ${currentUser.token}",
-                  "content-Type": "application/json",
-                  "Accept": "application/json",
-                });
-            if (onSuccess != null) {
-              onSuccess();
-            }
-          } else {
-            if (userDataDecodedResponse['message'] == 'USER_NOT_FOUND') {
-              if (onNoUser != null) {
-                onNoUser();
-              }
-            } else if (userDataDecodedResponse['message'] ==
-                'WRONG_PASSWORD_PROVIDED') {
-              if (onWrongPassword != null) {
-                onWrongPassword();
-              }
-            }
+          if (onSuccess != null) {
+            onSuccess();
           }
+          return user;
         } else {
-          if (decodedResponse['message'] == 'USER_NOT_FOUND') {
-            if (onNoUser != null) {
-              onNoUser();
-            }
-          } else if (decodedResponse['message'] == 'WRONG_PASSWORD_PROVIDED') {
+          if (response.data['message'] == 'WRONG_PASSWORD_PROVIDED') {
             if (onWrongPassword != null) {
               onWrongPassword();
             }
@@ -84,36 +67,62 @@ class AuthApis {
           onError();
         }
       }
-    }
-    // catch (e) {
-    //   if (onError != null) {
-    //     onError();
-    //   }
-    //
-    //   // For testing purposes only
-    //   if (onErrors != null) {
-    //     onErrors(e);
-    //   }
-    // }
-    finally {
-      client.close();
+    } finally {
+      dio.close();
     }
     return null;
   }
 
-  static signOutUser(
-      {required Function(void) onSuccess,
-      required Function(Object object, StackTrace stackTrace) onError}) async {
-    final box = GetSecureStorage(
+  static Future<String?> checkIfUserExists(
+    String email, {
+    Function()? onSuccess,
+    Function()? onNoUser,
+    Function()? onError,
+  }) async {
+    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+
+    dio.options.headers['content-Type'] = 'application/json';
+    dio.options.headers['Accept'] = 'application/json';
+    dio.options.followRedirects = false;
+
+    try {
+      var response = await dio.post(
+          Uri.https('app.smartcase.co.ug', 'api/login').toString(),
+          data: json.encode({
+            'email': email,
+          }));
+
+      if (response.statusCode == 200) {
+        bool success = response.data['success'] as bool;
+
+        if (success) {
+          return response.data['user']['app_url'];
+        } else {
+          if (response.data['message'] == 'USER_NOT_FOUND') {
+            if (onNoUser != null) {
+              onNoUser();
+            }
+          }
+        }
+      } else {
+        if (onError != null) {
+          onError();
+        }
+      }
+    } finally {
+      dio.close();
+    }
+    return null;
+  }
+
+  static Future signOutUser() async {
+    final preferences = GetSecureStorage(
         password: 'infosec_technologies_ug_smart_case_law_manager');
 
-    // await storage.delete(key: 'email').then(onSuccess).onError(onError);
-    // await storage.delete(key: 'name').then(onSuccess).onError(onError);
-    // await storage.delete(key: 'image').then(onSuccess).onError(onError);
     await PCacheImage.clearAllCacheImages();
-    box.remove('email');
-    box.remove('name');
-    box.remove('image');
+    await preferences.remove('email');
+    await preferences.remove('name');
+    await preferences.remove('image');
   }
 
   static requestReset(String email,
@@ -122,22 +131,29 @@ class AuthApis {
       Function()? onWrongPassword,
       Function()? onError,
       Function(dynamic e)? onErrors}) async {
-    var client = RetryClient(http.Client());
+    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+
+    dio.options.headers['content-Type'] = 'application/json';
+    dio.options.headers['Accept'] = 'application/json';
+    dio.options.followRedirects = false;
+
     try {
-      var response = await client
-          .post(Uri.https('app.smartcase.co.ug', 'api/login'), body: {
-        'email': email,
-      });
-      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-      bool success = decodedResponse['success'] as bool;
+      var response = await dio.post(
+          Uri.https('app.smartcase.co.ug', 'api/login').toString(),
+          data: json.encode({
+            'email': email,
+          }));
 
       if (response.statusCode == 200) {
-        if (success) {
-          String url = decodedResponse['user']['app_url'];
+        bool success = response.data['success'] as bool;
 
-          var resetRequest = await client.post(
-              Uri.https(url.replaceRange(0, 8, ''), 'api/password/email'),
-              body: {'email': email});
+        if (success) {
+          var url = response.data['user']['app_url'];
+
+          var resetRequest = await dio.post(
+              Uri.https(url.replaceRange(0, 8, ''), 'api/password/email')
+                  .toString(),
+              data: json.encode({'email': email}));
 
           if (resetRequest.statusCode == 200) {
             if (onSuccess != null) {
@@ -149,7 +165,7 @@ class AuthApis {
             }
           }
         } else {
-          if (decodedResponse['message'] == 'USER_NOT_FOUND') {
+          if (response.data['message'] == 'USER_NOT_FOUND') {
             if (onNoUser != null) {
               onNoUser();
             }
@@ -160,20 +176,8 @@ class AuthApis {
           onError();
         }
       }
+    } finally {
+      dio.close();
     }
-    // catch (e) {
-    //   if (onError != null) {
-    //     onError();
-    //   }
-    //
-    //   // For testing purposes only
-    //   if (onErrors != null) {
-    //     onErrors(e);
-    //   }
-    // }
-    finally {
-      client.close();
-    }
-    return null;
   }
 }

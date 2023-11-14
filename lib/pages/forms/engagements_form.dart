@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_case/models/smart_client.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_engagement.dart';
+import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:toast/toast.dart';
-
-import '../../models/smart_client.dart';
-import '../../services/apis/smartcase_api.dart';
-import '../../util/smart_case_init.dart';
-import '../../widgets/better_toast.dart';
-import '../../widgets/custom_accordion.dart';
-import '../../widgets/custom_searchable_async_bottom_sheet_contents.dart';
-import '../../widgets/custom_textbox.dart';
-import '../../widgets/form_title.dart';
+import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/better_toast.dart';
+import 'package:smart_case/widgets/custom_accordion.dart';
+import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
+import 'package:smart_case/widgets/custom_textbox.dart';
+import 'package:smart_case/widgets/form_title.dart';
 
 class EngagementForm extends StatefulWidget {
   final SmartEngagement? engagement;
@@ -26,7 +24,6 @@ class EngagementForm extends StatefulWidget {
 
 class _EngagementFormState extends State<EngagementForm> {
   final globalKey = GlobalKey();
-  final ToastContext toast = ToastContext();
   bool isTitleElevated = false;
 
   TextEditingController costController = TextEditingController();
@@ -49,8 +46,6 @@ class _EngagementFormState extends State<EngagementForm> {
 
   @override
   Widget build(BuildContext context) {
-    toast.init(context);
-
     return _buildBody();
   }
 
@@ -297,15 +292,15 @@ class _EngagementFormState extends State<EngagementForm> {
     (widget.engagement == null)
         ? SmartCaseApi.smartPost('api/crm/engagements', currentUser.token,
             smartEngagement.toCreateJson(), onError: () {
-            BetterToast(text: "An error occurred");
+            const BetterErrorToast(text: "An error occurred");
           }, onSuccess: () {
-            BetterToast(text: "Engagement added successfully");
+            const BetterSuccessToast(text: "Engagement added successfully");
           })
         : SmartCaseApi.smartPut('api/crm/engagements/${widget.engagement!.id}',
             currentUser.token, smartEngagement.toCreateJson(), onError: () {
-            BetterToast(text: "An error occurred");
+            const BetterErrorToast(text: "An error occurred");
           }, onSuccess: () {
-            BetterToast(text: "Engagement updated successfully");
+            const BetterSuccessToast(text: "Engagement updated successfully");
           });
 
     Navigator.pop(context);

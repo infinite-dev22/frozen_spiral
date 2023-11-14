@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as mu;
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
 import 'package:smart_case/theme/color.dart';
@@ -22,8 +21,6 @@ class RequisitionsPage extends StatefulWidget {
 }
 
 class _RequisitionsPageState extends State<RequisitionsPage> {
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
   TextEditingController filterController = TextEditingController();
 
   List<SmartRequisition> filteredRequisitions = List.empty(growable: true);

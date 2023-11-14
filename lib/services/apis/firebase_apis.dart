@@ -9,7 +9,8 @@ FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 class FirebaseApi {
   Future<void> initPushNotification() async {
-    NotificationSettings settings = await messaging.requestPermission(
+    // NotificationSettings settings =
+    await messaging.requestPermission(
       alert: true,
       announcement: true,
       badge: true,

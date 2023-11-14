@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_model.dart';
 
 class SmartActivity extends SmartModel {
@@ -19,6 +20,7 @@ class SmartActivity extends SmartModel {
   final DateTime? startTime;
   final DateTime? endTime;
   final List? emails;
+  final SmartEmployee? employee;
   final SmartFile? file;
   final SmartActivityStatus? caseActivityStatus;
 
@@ -39,6 +41,7 @@ class SmartActivity extends SmartModel {
     this.startTime,
     this.endTime,
     this.emails,
+    this.employee,
     this.file,
     this.caseActivityStatus,
   });
@@ -56,14 +59,12 @@ class SmartActivity extends SmartModel {
       courtFileNumber: json['case_file']['court_file_number'],
       activityDate: json['created_at'],
       employeeId: json['employee_id'],
-      date: DateFormat('dd/MM/yyyy').parse(DateFormat('dd/MM/yyyy')
-          .format(DateFormat('dd-MM-yy').parse(json['date']))),
+      date: DateTime.parse(json['date']),
       billable: json['is_billable'],
-      startTime: DateFormat('h:mm a').parse(DateFormat('h:mm a')
-          .format(DateFormat('yyyy-MM-ddThh:mm:ss').parse(json['from']))),
-      endTime: DateFormat('h:mm a').parse(DateFormat('h:mm a')
-          .format(DateFormat('yyyy-MM-ddThh:mm:ss').parse(json['to']))),
+      startTime: DateTime.parse(json['from']),
+      endTime: DateTime.parse(json['to']),
       emails: json['to_be_notified'],
+      employee: SmartEmployee.fromJson(json['employee']),
       file: SmartFile.fromJson(json['case_file']),
       caseActivityStatus:
           SmartActivityStatus.fromJson(json['case_activity_status']),

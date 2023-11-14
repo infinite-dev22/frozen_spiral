@@ -4,11 +4,14 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:smart_case/data/screen_arguments.dart';
 import 'package:smart_case/theme/color.dart';
 
 import '../models/smart_currency.dart';
 import '../services/apis/smartcase_api.dart';
 import '../services/apis/smartcase_apis/requisition_api.dart';
+import '../services/navigation/locator.dart';
+import '../services/navigation/navigator_service.dart';
 import '../util/smart_case_init.dart';
 import '../widgets/bottom_bar_item.dart';
 import 'activities_page.dart';
@@ -285,11 +288,9 @@ class _RootPageState extends State<RootPage> {
     Map currencyMap = await SmartCaseApi.smartFetch(
         'api/admin/currencytypes', currentUser.token);
     List? currencyList = currencyMap["currencytypes"];
-    setState(() {
-      currencies =
-          currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList();
-      currencyList = null;
-    });
+    currencies =
+        currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList();
+    currencyList = null;
   }
 
   @override
@@ -325,19 +326,28 @@ class _RootPageState extends State<RootPage> {
   void _handleMessage(RemoteMessage message) {
     String page = message.data['page'];
     if (page.toLowerCase() == "requisition") {
+      // locator<NavigationService>()
+      //     .navigateWithArgumentsTo("/requisition", message.data['Requisition']);
+
       Navigator.pushNamed(context, '/requisition',
-          arguments: message.data['requisition']);
+          arguments: ScreenArguments(
+              message.data['File'], message.data['Requisition']));
     }
     if (page.toLowerCase() == "activity") {
+      // locator<NavigationService>().navigateWithArgumentsTo("/activity",
+      //     ScreenArguments(message.data['File'], message.data['Activity']));
+
       Navigator.pushNamed(context, '/activity',
-          arguments: message.data['activity']);
+          arguments:
+              ScreenArguments(message.data['File'], message.data['Activity']));
     }
     // if (page.toLowerCase() == "task") {
     //   Navigator.pushNamed(context, '/task',
     //       arguments: message.data['task']);
     // }
     if (page.toLowerCase() == "file") {
-      Navigator.pushNamed(context, '/file', arguments: message.data['file']);
+      locator<NavigationService>()
+          .navigateWithArgumentsTo("/file", message.data['File']);
     }
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/services/apis/auth_apis.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-import 'package:toast/toast.dart';
 
 import 'custom_dropdowns.dart';
 import 'custom_images/custom_image.dart';
@@ -38,9 +37,6 @@ class AppBarContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ToastContext toast = ToastContext();
-    toast.init(context);
-
     return _buildAppBar(context);
   }
 
@@ -116,12 +112,8 @@ class AppBarContent extends StatelessWidget {
       return Navigator.pushNamed(context, '/profile');
     }
     if (value == 'Sign out') {
-      AuthApis.signOutUser(onSuccess: (value) {
-        Navigator.popUntil(context, (route) => false);
-        Navigator.pushNamed(context, '/');
-      }, onError: (Object object, StackTrace stackTrace) {
-        Toast.show("An error occurred",
-            duration: Toast.lengthLong, gravity: Toast.bottom);
+      AuthApis.signOutUser().then((value) {
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
       });
     }
   }

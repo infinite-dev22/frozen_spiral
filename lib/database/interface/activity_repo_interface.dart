@@ -1,5 +1,5 @@
 abstract class ActivityRepoInterface {
-  Future<Map<String, dynamic>> fetch(int id);
+  Future<Map<String, dynamic>> fetch(int fileId, int activityId);
 
   Future<Map<String, dynamic>> fetchAll({Map<String, dynamic>? body});
 

@@ -7,17 +7,15 @@ import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/models/smart_currency.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/better_toast.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
-import 'package:toast/toast.dart';
-
-import '../../services/apis/smartcase_apis/file_api.dart';
-import '../../widgets/better_toast.dart';
 
 class RequisitionForm extends StatefulWidget {
   const RequisitionForm({
@@ -37,7 +35,6 @@ class RequisitionForm extends StatefulWidget {
 
 class _RequisitionFormState extends State<RequisitionForm> {
   final globalKey = GlobalKey();
-  final ToastContext toast = ToastContext();
   bool isTitleElevated = false;
   bool isActivityLoading = false;
 
@@ -59,8 +56,6 @@ class _RequisitionFormState extends State<RequisitionForm> {
 
   @override
   Widget build(BuildContext context) {
-    toast.init(context);
-
     return _buildBody();
   }
 
@@ -398,12 +393,10 @@ class _RequisitionFormState extends State<RequisitionForm> {
             currentUser.token,
             smartRequisition.createRequisitionToJson(),
             onError: () {
-              BetterToast(text: "An error occurred");
+              const BetterErrorToast(text: "An error occurred");
             },
             onSuccess: () {
-              Toast.show("Requisition added successfully",
-                  duration: Toast.lengthLong, gravity: Toast.bottom);
-              BetterToast(text: "Requisition added successfully");
+              const BetterSuccessToast(text: "Requisition added successfully");
             },
           )
         : SmartCaseApi.smartPut(
@@ -412,12 +405,11 @@ class _RequisitionFormState extends State<RequisitionForm> {
             currentUser.token,
             smartRequisition.createRequisitionToJson(),
             onError: () {
-              BetterToast(text: "An error occurred");
+              const BetterErrorToast(text: "An error occurred");
             },
             onSuccess: () {
-              Toast.show("Requisition updated successfully",
-                  duration: Toast.lengthLong, gravity: Toast.bottom);
-              BetterToast(text: "Requisition updated successfully");
+              const BetterSuccessToast(
+                  text: "Requisition updated successfully");
             },
           );
 

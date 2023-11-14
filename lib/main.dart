@@ -32,28 +32,29 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Firebase core.
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  // FCM.
   await FirebaseApi().initPushNotification();
   appFCMInit();
   handleForegroundMasseges();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
+  // Navigator.
   setupLocator();
-
+  // Shared Preferences.
   await GetSecureStorage.init(
       password: 'infosec_technologies_ug_smart_case_law_manager');
-
+  // Local Storage.
   await Hive.initFlutter();
   if (!Hive.isAdapterRegistered(1)) {
     Hive.registerAdapter(NotificationsAdapter());
   }
   localStorage = await Hive.openBox<Notifications>('notifications');
-
+  // Image Caching.
   await PCacheImage.init(enableInMemory: true, maxInMemoryImages: 1);
-
+  // Start App.
   runApp(const MyApp());
 }
 

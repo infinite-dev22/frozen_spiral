@@ -4,7 +4,6 @@ import 'package:smart_case/database/activity/activity_model.dart';
 
 import '../../../theme/color.dart';
 import '../../pages/forms/activity_form.dart';
-import '../../util/smart_case_init.dart';
 import '../custom_icon_button.dart';
 
 class ActivityItem extends StatelessWidget {
@@ -61,13 +60,11 @@ class ActivityItem extends StatelessWidget {
                   children: [
                     _buildStringItem(
                         'Activity date',
-                        activity.activityDate == null
+                        activity.date == null
                             ? 'Null'
-                            : DateFormat("dd/MM/yyyy").format(
-                                DateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                                    .parse(activity.activityDate!))),
+                            : DateFormat('dd/MM/yyyy').format(activity.date!)),
                     _buildStringItem('Done by',
-                        '${currentUser.firstName} ${currentUser.middleName ?? ''} ${currentUser.lastName}'),
+                        '${activity.employee!.firstName} ${activity.employee!.lastName}'),
                   ],
                 ),
               ],
@@ -76,7 +73,8 @@ class ActivityItem extends StatelessWidget {
           Positioned(
             right: 0,
             top: 0,
-            child: MaterialButton(padding: const EdgeInsets.all(10),
+            child: MaterialButton(
+              padding: const EdgeInsets.all(5),
               onPressed: () => _onPressed(context),
               child: const CustomIconButton(),
             ),

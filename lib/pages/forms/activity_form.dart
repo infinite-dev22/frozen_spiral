@@ -10,14 +10,12 @@ import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/better_toast.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_searchable_async_activity_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_searchable_async_file_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
-import 'package:toast/toast.dart';
-
-import '../../widgets/better_toast.dart';
 
 class ActivityForm extends StatefulWidget {
   const ActivityForm({super.key, this.activity});
@@ -30,7 +28,6 @@ class ActivityForm extends StatefulWidget {
 
 class _ActivityFormState extends State<ActivityForm> {
   final globalKey = GlobalKey();
-  final ToastContext toast = ToastContext();
   bool isTitleElevated = false;
 
   final TextEditingController descriptionController = TextEditingController();
@@ -54,7 +51,6 @@ class _ActivityFormState extends State<ActivityForm> {
 
   @override
   Widget build(BuildContext context) {
-    toast.init(context);
     return _buildBody();
   }
 
@@ -328,11 +324,13 @@ class _ActivityFormState extends State<ActivityForm> {
 
     List? contacts = contactsMap['contacts'];
 
-    setState(() {
-      this.contacts =
-          contacts!.map((doc) => SmartContact.fromJson(doc)).toList();
-      contacts = null;
-    });
+    if (mounted) {
+      setState(() {
+        this.contacts =
+            contacts!.map((doc) => SmartContact.fromJson(doc)).toList();
+        contacts = null;
+      });
+    }
   }
 
   @override
@@ -411,17 +409,17 @@ class _ActivityFormState extends State<ActivityForm> {
             'api/cases/${file!.id}/activities',
             currentUser.token,
             SmartActivity.toActivityCreateJson(smartActivity), onError: () {
-            BetterToast(text: "An error occurred");
+            const BetterErrorToast(text: "An error occurred");
           }, onSuccess: () {
-            BetterToast(text: "Activity added successfully");
+            const BetterSuccessToast(text: "Activity added successfully");
           })
         : SmartCaseApi.smartPut(
             'api/cases/${file!.id}/activities/${widget.activity!.id}',
             currentUser.token,
             SmartActivity.toActivityCreateJson(smartActivity), onError: () {
-            BetterToast(text: "An error occurred");
+            const BetterErrorToast(text: "An error occurred");
           }, onSuccess: () {
-            BetterToast(text: "Activity updated successfully");
+            const BetterSuccessToast(text: "Activity updated successfully");
           });
 
     Navigator.pop(context);

@@ -13,7 +13,7 @@ class RequisitionBloc extends Bloc<RequisitionEvent, RequisitionState> {
   RequisitionBloc({required this.requisitionRepo})
       : super(const RequisitionState()) {
     on<GetRequisitions>(_mapGetRequisitionsEventToState);
-    on<GetRequisition>(_mapGetRequisitionEventToState);
+    // on<GetRequisition>(_mapGetRequisitionEventToState);
     // on<PostRequisition>(_mapPostRequisitionEventToState);
     // on<PutRequisition>(_mapPutRequisitionEventToState);
     on<SelectRequisition>(_mapSelectRequisitionEventToState);
@@ -37,21 +37,21 @@ class RequisitionBloc extends Bloc<RequisitionEvent, RequisitionState> {
     }
   }
 
-  void _mapGetRequisitionEventToState(
-      GetRequisition event, Emitter<RequisitionState> emit) async {
-    emit(state.copyWith(status: RequisitionStatus.loading));
-
-    try {
-      final requisitions = await RequisitionApi.fetch();
-
-      emit(
-        state.copyWith(
-            status: RequisitionStatus.success, requisitions: requisitions),
-      );
-    } catch (error) {
-      emit(state.copyWith(status: RequisitionStatus.error));
-    }
-  }
+  // void _mapGetRequisitionEventToState(
+  //     GetRequisition event, Emitter<RequisitionState> emit) async {
+  //   emit(state.copyWith(status: RequisitionStatus.loading));
+  //
+  //   try {
+  //     final requisitions = await RequisitionApi.fetch();
+  //
+  //     emit(
+  //       state.copyWith(
+  //           status: RequisitionStatus.success, requisitions: requisitions),
+  //     );
+  //   } catch (error) {
+  //     emit(state.copyWith(status: RequisitionStatus.error));
+  //   }
+  // }
 
   // void _mapPostRequisitionEventToState(
   //     PostRequisition file, Emitter<RequisitionState> emit) async {

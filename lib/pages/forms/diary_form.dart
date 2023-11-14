@@ -11,14 +11,12 @@ import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/better_toast.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_searchable_async_activity_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_searchable_async_file_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
-import 'package:toast/toast.dart';
-
-import '../../widgets/better_toast.dart';
 
 class DiaryForm extends StatefulWidget {
   const DiaryForm({
@@ -36,7 +34,6 @@ class DiaryForm extends StatefulWidget {
 
 class _DiaryFormState extends State<DiaryForm> {
   final globalKey = GlobalKey();
-  final ToastContext toast = ToastContext();
   bool isTitleElevated = false;
 
   final TextEditingController descriptionController = TextEditingController();
@@ -64,8 +61,6 @@ class _DiaryFormState extends State<DiaryForm> {
 
   @override
   Widget build(BuildContext context) {
-    toast.init(context);
-
     return _buildBody();
   }
 
@@ -395,15 +390,15 @@ class _DiaryFormState extends State<DiaryForm> {
         ? SmartCaseApi.smartPost(
             'api/calendar', currentUser.token, smartEvent.toJson(),
             onError: () {
-            BetterToast(text: "An error occurred");
+            const BetterErrorToast(text: "An error occurred");
           }, onSuccess: () {
-            BetterToast(text: "Event added successfully");
+            const BetterSuccessToast(text: "Event added successfully");
           })
         : SmartCaseApi.smartPut('api/calendar/${widget.event!.id}',
             currentUser.token, smartEvent.toJson(), onError: () {
-            BetterToast(text: "An error occurred");
+            const BetterErrorToast(text: "An error occurred");
           }, onSuccess: () {
-            BetterToast(text: "Event updated successfully");
+            const BetterSuccessToast(text: "Event updated successfully");
           });
 
     Navigator.pop(context);

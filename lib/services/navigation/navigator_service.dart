@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_case/data/screen_arguments.dart';
 
 class NavigationService {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -20,6 +21,14 @@ class NavigationService {
       );
     }
     return null;
+  }
+
+  Future<dynamic>? navigateWithArgumentsTo(
+      String routeName, dynamic arguments) {
+    return navigatorKey.currentState?.pushNamed(
+      routeName,
+      arguments: arguments,
+    );
   }
 
   goBack() {

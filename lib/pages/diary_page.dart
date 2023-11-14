@@ -183,12 +183,7 @@ class _DiaryPageState extends State<DiaryPage> {
       showTodayButton: true,
       onTap: (calendarTapDetails) {
         if (calendarTapDetails.appointments != null) {
-          if (calendarTapDetails.appointments!.length == 1) {
-            _allowViewNavigation = false;
-            _buildEventView(calendarTapDetails.appointments![0]);
-          } else {
-            _allowViewNavigation = true;
-          }
+          _buildEventView(calendarTapDetails.appointments![0]);
         }
       },
       controller: calendarController,

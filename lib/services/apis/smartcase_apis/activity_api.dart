@@ -23,22 +23,18 @@ class ActivityApi {
     return activities;
   }
 
-  static fetch({Function()? onSuccess, Function()? onError}) async {
-    // ActivityRepo activityRepo = ActivityRepo();
-    // List<SmartActivity> activities = List.empty(growable: true);
-    //
-    // Map response = await activityRepo.fetchAll();
-    // List activitiesMap = response['search']['activities'];
-    //
-    // if (activitiesMap.isNotEmpty) {
-    //   activities = activitiesMap
-    //       .map(
-    //         (activity) => SmartActivity.fromJson(activity),
-    //       )
-    //       .toList();
-    // }
-    //
-    // preloadedActivities = activities;
+  static Future<SmartActivity> fetch(int fileId, int activityId,
+      {Function()? onSuccess, Function()? onError}) async {
+    ActivityRepo activityRepo = ActivityRepo();
+    SmartActivity activity;
+
+    Map response = await activityRepo.fetch(fileId, activityId);
+
+    activity = SmartActivity.fromJson(response['caseActivity']);
+
+    print("SmartActivity: $activity");
+
+    return activity;
   }
 
   static post(Map<String, dynamic> data, int fileId,

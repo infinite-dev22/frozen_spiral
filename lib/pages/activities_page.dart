@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/activity_widget/activity_item.dart';
@@ -18,8 +17,6 @@ class ActivitiesPage extends StatefulWidget {
 }
 
 class _ActivitiesPageState extends State<ActivitiesPage> {
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
   TextEditingController filterController = TextEditingController();
 
   List<SmartActivity> activities = List.empty(growable: true);

@@ -8,10 +8,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_case/services/apis/auth_apis.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/auth_text_field.dart';
+import 'package:smart_case/widgets/better_toast.dart';
 import 'package:smart_case/widgets/custom_icon_holder.dart';
 import 'package:smart_case/widgets/custom_images/custom_image.dart';
 import 'package:smart_case/widgets/wide_button.dart';
-import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../util/smart_case_init.dart';
@@ -24,8 +24,6 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  final ToastContext toast = ToastContext();
-
   bool isAuthingUser = false;
   bool showLogin = true;
   bool isSendingResetRequest = false;
@@ -36,7 +34,6 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
-    toast.init(context);
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: _buildBody(),
@@ -179,17 +176,26 @@ class _WelcomePageState extends State<WelcomePage> {
         isAuthingUser = true;
       });
 
-      AuthApis.signInUser(
+      AuthApis.checkIfUserExists(
+        emailController.text.isNotEmpty ? emailController.text.trim() : email,
+        onError: _handleError,
+        onNoUser: _handleWrongEmail,
+      ).then(
+        (url) => AuthApis.signInUser(
+          url!,
           emailController.text.isNotEmpty ? emailController.text.trim() : email,
           passwordController.text.trim(),
           onSuccess: _signUserIn,
-          onNoUser: _handleWrongEmail,
           onWrongPassword: _handleWrongPass,
           onError: _handleError,
-          onErrors: _handleErrors);
+        ).then(
+          (user) => AuthApis.uploadFCMToken(emailController.text.isNotEmpty
+              ? emailController.text.trim()
+              : email),
+        ),
+      );
     } else {
-      Toast.show("Email not valid",
-          duration: Toast.lengthLong, gravity: Toast.bottom);
+      const BetterErrorToast(text: "Email not valid");
     }
   }
 
@@ -203,8 +209,7 @@ class _WelcomePageState extends State<WelcomePage> {
         emailController.text,
         onError: () {
           FocusManager.instance.primaryFocus?.unfocus();
-          Toast.show("An error occurred",
-              duration: Toast.lengthLong, gravity: Toast.bottom);
+          const BetterErrorToast(text: "An error occurred");
 
           setState(() {
             isSendingResetRequest = false;
@@ -213,8 +218,7 @@ class _WelcomePageState extends State<WelcomePage> {
         },
         onSuccess: () {
           FocusManager.instance.primaryFocus?.unfocus();
-          Toast.show("Reset password link sent on your email",
-              duration: Toast.lengthLong, gravity: Toast.bottom);
+          const BetterSuccessToast(text: "Reset password link sent on your email");
           setState(() {
             isSendingResetRequest = false;
             showLogin = true;
@@ -222,8 +226,7 @@ class _WelcomePageState extends State<WelcomePage> {
         },
       );
     } else {
-      Toast.show("Email not valid",
-          duration: Toast.lengthLong, gravity: Toast.bottom);
+      const BetterErrorToast(text: "Email not valid");
     }
   }
 
@@ -246,31 +249,28 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   _handleWrongEmail() {
-    Toast.show("User not found",
-        duration: Toast.lengthLong, gravity: Toast.bottom);
+    const BetterErrorToast(text: "User not found");
     setState(() {
       isAuthingUser = false;
     });
   }
 
   _handleErrors(e) {
-    Toast.show(e.toString(), duration: Toast.lengthLong, gravity: Toast.bottom);
+    BetterErrorToast(text: e.toString());
     setState(() {
       isAuthingUser = false;
     });
   }
 
   _handleWrongPass() {
-    Toast.show("Incorrect password",
-        duration: Toast.lengthLong, gravity: Toast.bottom);
+    const BetterErrorToast(text: "Incorrect password");
     setState(() {
       isAuthingUser = false;
     });
   }
 
   _handleError() {
-    Toast.show("An error occurred",
-        duration: Toast.lengthLong, gravity: Toast.bottom);
+    const BetterErrorToast(text: "An error occurred");
     setState(() {
       isAuthingUser = false;
     });

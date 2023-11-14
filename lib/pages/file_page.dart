@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smart_case/widgets/file_widget/file_item.dart';
 
 import '../database/file/file_model.dart';
@@ -17,8 +16,6 @@ class FilesPage extends StatefulWidget {
 }
 
 class _FilesPageState extends State<FilesPage> {
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
   TextEditingController filterController = TextEditingController();
 
   List<SmartFile> files = List.empty(growable: true);

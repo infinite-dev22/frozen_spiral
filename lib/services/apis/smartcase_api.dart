@@ -9,8 +9,6 @@ import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:smart_case/data/global_data.dart';
-import 'package:smart_case/database/activity/activity_model.dart';
-import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/util/smart_case_init.dart';
@@ -60,10 +58,9 @@ class SmartCaseApi {
 
   static smartPost(String endPoint, String token, Object data,
       {Function()? onSuccess, Function()? onError}) async {
-    var client = RetryClient(http.Client());
+    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
-      Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers['Accept'] = 'application/json';
       dio.options.headers["authorization"] = "Bearer $token";
@@ -91,7 +88,7 @@ class SmartCaseApi {
         }
       }
     } finally {
-      client.close();
+      dio.close();
     }
     return [];
   }

@@ -36,7 +36,11 @@ class _AlertsPageState extends State {
                 Hive.box<Notifications>('notifications').listenable(),
             builder: (context, Box<Notifications> box, _) {
               if (box.values.isEmpty) {
-                return const Center(child: Text("Your alerts appear here"));
+                return const Center(
+                    child: Text(
+                  "Your alerts appear here",
+                  style: TextStyle(color: AppColors.inActiveColor),
+                ));
               } else {
                 return ListView.builder(
                   itemCount: box.values.length,

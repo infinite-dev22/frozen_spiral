@@ -23,41 +23,21 @@ class RequisitionApi {
     return requisitions;
   }
 
-  static fetch({Function()? onSuccess, Function()? onError}) async {
-    RequisitionRepo requisitionRepo = RequisitionRepo();
-    List<SmartRequisition> requisitions = List.empty(growable: true);
-
-    Map response = await requisitionRepo.fetchAll();
-    List requisitionsMap = response['search']['requisitions'];
-
-    if (requisitionsMap.isNotEmpty) {
-      requisitions = requisitionsMap
-          .map(
-            (requisition) => SmartRequisition.fromJson(requisition),
-          )
-          .toList();
-    }
-
-    preloadedRequisitions = requisitions;
-  }
-
-  static post(Map<String, dynamic> data, int id,
+  static Future<SmartRequisition> fetch(int id,
       {Function()? onSuccess, Function()? onError}) async {
     RequisitionRepo requisitionRepo = RequisitionRepo();
-    // List<SmartRequisition> requisitions = List.empty(growable: true);
 
+    SmartRequisition requisition = await requisitionRepo
+        .fetch(id)
+        .then((response) => SmartRequisition.fromJson(response['requisition']));
+
+    return requisition;
+  }
+
+  static Future post(Map<String, dynamic> data, int id,
+      {Function()? onSuccess, Function()? onError}) async {
+    RequisitionRepo requisitionRepo = RequisitionRepo();
     var response = await requisitionRepo.post(data, id);
-    // List requisitionsMap = response['search']['requisitions'];
-    //
-    // if (requisitionsMap.isNotEmpty) {
-    //   requisitions = requisitionsMap
-    //       .map(
-    //         (requisition) => SmartRequisition.fromJson(requisition),
-    //       )
-    //       .toList();
-    // }
-    //
-    // preloadedRequisitions = requisitions;
     return response;
   }
 

@@ -11,8 +11,8 @@ import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/profile_widget/profile_detail_item.dart';
 import 'package:smart_case/widgets/profile_widget/profile_master_item.dart';
 import 'package:smart_case/widgets/wide_button.dart';
-import 'package:toast/toast.dart';
 
+import '../widgets/better_toast.dart';
 import '../widgets/custom_accordion.dart';
 import '../widgets/custom_dropdowns.dart';
 import '../widgets/form_title.dart';
@@ -25,7 +25,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final ToastContext toast = ToastContext();
   bool isTitleElevated = false;
 
   TextEditingController oldPasswordController = TextEditingController();
@@ -45,8 +44,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    toast.init(context);
-
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -119,11 +116,9 @@ class _ProfilePageState extends State<ProfilePage> {
       },
       onSelected: (value) {
         SmartCaseApi.uploadProfilePicture(value.file.first!, onError: () {
-          Toast.show("An error occurred",
-              duration: Toast.lengthLong, gravity: Toast.bottom);
+          const BetterErrorToast(text: "An error occurred");
         }, onSuccess: () {
-          Toast.show("Profile photo updated successfully",
-              duration: Toast.lengthLong, gravity: Toast.bottom);
+          const BetterSuccessToast(text: "Profile photo updated successfully");
         });
       },
     );

@@ -10,13 +10,11 @@ import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/better_toast.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
-import 'package:toast/toast.dart';
-
-import '../../widgets/better_toast.dart';
 
 class TaskForm extends StatefulWidget {
   const TaskForm({super.key, this.task});
@@ -28,8 +26,6 @@ class TaskForm extends StatefulWidget {
 }
 
 class _TaskFormState extends State<TaskForm> {
-  final ToastContext toast = ToastContext();
-
   bool isTitleElevated = false;
   bool isAssigneeLoading = false;
 
@@ -47,8 +43,6 @@ class _TaskFormState extends State<TaskForm> {
 
   @override
   Widget build(BuildContext context) {
-    toast.init(context);
-
     return _buildBody();
   }
 
@@ -277,15 +271,15 @@ class _TaskFormState extends State<TaskForm> {
         ? SmartCaseApi.smartPost(
             'api/crm/tasks', currentUser.token, smartTask.toCreateJson(),
             onError: () {
-            BetterToast(text: "An error occurred");
+            const BetterErrorToast(text: "An error occurred");
           }, onSuccess: () {
-            BetterToast(text: "Engagement added successfully");
+            const BetterSuccessToast(text: "Engagement added successfully");
           })
         : SmartCaseApi.smartPut('api/crm/tasks/${widget.task!.id}',
             currentUser.token, smartTask.toCreateJson(), onError: () {
-            BetterToast(text: "An error occurred");
+            const BetterErrorToast(text: "An error occurred");
           }, onSuccess: () {
-            BetterToast(text: "Engagement updated successfully");
+            const BetterSuccessToast(text: "Engagement updated successfully");
           });
 
     Navigator.pop(context);
