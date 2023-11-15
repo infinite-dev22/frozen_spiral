@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/activity_widget/activity_item.dart';
 
 import '../services/apis/smartcase_apis/activity_api.dart';
 import '../theme/color.dart';
+import '../widgets/better_toast.dart';
 import '../widgets/custom_appbar.dart';
 
 class ActivitiesPage extends StatefulWidget {
@@ -18,8 +20,8 @@ class ActivitiesPage extends StatefulWidget {
 
 class _ActivitiesPageState extends State<ActivitiesPage> {
   TextEditingController filterController = TextEditingController();
+  bool _doneLoading = false;
 
-  List<SmartActivity> activities = List.empty(growable: true);
   List<SmartActivity> filteredActivities = List.empty(growable: true);
   final List<String>? filters = [
     "Name",
@@ -37,7 +39,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
         ),
         backgroundColor: AppColors.primary,
         title: AppBarContent(
-          isNetwork: currentUserImage != null ? true : false,
+          isNetwork: currentUser.avatar != null ? true : false,
           searchable: true,
           filterable: true,
           search: 'activities',
@@ -95,7 +97,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
   }
 
   _buildNonSearchedBody() {
-    return (activities.isNotEmpty)
+    return (_doneLoading && preloadedActivities.isNotEmpty)
         ? ListView.builder(
             padding: const EdgeInsets.only(
               left: 10,
@@ -103,23 +105,30 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
               right: 10,
               bottom: 80,
             ),
-            itemCount: activities.length,
+            itemCount: preloadedActivities.length,
             itemBuilder: (context, index) {
               return ActivityItem(
-                activity: activities[index],
+                activity: preloadedActivities[index],
                 padding: 20,
                 color: Colors.white,
                 onTap: () => Navigator.pushNamed(
                   context,
                   '/activity',
-                  arguments: activities[index],
+                  arguments: preloadedActivities[index],
                 ),
               );
             },
           )
-        : const Center(
-            child: CupertinoActivityIndicator(radius: 20),
-          );
+        : (_doneLoading && preloadedActivities.isEmpty)
+            ? const Center(
+                child: Text(
+                  "Your activities appear here",
+                  style: TextStyle(color: AppColors.inActiveColor),
+                ),
+              )
+            : const Center(
+                child: CupertinoActivityIndicator(radius: 20),
+              );
   }
 
   _buildSearchedBody() {
@@ -158,7 +167,16 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
   }
 
   Future<void> _setUpData() async {
-    activities = await ActivityApi.fetchAll();
+    await ActivityApi.fetchAll().then((value) {
+      _doneLoading = true;
+      setState(() {});
+    }).onError((error, stackTrace) {
+      _doneLoading = true;
+      const BetterErrorToast(
+        text: "An error occurred",
+      );
+      setState(() {});
+    });
     filterController.text == 'Name';
     setState(() {});
   }
@@ -166,32 +184,41 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
   _searchActivities(String value) {
     filteredActivities.clear();
     if (filterController.text == 'File Name') {
-      filteredActivities.addAll(activities.where((smartActivity) =>
+      filteredActivities.addAll(preloadedActivities.where((smartActivity) =>
           smartActivity.file!
               .getName()
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'File Number') {
-      filteredActivities.addAll(activities.where((smartActivity) =>
+      filteredActivities.addAll(preloadedActivities.where((smartActivity) =>
           smartActivity.fileNumber!
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'File Number (Court)') {
-      filteredActivities.addAll(activities.where((smartActivity) =>
+      filteredActivities.addAll(preloadedActivities.where((smartActivity) =>
           smartActivity.courtFileNumber!
               .toLowerCase()
               .contains(value.toLowerCase())));
       setState(() {});
     } else {
-      filteredActivities.addAll(activities.where((smartActivity) =>
+      filteredActivities.addAll(preloadedActivities.where((smartActivity) =>
           smartActivity.getName().toLowerCase().contains(value.toLowerCase())));
       setState(() {});
     }
   }
 
   Future<void> _onRefresh() async {
-    await ActivityApi.fetchAll();
+    await ActivityApi.fetchAll().then((value) {
+      _doneLoading = true;
+      setState(() {});
+    }).onError((error, stackTrace) {
+      _doneLoading = true;
+      const BetterErrorToast(
+        text: "An error occurred",
+      );
+      setState(() {});
+    });
   }
 }

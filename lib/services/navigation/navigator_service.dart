@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smart_case/data/screen_arguments.dart';
 
 class NavigationService {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

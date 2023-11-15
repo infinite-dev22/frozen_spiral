@@ -37,7 +37,7 @@ class _DiaryPageState extends State<DiaryPage> {
 
   final bool _showLeadingAndTrailingDates = false;
   final bool _showDatePickerButton = true;
-  bool _allowViewNavigation = true;
+  final bool _allowViewNavigation = true;
   final bool _showCurrentTimeIndicator = true;
 
   final ViewNavigationMode _viewNavigationMode = ViewNavigationMode.snap;
@@ -75,7 +75,7 @@ class _DiaryPageState extends State<DiaryPage> {
         backgroundColor: AppColors.primary,
         title: AppBarContent(
           canNavigate: true,
-          isNetwork: currentUserImage != null ? true : false,
+          isNetwork: currentUser.avatar != null ? true : false,
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -323,7 +323,7 @@ class _DiaryPageState extends State<DiaryPage> {
         }
       }
     }
-    setState(() {});
+    if (mounted) setState(() {});
     return dataCollection;
   }
 

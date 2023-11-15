@@ -19,6 +19,7 @@ class ActivityApi {
           .toList();
     }
 
+    preloadedActivities.clear();
     preloadedActivities = activities;
     return activities;
   }
@@ -31,8 +32,6 @@ class ActivityApi {
     Map response = await activityRepo.fetch(fileId, activityId);
 
     activity = SmartActivity.fromJson(response['caseActivity']);
-
-    print("SmartActivity: $activity");
 
     return activity;
   }

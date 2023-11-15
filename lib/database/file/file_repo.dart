@@ -79,7 +79,7 @@ class FileRepo extends FileRepoInterface {
   }
 
   @override
-  Future<dynamic> post(Map<String, dynamic> data, int fileId) async {
+  Future<dynamic> post(Map<String, dynamic> data, int id) async {
     // Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
     //
     // try {
@@ -111,7 +111,7 @@ class FileRepo extends FileRepoInterface {
   }
 
   @override
-  Future<dynamic> put(Map<String, dynamic> data, int fileId) async {
+  Future<dynamic> put(Map<String, dynamic> data, int id) async {
     // Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
     //
     // try {

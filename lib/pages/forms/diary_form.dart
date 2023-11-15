@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
@@ -11,7 +12,6 @@ import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-import 'package:smart_case/widgets/better_toast.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_searchable_async_activity_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_searchable_async_file_bottom_sheet_contents.dart';
@@ -390,15 +390,43 @@ class _DiaryFormState extends State<DiaryForm> {
         ? SmartCaseApi.smartPost(
             'api/calendar', currentUser.token, smartEvent.toJson(),
             onError: () {
-            const BetterErrorToast(text: "An error occurred");
+            Fluttertoast.showToast(
+                msg: "An error occurred",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: AppColors.red,
+                textColor: AppColors.white,
+                fontSize: 16.0);
           }, onSuccess: () {
-            const BetterSuccessToast(text: "Event added successfully");
+            Fluttertoast.showToast(
+                msg: "Event added successfully",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: AppColors.green,
+                textColor: AppColors.white,
+                fontSize: 16.0);
           })
         : SmartCaseApi.smartPut('api/calendar/${widget.event!.id}',
             currentUser.token, smartEvent.toJson(), onError: () {
-            const BetterErrorToast(text: "An error occurred");
+            Fluttertoast.showToast(
+                msg: "An error occurred",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: AppColors.red,
+                textColor: AppColors.white,
+                fontSize: 16.0);
           }, onSuccess: () {
-            const BetterSuccessToast(text: "Event updated successfully");
+            Fluttertoast.showToast(
+                msg: "Event updated successfully",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: AppColors.green,
+                textColor: AppColors.white,
+                fontSize: 16.0);
           });
 
     Navigator.pop(context);

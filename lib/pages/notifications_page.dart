@@ -22,7 +22,7 @@ class _AlertsPageState extends State {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         title: AppBarContent(
-          isNetwork: currentUserImage != null ? true : false,
+          isNetwork: currentUser.avatar != null ? true : false,
         ),
       ),
       body: _buildBody(),

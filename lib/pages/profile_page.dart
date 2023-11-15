@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: AppColors.primary,
         title: AppBarContent(
           canNavigate: true,
-          isNetwork: currentUserImage != null ? true : false,
+          isNetwork: currentUser.avatar != null ? true : false,
         ),
       ),
       body: _buildBody(),
@@ -64,9 +64,9 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.all(16),
       children: [
         ProfileMasterItem(
-          image: currentUserImage,
+          image: currentUser.avatar,
           isFile: false,
-          isNetwork: currentUserImage != null ? true : false,
+          isNetwork: currentUser.avatar != null ? true : false,
           color: Colors.white,
           padding: 20,
           changePhotoTap: _changePhotoTapped,

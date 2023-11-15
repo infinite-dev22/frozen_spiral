@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_case/services/apis/auth_apis.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/auth_text_field.dart';
-import 'package:smart_case/widgets/better_toast.dart';
 import 'package:smart_case/widgets/custom_icon_holder.dart';
 import 'package:smart_case/widgets/custom_images/custom_image.dart';
 import 'package:smart_case/widgets/wide_button.dart';
@@ -195,7 +195,14 @@ class _WelcomePageState extends State<WelcomePage> {
         ),
       );
     } else {
-      const BetterErrorToast(text: "Email not valid");
+      Fluttertoast.showToast(
+          msg: "Email not valid",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: AppColors.red,
+          textColor: AppColors.white,
+          fontSize: 16.0);
     }
   }
 
@@ -209,7 +216,14 @@ class _WelcomePageState extends State<WelcomePage> {
         emailController.text,
         onError: () {
           FocusManager.instance.primaryFocus?.unfocus();
-          const BetterErrorToast(text: "An error occurred");
+          Fluttertoast.showToast(
+              msg: "An error occurred",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: AppColors.red,
+              textColor: AppColors.white,
+              fontSize: 16.0);
 
           setState(() {
             isSendingResetRequest = false;
@@ -218,7 +232,14 @@ class _WelcomePageState extends State<WelcomePage> {
         },
         onSuccess: () {
           FocusManager.instance.primaryFocus?.unfocus();
-          const BetterSuccessToast(text: "Reset password link sent on your email");
+          Fluttertoast.showToast(
+              msg: "Reset password link sent on your email",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: AppColors.green,
+              textColor: AppColors.white,
+              fontSize: 16.0);
           setState(() {
             isSendingResetRequest = false;
             showLogin = true;
@@ -226,7 +247,14 @@ class _WelcomePageState extends State<WelcomePage> {
         },
       );
     } else {
-      const BetterErrorToast(text: "Email not valid");
+      Fluttertoast.showToast(
+          msg: "Email not valid",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: AppColors.red,
+          textColor: AppColors.white,
+          fontSize: 16.0);
     }
   }
 
@@ -238,10 +266,6 @@ class _WelcomePageState extends State<WelcomePage> {
     Navigator.popUntil(context, (route) => false);
     Navigator.pushNamed(context, '/root');
 
-    // await storage.write(key: 'email', value: emailController.text.trim());
-    // await storage.write(key: 'name', value: currentUser.firstName);
-    // await storage.write(key: 'image', value: currentUser.avatar);
-
     box.write('email',
         emailController.text.isNotEmpty ? emailController.text.trim() : email);
     box.write('name', currentUser.firstName);
@@ -249,28 +273,56 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   _handleWrongEmail() {
-    const BetterErrorToast(text: "User not found");
+    Fluttertoast.showToast(
+        msg: "User not found",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.red,
+        textColor: AppColors.white,
+        fontSize: 16.0);
     setState(() {
       isAuthingUser = false;
     });
   }
 
   _handleErrors(e) {
-    BetterErrorToast(text: e.toString());
+    Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.red,
+        textColor: AppColors.white,
+        fontSize: 16.0);
     setState(() {
       isAuthingUser = false;
     });
   }
 
   _handleWrongPass() {
-    const BetterErrorToast(text: "Incorrect password");
+    Fluttertoast.showToast(
+        msg: "Incorrect password",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.red,
+        textColor: AppColors.white,
+        fontSize: 16.0);
     setState(() {
       isAuthingUser = false;
     });
   }
 
   _handleError() {
-    const BetterErrorToast(text: "An error occurred");
+    Fluttertoast.showToast(
+        msg: "An error occurred",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.red,
+        textColor: AppColors.white,
+        fontSize: 16.0);
     setState(() {
       isAuthingUser = false;
     });
@@ -291,7 +343,7 @@ class _WelcomePageState extends State<WelcomePage> {
     setState(() {
       emailController.text = email ?? "";
       currentUsername = name;
-      currentUserImage = image;
+      currentUser.avatar = image;
     });
   }
 
@@ -395,8 +447,8 @@ class _WelcomePageState extends State<WelcomePage> {
                 borderSide: const BorderSide(color: AppColors.gray45),
                 fillColor: AppColors.primary,
               )
-            : currentUserImage != null
-                ? CustomImage(currentUserImage)
+            : currentUser.avatar != null
+                ? CustomImage(currentUser.avatar)
                 : const CustomIconHolder(
                     width: 120,
                     height: 120,

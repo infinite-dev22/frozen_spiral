@@ -1,6 +1,7 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
@@ -10,7 +11,6 @@ import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-import 'package:smart_case/widgets/better_toast.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
@@ -393,10 +393,24 @@ class _RequisitionFormState extends State<RequisitionForm> {
             currentUser.token,
             smartRequisition.createRequisitionToJson(),
             onError: () {
-              const BetterErrorToast(text: "An error occurred");
+              Fluttertoast.showToast(
+                  msg: "An error occurred",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.red,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
             },
             onSuccess: () {
-              const BetterSuccessToast(text: "Requisition added successfully");
+              Fluttertoast.showToast(
+                  msg: "Requisition added successfully",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.green,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
             },
           )
         : SmartCaseApi.smartPut(
@@ -405,11 +419,24 @@ class _RequisitionFormState extends State<RequisitionForm> {
             currentUser.token,
             smartRequisition.createRequisitionToJson(),
             onError: () {
-              const BetterErrorToast(text: "An error occurred");
+              Fluttertoast.showToast(
+                  msg: "An error occurred",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.red,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
             },
             onSuccess: () {
-              const BetterSuccessToast(
-                  text: "Requisition updated successfully");
+              Fluttertoast.showToast(
+                  msg: "Requisition updated successfully",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.green,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
             },
           );
 

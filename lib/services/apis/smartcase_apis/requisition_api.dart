@@ -19,6 +19,7 @@ class RequisitionApi {
           .toList();
     }
 
+    preloadedRequisitions.clear();
     preloadedRequisitions = requisitions;
     return requisitions;
   }
@@ -26,10 +27,15 @@ class RequisitionApi {
   static Future<SmartRequisition> fetch(int id,
       {Function()? onSuccess, Function()? onError}) async {
     RequisitionRepo requisitionRepo = RequisitionRepo();
+    // DrawerRepo drawerRepo = DrawerRepo();
 
     SmartRequisition requisition = await requisitionRepo
         .fetch(id)
         .then((response) => SmartRequisition.fromJson(response['requisition']));
+
+    // SmartDrawer drawer = await drawerRepo
+    //     .fetch(id)
+    //     .then((response) => SmartDrawer.fromJson(response['drawer']));
 
     return requisition;
   }

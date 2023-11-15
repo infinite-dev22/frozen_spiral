@@ -326,20 +326,16 @@ class _RootPageState extends State<RootPage> {
   void _handleMessage(RemoteMessage message) {
     String page = message.data['page'];
     if (page.toLowerCase() == "requisition") {
-      // locator<NavigationService>()
-      //     .navigateWithArgumentsTo("/requisition", message.data['Requisition']);
-
       Navigator.pushNamed(context, '/requisition',
-          arguments: ScreenArguments(
-              message.data['File'], message.data['Requisition']));
+          arguments: message.data['Requisition']);
     }
     if (page.toLowerCase() == "activity") {
-      // locator<NavigationService>().navigateWithArgumentsTo("/activity",
-      //     ScreenArguments(message.data['File'], message.data['Activity']));
-
       Navigator.pushNamed(context, '/activity',
           arguments:
               ScreenArguments(message.data['File'], message.data['Activity']));
+    }
+    if (page.toLowerCase() == "event") {
+      Navigator.pushNamed(context, '/event', arguments: message.data['Event']);
     }
     // if (page.toLowerCase() == "task") {
     //   Navigator.pushNamed(context, '/task',
