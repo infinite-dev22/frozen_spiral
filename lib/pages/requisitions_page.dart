@@ -238,11 +238,13 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     Map currencyMap = await SmartCaseApi.smartFetch(
         'api/admin/currencytypes', currentUser.token);
     List? currencyList = currencyMap["currencytypes"];
-    setState(() {
+    if (mounted) {
+      setState(() {
       currencies =
           currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList();
       currencyList = null;
     });
+    }
   }
 
   Future<void> _onRefresh() async {
