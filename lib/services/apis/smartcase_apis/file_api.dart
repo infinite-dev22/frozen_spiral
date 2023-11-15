@@ -19,6 +19,7 @@ class FileApi {
           .toList();
     }
 
+    preloadedFiles.clear();
     preloadedFiles = files;
     return files;
   }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/widgets/file_widget/file_item.dart';
 
 import '../database/file/file_model.dart';
 import '../services/apis/smartcase_apis/file_api.dart';
 import '../theme/color.dart';
 import '../util/smart_case_init.dart';
+import '../widgets/better_toast.dart';
 import '../widgets/custom_appbar.dart';
 
 class FilesPage extends StatefulWidget {
@@ -17,8 +19,8 @@ class FilesPage extends StatefulWidget {
 
 class _FilesPageState extends State<FilesPage> {
   TextEditingController filterController = TextEditingController();
+  bool _doneLoading = false;
 
-  List<SmartFile> files = List.empty(growable: true);
   List<SmartFile> filteredFiles = List.empty(growable: true);
   final List<String>? filters = [
     "Name",
@@ -37,7 +39,7 @@ class _FilesPageState extends State<FilesPage> {
         ),
         backgroundColor: AppColors.primary,
         title: AppBarContent(
-          isNetwork: currentUserImage != null ? true : false,
+          isNetwork: currentUser.avatar != null ? true : false,
           searchable: true,
           filterable: true,
           search: 'files',
@@ -63,7 +65,7 @@ class _FilesPageState extends State<FilesPage> {
   }
 
   _buildNonSearchedBody() {
-    return (files.isNotEmpty)
+    return (_doneLoading && preloadedFiles.isNotEmpty)
         ? ListView.builder(
             padding: const EdgeInsets.only(
               left: 10,
@@ -71,22 +73,29 @@ class _FilesPageState extends State<FilesPage> {
               right: 10,
               bottom: 80,
             ),
-            itemCount: files.length,
+            itemCount: preloadedFiles.length,
             itemBuilder: (context, index) {
               return FileItem(
-                fileName: files[index].fileName!,
-                fileNumber: files[index].fileNumber!,
-                dateCreated: files[index].dateOpened,
-                clientName: files[index].clientName!,
+                fileName: preloadedFiles[index].fileName!,
+                fileNumber: preloadedFiles[index].fileNumber!,
+                dateCreated: preloadedFiles[index].dateOpened,
+                clientName: preloadedFiles[index].clientName!,
                 color: Colors.white,
                 padding: 20,
-                status: files[index].status ?? 'N/A',
+                status: preloadedFiles[index].status ?? 'N/A',
               );
             },
           )
-        : const Center(
-            child: CircularProgressIndicator(),
-          );
+        : (_doneLoading && preloadedFiles.isEmpty)
+            ? const Center(
+                child: Text(
+                  "Your files appear here",
+                  style: TextStyle(color: AppColors.inActiveColor),
+                ),
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              );
   }
 
   _buildSearchedBody() {
@@ -124,7 +133,16 @@ class _FilesPageState extends State<FilesPage> {
   }
 
   Future<void> _setUpData() async {
-    files = await FileApi.fetchAll();
+    await FileApi.fetchAll().then((value) {
+      _doneLoading = true;
+      setState(() {});
+    }).onError((error, stackTrace) {
+      _doneLoading = true;
+      const BetterErrorToast(
+        text: "An error occurred",
+      );
+      setState(() {});
+    });
     filterController.text == 'Name';
     setState(() {});
   }
@@ -132,30 +150,40 @@ class _FilesPageState extends State<FilesPage> {
   _searchFiles(String value) {
     filteredFiles.clear();
     if (filterController.text == 'Client') {
-      filteredFiles.addAll(files.where((smartFile) =>
+      filteredFiles.addAll(preloadedFiles.where((smartFile) =>
           smartFile.clientName!.toLowerCase().contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'Status') {
-      filteredFiles.addAll(files.where((smartFile) =>
+      filteredFiles.addAll(preloadedFiles.where((smartFile) =>
           smartFile.status!.toLowerCase().contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'File Number') {
-      filteredFiles.addAll(files.where((smartFile) =>
+      filteredFiles.addAll(preloadedFiles.where((smartFile) =>
           smartFile.fileNumber!.toLowerCase().contains(value.toLowerCase())));
       setState(() {});
     } else if (filterController.text == 'File Number (Court)') {
-      filteredFiles.addAll(files.where((smartFile) => smartFile.courtFileNumber!
+      filteredFiles.addAll(preloadedFiles.where((smartFile) => smartFile
+          .courtFileNumber!
           .toLowerCase()
           .contains(value.toLowerCase())));
       setState(() {});
     } else {
-      filteredFiles.addAll(files.where((smartFile) =>
+      filteredFiles.addAll(preloadedFiles.where((smartFile) =>
           smartFile.getName().toLowerCase().contains(value.toLowerCase())));
       setState(() {});
     }
   }
 
   Future<void> _onRefresh() async {
-    await FileApi.fetchAll();
+    await FileApi.fetchAll().then((value) {
+      _doneLoading = true;
+      setState(() {});
+    }).onError((error, stackTrace) {
+      _doneLoading = true;
+      const BetterErrorToast(
+        text: "An error occurred",
+      );
+      setState(() {});
+    });
   }
 }

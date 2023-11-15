@@ -11,6 +11,7 @@ import '../data/global_data.dart';
 import '../models/smart_currency.dart';
 import '../services/apis/smartcase_api.dart';
 import '../util/smart_case_init.dart';
+import '../widgets/better_toast.dart';
 import '../widgets/custom_appbar.dart';
 
 class RequisitionsPage extends StatefulWidget {
@@ -22,6 +23,7 @@ class RequisitionsPage extends StatefulWidget {
 
 class _RequisitionsPageState extends State<RequisitionsPage> {
   TextEditingController filterController = TextEditingController();
+  bool _doneLoading = false;
 
   List<SmartRequisition> filteredRequisitions = List.empty(growable: true);
   List<SmartCurrency> currencies = List.empty(growable: true);
@@ -111,7 +113,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   }
 
   _buildNonSearchedBody() {
-    if ((preloadedRequisitions.isNotEmpty)) {
+    if ((_doneLoading && preloadedRequisitions.isNotEmpty)) {
       return ListView.builder(
         itemCount: preloadedRequisitions.length,
         padding: const EdgeInsets.all(10),
@@ -125,6 +127,13 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
             showFinancialStatus: true,
           );
         },
+      );
+    } else if (_doneLoading && preloadedRequisitions.isEmpty) {
+      return const Center(
+        child: Text(
+          "Your requisitions appear here",
+          style: TextStyle(color: AppColors.inActiveColor),
+        ),
       );
     } else {
       return ListView.builder(
@@ -160,7 +169,16 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
 
   @override
   void initState() {
-    RequisitionApi.fetchAll();
+    RequisitionApi.fetchAll().then((value) {
+      _doneLoading = true;
+      setState(() {});
+    }).onError((error, stackTrace) {
+      _doneLoading = true;
+      const BetterErrorToast(
+        text: "An error occurred",
+      );
+      setState(() {});
+    });
     _loadCurrencies();
 
     super.initState();
@@ -246,6 +264,15 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   }
 
   Future<void> _onRefresh() async {
-    await RequisitionApi.fetchAll();
+    await RequisitionApi.fetchAll().then((value) {
+      _doneLoading = true;
+      setState(() {});
+    }).onError((error, stackTrace) {
+      _doneLoading = true;
+      const BetterErrorToast(
+        text: "An error occurred",
+      );
+      setState(() {});
+    });
   }
 }

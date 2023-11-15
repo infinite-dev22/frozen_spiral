@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_client.dart';
 import 'package:smart_case/models/smart_employee.dart';
@@ -7,7 +8,6 @@ import 'package:smart_case/models/smart_engagement.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-import 'package:smart_case/widgets/better_toast.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
@@ -292,15 +292,43 @@ class _EngagementFormState extends State<EngagementForm> {
     (widget.engagement == null)
         ? SmartCaseApi.smartPost('api/crm/engagements', currentUser.token,
             smartEngagement.toCreateJson(), onError: () {
-            const BetterErrorToast(text: "An error occurred");
+            Fluttertoast.showToast(
+                msg: "An error occurred",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: AppColors.red,
+                textColor: AppColors.white,
+                fontSize: 16.0);
           }, onSuccess: () {
-            const BetterSuccessToast(text: "Engagement added successfully");
+            Fluttertoast.showToast(
+                msg: "Engagement added successfully",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: AppColors.green,
+                textColor: AppColors.white,
+                fontSize: 16.0);
           })
         : SmartCaseApi.smartPut('api/crm/engagements/${widget.engagement!.id}',
             currentUser.token, smartEngagement.toCreateJson(), onError: () {
-            const BetterErrorToast(text: "An error occurred");
+            Fluttertoast.showToast(
+                msg: "An error occurred",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: AppColors.red,
+                textColor: AppColors.white,
+                fontSize: 16.0);
           }, onSuccess: () {
-            const BetterSuccessToast(text: "Engagement updated successfully");
+            Fluttertoast.showToast(
+                msg: "Engagement updated successfully",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: AppColors.green,
+                textColor: AppColors.white,
+                fontSize: 16.0);
           });
 
     Navigator.pop(context);

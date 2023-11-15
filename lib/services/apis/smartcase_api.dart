@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,6 +15,8 @@ import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../theme/color.dart';
 
 class SmartCaseApi {
   static Future<List<SmartRequisition>> fetchAllRequisitions(String token,
@@ -83,6 +87,14 @@ class SmartCaseApi {
     } catch (e) {
       if (onError != null) {
         onError();
+        Fluttertoast.showToast(
+            msg: e.toString(),
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: AppColors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
         if (kDebugMode) {
           print(e);
         }

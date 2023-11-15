@@ -125,7 +125,6 @@ class _ActivityViewPageState extends State<ActivityViewPage> {
 
   _setupData(int fileId, int activityId) async {
     await ActivityApi.fetch(fileId, activityId).then((value) {
-      print("SmartActivity: $value");
       activity = value;
       if (mounted) setState(() {});
     });
