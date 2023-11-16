@@ -142,21 +142,37 @@ class _EventViewState extends State<EventView> {
                                 size: 30,
                               ),
                               const SizedBox(width: 20),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Event',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    event!.title!,
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
-                                ],
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width - 70,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Event',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    // const SizedBox(height: 10),SizedBox(
+                                    //   width: MediaQuery.of(context).size.width - 70,
+                                    //   height: 50,
+                                    //   child: Marquee(
+                                    //     text:
+                                    //     "${event!.title!} | ",
+                                    //     velocity: 50.0,
+                                    //     style: const TextStyle(fontSize: 18),
+                                    //     blankSpace: 0,
+                                    //     pauseAfterRound: const Duration(seconds: 3),
+                                    //   ),
+                                    // ),
+                                    Text(
+                                      event!.title!,
+                                      style: const TextStyle(
+                                          overflow: TextOverflow.ellipsis,
+                                          fontSize: 18),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),

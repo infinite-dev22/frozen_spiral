@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:path_provider/path_provider.dart';
@@ -238,6 +239,13 @@ class SmartCaseApi {
       var response = await dio.post(url.toString(), data: formData);
 
       if (response.statusCode == 200) {
+        currentUser.avatar = response.data["avatar"];
+
+        final box = GetSecureStorage(
+            password: 'infosec_technologies_ug_smart_case_law_manager');
+        box.write('image', currentUser.avatar);
+
+        print("New: ${response.data["avatar"]}");
         if (onSuccess != null) {
           onSuccess();
         }

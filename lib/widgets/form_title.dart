@@ -115,11 +115,31 @@ class CalendarViewTitle extends StatelessWidget {
               color: AppColors.red,
             ),
           ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
+          // SizedBox(
+          //   width: MediaQuery.of(context).size.width - 96,
+          //   height: 50,
+          //   child: Marquee(
+          //     text: "$title | ",
+          //     velocity: 50.0,
+          //     style: const TextStyle(fontSize: 18),
+          //     blankSpace: 0,
+          //     pauseAfterRound: const Duration(seconds: 3),
+          //   ),
+          // ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width - 96,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+              ],
             ),
           ),
           IconButton(
