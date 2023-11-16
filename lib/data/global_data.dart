@@ -32,6 +32,8 @@ final options = CacheOptions(
   allowPostMethod: false,
 );
 
+bool refreshRequisitions = false;
+
 Map<DateTime, List<SmartEvent>> preloadedEvents =
     <DateTime, List<SmartEvent>>{};
 List<SmartRequisition> preloadedRequisitions = List.empty(growable: true);

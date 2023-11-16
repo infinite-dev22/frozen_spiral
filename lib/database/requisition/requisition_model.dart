@@ -65,7 +65,7 @@ class SmartRequisition {
   final SmartCurrency? currency;
   final SmartRequisitionStatus? requisitionStatus;
   final SmartRequisitionCategory? requisitionCategory;
-  final int? caseFinancialStatus;
+  final String? caseFinancialStatus;
 
   SmartRequisition({
     this.id,
@@ -178,7 +178,7 @@ class SmartRequisition {
           json['requisition_actions'].last['requisition_status']),
       requisitionCategory:
           SmartRequisitionCategory.fromJson(json['requisition_category']),
-      caseFinancialStatus: json['caseFinancialStatus'],
+      caseFinancialStatus: json['caseFinancialStatusDisp'],
     );
   }
 
@@ -211,7 +211,7 @@ class SmartRequisition {
       currency: SmartCurrency.fromJson(json['currency']),
       requisitionStatus:
           SmartRequisitionStatus.fromJson(json['requisition_status']),
-      caseFinancialStatus: json['caseFinancialStatus'],
+      caseFinancialStatus: json['caseFinancialStatusDisp'],
     );
   }
 }

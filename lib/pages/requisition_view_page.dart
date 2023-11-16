@@ -9,6 +9,7 @@ import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/requisition_widget/requisition_item.dart';
 
+import '../data/global_data.dart';
 import '../theme/color.dart';
 import '../util/smart_case_init.dart';
 import '../widgets/custom_appbar.dart';
@@ -23,6 +24,7 @@ class RequisitionViewPage extends StatefulWidget {
 class _RequisitionViewPageState extends State<RequisitionViewPage> {
   SmartRequisition? requisition;
   late int requisitionId;
+  final _key = GlobalKey();
 
   TextEditingController commentController = TextEditingController();
   TextEditingController amountController = TextEditingController();
@@ -247,7 +249,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   _payoutRequisition() {
     _submitData("PAID", 'Pay out successful');
 
-    Navigator.pop(context);
+    Navigator.pop(context, _key);
   }
 
   _approveRequisition() {
@@ -299,14 +301,17 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
     Fluttertoast.showToast(
         msg: text,
         toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
+        gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
         backgroundColor: AppColors.green,
         textColor: Colors.white,
         fontSize: 16.0);
+    preloadedRequisitions.remove(requisition);
   }
 
   _onError() async {
+    refreshRequisitions = true;
+
     Fluttertoast.showToast(
         msg: "An error occurred",
         toastLength: Toast.LENGTH_LONG,

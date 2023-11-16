@@ -87,14 +87,9 @@ class SmartCaseApi {
       }
     } catch (e) {
       if (e.toString().contains("302")) {
-        Fluttertoast.showToast(
-            msg: "Action completed successfully",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: AppColors.green,
-            textColor: Colors.white,
-            fontSize: 16.0);
+        if (onSuccess != null) {
+          onSuccess();
+        }
       } else {
         if (onError != null) {
           onError();

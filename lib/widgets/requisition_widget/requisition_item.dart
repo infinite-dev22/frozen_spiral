@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/widgets/requisition_widget/reuisition_item_status.dart';
 
+import '../../data/global_data.dart';
 import '../../models/smart_currency.dart';
 import '../../pages/forms/requisition_form.dart';
+import '../../services/apis/smartcase_api.dart';
 import '../../theme/color.dart';
+import '../../util/smart_case_init.dart';
 
 class RequisitionItem extends StatefulWidget {
   const RequisitionItem({
@@ -32,6 +36,8 @@ class RequisitionItem extends StatefulWidget {
 }
 
 class _RequisitionItemState extends State<RequisitionItem> {
+  bool isProcessing = false;
+
   NumberFormat formatter =
       NumberFormat('###,###,###,###,###,###,###,###,###.##');
 
@@ -86,23 +92,47 @@ class _RequisitionItemState extends State<RequisitionItem> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             if (widget.requisition.canApprove != null)
-                              TextButton(
-                                onPressed: () => Navigator.pushNamed(
-                                  context,
-                                  '/requisition',
-                                  arguments: widget.requisition.id!,
-                                ).then((_) => setState(() {})),
-                                child: const Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.recycling_rounded),
-                                    SizedBox(
-                                      width: 5,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: FilledButton(
+                                      onPressed: (isProcessing)
+                                          ? null
+                                          : _approveRequisition,
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.resolveWith(
+                                                (states) => AppColors.green),
+                                      ),
+                                      child: const Text(
+                                        'Approve',
+                                      ),
                                     ),
-                                    Text('Process')
-                                  ],
-                                ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pushNamed(
+                                      context,
+                                      '/requisition',
+                                      arguments: widget.requisition.id!,
+                                    ).then((_) => setState(() {})),
+                                    child: const Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.recycling_rounded, size: 20),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text('Process')
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             if (widget.requisition.canPay == true)
                               TextButton(
@@ -163,8 +193,9 @@ class _RequisitionItemState extends State<RequisitionItem> {
                 children: [
                   _buildFinancialStatusStringItem(
                       'Financial Status (UGX)',
-                      formatter.format(double.parse(
-                          widget.requisition.caseFinancialStatus.toString()))),
+                      formatter.format(double.parse(widget
+                          .requisition.caseFinancialStatus!
+                          .replaceAll(",", '')))),
                   const SizedBox(
                     height: 10,
                   ),
@@ -277,12 +308,12 @@ class _RequisitionItemState extends State<RequisitionItem> {
           data ?? 'Null',
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: (double.parse(
-                          widget.requisition.caseFinancialStatus.toString()) >
+              color: (double.parse(widget.requisition.caseFinancialStatus!
+                          .replaceAll(",", '')) >
                       0)
                   ? AppColors.green
-                  : (double.parse(widget.requisition.caseFinancialStatus
-                              .toString()) ==
+                  : (double.parse(widget.requisition.caseFinancialStatus!
+                              .replaceAll(",", '')) ==
                           0)
                       ? AppColors.blue
                       : AppColors.red),
@@ -300,5 +331,72 @@ class _RequisitionItemState extends State<RequisitionItem> {
       builder: (context) => RequisitionForm(
           currencies: widget.currencies!, requisition: widget.requisition),
     );
+  }
+
+  _approveRequisition() {
+    isProcessing = true;
+
+    if (widget.requisition.requisitionStatus!.code == 'EDITED' ||
+        widget.requisition.requisitionStatus!.code == "SUBMITTED") {
+      if (widget.requisition.canApprove == 'LV1') {
+        _submitData("APPROVED", 'Requisition approved');
+      } else if (widget.requisition.canApprove == 'LV2') {
+        _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
+      }
+    } else if (widget.requisition.requisitionStatus!.code ==
+        "PRIMARY_APPROVED") {
+      _submitData("SECONDARY_APPROVED", 'Requisition approved');
+    }
+  }
+
+  _submitData(String value, String toastText) {
+    // RequisitionApi.post({
+    //   "forms": 1,
+    //   "payout_amount": amountController.text.trim(),
+    //   "action_comment": commentController.text.trim(),
+    //   "submit": value,
+    // }, requisition!.id!,
+    //         onError: _onError, onSuccess: () => _onSuccess(toastText))
+    //     .onError((error, stackTrace) => _onError());
+
+    SmartCaseApi.smartPost(
+      'api/accounts/requisitions/${widget.requisition!.id}/process',
+      currentUser.token,
+      {
+        "forms": 1,
+        "payout_amount": widget.requisition.amount!,
+        "action_comment": "",
+        "submit": value,
+      },
+      onSuccess: () => _onSuccess(toastText),
+      onError: _onError,
+    );
+  }
+
+  _onSuccess(String text) async {
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    preloadedRequisitions.removeWhere((element) => element.id == widget.requisition.id);
+    isProcessing = false;
+    setState(() {});
+  }
+
+  _onError() async {
+    Fluttertoast.showToast(
+        msg: "An error occurred",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    isProcessing = false;
+    setState(() {});
   }
 }
