@@ -113,7 +113,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   }
 
   _buildNonSearchedBody() {
-    if ((_doneLoading && preloadedRequisitions.isNotEmpty)) {
+    if ((preloadedRequisitions.isNotEmpty)) {
       return ListView.builder(
         itemCount: preloadedRequisitions.length,
         padding: const EdgeInsets.all(10),
