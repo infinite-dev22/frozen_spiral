@@ -204,42 +204,44 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
               ),
             ],
           )
-        : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              FilledButton(
-                onPressed: _approveRequisition,
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => AppColors.green),
-                ),
-                child: const Text(
-                  'Approve',
-                ),
-              ),
-              FilledButton(
-                onPressed: _returnRequisition,
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => AppColors.orange),
-                ),
-                child: const Text(
-                  'Return',
-                ),
-              ),
-              FilledButton(
-                onPressed: _rejectRequisition,
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => AppColors.red),
-                ),
-                child: const Text(
-                  'Reject',
-                ),
-              ),
-            ],
-          );
+        : (requisition!.canApprove != null)
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  FilledButton(
+                    onPressed: _approveRequisition,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith(
+                          (states) => AppColors.green),
+                    ),
+                    child: const Text(
+                      'Approve',
+                    ),
+                  ),
+                  FilledButton(
+                    onPressed: _returnRequisition,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith(
+                          (states) => AppColors.orange),
+                    ),
+                    child: const Text(
+                      'Return',
+                    ),
+                  ),
+                  FilledButton(
+                    onPressed: _rejectRequisition,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith(
+                          (states) => AppColors.red),
+                    ),
+                    child: const Text(
+                      'Reject',
+                    ),
+                  ),
+                ],
+              )
+            : Container();
   }
 
   _payoutRequisition() {

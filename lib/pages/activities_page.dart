@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
+import 'package:smart_case/pages/forms/activity_form.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/activity_widget/activity_item.dart';
 
@@ -47,6 +48,12 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
           onChanged: _searchActivities,
           filters: filters,
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _buildActivitiesForm,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add),
       ),
       body: LiquidPullToRefresh(
         onRefresh: _onRefresh,
@@ -97,7 +104,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
   }
 
   _buildNonSearchedBody() {
-    return (_doneLoading && preloadedActivities.isNotEmpty)
+    return (preloadedActivities.isNotEmpty)
         ? ListView.builder(
             padding: const EdgeInsets.only(
               left: 10,
@@ -220,5 +227,15 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
       );
       setState(() {});
     });
+  }
+
+  _buildActivitiesForm() {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => const ActivityForm(),
+    );
   }
 }

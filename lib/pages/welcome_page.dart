@@ -24,9 +24,14 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  final globalKey = GlobalKey();
+
   bool isAuthingUser = false;
   bool showLogin = true;
   bool isSendingResetRequest = false;
+  bool hasFocus1 = false;
+  bool hasFocus2 = false;
+  var _height = 40.0;
 
   late String email;
   TextEditingController emailController = TextEditingController();
@@ -62,7 +67,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       imageFit: BoxFit.contain,
                       radius: 0,
                     ),
-                    const SizedBox(height: 40),
+                    SizedBox(height: _height),
                     (showLogin) ? _buildLoginBody() : _buildPasswordResetBody(),
                   ],
                 ),
@@ -437,15 +442,25 @@ class _WelcomePageState extends State<WelcomePage> {
           height: 30,
         ),
         (emailController.text == '')
-            ? AuthTextField(
-                onChanged: (value) => email = value,
-                hintText: 'email',
-                enabled: !isAuthingUser,
-                obscureText: false,
-                isEmail: true,
-                style: const TextStyle(color: AppColors.gray45),
-                borderSide: const BorderSide(color: AppColors.gray45),
-                fillColor: AppColors.primary,
+            ? Focus(
+                child: AuthTextField(
+                  onChanged: (value) => email = value,
+                  hintText: 'email',
+                  enabled: !isAuthingUser,
+                  obscureText: false,
+                  isEmail: true,
+                  style: const TextStyle(color: AppColors.gray45),
+                  borderSide: const BorderSide(color: AppColors.gray45),
+                  fillColor: AppColors.primary,
+                ),
+                onFocusChange: (hasFocus) {
+                  if (hasFocus2) {
+                    hasFocus2 = false;
+                  }
+                  hasFocus1 = true;
+                  (hasFocus1) ? _height = 0 : _height = 40;
+                  setState(() {});
+                },
               )
             : currentUserAvatar != null
                 ? CustomImage(currentUserAvatar)
@@ -461,14 +476,24 @@ class _WelcomePageState extends State<WelcomePage> {
         const SizedBox(
           height: 20,
         ),
-        AuthPasswordTextField(
-          controller: passwordController,
-          hintText: 'password',
-          enabled: !isAuthingUser,
-          borderSide: const BorderSide(color: AppColors.gray45),
-          style: const TextStyle(color: AppColors.gray45),
-          fillColor: AppColors.primary,
-          iconColor: AppColors.gray45,
+        Focus(
+          child: AuthPasswordTextField(
+            controller: passwordController,
+            hintText: 'password',
+            enabled: !isAuthingUser,
+            borderSide: const BorderSide(color: AppColors.gray45),
+            style: const TextStyle(color: AppColors.gray45),
+            fillColor: AppColors.primary,
+            iconColor: AppColors.gray45,
+          ),
+          onFocusChange: (hasFocus) {
+            if (hasFocus1) {
+              hasFocus1 = false;
+            }
+            hasFocus2 = true;
+            (hasFocus2) ? _height = 0 : _height = 40;
+            setState(() {});
+          },
         ),
         const SizedBox(
           height: 10,

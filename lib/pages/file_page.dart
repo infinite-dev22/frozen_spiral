@@ -65,7 +65,7 @@ class _FilesPageState extends State<FilesPage> {
   }
 
   _buildNonSearchedBody() {
-    return (_doneLoading && preloadedFiles.isNotEmpty)
+    return (preloadedFiles.isNotEmpty)
         ? ListView.builder(
             padding: const EdgeInsets.only(
               left: 10,

@@ -11,6 +11,7 @@ class AuthTextField extends StatelessWidget {
   final TextStyle? style;
   final bool enabled;
   final Function(String)? onChanged;
+  final Function()? onTap;
 
   const AuthTextField({
     super.key,
@@ -23,6 +24,7 @@ class AuthTextField extends StatelessWidget {
     this.style,
     this.enabled = true,
     this.onChanged,
+    this.onTap,
   });
 
   @override
@@ -68,6 +70,7 @@ class AuthTextField extends StatelessWidget {
           ),
         ),
         keyboardType: TextInputType.emailAddress,
+        onTap: onTap,
       ),
     );
   }
@@ -81,6 +84,7 @@ class AuthPasswordTextField extends StatefulWidget {
   final Color iconColor;
   final bool enabled;
   final TextStyle? style;
+  final Function()? onTap;
 
   const AuthPasswordTextField({
     super.key,
@@ -91,6 +95,7 @@ class AuthPasswordTextField extends StatefulWidget {
     this.iconColor = AppColors.darker,
     this.style,
     this.enabled = true,
+    this.onTap,
   });
 
   @override
@@ -152,6 +157,7 @@ class _AuthPasswordTextField extends State<AuthPasswordTextField> {
           ),
         ),
         keyboardType: TextInputType.visiblePassword,
+        onTap: widget.onTap,
       ),
     );
   }

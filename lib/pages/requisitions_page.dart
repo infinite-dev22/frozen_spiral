@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' as mu;
+import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
+import 'package:smart_case/pages/forms/requisition_form.dart';
 import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/loading_widget/shimmers/requisition_shimmer.dart';
@@ -42,8 +42,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return mu.Scaffold(
-      appBar: mu.AppBar(
+    return Scaffold(
+      appBar: AppBar(
         iconTheme: const IconThemeData(
           color: AppColors.white,
         ),
@@ -58,7 +58,12 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           onChanged: _searchActivities,
         ),
       ),
-
+      floatingActionButton: FloatingActionButton(
+        onPressed: _buildRequisitionForm,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add),
+      ),
       body: LiquidPullToRefresh(
         onRefresh: _onRefresh,
         color: AppColors.primary,
@@ -66,7 +71,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         child: _buildBody(),
         showChildOpacityTransition: false,
       ),
-      // body: mu.RefreshIndicator(
+      // body: RefreshIndicator(
       //   onRefresh: _onRefresh,
       //   child: _buildBody(),
       // ),
@@ -258,10 +263,10 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     List? currencyList = currencyMap["currencytypes"];
     if (mounted) {
       setState(() {
-      currencies =
-          currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList();
-      currencyList = null;
-    });
+        currencies =
+            currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList();
+        currencyList = null;
+      });
     }
   }
 
@@ -276,5 +281,15 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
       );
       setState(() {});
     });
+  }
+
+  _buildRequisitionForm() {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => RequisitionForm(currencies: currencies),
+    );
   }
 }

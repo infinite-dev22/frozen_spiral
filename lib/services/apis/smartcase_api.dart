@@ -86,18 +86,29 @@ class SmartCaseApi {
         }
       }
     } catch (e) {
-      if (onError != null) {
-        onError();
+      if (e.toString().contains("302")) {
         Fluttertoast.showToast(
-            msg: e.toString(),
+            msg: "Action completed successfully",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
-            backgroundColor: AppColors.red,
+            backgroundColor: AppColors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-        if (kDebugMode) {
-          print(e);
+      } else {
+        if (onError != null) {
+          onError();
+          Fluttertoast.showToast(
+              msg: e.toString(),
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: AppColors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          if (kDebugMode) {
+            print(e);
+          }
         }
       }
     } finally {
