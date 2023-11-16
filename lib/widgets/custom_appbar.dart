@@ -31,7 +31,7 @@ class AppBarContent extends StatelessWidget {
   final List<String>? filters;
 
   final List<String> profileActions = [
-    "Profile",
+  "Profile",
     "Sign out",
   ];
 
@@ -85,7 +85,7 @@ class AppBarContent extends StatelessWidget {
                   )
                 : isNetwork
                     ? CustomDropdownAction(
-                        menuItems: profileActions,
+                        menuItems: (ModalRoute.of(context)!.settings.name == "/profile") ? ["Sign out"] : profileActions,
                         bgColor: Colors.white,
                         isNetwork: isNetwork,
                         onChanged: (value) =>
@@ -93,7 +93,7 @@ class AppBarContent extends StatelessWidget {
                         image: currentUser.avatar,
                       )
                     : CustomDropdownFilter(
-                        menuItems: profileActions,
+                        menuItems: (ModalRoute.of(context)!.settings.name == "/profile") ? ["Sign out"] : profileActions,
                         bgColor: Colors.white,
                         icon: Icons.account_circle,
                         radius: 50,

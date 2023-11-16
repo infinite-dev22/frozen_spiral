@@ -198,35 +198,49 @@ class _RootPageState extends State<RootPage> {
         children: List.generate(
           _barItems().length,
           (index) {
-            if (index == 2) {
-              return BottomBarItem(
-                _activeTab == index
-                    ? _barItems()[index]["active_icon"]
-                    : _barItems()[index]["icon"],
-                _barItems()[index]["name"],
-                isActive: _activeTab == index,
-                activeColor: AppColors.primary,
-                onTap: () {
-                  setState(() {
-                    _activeTab = index;
-                  });
-                },
-              );
-            } else {
-              return BottomBarItem(
-                _activeTab == index
-                    ? _barItems()[index]["active_icon"]
-                    : _barItems()[index]["icon"],
-                _barItems()[index]["name"],
-                isActive: _activeTab == index,
-                activeColor: AppColors.primary,
-                onTap: () {
-                  setState(() {
-                    _activeTab = index;
-                  });
-                },
-              );
-            }
+            // if (index == 2) {
+            //   return BottomBarItem(
+            //     _activeTab == index
+            //         ? _barItems()[index]["active_icon"]
+            //         : _barItems()[index]["icon"],
+            //     _barItems()[index]["name"],
+            //     isActive: _activeTab == index,
+            //     activeColor: AppColors.primary,
+            //     onTap: () {
+            //       setState(() {
+            //         _activeTab = index;
+            //       });
+            //     },
+            //   );
+            // } else {
+            //   return BottomBarItem(
+            //     _activeTab == index
+            //         ? _barItems()[index]["active_icon"]
+            //         : _barItems()[index]["icon"],
+            //     _barItems()[index]["name"],
+            //     isActive: _activeTab == index,
+            //     activeColor: AppColors.primary,
+            //     onTap: () {
+            //       setState(() {
+            //         _activeTab = index;
+            //       });
+            //     },
+            //   );
+            // }
+
+            return BottomBarItem(
+              _activeTab == index
+                  ? _barItems()[index]["active_icon"]
+                  : _barItems()[index]["icon"],
+              _barItems()[index]["name"],
+              isActive: _activeTab == index,
+              activeColor: AppColors.primary,
+              onTap: () {
+                setState(() {
+                  _activeTab = index;
+                });
+              },
+            );
           },
         ),
       ),
@@ -295,6 +309,8 @@ class _RootPageState extends State<RootPage> {
 
   @override
   void initState() {
+    currentUser.avatar = currentUserAvatar;
+
     // Run code required to handle interacted messages in an async function
     // as initState() must not be async
     setupInteractedMessage();

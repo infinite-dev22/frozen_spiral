@@ -57,18 +57,9 @@ class ActivityApi {
   static put(Map<String, dynamic> data, int fileId, int activityId,
       {Function()? onSuccess, Function()? onError}) async {
     ActivityRepo activityRepo = ActivityRepo();
-    // List<SmartActivity> activities = List.empty(growable: true);
-
     var response = await activityRepo.put(data, fileId, activityId);
-    // List activitiesMap = response['search']['activities'];
-    // if (activitiesMap.isNotEmpty) {
-    //   activities = activitiesMap
-    //       .map(
-    //         (activity) => SmartActivity.fromJson(activity),
-    //       )
-    //       .toList();
-    // }
-    // preloadedActivities = activities;
+    ActivityApi.fetchAll(); // TODO: Remove when bloc is successfully added.
+
     return response;
   }
 }

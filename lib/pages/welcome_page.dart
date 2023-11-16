@@ -270,7 +270,6 @@ class _WelcomePageState extends State<WelcomePage> {
         emailController.text.isNotEmpty ? emailController.text.trim() : email);
     box.write('name', currentUser.firstName);
     box.write('image', currentUser.avatar);
-    box.write('image', currentUser.avatar);
   }
 
   _handleWrongEmail() {
@@ -344,10 +343,7 @@ class _WelcomePageState extends State<WelcomePage> {
     setState(() {
       emailController.text = email ?? "";
       currentUsername = name;
-      if (currentUserAvatar != null) {
-        currentUser.avatar = image;
-        currentUserAvatar = image;
-      }
+      currentUserAvatar = image;
     });
   }
 
@@ -452,7 +448,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 fillColor: AppColors.primary,
               )
             : currentUserAvatar != null
-                ? CustomImage(currentUser.avatar)
+                ? CustomImage(currentUserAvatar)
                 : const CustomIconHolder(
                     width: 120,
                     height: 120,
@@ -511,6 +507,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
+    print(currentUserAvatar);
     _getCurrentUserData();
     super.initState();
   }
