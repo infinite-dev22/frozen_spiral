@@ -37,7 +37,7 @@ class _DiaryPageState extends State<DiaryPage> {
 
   final bool _showLeadingAndTrailingDates = false;
   final bool _showDatePickerButton = true;
-  final bool _allowViewNavigation = true;
+  bool _allowViewNavigation = true;
   final bool _showCurrentTimeIndicator = true;
 
   final ViewNavigationMode _viewNavigationMode = ViewNavigationMode.snap;
@@ -182,8 +182,23 @@ class _DiaryPageState extends State<DiaryPage> {
           showTimeIndicator: true),
       showTodayButton: true,
       onTap: (calendarTapDetails) {
-        if (calendarTapDetails.appointments != null) {
-          _buildEventView(calendarTapDetails.appointments![0]);
+        if (calendarTapDetails.appointments != null &&
+            calendarTapDetails.appointments!.isNotEmpty) {
+          if (calendarController!.view == CalendarView.day) {
+            _buildEventView(calendarTapDetails.appointments![0]);
+          }
+
+          // if (calendarTapDetails.appointments!.length > 1) {
+          //   _allowViewNavigation = true;
+          //   setState(() {});
+          // } else {
+          //   _allowViewNavigation = false;
+          //   setState(() {});
+          //   _buildEventView(calendarTapDetails.appointments![0]);
+          // }
+        } else {
+          _allowViewNavigation = false;
+          setState(() {});
         }
       },
       controller: calendarController,

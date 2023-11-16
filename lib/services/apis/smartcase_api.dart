@@ -238,6 +238,7 @@ class SmartCaseApi {
       var response = await dio.post(url.toString(), data: formData);
 
       if (response.statusCode == 200) {
+        currentUser.avatar = response.data["avatar"];
         if (onSuccess != null) {
           onSuccess();
         }

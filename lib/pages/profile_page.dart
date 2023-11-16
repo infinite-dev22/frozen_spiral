@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:full_picker/full_picker.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/theme/color.dart';
@@ -12,7 +13,6 @@ import 'package:smart_case/widgets/profile_widget/profile_detail_item.dart';
 import 'package:smart_case/widgets/profile_widget/profile_master_item.dart';
 import 'package:smart_case/widgets/wide_button.dart';
 
-import '../widgets/better_toast.dart';
 import '../widgets/custom_accordion.dart';
 import '../widgets/custom_dropdowns.dart';
 import '../widgets/form_title.dart';
@@ -116,9 +116,24 @@ class _ProfilePageState extends State<ProfilePage> {
       },
       onSelected: (value) {
         SmartCaseApi.uploadProfilePicture(value.file.first!, onError: () {
-          const BetterErrorToast(text: "An error occurred");
+          Fluttertoast.showToast(
+              msg: "An error occurred! Profile not updated",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: AppColors.red,
+              textColor: AppColors.white,
+              fontSize: 16.0);
         }, onSuccess: () {
-          const BetterSuccessToast(text: "Profile photo updated successfully");
+          Fluttertoast.showToast(
+              msg: "Profile photo updated successfully",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: AppColors.green,
+              textColor: AppColors.white,
+              fontSize: 16.0);
+          setState(() {});
         });
       },
     );
