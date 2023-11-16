@@ -7,6 +7,8 @@ import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/interface/requisition_repo_interface.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
+import '../../services/apis/smartcase_apis/requisition_api.dart';
+
 class RequisitionRepo extends RequisitionRepoInterface {
   static final RequisitionRepo _instance = RequisitionRepo._internal();
 
@@ -134,6 +136,7 @@ class RequisitionRepo extends RequisitionRepoInterface {
         if (kDebugMode) {
           print("A Success occurred: ${response.statusCode}");
         }
+        await RequisitionApi.fetchAll();  // TODO: Remove when bloc is successfully added.
         return response.data;
       } else {
         if (kDebugMode) {

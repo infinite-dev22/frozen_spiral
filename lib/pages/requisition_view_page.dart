@@ -293,7 +293,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
     Navigator.pop(context);
   }
 
-  _onSuccess(String text) {
+  _onSuccess(String text) async {
     Fluttertoast.showToast(
         msg: text,
         toastLength: Toast.LENGTH_LONG,
@@ -304,7 +304,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
         fontSize: 16.0);
   }
 
-  _onError() {
+  _onError() async {
     Fluttertoast.showToast(
         msg: "An error occurred",
         toastLength: Toast.LENGTH_LONG,
@@ -313,7 +313,6 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
         backgroundColor: AppColors.red,
         textColor: Colors.white,
         fontSize: 16.0);
-    if (mounted) setState(() {});
   }
 
   _submitData(String value, String toastText) {
