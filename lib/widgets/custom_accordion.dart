@@ -901,9 +901,11 @@ class _DateAccordionState extends State<DateAccordion> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Icon(
-                  _showContent ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                  _showContent
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded,
                   size: 25,
-                  color: Colors.black45,
+                  color: AppColors.darker,
                 ),
               ],
             ),

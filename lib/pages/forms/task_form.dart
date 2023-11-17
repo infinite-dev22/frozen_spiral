@@ -83,39 +83,69 @@ class _TaskFormState extends State<TaskForm> {
                 padding: const EdgeInsets.all(16),
                 children: [
                   SmartCaseTextField(hint: 'Name', controller: nameController),
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(5),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: _showSearchFileBottomSheet,
-                      child: Text(
-                        file?.fileName ?? 'Select file',
-                        style: const TextStyle(color: AppColors.darker),
+                  GestureDetector(
+                    onTap: _showSearchFileBottomSheet,
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: Text(
+                              file?.fileName ?? 'Select file',
+                              style: const TextStyle(
+                                  color: AppColors.darker,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: AppColors.darker,
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(5),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: _showSearchAssigneeBottomSheet,
-                      child: Text(
-                        assignee?.getName() ?? 'Select assignee',
-                        style: const TextStyle(color: AppColors.darker),
+                  GestureDetector(
+                    onTap: _showSearchAssigneeBottomSheet,
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: Text(
+                              assignee?.getName() ?? 'Select assignee',
+                              style: const TextStyle(
+                                  color: AppColors.darker,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: AppColors.darker,
+                          ),
+                        ],
                       ),
                     ),
                   ),

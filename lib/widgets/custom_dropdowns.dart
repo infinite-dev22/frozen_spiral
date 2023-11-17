@@ -170,6 +170,10 @@ class SearchableDropDown<T extends SmartModel> extends StatelessWidget {
           }
         },
         dropDownItemCount: 6,
+        dropDownIconProperty: IconProperty(
+          icon: Icons.keyboard_arrow_down_rounded,
+          color: AppColors.darker,
+        ),
         autovalidateMode: AutovalidateMode.onUserInteraction,
         dropDownList: menuItems
             .map(
@@ -246,8 +250,8 @@ class CustomGenericDropdown<T extends SmartModel> extends StatelessWidget {
             ),
             iconStyleData: const IconStyleData(
               icon: Icon(
-                Icons.arrow_drop_down,
-                color: Colors.black45,
+                Icons.keyboard_arrow_down_rounded,
+                color: AppColors.darker,
               ),
               iconSize: 24,
             ),

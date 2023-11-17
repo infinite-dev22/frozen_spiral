@@ -105,28 +105,60 @@ class _EngagementFormState extends State<EngagementForm> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                              client?.getName() ?? 'Select client',
-                              style: const TextStyle(color: AppColors.darker),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    client?.getName() ?? 'Select client',
+                                    style: const TextStyle(
+                                        color: AppColors.darker,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: AppColors.darker,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                        Container(
-                          height: 50,
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(5),
-                          margin: const EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          alignment: Alignment.centerLeft,
-                          child: TextButton(
-                            onPressed: _showSearchEngagementTypeBottomSheet,
-                            child: Text(
-                              engagementType?.getName() ??
-                                  'Select engagement type',
-                              style: const TextStyle(color: AppColors.darker),
+                        GestureDetector(
+                          onTap: _showSearchEngagementTypeBottomSheet,
+                          child: Container(
+                            height: 50,
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 7),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    engagementType?.getName() ??
+                                        'Select engagement type',
+                                    style: const TextStyle(
+                                        color: AppColors.darker,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: AppColors.darker,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

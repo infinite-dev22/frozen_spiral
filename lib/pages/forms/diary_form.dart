@@ -108,39 +108,69 @@ class _DiaryFormState extends State<DiaryForm> {
                       startTimeController: startTimeController,
                       endDateController: endDateController,
                       endTimeController: endTimeController),
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(5),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: TextButton(
-                      onPressed: _showSearchFileBottomSheet,
-                      child: Text(
-                        file?.fileName ?? 'Select file',
-                        style: const TextStyle(color: AppColors.darker),
+                  GestureDetector(
+                    onTap: _showSearchFileBottomSheet,
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: Text(
+                              file?.fileName ?? 'Select file',
+                              style: const TextStyle(
+                                  color: AppColors.darker,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: AppColors.darker,
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(5),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: TextButton(
-                      onPressed: _showSearchActivityBottomSheet,
-                      child: Text(
-                        activity?.name ?? 'Select activity status',
-                        style: const TextStyle(color: AppColors.darker),
+                  GestureDetector(
+                    onTap: _showSearchActivityBottomSheet,
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: Text(
+                              activity?.name ?? 'Select activity status',
+                              style: const TextStyle(
+                                  color: AppColors.darker,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: AppColors.darker,
+                          ),
+                        ],
                       ),
                     ),
                   ),
