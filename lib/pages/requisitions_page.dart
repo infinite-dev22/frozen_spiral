@@ -208,15 +208,25 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   // }
 
   _buildSearchedBody() {
-    if ((filteredRequisitions.isNotEmpty)) {
+    List<SmartRequisition> requisitions = filteredRequisitions
+        .where((requisition) =>
+    (requisition.requisitionStatus!.code
+        .toLowerCase()
+        .contains("submit") ||
+        requisition.requisitionStatus!.name
+            .toLowerCase()
+            .contains("submit")) &&
+        requisition.supervisor!.id == currentUser.id)
+        .toList(growable: true);
+    if ((requisitions.isNotEmpty)) {
       return ListView.builder(
-        itemCount: filteredRequisitions.length,
+        itemCount: requisitions.length,
         padding: const EdgeInsets.all(10),
         itemBuilder: (context, index) {
           return RequisitionItem(
             color: AppColors.white,
             padding: 10,
-            requisition: filteredRequisitions.elementAt(index),
+            requisition: requisitions.elementAt(index),
             currencies: currencies,
             showActions: true,
             showFinancialStatus: true,

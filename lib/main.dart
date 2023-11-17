@@ -95,6 +95,11 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
           useMaterial3: true,
           brightness: Brightness.light,
+          // textSelectionTheme: const TextSelectionThemeData(
+          //   cursorColor: AppColors.gray75,
+          //   selectionColor: AppColors.gray50,
+          //   selectionHandleColor: AppColors.gray45,
+          // ),
           /* light theme settings */
         ),
         darkTheme: ThemeData(

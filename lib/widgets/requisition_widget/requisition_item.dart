@@ -334,7 +334,9 @@ class _RequisitionItemState extends State<RequisitionItem> {
   }
 
   _approveRequisition() {
-    isProcessing = true;
+    setState(() {
+      isProcessing = true;
+    });
 
     if (widget.requisition.requisitionStatus!.code == 'EDITED' ||
         widget.requisition.requisitionStatus!.code == "SUBMITTED") {
@@ -382,7 +384,8 @@ class _RequisitionItemState extends State<RequisitionItem> {
         backgroundColor: AppColors.green,
         textColor: Colors.white,
         fontSize: 16.0);
-    preloadedRequisitions.removeWhere((element) => element.id == widget.requisition.id);
+    preloadedRequisitions
+        .removeWhere((element) => element.id == widget.requisition.id);
     isProcessing = false;
     setState(() {});
   }

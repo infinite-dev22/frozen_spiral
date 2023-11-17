@@ -32,6 +32,7 @@ class AuthTextField extends StatelessWidget {
     return SizedBox(
       height: 50,
       child: TextFormField(
+        cursorColor: AppColors.gray45,
         validator: (val) =>
             val!.isEmpty ? 'Required field, Please fill in.' : null,
         controller: controller,
@@ -110,6 +111,7 @@ class _AuthPasswordTextField extends State<AuthPasswordTextField> {
     return SizedBox(
       height: 50,
       child: TextFormField(
+        cursorColor: AppColors.gray45,
         validator: (val) =>
             val!.isEmpty ? 'Required field, Please fill in.' : null,
         controller: widget.controller,
