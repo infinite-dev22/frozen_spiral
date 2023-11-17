@@ -135,7 +135,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _buildNonSearchedBody() {
     List<SmartRequisition> requisitions = preloadedRequisitions
         .where((requisition) =>
-            (requisition.requisitionStatus!.code.toLowerCase()
+            (requisition.requisitionStatus!.code
+                    .toLowerCase()
                     .contains("submit") ||
                 requisition.requisitionStatus!.name
                     .toLowerCase()
@@ -255,71 +256,109 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
 
   _searchActivities(String value) {
     filteredRequisitions.clear();
-    if (filterController.text == 'Number') {
-      filteredRequisitions.addAll(preloadedRequisitions.where(
-          (smartRequisition) => smartRequisition.number!
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'Category') {
-      filteredRequisitions.addAll(preloadedRequisitions.where(
-          (smartRequisition) => smartRequisition.requisitionCategory!.name
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'Currency') {
-      filteredRequisitions.addAll(preloadedRequisitions.where(
-          (smartRequisition) => smartRequisition.currency!.name!
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'Requester') {
-      filteredRequisitions.addAll(preloadedRequisitions.where(
-          (smartRequisition) => smartRequisition.employee!
-              .getName()
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'Supervisor') {
-      filteredRequisitions.addAll(preloadedRequisitions.where(
-          (smartRequisition) => smartRequisition.supervisor!
-              .getName()
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'Amount') {
-      filteredRequisitions.addAll(preloadedRequisitions.where(
-          (smartRequisition) => smartRequisition.amount!
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'Amount (Payout)') {
-      filteredRequisitions.addAll(preloadedRequisitions.where(
-          (smartRequisition) => smartRequisition.payoutAmount!
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'Status') {
-      filteredRequisitions.addAll(preloadedRequisitions.where(
-          (smartRequisition) => smartRequisition.requisitionStatus!.name
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'Status (Financial)') {
-      filteredRequisitions.addAll(preloadedRequisitions.where(
-          (smartRequisition) => smartRequisition.caseFinancialStatus
-              .toString()
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else {
-      filteredRequisitions.addAll(preloadedRequisitions.where(
-          (smartRequisition) => smartRequisition.caseFile!
-              .getName()
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    }
+    filteredRequisitions.addAll(preloadedRequisitions.where(
+        (smartRequisition) =>
+            smartRequisition.number!
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartRequisition.caseFile!.fileName!
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartRequisition.caseFile!.fileNumber!
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartRequisition.requisitionStatus!.name
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartRequisition.requisitionStatus!.code
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartRequisition.supervisor!
+                .getName()
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartRequisition.payoutAmount!
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartRequisition.employee!
+                .getName()
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            (smartRequisition.description != null
+                ? smartRequisition.description!
+                    .toLowerCase()
+                    .contains(value.toLowerCase())
+                : false)));
+    setState(() {});
   }
+
+  // _searchActivities(String value) {
+  //   filteredRequisitions.clear();
+  //   if (filterController.text == 'Number') {
+  //     filteredRequisitions.addAll(preloadedRequisitions.where(
+  //         (smartRequisition) => smartRequisition.number!
+  //             .toLowerCase()
+  //             .contains(value.toLowerCase())));
+  //     setState(() {});
+  //   } else if (filterController.text == 'Category') {
+  //     filteredRequisitions.addAll(preloadedRequisitions.where(
+  //         (smartRequisition) => smartRequisition.requisitionCategory!.name
+  //             .contains(value.toLowerCase())));
+  //     setState(() {});
+  //   } else if (filterController.text == 'Currency') {
+  //     filteredRequisitions.addAll(preloadedRequisitions.where(
+  //         (smartRequisition) => smartRequisition.currency!.name!
+  //             .toLowerCase()
+  //             .contains(value.toLowerCase())));
+  //     setState(() {});
+  //   } else if (filterController.text == 'Requester') {
+  //     filteredRequisitions.addAll(preloadedRequisitions.where(
+  //         (smartRequisition) => smartRequisition.employee!
+  //             .getName()
+  //             .toLowerCase()
+  //             .contains(value.toLowerCase())));
+  //     setState(() {});
+  //   } else if (filterController.text == 'Supervisor') {
+  //     filteredRequisitions.addAll(preloadedRequisitions.where(
+  //         (smartRequisition) => smartRequisition.supervisor!
+  //             .getName()
+  //             .toLowerCase()
+  //             .contains(value.toLowerCase())));
+  //     setState(() {});
+  //   } else if (filterController.text == 'Amount') {
+  //     filteredRequisitions.addAll(preloadedRequisitions.where(
+  //         (smartRequisition) => smartRequisition.amount!
+  //             .toLowerCase()
+  //             .contains(value.toLowerCase())));
+  //     setState(() {});
+  //   } else if (filterController.text == 'Amount (Payout)') {
+  //     filteredRequisitions.addAll(preloadedRequisitions.where(
+  //         (smartRequisition) => smartRequisition.payoutAmount!
+  //             .toLowerCase()
+  //             .contains(value.toLowerCase())));
+  //     setState(() {});
+  //   } else if (filterController.text == 'Status') {
+  //     filteredRequisitions.addAll(preloadedRequisitions.where(
+  //         (smartRequisition) => smartRequisition.requisitionStatus!.name
+  //             .toLowerCase()
+  //             .contains(value.toLowerCase())));
+  //     setState(() {});
+  //   } else if (filterController.text == 'Status (Financial)') {
+  //     filteredRequisitions.addAll(preloadedRequisitions.where(
+  //         (smartRequisition) => smartRequisition.caseFinancialStatus
+  //             .toString()
+  //             .toLowerCase()
+  //             .contains(value.toLowerCase())));
+  //     setState(() {});
+  //   } else {
+  //     filteredRequisitions.addAll(preloadedRequisitions.where(
+  //         (smartRequisition) => smartRequisition.caseFile!
+  //             .getName()
+  //             .toLowerCase()
+  //             .contains(value.toLowerCase())));
+  //     setState(() {});
+  //   }
+  // }
 
   _loadCurrencies() async {
     Map currencyMap = await SmartCaseApi.smartFetch(
