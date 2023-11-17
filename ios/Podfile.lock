@@ -156,6 +156,8 @@ PODS:
   - ReachabilitySwift (5.0.0)
   - record (0.0.1):
     - Flutter
+  - rive_common (0.0.1):
+    - Flutter
   - SDWebImage (5.18.3):
     - SDWebImage/Core (= 5.18.3)
   - SDWebImage/Core (5.18.3)
@@ -185,6 +187,7 @@ DEPENDENCIES:
   - light_compressor (from `.symlinks/plugins/light_compressor/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - record (from `.symlinks/plugins/record/ios`)
+  - rive_common (from `.symlinks/plugins/rive_common/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -247,6 +250,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   record:
     :path: ".symlinks/plugins/record/ios"
+  rive_common:
+    :path: ".symlinks/plugins/rive_common/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
@@ -286,6 +291,7 @@ SPEC CHECKSUMS:
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   record: cae05d8dd3cdb1dea3511b20e5a5811a1ae00d0d
+  rive_common: 8a159d68033a8b073e5853acc50f03aa486a2888
   SDWebImage: 96e0c18ef14010b7485210e92fac888587ebb958
   SDWebImageWebPCoder: eb7970094ac1401eb4c8a1cd077f472dbc66497b
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
