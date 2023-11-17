@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:great_list_view/great_list_view.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/pages/forms/requisition_form.dart';
@@ -30,7 +29,6 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   late Timer _timer;
 
   final scrollController = ScrollController();
-  final controller = AnimatedListController();
   final gkey = GlobalKey<_RequisitionsPageState>();
 
   List<SmartRequisition> filteredRequisitions = List.empty(growable: true);
@@ -134,31 +132,33 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         : _buildNonSearchedBody();
   }
 
-  _buildNonSearchedBody2() {
-    if ((preloadedRequisitions.isNotEmpty)) {
-      return Scrollbar(
-        controller: scrollController,
-        child: AutomaticAnimatedListView<SmartRequisition>(
-          padding: const EdgeInsets.all(10),
-          list: preloadedRequisitions,
-          comparator: AnimatedListDiffListComparator<SmartRequisition>(
-              sameItem: (a, b) => a.id == b.id,
-              sameContent: (a, b) =>
-                  a.number == b.number &&
-                  a.caseFile!.fileName == b.caseFile!.fileName),
-          itemBuilder: (context, item, data) => RequisitionItem(
+  _buildNonSearchedBody() {
+    List<SmartRequisition> requisitions = preloadedRequisitions
+        .where((requisition) =>
+            (requisition.requisitionStatus!.code.toLowerCase()
+                    .contains("submit") ||
+                requisition.requisitionStatus!.name
+                    .toLowerCase()
+                    .contains("submit")) &&
+            requisition.supervisor!.id == currentUser.id)
+        .toList(growable: true);
+    // preloadedRequisitions.forEach((element) { print("${element.requisitionStatus!.name}\n"); });
+    if ((requisitions.isNotEmpty)) {
+      return ListView.builder(
+        itemCount: requisitions.length,
+        padding: const EdgeInsets.all(10),
+        itemBuilder: (context, index) {
+          return RequisitionItem(
             color: AppColors.white,
             padding: 10,
-            requisition: item,
+            requisition: requisitions.elementAt(index),
             currencies: currencies,
             showActions: true,
-          ),
-          listController: controller,
-          scrollController: scrollController,
-          detectMoves: true,
-        ),
+            showFinancialStatus: true,
+          );
+        },
       );
-    } else if (_doneLoading && preloadedRequisitions.isEmpty) {
+    } else if (_doneLoading && requisitions.isEmpty) {
       return const Center(
         child: Text(
           "Your requisitions appear here",
@@ -174,37 +174,37 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     }
   }
 
-  _buildNonSearchedBody() {
-    if ((preloadedRequisitions.isNotEmpty)) {
-      return ListView.builder(
-        itemCount: preloadedRequisitions.length,
-        padding: const EdgeInsets.all(10),
-        itemBuilder: (context, index) {
-          return RequisitionItem(
-            color: AppColors.white,
-            padding: 10,
-            requisition: preloadedRequisitions.elementAt(index),
-            currencies: currencies,
-            showActions: true,
-            showFinancialStatus: true,
-          );
-        },
-      );
-    } else if (_doneLoading && preloadedRequisitions.isEmpty) {
-      return const Center(
-        child: Text(
-          "Your requisitions appear here",
-          style: TextStyle(color: AppColors.inActiveColor),
-        ),
-      );
-    } else {
-      return ListView.builder(
-        itemCount: 3,
-        padding: const EdgeInsets.all(10),
-        itemBuilder: (context, index) => const RequisitionShimmer(),
-      );
-    }
-  }
+  // _buildNonSearchedBody() {
+  //   if ((preloadedRequisitions.isNotEmpty)) {
+  //     return ListView.builder(
+  //       itemCount: preloadedRequisitions.length,
+  //       padding: const EdgeInsets.all(10),
+  //       itemBuilder: (context, index) {
+  //         return RequisitionItem(
+  //           color: AppColors.white,
+  //           padding: 10,
+  //           requisition: preloadedRequisitions.elementAt(index),
+  //           currencies: currencies,
+  //           showActions: true,
+  //           showFinancialStatus: true,
+  //         );
+  //       },
+  //     );
+  //   } else if (_doneLoading && preloadedRequisitions.isEmpty) {
+  //     return const Center(
+  //       child: Text(
+  //         "Your requisitions appear here",
+  //         style: TextStyle(color: AppColors.inActiveColor),
+  //       ),
+  //     );
+  //   } else {
+  //     return ListView.builder(
+  //       itemCount: 3,
+  //       padding: const EdgeInsets.all(10),
+  //       itemBuilder: (context, index) => const RequisitionShimmer(),
+  //     );
+  //   }
+  // }
 
   _buildSearchedBody() {
     if ((filteredRequisitions.isNotEmpty)) {
