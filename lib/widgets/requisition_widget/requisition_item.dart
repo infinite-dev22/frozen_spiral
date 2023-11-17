@@ -1,6 +1,8 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/widgets/requisition_widget/reuisition_item_status.dart';
@@ -37,6 +39,7 @@ class RequisitionItem extends StatefulWidget {
 
 class _RequisitionItemState extends State<RequisitionItem> {
   bool isProcessing = false;
+  bool isLoading = false;
 
   NumberFormat formatter =
       NumberFormat('###,###,###,###,###,###,###,###,###.##');
@@ -69,208 +72,463 @@ class _RequisitionItemState extends State<RequisitionItem> {
         ],
         color: widget.color,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.showActions)
-            Column(
+      child: isProcessing
+          ? Stack(
+              fit: StackFit.passthrough,
               children: [
-                (widget.requisition.canApprove == null &&
-                        (widget.requisition.canPay == false ||
-                            widget.requisition.canPay == null) &&
-                        (!widget.requisition.isMine! &&
-                                !widget.requisition.canEdit! &&
-                                widget.requisition.requisitionStatus!.code !=
-                                    'SUBMITTED' ||
-                            widget.requisition.requisitionStatus!.code !=
-                                'EDITED'))
-                    ? Container()
-                    : SizedBox(
-                        height: 33,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            if (widget.requisition.canApprove != null)
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: FilledButton(
-                                      onPressed: (isProcessing)
-                                          ? null
-                                          : _approveRequisition,
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.resolveWith(
-                                                (states) => AppColors.green),
-                                      ),
-                                      child: const Text(
-                                        'Approve',
-                                      ),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.pushNamed(
-                                      context,
-                                      '/requisition',
-                                      arguments: widget.requisition.id!,
-                                    ).then((_) => setState(() {})),
-                                    child: const Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.recycling_rounded, size: 20),
-                                        SizedBox(
-                                          width: 5,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (widget.showActions)
+                      Column(
+                        children: [
+                          (widget.requisition.canApprove == null &&
+                                  (widget.requisition.canPay == false ||
+                                      widget.requisition.canPay == null) &&
+                                  (!widget.requisition.isMine! &&
+                                          !widget.requisition.canEdit! &&
+                                          widget.requisition.requisitionStatus!
+                                                  .code !=
+                                              'SUBMITTED' ||
+                                      widget.requisition.requisitionStatus!
+                                              .code !=
+                                          'EDITED'))
+                              ? Container()
+                              : SizedBox(
+                                  height: 33,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      if (widget.requisition.canApprove != null)
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: FilledButton(
+                                                onPressed: (isProcessing)
+                                                    ? null
+                                                    : _approveRequisition,
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty
+                                                          .resolveWith(
+                                                              (states) =>
+                                                                  AppColors
+                                                                      .green),
+                                                ),
+                                                child: const Text(
+                                                  'Approve',
+                                                ),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pushNamed(
+                                                context,
+                                                '/requisition',
+                                                arguments:
+                                                    widget.requisition.id!,
+                                              ).then((_) => setState(() {})),
+                                              child: const Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(Icons.recycling_rounded,
+                                                      size: 20),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Text('Process')
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Text('Process')
-                                      ],
-                                    ),
+                                      if (widget.requisition.canPay == true)
+                                        TextButton(
+                                          onPressed: () => Navigator.pushNamed(
+                                            context,
+                                            '/requisition',
+                                            arguments: widget.requisition.id,
+                                          ).then((_) => setState(() {})),
+                                          child: const Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.money_rounded),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text('Pay out')
+                                            ],
+                                          ),
+                                        ),
+                                      if (widget.requisition.isMine! &&
+                                              widget.requisition.canEdit! &&
+                                              widget
+                                                      .requisition
+                                                      .requisitionStatus!
+                                                      .code ==
+                                                  'SUBMITTED' ||
+                                          widget.requisition.requisitionStatus!
+                                                  .code ==
+                                              'EDITED')
+                                        TextButton(
+                                          onPressed: () =>
+                                              _buildRequisitionForm(context),
+                                          child: const Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(CupertinoIcons
+                                                  .pencil_ellipsis_rectangle),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text('Edit')
+                                            ],
+                                          ),
+                                        ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            if (widget.requisition.canPay == true)
-                              TextButton(
-                                onPressed: () => Navigator.pushNamed(
-                                  context,
-                                  '/requisition',
-                                  arguments: widget.requisition.id,
-                                ).then((_) => setState(() {})),
-                                child: const Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.money_rounded),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text('Pay out')
-                                  ],
                                 ),
-                              ),
-                            if (widget.requisition.isMine! &&
-                                    widget.requisition.canEdit! &&
-                                    widget.requisition.requisitionStatus!
-                                            .code ==
-                                        'SUBMITTED' ||
-                                widget.requisition.requisitionStatus!.code ==
-                                    'EDITED')
-                              TextButton(
-                                onPressed: () => _buildRequisitionForm(context),
-                                child: const Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(CupertinoIcons
-                                        .pencil_ellipsis_rectangle),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text('Edit')
-                                  ],
-                                ),
-                              ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    _buildStringItem(
+                        'File Name', widget.requisition.caseFile!.fileName),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    if (widget.showFinancialStatus)
+                      if (widget.requisition.caseFinancialStatus != null)
+                        Column(
+                          children: [
+                            _buildFinancialStatusStringItem(
+                                'Financial Status (UGX)',
+                                formatter.format(double.parse(widget
+                                    .requisition.caseFinancialStatus!
+                                    .replaceAll(",", '')))),
+                            const SizedBox(
+                              height: 10,
+                            ),
                           ],
                         ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildStringItem(
+                            'Requisition Number', widget.requisition.number),
+                        _buildStringItem('Category',
+                            widget.requisition.requisitionCategory!.name),
+                      ],
+                    ),
+                    Text(
+                      DateFormat('dd/MM/yyyy').format(widget.requisition.date!),
+                      style: const TextStyle(color: AppColors.inActiveColor),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _buildStringItem(
+                        'Description', widget.requisition.description),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildStringItem('Requestioner',
+                            "${widget.requisition.employee!.firstName} ${widget.requisition.employee!.lastName}"),
+                        _buildStringItem('Supervisor',
+                            "${widget.requisition.supervisor!.firstName} ${widget.requisition.supervisor!.lastName}"),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildStringItem(
+                            'Amount (UGX)',
+                            formatter.format(
+                                double.parse(widget.requisition.amount!))),
+                        RequisitionItemStatus(
+                            name: widget.requisition.requisitionStatus!.name ==
+                                    'SECONDARY_APPROVED'
+                                ? 'Approved'
+                                : widget.requisition.requisitionStatus!.name ==
+                                        'SECONDARY_REJECTED'
+                                    ? 'Rejected'
+                                    : widget.requisition.requisitionStatus!
+                                                .name ==
+                                            'SECONDARY_RETURNED'
+                                        ? 'Returned'
+                                        : widget.requisition.requisitionStatus!
+                                            .name,
+                            bgColor: widget.requisition.requisitionStatus!.name
+                                    .toLowerCase()
+                                    .contains('approved')
+                                ? AppColors.green
+                                : widget.requisition.requisitionStatus!.name
+                                        .toLowerCase()
+                                        .contains('rejected')
+                                    ? AppColors.red
+                                    : widget.requisition.requisitionStatus!.name
+                                            .toLowerCase()
+                                            .contains('returned')
+                                        ? AppColors.orange
+                                        : widget.requisition.requisitionStatus!
+                                                .name
+                                                .toLowerCase()
+                                                .contains('paid')
+                                            ? AppColors.purple
+                                            : AppColors.blue,
+                            horizontalPadding: 20,
+                            verticalPadding: 5),
+                      ],
+                    ),
+                  ],
+                ).blur(blur: 3),
+                if (isLoading)
+                  const Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: CupertinoActivityIndicator(radius: 18),
+                    ),
+                  )
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.showActions)
+                  Column(
+                    children: [
+                      (widget.requisition.canApprove == null &&
+                              (widget.requisition.canPay == false ||
+                                  widget.requisition.canPay == null) &&
+                              (!widget.requisition.isMine! &&
+                                      !widget.requisition.canEdit! &&
+                                      widget.requisition.requisitionStatus!
+                                              .code !=
+                                          'SUBMITTED' ||
+                                  widget.requisition.requisitionStatus!.code !=
+                                      'EDITED'))
+                          ? Container()
+                          : SizedBox(
+                              height: 33,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  if (widget.requisition.canApprove != null)
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: FilledButton(
+                                            onPressed: (isProcessing)
+                                                ? null
+                                                : _approveRequisition,
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty
+                                                      .resolveWith((states) =>
+                                                          AppColors.green),
+                                            ),
+                                            child: const Text(
+                                              'Approve',
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () => Navigator.pushNamed(
+                                            context,
+                                            '/requisition',
+                                            arguments: widget.requisition.id!,
+                                          ).then((_) => setState(() {})),
+                                          child: const Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.recycling_rounded,
+                                                  size: 20),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text('Process')
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  if (widget.requisition.canPay == true)
+                                    TextButton(
+                                      onPressed: () => Navigator.pushNamed(
+                                        context,
+                                        '/requisition',
+                                        arguments: widget.requisition.id,
+                                      ).then((_) => setState(() {})),
+                                      child: const Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.money_rounded),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text('Pay out')
+                                        ],
+                                      ),
+                                    ),
+                                  if (widget.requisition.isMine! &&
+                                          widget.requisition.canEdit! &&
+                                          widget.requisition.requisitionStatus!
+                                                  .code ==
+                                              'SUBMITTED' ||
+                                      widget.requisition.requisitionStatus!
+                                              .code ==
+                                          'EDITED')
+                                    TextButton(
+                                      onPressed: () =>
+                                          _buildRequisitionForm(context),
+                                      child: const Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(CupertinoIcons
+                                              .pencil_ellipsis_rectangle),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text('Edit')
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                      const SizedBox(
+                        height: 10,
                       ),
+                    ],
+                  ),
+                _buildStringItem(
+                    'File Name', widget.requisition.caseFile!.fileName),
                 const SizedBox(
                   height: 10,
                 ),
+                if (widget.showFinancialStatus)
+                  if (widget.requisition.caseFinancialStatus != null)
+                    Column(
+                      children: [
+                        _buildFinancialStatusStringItem(
+                            'Financial Status (UGX)',
+                            formatter.format(double.parse(widget
+                                .requisition.caseFinancialStatus!
+                                .replaceAll(",", '')))),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildStringItem(
+                        'Requisition Number', widget.requisition.number),
+                    _buildStringItem('Category',
+                        widget.requisition.requisitionCategory!.name),
+                  ],
+                ),
+                Text(
+                  DateFormat('dd/MM/yyyy').format(widget.requisition.date!),
+                  style: const TextStyle(color: AppColors.inActiveColor),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                _buildStringItem('Description', widget.requisition.description),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildStringItem('Requester',
+                        "${widget.requisition.employee!.firstName} ${widget.requisition.employee!.lastName}"),
+                    _buildStringItem('Supervisor',
+                        "${widget.requisition.supervisor!.firstName} ${widget.requisition.supervisor!.lastName}"),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildStringItem(
+                        'Amount (UGX)',
+                        formatter
+                            .format(double.parse(widget.requisition.amount!))),
+                    RequisitionItemStatus(
+                        name: widget.requisition.requisitionStatus!.name ==
+                                'SECONDARY_APPROVED'
+                            ? 'Approved'
+                            : widget.requisition.requisitionStatus!.name ==
+                                    'SECONDARY_REJECTED'
+                                ? 'Rejected'
+                                : widget.requisition.requisitionStatus!.name ==
+                                        'SECONDARY_RETURNED'
+                                    ? 'Returned'
+                                    : widget
+                                        .requisition.requisitionStatus!.name,
+                        bgColor: widget.requisition.requisitionStatus!.name
+                                .toLowerCase()
+                                .contains('approved')
+                            ? AppColors.green
+                            : widget.requisition.requisitionStatus!.name
+                                    .toLowerCase()
+                                    .contains('rejected')
+                                ? AppColors.red
+                                : widget.requisition.requisitionStatus!.name
+                                        .toLowerCase()
+                                        .contains('returned')
+                                    ? AppColors.orange
+                                    : widget.requisition.requisitionStatus!.name
+                                            .toLowerCase()
+                                            .contains('paid')
+                                        ? AppColors.purple
+                                        : AppColors.blue,
+                        horizontalPadding: 20,
+                        verticalPadding: 5),
+                  ],
+                ),
               ],
             ),
-          _buildStringItem('File Name', widget.requisition.caseFile!.fileName),
-          const SizedBox(
-            height: 10,
-          ),
-          if (widget.showFinancialStatus)
-            if (widget.requisition.caseFinancialStatus != null)
-              Column(
-                children: [
-                  _buildFinancialStatusStringItem(
-                      'Financial Status (UGX)',
-                      formatter.format(double.parse(widget
-                          .requisition.caseFinancialStatus!
-                          .replaceAll(",", '')))),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildStringItem('Requisition Number', widget.requisition.number),
-              _buildStringItem(
-                  'Category', widget.requisition.requisitionCategory!.name),
-            ],
-          ),
-          Text(
-            DateFormat('dd/MM/yyyy').format(widget.requisition.date!),
-            style: const TextStyle(color: AppColors.inActiveColor),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          _buildStringItem('Description', widget.requisition.description),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildStringItem('Requester',
-                  "${widget.requisition.employee!.firstName} ${widget.requisition.employee!.lastName}"),
-              _buildStringItem('Supervisor',
-                  "${widget.requisition.supervisor!.firstName} ${widget.requisition.supervisor!.lastName}"),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildStringItem('Amount (UGX)',
-                  formatter.format(double.parse(widget.requisition.amount!))),
-              RequisitionItemStatus(
-                  name: widget.requisition.requisitionStatus!.name ==
-                          'SECONDARY_APPROVED'
-                      ? 'Approved'
-                      : widget.requisition.requisitionStatus!.name ==
-                              'SECONDARY_REJECTED'
-                          ? 'Rejected'
-                          : widget.requisition.requisitionStatus!.name ==
-                                  'SECONDARY_RETURNED'
-                              ? 'Returned'
-                              : widget.requisition.requisitionStatus!.name,
-                  bgColor: widget.requisition.requisitionStatus!.name
-                          .toLowerCase()
-                          .contains('approved')
-                      ? AppColors.green
-                      : widget.requisition.requisitionStatus!.name
-                              .toLowerCase()
-                              .contains('rejected')
-                          ? AppColors.red
-                          : widget.requisition.requisitionStatus!.name
-                                  .toLowerCase()
-                                  .contains('returned')
-                              ? AppColors.orange
-                              : widget.requisition.requisitionStatus!.name
-                                      .toLowerCase()
-                                      .contains('paid')
-                                  ? AppColors.purple
-                                  : AppColors.blue,
-                  horizontalPadding: 20,
-                  verticalPadding: 5),
-            ],
-          ),
-        ],
-      ),
     );
   }
 
@@ -336,6 +594,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
   _approveRequisition() {
     setState(() {
       isProcessing = true;
+      isLoading = true;
     });
 
     if (widget.requisition.requisitionStatus!.code == 'EDITED' ||
@@ -376,17 +635,29 @@ class _RequisitionItemState extends State<RequisitionItem> {
   }
 
   _onSuccess(String text) async {
-    Fluttertoast.showToast(
-        msg: text,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: AppColors.green,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.bottomSlide,
+      title: 'Success',
+      desc: 'Requisition has been successfully approved',
+      // autoDismiss: true,
+      // autoHide: const Duration(seconds: 3),
+      btnCancel: null,
+      btnOkOnPress: () {},
+    ).show();
+    // Fluttertoast.showToast(
+    //     msg: text,
+    //     toastLength: Toast.LENGTH_LONG,
+    //     gravity: ToastGravity.CENTER,
+    //     timeInSecForIosWeb: 1,
+    //     backgroundColor: AppColors.green,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0);
     preloadedRequisitions
         .removeWhere((element) => element.id == widget.requisition.id);
     isProcessing = false;
+    isLoading = false;
     setState(() {});
   }
 
@@ -400,6 +671,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
         textColor: Colors.white,
         fontSize: 16.0);
     isProcessing = false;
+    isLoading = false;
     setState(() {});
   }
 }

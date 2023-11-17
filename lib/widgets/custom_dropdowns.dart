@@ -43,10 +43,12 @@ class CustomDropdownFilter extends StatelessWidget {
         ),
         items: menuItems
             .map((item) => DropdownMenuItem<String>(
+                  alignment: Alignment.centerLeft,
                   value: item,
                   child: Text(
                     item,
                     style: const TextStyle(
+                      color: AppColors.darker,
                       fontSize: 14,
                     ),
                   ),
@@ -168,7 +170,7 @@ class SearchableDropDown<T extends SmartModel> extends StatelessWidget {
           }
         },
         dropDownItemCount: 6,
-        autovalidateMode: AutovalidateMode.always,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         dropDownList: menuItems
             .map(
                 (item) => DropDownValueModel(value: item, name: item.getName()))
@@ -203,6 +205,8 @@ class CustomGenericDropdown<T extends SmartModel> extends StatelessWidget {
         SizedBox(
           height: 50,
           child: DropdownButtonFormField2<T>(
+            alignment: Alignment.centerLeft,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             value: defaultValue,
             isExpanded: true,
             decoration: InputDecoration(
@@ -282,6 +286,7 @@ class GenderDropdown extends StatelessWidget {
         SizedBox(
           height: 50,
           child: DropdownButtonFormField2<int>(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             isExpanded: true,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(vertical: 16),

@@ -135,14 +135,17 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _buildNonSearchedBody() {
     List<SmartRequisition> requisitions = preloadedRequisitions
         .where((requisition) =>
-            (requisition.requisitionStatus!.code
-                    .toLowerCase()
-                    .contains("submit") ||
-                requisition.requisitionStatus!.name
-                    .toLowerCase()
-                    .contains("submit")) &&
-            requisition.supervisor!.id == currentUser.id)
+            ((requisition.requisitionStatus!.code
+                        .toLowerCase()
+                        .contains("submit") ||
+                    requisition.requisitionStatus!.name
+                        .toLowerCase()
+                        .contains("submit")) &&
+                requisition.supervisor!.id == currentUser.id) ||
+            (requisition.employee!.id == currentUser.id) ||
+            (requisition.canPay == true))
         .toList(growable: true);
+
     // preloadedRequisitions.forEach((element) { print("${element.requisitionStatus!.name}\n"); });
     if ((requisitions.isNotEmpty)) {
       return ListView.builder(
@@ -210,13 +213,15 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _buildSearchedBody() {
     List<SmartRequisition> requisitions = filteredRequisitions
         .where((requisition) =>
-    (requisition.requisitionStatus!.code
-        .toLowerCase()
-        .contains("submit") ||
-        requisition.requisitionStatus!.name
-            .toLowerCase()
-            .contains("submit")) &&
-        requisition.supervisor!.id == currentUser.id)
+            ((requisition.requisitionStatus!.code
+                        .toLowerCase()
+                        .contains("submit") ||
+                    requisition.requisitionStatus!.name
+                        .toLowerCase()
+                        .contains("submit")) &&
+                requisition.supervisor!.id == currentUser.id) ||
+            (requisition.employee!.id == currentUser.id) ||
+            (requisition.canPay == true))
         .toList(growable: true);
     if ((requisitions.isNotEmpty)) {
       return ListView.builder(
@@ -250,7 +255,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
       const BetterErrorToast(
         text: "An error occurred",
       );
-      setState(() {});
+      if (mounted) setState(() {});
     });
     _loadCurrencies();
 

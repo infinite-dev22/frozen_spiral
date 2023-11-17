@@ -141,6 +141,9 @@ class CustomTextArea extends StatelessWidget {
           minLines: minLines,
           maxLines: 500,
           onTap: onTap,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (val) =>
+              val!.isEmpty ? 'Required field, Please fill in.' : null,
           decoration: InputDecoration(
             filled: true,
             fillColor: AppColors.textBoxColor,
@@ -176,6 +179,9 @@ class SmartCaseTextField extends StatelessWidget {
           height: 50,
           child: TextFormField(
             controller: controller,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (val) =>
+            val!.isEmpty ? 'Required field, Please fill in.' : null,
             decoration: InputDecoration(
               filled: true,
               fillColor: AppColors.textBoxColor,
@@ -216,6 +222,9 @@ class SmartCaseNumberField extends StatelessWidget {
           height: 50,
           child: TextFormField(
             controller: controller,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (val) =>
+            val!.isEmpty ? 'Required field, Please fill in.' : null,
             decoration: InputDecoration(
               filled: true,
               fillColor: AppColors.textBoxColor,

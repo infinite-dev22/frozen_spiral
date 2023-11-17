@@ -93,19 +93,21 @@ class _EngagementFormState extends State<EngagementForm> {
                             dateController: dateController,
                             startTimeController: startTimeController,
                             endTimeController: endTimeController),
-                        Container(
-                          height: 50,
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(5),
-                          margin: const EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: TextButton(
-                            onPressed: _showSearchClientBottomSheet,
+                        GestureDetector(
+                          onTap: _showSearchClientBottomSheet,
+                          child: Container(
+                            height: 50,
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            alignment: Alignment.centerLeft,
                             child: Text(
                               client?.getName() ?? 'Select client',
+                              style: const TextStyle(color: AppColors.darker),
                             ),
                           ),
                         ),
@@ -118,11 +120,13 @@ class _EngagementFormState extends State<EngagementForm> {
                             color: AppColors.white,
                             borderRadius: BorderRadius.circular(10),
                           ),
+                          alignment: Alignment.centerLeft,
                           child: TextButton(
                             onPressed: _showSearchEngagementTypeBottomSheet,
                             child: Text(
                               engagementType?.getName() ??
                                   'Select engagement type',
+                              style: const TextStyle(color: AppColors.darker),
                             ),
                           ),
                         ),

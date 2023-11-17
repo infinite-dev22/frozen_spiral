@@ -113,6 +113,7 @@ class _DiaryFormState extends State<DiaryForm> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(5),
                     margin: const EdgeInsets.only(bottom: 10),
+                    alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
                       color: AppColors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -121,6 +122,7 @@ class _DiaryFormState extends State<DiaryForm> {
                       onPressed: _showSearchFileBottomSheet,
                       child: Text(
                         file?.fileName ?? 'Select file',
+                        style: const TextStyle(color: AppColors.darker),
                       ),
                     ),
                   ),
@@ -129,6 +131,7 @@ class _DiaryFormState extends State<DiaryForm> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(5),
                     margin: const EdgeInsets.only(bottom: 10),
+                    alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
                       color: AppColors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -137,6 +140,7 @@ class _DiaryFormState extends State<DiaryForm> {
                       onPressed: _showSearchActivityBottomSheet,
                       child: Text(
                         activity?.name ?? 'Select activity status',
+                        style: const TextStyle(color: AppColors.darker),
                       ),
                     ),
                   ),

@@ -119,10 +119,12 @@ class _RequisitionFormState extends State<RequisitionForm> {
                       color: AppColors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    alignment: Alignment.centerLeft,
                     child: TextButton(
                       onPressed: _showSearchFileBottomSheet,
                       child: Text(
                         file?.getName() ?? 'Select file',
+                        style: TextStyle(color: AppColors.darker),
                       ),
                     ),
                   ),
@@ -158,10 +160,12 @@ class _RequisitionFormState extends State<RequisitionForm> {
                       color: AppColors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    alignment: Alignment.centerLeft,
                     child: TextButton(
                       onPressed: _showSearchCategoryBottomSheet,
                       child: Text(
                         category?.getName() ?? 'Select requisition category',
+                        style: const TextStyle(color: AppColors.darker),
                       ),
                     ),
                   ),
