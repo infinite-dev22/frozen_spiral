@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:intl/intl.dart';
+import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/widgets/requisition_widget/reuisition_item_status.dart';
 
@@ -542,10 +543,12 @@ class _RequisitionItemState extends State<RequisitionItem> {
             color: AppColors.inActiveColor,
           ),
         ),
-        Text(
+        SearchHighlightText(
           data ?? 'Null',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: const TextStyle(color: AppColors.darker),
+          highlightStyle: const TextStyle(
+            backgroundColor: AppColors.yellow,
+            color: AppColors.darker,
           ),
         ),
       ],

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -45,55 +47,55 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  _buildBody() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .82,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CustomImage(
-                      "assets/images/splash.png",
-                      trBackground: true,
-                      isNetwork: false,
-                      width: MediaQuery.of(context).size.width * .6,
-                      imageFit: BoxFit.contain,
-                      radius: 0,
-                    ),
-                    SizedBox(height: _height),
-                    (showLogin) ? _buildLoginBody() : _buildPasswordResetBody(),
-                  ],
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                const SizedBox(height: 10),
-                _buildTextWithLink('contact us: ', 'info@infosectechno.com'),
-                const SizedBox(height: 8),
-                _buildTextWithAction('+256 (0)770456789'),
-                const SizedBox(height: 8),
-                Text(
-                  'copyright @ ${DateTime.now().year} SmartCase Manager',
-                  style: const TextStyle(
-                    color: AppColors.inActiveColor,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // _buildBody() {
+  //   return SingleChildScrollView(
+  //     padding: const EdgeInsets.all(16),
+  //     child: SizedBox(
+  //       height: MediaQuery.of(context).size.height,
+  //       child: Column(
+  //         children: [
+  //           SizedBox(
+  //             height: MediaQuery.of(context).size.height * .82,
+  //             child: Center(
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 children: [
+  //                   CustomImage(
+  //                     "assets/images/splash.png",
+  //                     trBackground: true,
+  //                     isNetwork: false,
+  //                     width: MediaQuery.of(context).size.width * .6,
+  //                     imageFit: BoxFit.contain,
+  //                     radius: 0,
+  //                   ),
+  //                   SizedBox(height: _height),
+  //                   (showLogin) ? _buildLoginBody() : _buildPasswordResetBody(),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //           Column(
+  //             children: [
+  //               const SizedBox(height: 10),
+  //               _buildTextWithLink('contact us: ', 'info@infosectechno.com'),
+  //               const SizedBox(height: 8),
+  //               _buildTextWithAction('+256 (0)770456789'),
+  //               const SizedBox(height: 8),
+  //               Text(
+  //                 'copyright @ ${DateTime.now().year} SmartCase Manager',
+  //                 style: const TextStyle(
+  //                   color: AppColors.inActiveColor,
+  //                   fontWeight: FontWeight.w300,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   _buildTextWithLink(String data, String link) {
     return Column(
@@ -174,34 +176,60 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   _onPressed() {
-    if (EmailValidator.validate(emailController.text.isNotEmpty
-        ? emailController.text.trim()
-        : email)) {
-      setState(() {
-        isAuthingUser = true;
-      });
+    if (emailController.text.isNotEmpty || email.isNotEmpty) {
+      if (EmailValidator.validate(emailController.text.isNotEmpty
+          ? emailController.text.trim()
+          : email)) {
+        if (passwordController.text.isNotEmpty) {
+          setState(() {
+            isAuthingUser = true;
+          });
 
-      AuthApis.checkIfUserExists(
-        emailController.text.isNotEmpty ? emailController.text.trim() : email,
-        onError: _handleError,
-        onNoUser: _handleWrongEmail,
-      ).then(
-        (url) => AuthApis.signInUser(
-          url!,
-          emailController.text.isNotEmpty ? emailController.text.trim() : email,
-          passwordController.text.trim(),
-          onSuccess: _signUserIn,
-          onWrongPassword: _handleWrongPass,
-          onError: _handleError,
-        ).then(
-          (user) => AuthApis.uploadFCMToken(emailController.text.isNotEmpty
-              ? emailController.text.trim()
-              : email),
-        ),
-      );
+          AuthApis.checkIfUserExists(
+            emailController.text.isNotEmpty
+                ? emailController.text.trim()
+                : email,
+            onError: _handleError,
+            onNoUser: _handleWrongEmail,
+          ).then(
+            (url) => AuthApis.signInUser(
+              url!,
+              emailController.text.isNotEmpty
+                  ? emailController.text.trim()
+                  : email,
+              passwordController.text.trim(),
+              onSuccess: _signUserIn,
+              onWrongPassword: _handleWrongPass,
+              onError: _handleError,
+            ).then(
+              (user) => AuthApis.uploadFCMToken(emailController.text.isNotEmpty
+                  ? emailController.text.trim()
+                  : email),
+            ),
+          );
+        } else {
+          Fluttertoast.showToast(
+              msg: "No Password provided",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: AppColors.red,
+              textColor: AppColors.white,
+              fontSize: 16.0);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: "Email not valid",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: AppColors.red,
+            textColor: AppColors.white,
+            fontSize: 16.0);
+      }
     } else {
       Fluttertoast.showToast(
-          msg: "Email not valid",
+          msg: "No email provided",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
@@ -429,14 +457,26 @@ class _WelcomePageState extends State<WelcomePage> {
   _buildLoginBody() {
     return Column(
       children: [
-        Text(
-          (currentUsername != null)
-              ? 'Welcome, ${currentUsername!}'
-              : 'Welcome',
-          style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 30,
-              fontWeight: FontWeight.w100),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // Text(
+            //   "Welcome\nback!",
+            //   style: const TextStyle(
+            //       color: AppColors.white,
+            //       fontSize: 25,
+            //       fontWeight: FontWeight.w400),
+            // ),
+            Text(
+              (currentUsername != null)
+                  ? 'Hey! Good to see you again.'
+                  : 'Hello, We are happy to see you here.',
+              style: const TextStyle(
+                  color: AppColors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w300),
+            ),
+          ],
         ),
         const SizedBox(
           height: 30,
@@ -507,8 +547,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 name: 'Login',
                 onPressed: _onPressed,
                 bgColor: AppColors.gray45,
-                textStyle:
-                    const TextStyle(color: AppColors.primary, fontSize: 20),
+                textStyle: const TextStyle(color: Colors.black54, fontSize: 22),
               ),
         const SizedBox(
           height: 10,
@@ -527,6 +566,73 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildBody() {
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+                        decoration: BoxDecoration(
+                            color: const Color.fromRGBO(0, 0, 0, 1)
+                                .withOpacity(0.2),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(30))),
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CustomImage(
+                                "assets/images/splash.png",
+                                trBackground: true,
+                                isNetwork: false,
+                                width: MediaQuery.of(context).size.width * .6,
+                                imageFit: BoxFit.contain,
+                                radius: 0,
+                              ),
+                              (showLogin)
+                                  ? _buildLoginBody()
+                                  : _buildPasswordResetBody(),
+                              const SizedBox(height: 10),
+                              _buildTextWithLink(
+                                  'contact us: ', 'info@infosectechno.com'),
+                              const SizedBox(height: 8),
+                              _buildTextWithAction('+256 (0)770456789'),
+                              const SizedBox(height: 8),
+                              Text(
+                                'copyright @ ${DateTime.now().year} SmartCase Manager',
+                                style: const TextStyle(
+                                  color: AppColors.inActiveColor,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
