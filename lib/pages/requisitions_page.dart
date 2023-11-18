@@ -135,15 +135,29 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _buildNonSearchedBody() {
     List<SmartRequisition> requisitions = preloadedRequisitions
         .where((requisition) =>
+    ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
+        requisition.requisitionStatus!.name
+            .toLowerCase()
+            .contains("submit")) &&
+        requisition.supervisor!.id == currentUser.id) ||
+        (requisition.employee!.id == currentUser.id) ||
+        (requisition.canPay == true) ||
+        ((requisition.secondApprover != null &&
+            requisition.secondApprover == true) &&
             ((requisition.requisitionStatus!.code
-                        .toLowerCase()
-                        .contains("submit") ||
+                .toLowerCase()
+                .contains("submit") ||
+                requisition.requisitionStatus!.name
+                    .toLowerCase()
+                    .contains("submit")) ||
+                (requisition.requisitionStatus!.code
+                    .toLowerCase()
+                    .contains("primar") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("submit")) &&
-                requisition.supervisor!.id == currentUser.id) ||
-            (requisition.employee!.id == currentUser.id) ||
-            (requisition.canPay == true))
+                        .contains("primar")) ||
+                (requisition.supervisor!.id == currentUser.id) ||
+                (requisition.employee!.id == currentUser.id))))
         .toList(growable: true);
 
     // preloadedRequisitions.forEach((element) { print("${element.requisitionStatus!.name}\n"); });
@@ -213,15 +227,31 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _buildSearchedBody() {
     List<SmartRequisition> requisitions = filteredRequisitions
         .where((requisition) =>
+    ((requisition.requisitionStatus!.code
+        .toLowerCase()
+        .contains("submit") ||
+        requisition.requisitionStatus!.name
+            .toLowerCase()
+            .contains("submit")) &&
+        requisition.supervisor!.id == currentUser.id) ||
+        (requisition.employee!.id == currentUser.id) ||
+        (requisition.canPay == true) ||
+        ((requisition.secondApprover != null &&
+            requisition.secondApprover == true) &&
             ((requisition.requisitionStatus!.code
-                        .toLowerCase()
-                        .contains("submit") ||
+                .toLowerCase()
+                .contains("submit") ||
+                requisition.requisitionStatus!.name
+                    .toLowerCase()
+                    .contains("submit")) ||
+                (requisition.requisitionStatus!.code
+                    .toLowerCase()
+                    .contains("primar") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("submit")) &&
-                requisition.supervisor!.id == currentUser.id) ||
-            (requisition.employee!.id == currentUser.id) ||
-            (requisition.canPay == true))
+                        .contains("primar")) ||
+                (requisition.supervisor!.id == currentUser.id) ||
+                (requisition.employee!.id == currentUser.id))))
         .toList(growable: true);
     if ((requisitions.isNotEmpty)) {
       return ListView.builder(
@@ -272,10 +302,10 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _searchActivities(String value) {
     filteredRequisitions.clear();
     filteredRequisitions.addAll(preloadedRequisitions.where(
-        (smartRequisition) =>
-            smartRequisition.number!
-                .toLowerCase()
-                .contains(value.toLowerCase()) ||
+            (smartRequisition) =>
+        smartRequisition.number!
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
             smartRequisition.caseFile!.fileName!
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
@@ -301,8 +331,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                 .contains(value.toLowerCase()) ||
             (smartRequisition.description != null
                 ? smartRequisition.description!
-                    .toLowerCase()
-                    .contains(value.toLowerCase())
+                .toLowerCase()
+                .contains(value.toLowerCase())
                 : false)));
     setState(() {});
   }

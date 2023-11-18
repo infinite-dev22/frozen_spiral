@@ -45,6 +45,7 @@ class SmartRequisition {
   final String? description;
   final String? number;
   final String? canApprove;
+  final dynamic secondApprover;
   final bool? canEdit;
   final bool? isMine;
   final bool? canPay;
@@ -74,6 +75,7 @@ class SmartRequisition {
     this.description,
     this.number,
     this.canApprove,
+    this.secondApprover,
     this.canEdit,
     this.isMine,
     this.canPay,
@@ -156,6 +158,7 @@ class SmartRequisition {
       description: json['description'],
       number: json['number'],
       canApprove: json['canApprove'],
+      secondApprover: json['secondApprover'],
       canEdit: json['canEdit'],
       isMine: json['isMine'],
       canPay: json['canPay'],
