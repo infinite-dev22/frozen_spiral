@@ -155,7 +155,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                     .contains("primar") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("primar")) ||
+                        .contains("primar")) &&
                 (requisition.supervisor!.id == currentUser.id) ||
                 (requisition.employee!.id == currentUser.id))))
         .toList(growable: true);
@@ -249,10 +249,38 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                     .contains("primar") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("primar")) ||
+                        .contains("primar")) &&
                 (requisition.supervisor!.id == currentUser.id) ||
                 (requisition.employee!.id == currentUser.id))))
         .toList(growable: true);
+
+    // Iterable<SmartRequisition> requisitions = filteredRequisitions
+    //     .where((requisition) =>
+    // (requisition.secondApprover != null &&
+    //     requisition.secondApprover == true) ?
+    // (((requisition.requisitionStatus!.code
+    //     .toLowerCase()
+    //     .contains("submit") ||
+    //     requisition.requisitionStatus!.name
+    //         .toLowerCase()
+    //         .contains("submit")) &&
+    //     requisition.supervisor!.id == currentUser.id) ||
+    //     (requisition.employee!.id == currentUser.id) ||
+    //     (requisition.canPay == true)) :
+    // (((requisition.requisitionStatus!.code
+    //     .toLowerCase()
+    //     .contains("submit") ||
+    //     requisition.requisitionStatus!.name
+    //         .toLowerCase()
+    //         .contains("submit")) ||
+    //     (requisition.requisitionStatus!.code
+    //         .toLowerCase()
+    //         .contains("primar") ||
+    //         requisition.requisitionStatus!.name
+    //             .toLowerCase()
+    //             .contains("primar")) &&
+    //         (requisition.supervisor!.id == currentUser.id) ||
+    //     (requisition.employee!.id == currentUser.id))));
     if ((requisitions.isNotEmpty)) {
       return ListView.builder(
         itemCount: requisitions.length,
