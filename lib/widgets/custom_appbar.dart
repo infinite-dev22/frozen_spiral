@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smart_case/services/apis/auth_apis.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
 import 'custom_dropdowns.dart';
@@ -31,7 +30,7 @@ class AppBarContent extends StatelessWidget {
   final List<String>? filters;
 
   final List<String> profileActions = [
-  "Profile",
+    "Profile",
     "Sign out",
   ];
 
@@ -85,7 +84,10 @@ class AppBarContent extends StatelessWidget {
                   )
                 : isNetwork
                     ? CustomDropdownAction(
-                        menuItems: (ModalRoute.of(context)!.settings.name == "/profile") ? ["Sign out"] : profileActions,
+                        menuItems: (ModalRoute.of(context)!.settings.name ==
+                                "/profile")
+                            ? ["Sign out"]
+                            : profileActions,
                         bgColor: Colors.white,
                         isNetwork: isNetwork,
                         onChanged: (value) =>
@@ -93,7 +95,10 @@ class AppBarContent extends StatelessWidget {
                         image: currentUser.avatar,
                       )
                     : CustomDropdownFilter(
-                        menuItems: (ModalRoute.of(context)!.settings.name == "/profile") ? ["Sign out"] : profileActions,
+                        menuItems: (ModalRoute.of(context)!.settings.name ==
+                                "/profile")
+                            ? ["Sign out"]
+                            : profileActions,
                         bgColor: Colors.white,
                         icon: Icons.account_circle,
                         radius: 50,
@@ -112,9 +117,9 @@ class AppBarContent extends StatelessWidget {
       return Navigator.pushNamed(context, '/profile');
     }
     if (value == 'Sign out') {
-      AuthApis.signOutUser().then((value) {
-        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-      });
+      // AuthApis.signOutUser().then((value) {
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      // });
     }
   }
 }
