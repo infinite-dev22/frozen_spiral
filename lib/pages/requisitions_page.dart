@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/pages/forms/requisition_form.dart';
 import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
@@ -27,6 +28,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   TextEditingController filterController = TextEditingController();
   bool _doneLoading = false;
   late Timer _timer;
+  String? searchText;
 
   final scrollController = ScrollController();
   final gkey = GlobalKey<_RequisitionsPageState>();
@@ -70,7 +72,10 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           search: 'requisitions',
           filterController: filterController,
           filters: filters,
-          onChanged: _searchActivities,
+          onChanged: (search) {
+            _searchActivities(search);
+            searchText = search;
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -156,7 +161,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                     requisition.requisitionStatus!.name
                         .toLowerCase()
                         .contains("primar")) &&
-                (requisition.supervisor!.id == currentUser.id) ||
+                    (requisition.supervisor!.id == currentUser.id) ||
                 (requisition.employee!.id == currentUser.id))))
         .toList(growable: true);
 
@@ -250,7 +255,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                     requisition.requisitionStatus!.name
                         .toLowerCase()
                         .contains("primar")) &&
-                (requisition.supervisor!.id == currentUser.id) ||
+                    (requisition.supervisor!.id == currentUser.id) ||
                 (requisition.employee!.id == currentUser.id))))
         .toList(growable: true);
 
@@ -282,19 +287,22 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     //         (requisition.supervisor!.id == currentUser.id) ||
     //     (requisition.employee!.id == currentUser.id))));
     if ((requisitions.isNotEmpty)) {
-      return ListView.builder(
-        itemCount: requisitions.length,
-        padding: const EdgeInsets.all(10),
-        itemBuilder: (context, index) {
-          return RequisitionItem(
-            color: AppColors.white,
-            padding: 10,
-            requisition: requisitions.elementAt(index),
-            currencies: currencies,
-            showActions: true,
-            showFinancialStatus: true,
-          );
-        },
+      return SearchTextInheritedWidget(
+        searchText: searchText,
+        child: ListView.builder(
+          itemCount: requisitions.length,
+          padding: const EdgeInsets.all(10),
+          itemBuilder: (context, index) {
+            return RequisitionItem(
+              color: AppColors.white,
+              padding: 10,
+              requisition: requisitions.elementAt(index),
+              currencies: currencies,
+              showActions: true,
+              showFinancialStatus: true,
+            );
+          },
+        ),
       );
     } else {
       return Center(
