@@ -479,7 +479,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildStringItem('Requester',
+                    _buildStringItem('Requestioner',
                         "${widget.requisition.employee!.firstName} ${widget.requisition.employee!.lastName}"),
                     _buildStringItem('Supervisor',
                         "${widget.requisition.supervisor!.firstName} ${widget.requisition.supervisor!.lastName}"),
@@ -605,7 +605,12 @@ class _RequisitionItemState extends State<RequisitionItem> {
       if (widget.requisition.canApprove == 'LV1') {
         _submitData("APPROVED", 'Requisition approved');
       } else if (widget.requisition.canApprove == 'LV2') {
-        _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
+        if (widget.requisition.secondApprover != null &&
+            widget.requisition.secondApprover) {
+          _submitData("APPROVED", 'Requisition approved');
+        } else {
+          _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
+        }
       }
     } else if (widget.requisition.requisitionStatus!.code ==
         "PRIMARY_APPROVED") {

@@ -132,6 +132,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   Widget _buildAmountHolder() {
+    print(requisition!.canApprove);
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.only(top: 10),
@@ -253,12 +254,20 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   _approveRequisition() {
+    // print(requisition!.secondApprover != null);
+    // print(requisition!.secondApprover);
+    // print(requisition!.secondApprover != null && requisition!.secondApprover);
     if (requisition!.requisitionStatus!.code == 'EDITED' ||
         requisition!.requisitionStatus!.code == "SUBMITTED") {
       if (requisition!.canApprove == 'LV1') {
         _submitData("APPROVED", 'Requisition approved');
       } else if (requisition!.canApprove == 'LV2') {
-        _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
+        if (requisition!.secondApprover != null &&
+            requisition!.secondApprover) {
+          _submitData("APPROVED", 'Requisition approved');
+        } else {
+          _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
+        }
       }
     } else if (requisition!.requisitionStatus!.code == "PRIMARY_APPROVED") {
       _submitData("SECONDARY_APPROVED", 'Requisition approved');
