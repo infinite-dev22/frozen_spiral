@@ -105,7 +105,8 @@ class LoginPromptPage extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   AuthApis.signOutUser().then((value) {
-                                    Navigator.pushNamed(context, '/login');
+                                    // Navigator.pushNamed(context, '/login');
+                                    Navigator.pushNamed(context, '/');
                                   });
                                 },
                                 child: const Text(

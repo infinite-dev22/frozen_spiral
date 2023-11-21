@@ -15,6 +15,7 @@ import 'package:smart_case/pages/event_view_page.dart';
 import 'package:smart_case/pages/file_page.dart';
 import 'package:smart_case/pages/home_page.dart';
 import 'package:smart_case/pages/locator_page.dart';
+import 'package:smart_case/pages/login_page.dart';
 import 'package:smart_case/pages/login_prompt_page.dart';
 import 'package:smart_case/pages/notifications_page.dart';
 import 'package:smart_case/pages/profile_page.dart';
@@ -117,11 +118,17 @@ class MyApp extends StatelessWidget {
          ThemeMode.light for light theme,
          ThemeMode.dark for dark theme */
         routes: {
+          // '/': (context) => const WelcomePage(),
+          // '/': (context) => (email != null && email.isNotEmpty && email != "")
+          //     ? const LoginPromptPage()
+          //     : const WelcomePage(),
+          '/login': (context) => const LoginPage(),
+          '/sign_in': (context) => const WelcomePage(),
           '/': (context) => (email != null && email.isNotEmpty && email != "")
-              ? const LoginPromptPage()
-              : const WelcomePage(),
-          '/login': (context) => const WelcomePage(),
-          '/welcome': (context) => const LoginPromptPage(),
+              ? const WelcomePage()
+              : const LoginPage(),
+          // '/login': (context) => const WelcomePage(),
+          // '/welcome': (context) => const LoginPromptPage(),
           '/root': (context) => const RootPage(),
           '/home': (context) => const HomePage(),
           '/files': (context) => const FilesPage(),
