@@ -182,7 +182,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
       const BetterErrorToast(
         text: "An error occurred",
       );
-      setState(() {});
+      if (mounted) setState(() {});
     });
     filterController.text == 'Name';
     setState(() {});
