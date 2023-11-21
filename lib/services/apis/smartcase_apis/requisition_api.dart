@@ -1,3 +1,5 @@
+import 'package:smart_case/models/smart_drawer.dart';
+
 import '../../../data/global_data.dart';
 import '../../../database/requisition/requisition_model.dart';
 import '../../../database/requisition/requisition_repo.dart';
@@ -24,14 +26,20 @@ class RequisitionApi {
     return requisitions;
   }
 
-  static Future<SmartRequisition> fetch(int id,
+  static Future<SmartRequisition?> fetch(int id,
       {Function()? onSuccess, Function()? onError}) async {
     RequisitionRepo requisitionRepo = RequisitionRepo();
     // DrawerRepo drawerRepo = DrawerRepo();
 
-    SmartRequisition requisition = await requisitionRepo
-        .fetch(id)
-        .then((response) => SmartRequisition.fromJson(response['requisition']));
+    SmartRequisition? requisition;
+    List drawersList;
+    await requisitionRepo.fetch(id).then((response) {
+      requisition = SmartRequisition.fromJson(response['requisition']);
+
+      drawersList = response['drawers'];
+      preloadedDrawers =
+          drawersList.map((drawer) => SmartDrawer.fromJson(drawer)).toList();
+    });
 
     // SmartDrawer drawer = await drawerRepo
     //     .fetch(id)
