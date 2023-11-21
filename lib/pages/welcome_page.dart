@@ -33,6 +33,7 @@ class _WelcomePageState extends State<WelcomePage> {
   bool isSendingResetRequest = false;
   bool hasFocus1 = false;
   bool hasFocus2 = false;
+  bool shownChangeUser = true;
   var _height = 40.0;
 
   TextEditingController emailController = TextEditingController();
@@ -130,6 +131,7 @@ class _WelcomePageState extends State<WelcomePage> {
         if (passwordController.text.isNotEmpty) {
           setState(() {
             isAuthingUser = true;
+            shownChangeUser = false;
           });
 
           AuthApis.checkIfUserExists(
@@ -444,7 +446,7 @@ class _WelcomePageState extends State<WelcomePage> {
         const SizedBox(
           height: 10,
         ),
-        if (emailController.text.isNotEmpty)
+        if (emailController.text.isNotEmpty && shownChangeUser)
           OutlinedButton(
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: AppColors.gray45),

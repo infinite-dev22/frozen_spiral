@@ -67,6 +67,10 @@ class AuthApis {
           onError();
         }
       }
+    } catch (e) {
+      if (onError != null) {
+        onError();
+      }
     } finally {
       dio.close();
     }
@@ -108,6 +112,10 @@ class AuthApis {
         if (onError != null) {
           onError();
         }
+      }
+    } catch (e) {
+      if (onError != null) {
+        onError();
       }
     } finally {
       dio.close();
