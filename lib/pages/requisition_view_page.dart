@@ -254,9 +254,6 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   _approveRequisition() {
-    // print(requisition!.secondApprover != null);
-    // print(requisition!.secondApprover);
-    // print(requisition!.secondApprover != null && requisition!.secondApprover);
     if (requisition!.requisitionStatus!.code == 'EDITED' ||
         requisition!.requisitionStatus!.code == "SUBMITTED") {
       if (requisition!.canApprove == 'LV1') {
@@ -315,7 +312,9 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
         backgroundColor: AppColors.green,
         textColor: Colors.white,
         fontSize: 16.0);
-    preloadedRequisitions.remove(requisition);
+    // preloadedRequisitions.remove(requisition);
+    preloadedRequisitions
+        .removeWhere((element) => element.id == requisition!.id);
   }
 
   _onError() async {

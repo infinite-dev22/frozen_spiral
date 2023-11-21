@@ -662,8 +662,8 @@ class _RequisitionItemState extends State<RequisitionItem> {
     //     backgroundColor: AppColors.green,
     //     textColor: Colors.white,
     //     fontSize: 16.0);
-    preloadedRequisitions
-        .removeWhere((element) => element.id == widget.requisition.id);
+    // preloadedRequisitions
+    //     .removeWhere((element) => element.id == widget.requisition.id);
     isProcessing = false;
     isLoading = false;
     setState(() {});
