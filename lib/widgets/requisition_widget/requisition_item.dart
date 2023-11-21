@@ -8,7 +8,6 @@ import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/widgets/requisition_widget/reuisition_item_status.dart';
 
-import '../../data/global_data.dart';
 import '../../models/smart_currency.dart';
 import '../../pages/forms/requisition_form.dart';
 import '../../services/apis/smartcase_api.dart';
@@ -654,16 +653,6 @@ class _RequisitionItemState extends State<RequisitionItem> {
       btnCancel: null,
       btnOkOnPress: () {},
     ).show();
-    // Fluttertoast.showToast(
-    //     msg: text,
-    //     toastLength: Toast.LENGTH_LONG,
-    //     gravity: ToastGravity.CENTER,
-    //     timeInSecForIosWeb: 1,
-    //     backgroundColor: AppColors.green,
-    //     textColor: Colors.white,
-    //     fontSize: 16.0);
-    // preloadedRequisitions
-    //     .removeWhere((element) => element.id == widget.requisition.id);
     isProcessing = false;
     isLoading = false;
     setState(() {});

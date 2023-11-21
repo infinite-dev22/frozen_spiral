@@ -1,10 +1,11 @@
 import 'package:smart_case/models/smart_currency.dart';
+import 'package:smart_case/models/smart_model.dart';
 
-class SmartDrawer {
+class SmartDrawer extends SmartModel {
   int? id;
   String? name;
   String? description;
-  String? openingBalance;
+  double? openingBalance;
   int? currencyId;
   SmartCurrency? currency;
 
@@ -21,9 +22,11 @@ class SmartDrawer {
     id = json['id'];
     name = json['name'];
     description = json['description'];
-    openingBalance = json['opening_balance'];
+    openingBalance = double.parse(json['opening_balance']);
     currencyId = json['currency_id'];
-    currency = json['currency'] != null ? SmartCurrency.fromJson(json['currency']) : null;
+    currency = json['currency'] != null
+        ? SmartCurrency.fromJson(json['currency'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -35,5 +38,15 @@ class SmartDrawer {
       'currency_id': currencyId,
       'currency': currency?.toJson(),
     };
+  }
+
+  @override
+  int getId() {
+    return id!;
+  }
+
+  @override
+  String getName() {
+    return "$name | ${currency!.code}$openingBalance";
   }
 }

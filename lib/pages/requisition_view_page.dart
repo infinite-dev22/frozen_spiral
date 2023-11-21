@@ -4,8 +4,10 @@ import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
+import 'package:smart_case/models/smart_drawer.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
+import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/requisition_widget/requisition_item.dart';
 
@@ -28,6 +30,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
 
   TextEditingController commentController = TextEditingController();
   TextEditingController amountController = TextEditingController();
+  SmartDrawer? drawer;
   bool isHeadElevated = false;
   NumberFormat formatter =
       NumberFormat('###,###,###,###,###,###,###,###,###.##');
@@ -75,7 +78,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
                   },
                   child: ListView(
                     controller: scrollController,
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(8),
                     children: [
                       RequisitionItem(
                         color: AppColors.white,
@@ -84,6 +87,9 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
                         showFinancialStatus: true,
                       ),
                       _buildAmountHolder(),
+                      if (preloadedDrawers.isNotEmpty &&
+                          requisition!.canPay == true)
+                        _buildDrawers(),
                       CustomTextArea(
                         hint: "Add comments",
                         controller: commentController,
@@ -131,23 +137,24 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
     );
   }
 
+  Widget _buildDrawers() {
+    return CustomGenericDropdown(
+      hintText: "Select drawer",
+      menuItems: preloadedDrawers,
+      onChanged: (drawer) => setState(() {
+        this.drawer = drawer;
+      }),
+    );
+  }
+
   Widget _buildAmountHolder() {
-    print(requisition!.canApprove);
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 4),
       decoration: BoxDecoration(
         color: AppColors.white,
         border: Border.all(color: AppColors.textBoxColor),
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withOpacity(.1),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: const Offset(0, 1), // changes position of shadow
-          ),
-        ],
       ),
       child: SizedBox(
         height: 50,
@@ -196,13 +203,40 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               FilledButton(
-                onPressed: _payoutRequisition,
+                onPressed: (drawer != null &&
+                        (drawer!.openingBalance! > 0 &&
+                            drawer!.openingBalance! >=
+                                double.parse(
+                                    amountController.text.replaceAll(",", ""))))
+                    ? _payoutRequisition
+                    : (preloadedDrawers.isEmpty)
+                        ? _payoutRequisition
+                        : null,
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => AppColors.green),
+                    (states) {
+                      if (drawer != null &&
+                          (drawer!.openingBalance! > 0 &&
+                              drawer!.openingBalance! >=
+                                  double.parse(amountController.text
+                                      .replaceAll(",", "")))) {
+                        return AppColors.green;
+                      } else if (preloadedDrawers.isEmpty) {
+                        return AppColors.green;
+                      } else {
+                        return Colors.green.shade200;
+                      }
+                    },
+                  ),
                 ),
-                child: const Text(
-                  'Pay out',
+                child: Text(
+                  (drawer != null &&
+                          (drawer!.openingBalance! > 0 &&
+                              drawer!.openingBalance! >=
+                                  double.parse(amountController.text
+                                      .replaceAll(",", ""))))
+                      ? 'Pay out'
+                      : 'Select drawer with sufficient funds to continue',
                 ),
               ),
             ],
@@ -331,20 +365,11 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
   }
 
   _submitData(String value, String toastText) {
-    // RequisitionApi.post({
-    //   "forms": 1,
-    //   "payout_amount": amountController.text.trim(),
-    //   "action_comment": commentController.text.trim(),
-    //   "submit": value,
-    // }, requisition!.id!,
-    //         onError: _onError, onSuccess: () => _onSuccess(toastText))
-    //     .onError((error, stackTrace) => _onError());
-
     SmartCaseApi.smartPost(
       'api/accounts/requisitions/${requisition!.id}/process',
       currentUser.token,
       {
-        "forms": 1,
+        if (drawer != null) "drawer_id": drawer!.id,
         "payout_amount": amountController.text.trim(),
         "action_comment": commentController.text.trim(),
         "submit": value,
@@ -360,7 +385,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
     }).then((requisition) {
       this.requisition = requisition;
       amountController.text =
-          formatter.format(double.parse(requisition.amount!));
+          formatter.format(double.parse(requisition!.amount!));
       if (mounted) setState(() {});
     });
   }
