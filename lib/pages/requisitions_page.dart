@@ -326,7 +326,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     _loadCurrencies();
 
     if (mounted) {
-      _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+      _timer = Timer.periodic(const Duration(seconds: 10), (timer) async {
         RequisitionApi.fetchAll();
         setState(() {});
       });
@@ -363,6 +363,9 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                 .contains(value.toLowerCase()) ||
             smartRequisition.employee!
                 .getName()
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartRequisition.requisitionCategory!.name
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
             (smartRequisition.description != null

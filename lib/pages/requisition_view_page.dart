@@ -295,7 +295,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
       } else if (requisition!.canApprove == 'LV2') {
         if (requisition!.secondApprover != null &&
             requisition!.secondApprover) {
-          _submitData("APPROVED", 'Requisition approved');
+          _submitData("SECONDARY_APPROVED", 'Requisition approved');
         } else {
           _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
         }

@@ -8,9 +8,11 @@ import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/widgets/requisition_widget/reuisition_item_status.dart';
 
+import '../../data/global_data.dart';
 import '../../models/smart_currency.dart';
 import '../../pages/forms/requisition_form.dart';
 import '../../services/apis/smartcase_api.dart';
+import '../../services/apis/smartcase_apis/requisition_api.dart';
 import '../../theme/color.dart';
 import '../../util/smart_case_init.dart';
 
@@ -127,13 +129,15 @@ class _RequisitionItemState extends State<RequisitionItem> {
                                               ),
                                             ),
                                             TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pushNamed(
-                                                context,
-                                                '/requisition',
-                                                arguments:
-                                                    widget.requisition.id!,
-                                              ).then((_) => setState(() {})),
+                                              onPressed: isProcessing
+                                                  ? null
+                                                  : () => Navigator.pushNamed(
+                                                        context,
+                                                        '/requisition',
+                                                        arguments: widget
+                                                            .requisition.id!,
+                                                      ).then((_) =>
+                                                          setState(() {})),
                                               child: const Row(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
@@ -504,8 +508,12 @@ class _RequisitionItemState extends State<RequisitionItem> {
                                 : widget.requisition.requisitionStatus!.name ==
                                         'SECONDARY_RETURNED'
                                     ? 'Returned'
-                                    : widget
-                                        .requisition.requisitionStatus!.name,
+                                    : widget.requisition.requisitionStatus!.name
+                                            .toLowerCase()
+                                            .contains("primary approver")
+                                        ? 'Primarily Approved'
+                                        : widget.requisition.requisitionStatus!
+                                            .name,
                         bgColor: widget.requisition.requisitionStatus!.name
                                 .toLowerCase()
                                 .contains('approved')
@@ -606,7 +614,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
       } else if (widget.requisition.canApprove == 'LV2') {
         if (widget.requisition.secondApprover != null &&
             widget.requisition.secondApprover) {
-          _submitData("APPROVED", 'Requisition approved');
+          _submitData("SECONDARY_APPROVED", 'Requisition approved');
         } else {
           _submitData("PRIMARY_APPROVED", 'Requisition primarily approved');
         }
@@ -642,20 +650,23 @@ class _RequisitionItemState extends State<RequisitionItem> {
   }
 
   _onSuccess(String text) async {
-    AwesomeDialog(
-      context: context,
-      dialogType: DialogType.success,
-      animType: AnimType.bottomSlide,
-      title: 'Success',
-      desc: 'Requisition has been successfully approved',
-      // autoDismiss: true,
-      // autoHide: const Duration(seconds: 3),
-      btnCancel: null,
-      btnOkOnPress: () {},
-    ).show();
-    isProcessing = false;
-    isLoading = false;
-    setState(() {});
+    RequisitionApi.fetchAll().then((value) {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.success,
+        animType: AnimType.bottomSlide,
+        title: 'Success',
+        desc: 'Requisition has been successfully approved',
+        autoDismiss: true,
+        autoHide: const Duration(seconds: 3),
+        btnCancel: null,
+        btnOkOnPress: () {},
+      ).show();
+      isProcessing = false;
+      preloadedRequisitions.remove(widget.requisition);
+      isLoading = false;
+      setState(() {});
+    });
   }
 
   _onError() async {

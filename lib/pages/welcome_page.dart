@@ -417,7 +417,7 @@ class _WelcomePageState extends State<WelcomePage> {
             enabled: !isAuthingUser,
             borderSide: const BorderSide(color: AppColors.gray45),
             style: const TextStyle(color: AppColors.gray45),
-            fillColor: AppColors.primary,
+            fillColor: AppColors.transparent,
             iconColor: AppColors.gray45,
           ),
           onFocusChange: (hasFocus) {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:smart_case/models/smart_drawer.dart';
 
 import '../../../data/global_data.dart';
@@ -36,9 +37,15 @@ class RequisitionApi {
     await requisitionRepo.fetch(id).then((response) {
       requisition = SmartRequisition.fromJson(response['requisition']);
 
-      drawersList = response['drawers'];
-      preloadedDrawers =
-          drawersList.map((drawer) => SmartDrawer.fromJson(drawer)).toList();
+      try {
+        drawersList = response['drawers'];
+        preloadedDrawers =
+            drawersList.map((drawer) => SmartDrawer.fromJson(drawer)).toList();
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     });
 
     // SmartDrawer drawer = await drawerRepo
