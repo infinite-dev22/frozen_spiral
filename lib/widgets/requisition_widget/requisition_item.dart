@@ -554,7 +554,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
           data ?? 'Null',
           style: const TextStyle(color: AppColors.darker),
           highlightStyle: const TextStyle(
-            backgroundColor: AppColors.yellow,
+            fontWeight: FontWeight.bold,
             color: AppColors.darker,
           ),
         ),

@@ -314,7 +314,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
     int financialStatus = financialStatusMap['caseFinancialStatus'];
 
     this.financialStatus = financialStatus;
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   _onTapSearchedFile(SmartFile value) {

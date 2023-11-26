@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
@@ -9,6 +10,7 @@ import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/loading_widget/shimmers/requisition_shimmer.dart';
 import 'package:smart_case/widgets/requisition_widget/requisition_item.dart';
+import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 import '../data/global_data.dart';
 import '../models/smart_currency.dart';
@@ -27,8 +29,10 @@ class RequisitionsPage extends StatefulWidget {
 class _RequisitionsPageState extends State<RequisitionsPage> {
   TextEditingController filterController = TextEditingController();
   bool _doneLoading = false;
-  late Timer _timer;
+  bool _isLoading = false;
+  Timer? _timer;
   String? searchText;
+  int _requisitionPage = 1;
 
   final scrollController = ScrollController();
   final gkey = GlobalKey<_RequisitionsPageState>();
@@ -52,9 +56,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   Widget build(BuildContext context) {
     if (refreshRequisitions) {
       refreshRequisitions = false;
-      print("Refreshing");
       RequisitionApi.fetchAll().then((value) {
-        print(value);
         setState(() {});
       });
     }
@@ -86,6 +88,10 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
       ),
       body: LiquidPullToRefresh(
         onRefresh: _onRefresh,
+        // springAnimationDurationInMilliseconds: 300,
+        animSpeedFactor: 2,
+        height: 40,
+        borderWidth: 1,
         color: AppColors.primary,
         backgroundColor: AppColors.white,
         child: _buildBody(),
@@ -167,19 +173,37 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
 
     // preloadedRequisitions.forEach((element) { print("${element.requisitionStatus!.name}\n"); });
     if ((requisitions.isNotEmpty)) {
-      return ListView.builder(
-        itemCount: requisitions.length,
-        padding: const EdgeInsets.all(10),
-        itemBuilder: (context, index) {
-          return RequisitionItem(
-            color: AppColors.white,
-            padding: 10,
-            requisition: requisitions.elementAt(index),
-            currencies: currencies,
-            showActions: true,
-            showFinancialStatus: true,
-          );
-        },
+      // return ListView.builder(
+      //   itemCount: requisitions.length,
+      //   padding: const EdgeInsets.all(10),
+      //   itemBuilder: (context, index) {
+      //     return RequisitionItem(
+      //       color: AppColors.white,
+      //       padding: 10,
+      //       requisition: requisitions.elementAt(index),
+      //       currencies: currencies,
+      //       showActions: true,
+      //       showFinancialStatus: true,
+      //     );
+      //   },
+      // );
+      return LazyLoadScrollView(
+        isLoading: _isLoading,
+        onEndOfPage: _fetchMoreData,
+        child: ListView.builder(
+          itemCount: requisitions.length,
+          padding: const EdgeInsets.all(10),
+          itemBuilder: (context, index) {
+            return RequisitionItem(
+              color: AppColors.white,
+              padding: 10,
+              requisition: requisitions.elementAt(index),
+              currencies: currencies,
+              showActions: true,
+              showFinancialStatus: true,
+            );
+          },
+        ),
       );
     } else if (_doneLoading && requisitions.isEmpty) {
       return const Center(
@@ -326,7 +350,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     _loadCurrencies();
 
     if (mounted) {
-      _timer = Timer.periodic(const Duration(seconds: 10), (timer) async {
+      _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
         RequisitionApi.fetchAll();
         setState(() {});
       });
@@ -480,9 +504,35 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     );
   }
 
+  _fetchMoreData() {
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
+
+    if (_isLoading) {
+      _requisitionPage++;
+      print("Loading Page: $_requisitionPage");
+      RequisitionApi.fetchAll(page: _requisitionPage).then((value) {
+        setState(() {
+          _isLoading = false;
+        });
+        print("Done loading!");
+      }).onError((error, stackTrace) {
+        setState(() {
+          _isLoading = false;
+        });
+        print("An error whilst loading!");
+      });
+    }
+  }
+
   @override
   void dispose() {
-    _timer.cancel();
+    if (_timer != null) {
+      _timer!.cancel();
+    }
 
     super.dispose();
   }

@@ -19,7 +19,8 @@ class RequisitionRepo extends RequisitionRepoInterface {
   RequisitionRepo._internal();
 
   @override
-  Future<Map<String, dynamic>> fetchAll({Map<String, dynamic>? body}) async {
+  Future<Map<String, dynamic>> fetchAll(
+      {Map<String, dynamic>? body, int page = 1}) async {
     Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
@@ -29,9 +30,7 @@ class RequisitionRepo extends RequisitionRepoInterface {
       dio.options.followRedirects = false;
 
       var response = await dio.get(
-        Uri.https(currentUser.url.replaceRange(0, 8, ''),
-                'api/accounts/cases/requisitions/allapi')
-            .toString(),
+        '${currentUser.url}/api/accounts/cases/requisitions/allapi?page=$page',
         data: json.encode(body),
       );
 
@@ -136,7 +135,8 @@ class RequisitionRepo extends RequisitionRepoInterface {
         if (kDebugMode) {
           print("A Success occurred: ${response.statusCode}");
         }
-        await RequisitionApi.fetchAll();  // TODO: Remove when bloc is successfully added.
+        await RequisitionApi
+            .fetchAll(); // TODO: Remove when bloc is successfully added.
         return response.data;
       } else {
         if (kDebugMode) {

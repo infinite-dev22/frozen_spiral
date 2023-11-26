@@ -7,12 +7,13 @@ import '../../../database/requisition/requisition_repo.dart';
 
 class RequisitionApi {
   static Future<List<SmartRequisition>> fetchAll(
-      {Function()? onSuccess, Function? onError}) async {
+      {int page = 1, Function()? onSuccess, Function? onError}) async {
     RequisitionRepo requisitionRepo = RequisitionRepo();
     List<SmartRequisition> requisitions = List.empty(growable: true);
 
-    var response = await requisitionRepo.fetchAll();
-    List requisitionsMap = response['search']['requisitions'];
+    var response = await requisitionRepo.fetchAll(page: page);
+    List requisitionsMap = response['data'];
+    requisitionNextPage = response["next_page_url"];
 
     if (requisitionsMap.isNotEmpty) {
       requisitions = requisitionsMap
@@ -22,7 +23,9 @@ class RequisitionApi {
           .toList();
     }
 
-    preloadedRequisitions.clear();
+    if (page == 1) {
+      preloadedRequisitions.clear();
+    }
     preloadedRequisitions = requisitions;
     return requisitions;
   }

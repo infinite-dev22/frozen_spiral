@@ -251,7 +251,6 @@ class SmartCaseApi {
             password: 'infosec_technologies_ug_smart_case_law_manager');
         box.write('image', currentUser.avatar);
 
-        print("New: ${response.data["avatar"]}");
         if (onSuccess != null) {
           onSuccess();
         }

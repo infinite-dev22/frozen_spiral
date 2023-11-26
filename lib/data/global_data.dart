@@ -3,6 +3,7 @@ import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/models/smart_event.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 
 import '../models/smart_drawer.dart';
 
@@ -42,3 +43,6 @@ List<SmartRequisition> preloadedRequisitions = List.empty(growable: true);
 List<SmartActivity> preloadedActivities = List.empty(growable: true);
 List<SmartFile> preloadedFiles = List.empty(growable: true);
 List<SmartDrawer> preloadedDrawers = List.empty(growable: true);
+
+String requisitionNextPage =
+    "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=1";

@@ -96,7 +96,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   _changePhotoTapped() {
-    print("Current: ${currentUser.avatar}");
     return FullPicker(
       context: context,
       prefixName: "Profile Photo",
