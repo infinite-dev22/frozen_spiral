@@ -832,14 +832,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.8.1"
-  lazy_load_scrollview:
-    dependency: "direct main"
-    description:
-      name: lazy_load_scrollview
-      sha256: "230c827d6f7ec5e461f0674ef332daae2f78190bf1e4cd84977e51de04b231e3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.0"
   light_compressor:
     dependency: transitive
     description:
@@ -864,6 +856,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
+  list_load_more:
+    dependency: "direct main"
+    description:
+      name: list_load_more
+      sha256: a13fd7c7b495fb7730b9b1ddb43d9ac7c0c5f2fd7edb5ee2f31e40e334758018
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   loading_skeleton_niu:
     dependency: "direct main"
     description:
@@ -1104,6 +1104,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
+  pull_to_refresh:
+    dependency: "direct main"
+    description:
+      name: pull_to_refresh
+      sha256: bbadd5a931837b57739cf08736bea63167e284e71fb23b218c8c9a6e042aad12
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   quiver:
     dependency: transitive
     description:
@@ -1184,6 +1192,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  scroll_to_index:
+    dependency: transitive
+    description:
+      name: scroll_to_index
+      sha256: b707546e7500d9f070d63e5acf74fd437ec7eeeb68d3412ef7b0afada0b4f176
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   search_highlight_text:
     dependency: "direct main"
     description:
@@ -1208,6 +1224,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  shimmer:
+    dependency: transitive
+    description:
+      name: shimmer
+      sha256: "1f1009b5845a1f88f1c5630212279540486f97409e9fc3f63883e71070d107bf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1437,14 +1461,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
-  very_good_infinite_list:
-    dependency: "direct main"
-    description:
-      name: very_good_infinite_list
-      sha256: "6f5ad429edbce6084e1c600e56b26b1de8c6b138e8e8fc2de41b686166029aa5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.1"
   watcher:
     dependency: transitive
     description:

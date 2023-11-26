@@ -26,7 +26,7 @@ class RequisitionApi {
     if (page == 1) {
       preloadedRequisitions.clear();
     }
-    preloadedRequisitions = requisitions;
+    preloadedRequisitions.addAll(requisitions);
     return requisitions;
   }
 
