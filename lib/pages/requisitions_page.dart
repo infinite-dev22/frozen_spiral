@@ -32,6 +32,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   bool _doneLoading = false;
   bool _isLoading = false;
   bool _loadMoreData = true;
+
   // Timer? _timer;
   String? searchText;
   int _requisitionPage = 1;
@@ -170,19 +171,20 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     // );
     if ((requisitions.isNotEmpty)) {
       return Scrollbar(
-          child: ListView.builder(
-            controller: _scrollController,
-            itemCount: requisitions.length,
-            padding: const EdgeInsets.all(8),
-            itemBuilder: (context, index) =>
-                RequisitionItem(
-                  color: AppColors.white,
-                  padding: 10,
-                  requisition: requisitions.elementAt(index),
-                  currencies: currencies,
-                  showActions: true,
-                  showFinancialStatus: true,
-                ),)
+        child: ListView.builder(
+          controller: _scrollController,
+          itemCount: requisitions.length,
+          padding: const EdgeInsets.all(8),
+          itemBuilder: (context, index) =>
+              RequisitionItem(
+                color: AppColors.white,
+                padding: 10,
+                requisition: requisitions.elementAt(index),
+                currencies: currencies,
+                showActions: true,
+                showFinancialStatus: true,
+              ),
+        ),
       );
     } else if (_doneLoading && requisitions.isEmpty) {
       return const Center(
@@ -398,22 +400,18 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
       });
     }
 
-    if (_isLoading) {
+    if (_isLoading && _requisitionPage <= pagesLength) {
       _requisitionPage++;
-      print("Loading Page: $_requisitionPage");
-      RequisitionApi.fetchAll(page: _requisitionPage).then((
-          value) {
+      RequisitionApi.fetchAll(page: _requisitionPage).then((value) {
         setState(() {
           _isLoading = false;
           _loadMoreData = true;
         });
-        print("Done loading!");
       }).onError((error, stackTrace) {
         setState(() {
           _isLoading = false;
           _loadMoreData = true;
         });
-        print("An error whilst loading!");
       });
     }
   }

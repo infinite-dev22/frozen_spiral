@@ -46,3 +46,5 @@ List<SmartDrawer> preloadedDrawers = List.empty(growable: true);
 
 String requisitionNextPage =
     "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=1";
+
+int pagesLength = 1;

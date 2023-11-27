@@ -14,6 +14,8 @@ class RequisitionApi {
     var response = await requisitionRepo.fetchAll(page: page);
     List requisitionsMap = response['data'];
     requisitionNextPage = response["next_page_url"];
+    List pagesList = response["links"];
+    pagesLength = pagesList.length;
 
     if (requisitionsMap.isNotEmpty) {
       requisitions = requisitionsMap
