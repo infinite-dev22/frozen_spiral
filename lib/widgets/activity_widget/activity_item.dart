@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
 
 import '../../../theme/color.dart';
@@ -97,7 +98,7 @@ class ActivityItem extends StatelessWidget {
     );
   }
 
-  _buildStringItem(String title, String data) {
+  _buildStringItem(String title, String? data) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -107,10 +108,17 @@ class ActivityItem extends StatelessWidget {
             color: AppColors.inActiveColor,
           ),
         ),
-        Text(
-          data,
+        SearchHighlightText(
+          data ?? 'Null',
           style: const TextStyle(
+            // fontWeight: FontWeight.bold,
+            color: AppColors.darker,
+          ),
+          highlightStyle: const TextStyle(
+            // fontSize: 14,
             fontWeight: FontWeight.bold,
+            color: AppColors.darker,
+            // backgroundColor: Colors.amberAccent.withOpacity(.6),
           ),
         ),
       ],

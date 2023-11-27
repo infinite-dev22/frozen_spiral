@@ -552,10 +552,15 @@ class _RequisitionItemState extends State<RequisitionItem> {
         ),
         SearchHighlightText(
           data ?? 'Null',
-          style: const TextStyle(color: AppColors.darker),
+          style: const TextStyle(
+            // fontWeight: FontWeight.bold,
+            color: AppColors.darker,
+          ),
           highlightStyle: const TextStyle(
+            // fontSize: 14,
             fontWeight: FontWeight.bold,
             color: AppColors.darker,
+            // backgroundColor: Colors.amberAccent.withOpacity(.6),
           ),
         ),
       ],

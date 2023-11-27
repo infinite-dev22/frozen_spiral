@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/pages/forms/activity_form.dart';
@@ -22,6 +23,7 @@ class ActivitiesPage extends StatefulWidget {
 class _ActivitiesPageState extends State<ActivitiesPage> {
   TextEditingController filterController = TextEditingController();
   bool _doneLoading = false;
+  String? searchText;
 
   List<SmartActivity> filteredActivities = List.empty(growable: true);
   final List<String>? filters = [
@@ -45,7 +47,10 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
           filterable: true,
           search: 'activities',
           filterController: filterController,
-          onChanged: _searchActivities,
+          onChanged: (search) {
+            _searchActivities(search);
+            searchText = search;
+          },
           filters: filters,
         ),
       ),
@@ -140,7 +145,9 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
 
   _buildSearchedBody() {
     return (filteredActivities.isNotEmpty)
-        ? ListView.builder(
+        ? SearchTextInheritedWidget(
+        searchText: searchText,
+        child: ListView.builder(
             padding: const EdgeInsets.only(
               left: 10,
               top: 16,
@@ -160,7 +167,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                 ),
               );
             },
-          )
+          ),)
         : const Center(
             child: Text('No result found'),
           );
@@ -190,30 +197,23 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
 
   _searchActivities(String value) {
     filteredActivities.clear();
-    if (filterController.text == 'File Name') {
-      filteredActivities.addAll(preloadedActivities.where((smartActivity) =>
-          smartActivity.file!
-              .getName()
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'File Number') {
-      filteredActivities.addAll(preloadedActivities.where((smartActivity) =>
-          smartActivity.fileNumber!
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'File Number (Court)') {
-      filteredActivities.addAll(preloadedActivities.where((smartActivity) =>
-          smartActivity.courtFileNumber!
-              .toLowerCase()
-              .contains(value.toLowerCase())));
-      setState(() {});
-    } else {
-      filteredActivities.addAll(preloadedActivities.where((smartActivity) =>
-          smartActivity.getName().toLowerCase().contains(value.toLowerCase())));
-      setState(() {});
-    }
+    filteredActivities.addAll(preloadedActivities.where((smartActivity) =>
+        smartActivity.getName()
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
+        smartActivity.date!
+            .toString()
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
+        smartActivity.employee!
+            .getName()
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
+        smartActivity.caseActivityStatus!
+            .getName()
+            .toLowerCase()
+            .contains(value.toLowerCase())));
+    setState(() {});
   }
 
   Future<void> _onRefresh() async {

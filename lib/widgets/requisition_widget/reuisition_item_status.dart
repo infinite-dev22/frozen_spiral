@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:search_highlight_text/search_highlight_text.dart';
 
 class RequisitionItemStatus extends StatelessWidget {
   const RequisitionItemStatus(
@@ -30,10 +31,24 @@ class RequisitionItemStatus extends StatelessWidget {
           Radius.circular(20),
         ),
       ),
-      child: Text(name,
-          style: const TextStyle(
-            color: Colors.white,
-          )),
+      child: SearchHighlightText(
+        name,
+        style: const TextStyle(
+          // fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+        highlightStyle: const TextStyle(
+          // fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          // backgroundColor: Colors.amberAccent.withOpacity(.3),
+        ),
+      ),
+      // child: Text(name,
+      //     style: const TextStyle(
+      //       color: Colors.white,
+      //     ),
+      //   ),
     );
   }
 }

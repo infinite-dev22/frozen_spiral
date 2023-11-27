@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/widgets/file_widget/file_item.dart';
 
@@ -20,6 +21,7 @@ class FilesPage extends StatefulWidget {
 class _FilesPageState extends State<FilesPage> {
   TextEditingController filterController = TextEditingController();
   bool _doneLoading = false;
+  String? searchText;
 
   List<SmartFile> filteredFiles = List.empty(growable: true);
   final List<String>? filters = [
@@ -44,7 +46,10 @@ class _FilesPageState extends State<FilesPage> {
           filterable: true,
           search: 'files',
           filterController: filterController,
-          onChanged: _searchFiles,
+          onChanged: (search) {
+            _searchFiles(search);
+            searchText = search;
+          },
           filters: filters,
         ),
       ),
@@ -100,25 +105,28 @@ class _FilesPageState extends State<FilesPage> {
 
   _buildSearchedBody() {
     return (filteredFiles.isNotEmpty)
-        ? ListView.builder(
-            padding: const EdgeInsets.only(
-              left: 10,
-              top: 16,
-              right: 10,
-              bottom: 80,
+        ? SearchTextInheritedWidget(
+            searchText: searchText,
+            child: ListView.builder(
+              padding: const EdgeInsets.only(
+                left: 10,
+                top: 16,
+                right: 10,
+                bottom: 80,
+              ),
+              itemCount: filteredFiles.length,
+              itemBuilder: (context, index) {
+                return FileItem(
+                  fileName: filteredFiles[index].fileName!,
+                  fileNumber: filteredFiles[index].fileNumber!,
+                  dateCreated: filteredFiles[index].dateOpened,
+                  clientName: filteredFiles[index].clientName!,
+                  color: Colors.white,
+                  padding: 20,
+                  status: filteredFiles[index].status ?? "N/A",
+                );
+              },
             ),
-            itemCount: filteredFiles.length,
-            itemBuilder: (context, index) {
-              return FileItem(
-                fileName: filteredFiles[index].fileName!,
-                fileNumber: filteredFiles[index].fileNumber!,
-                dateCreated: filteredFiles[index].dateOpened,
-                clientName: filteredFiles[index].clientName!,
-                color: Colors.white,
-                padding: 20,
-                status: filteredFiles[index].status ?? "N/A",
-              );
-            },
           )
         : const Center(
             child: Text('No result found'),
@@ -149,29 +157,23 @@ class _FilesPageState extends State<FilesPage> {
 
   _searchFiles(String value) {
     filteredFiles.clear();
-    if (filterController.text == 'Client') {
-      filteredFiles.addAll(preloadedFiles.where((smartFile) =>
-          smartFile.clientName!.toLowerCase().contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'Status') {
-      filteredFiles.addAll(preloadedFiles.where((smartFile) =>
-          smartFile.status!.toLowerCase().contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'File Number') {
-      filteredFiles.addAll(preloadedFiles.where((smartFile) =>
-          smartFile.fileNumber!.toLowerCase().contains(value.toLowerCase())));
-      setState(() {});
-    } else if (filterController.text == 'File Number (Court)') {
-      filteredFiles.addAll(preloadedFiles.where((smartFile) => smartFile
-          .courtFileNumber!
-          .toLowerCase()
-          .contains(value.toLowerCase())));
-      setState(() {});
-    } else {
-      filteredFiles.addAll(preloadedFiles.where((smartFile) =>
-          smartFile.getName().toLowerCase().contains(value.toLowerCase())));
-      setState(() {});
-    }
+    filteredFiles.addAll(preloadedFiles.where((smartFile) =>
+        smartFile.fileName!
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
+        smartFile.fileNumber!
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
+        smartFile.clientName!
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
+        smartFile.dateOpened!
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
+        (smartFile.status ?? "N/A")
+            .toLowerCase()
+            .contains(value.toLowerCase())));
+    setState(() {});
   }
 
   Future<void> _onRefresh() async {
