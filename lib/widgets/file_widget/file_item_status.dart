@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 
+import '../../theme/color.dart';
+
 class FileItemStatus extends StatelessWidget {
   const FileItemStatus(
       {super.key,
@@ -39,9 +41,9 @@ class FileItemStatus extends StatelessWidget {
         ),
         highlightStyle: const TextStyle(
           // fontSize: 14,
-          fontWeight: FontWeight.bold,
+          // fontWeight: FontWeight.bold,
           color: Colors.white,
-          // backgroundColor: Colors.amberAccent.withOpacity(.3),
+          backgroundColor: AppColors.searchText,
         ),
       ),
       // child: Text(name,

@@ -121,9 +121,9 @@ class ActivityItem extends StatelessWidget {
           ),
           highlightStyle: const TextStyle(
             // fontSize: 14,
-            fontWeight: FontWeight.bold,
+            // fontWeight: FontWeight.bold,
             color: AppColors.darker,
-            // backgroundColor: Colors.amberAccent.withOpacity(.6),
+            backgroundColor: AppColors.searchText,
           ),
         ),
       ],

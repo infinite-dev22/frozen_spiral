@@ -33,7 +33,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   bool _isLoading = false;
   bool _loadMoreData = true;
 
-  // Timer? _timer;
+  Timer? _timer;
   String? searchText;
   int _requisitionPage = 1;
 
@@ -43,16 +43,12 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   List<SmartRequisition> filteredRequisitions = List.empty(growable: true);
   List<SmartCurrency> currencies = List.empty(growable: true);
   final List<String>? filters = [
-    "File",
-    "Number",
-    "Category",
-    "Currency",
-    "Requester",
-    "Supervisor",
-    "Amount",
-    "Amount (Payout)",
-    "Status",
-    "Status (Financial)",
+    "All",
+    "Submitted",
+    "Approved",
+    "Pre-Approved",
+    "Rejected",
+    "Returned",
   ];
 
   @override
@@ -189,7 +185,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     } else if (_doneLoading && requisitions.isEmpty) {
       return const Center(
         child: Text(
-          "No new submitted requisitions",
+          "Your requisitions appear here",
           style: TextStyle(color: AppColors.inActiveColor),
         ),
       );
@@ -307,12 +303,12 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     });
     _loadCurrencies();
 
-    // if (mounted) {
-    //   _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
-    //     RequisitionApi.fetchAll();
-    //     setState(() {});
-    //   });
-    // }
+    if (mounted) {
+      _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+        RequisitionApi.fetchAll();
+        setState(() {});
+      });
+    }
   }
 
   _searchActivities(String value) {
@@ -418,9 +414,9 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
 
   @override
   void dispose() {
-    // if (_timer != null) {
-    //   _timer!.cancel();
-    // }
+    if (_timer != null) {
+      _timer!.cancel();
+    }
     _scrollController.removeListener(_scrollListener);
 
     super.dispose();
