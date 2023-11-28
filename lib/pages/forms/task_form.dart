@@ -100,12 +100,17 @@ class _TaskFormState extends State<TaskForm> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(6),
-                            child: Text(
-                              file?.fileName ?? 'Select file',
-                              style: const TextStyle(
-                                  color: AppColors.darker,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width - 80,
+                              child: Text(
+                                file?.fileName ?? 'Select file',
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                style: const TextStyle(
+                                    color: AppColors.darker,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ),
                           const Icon(
@@ -133,12 +138,17 @@ class _TaskFormState extends State<TaskForm> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(6),
-                            child: Text(
-                              assignee?.getName() ?? 'Select assignee',
-                              style: const TextStyle(
-                                  color: AppColors.darker,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width - 80,
+                              child: Text(
+                                assignee?.getName() ?? 'Select assignee',
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                style: const TextStyle(
+                                    color: AppColors.darker,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ),
                           const Icon(

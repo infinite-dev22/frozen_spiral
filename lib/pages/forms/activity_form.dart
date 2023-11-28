@@ -111,12 +111,18 @@ class _ActivityFormState extends State<ActivityForm> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(6),
-                                  child: Text(
-                                    file?.fileName ?? 'Select file',
-                                    style: const TextStyle(
-                                        color: AppColors.darker,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width - 80,
+                                    child: Text(
+                                      file?.fileName ?? 'Select file',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          color: AppColors.darker,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                 ),
                                 const Icon(
@@ -144,12 +150,19 @@ class _ActivityFormState extends State<ActivityForm> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(6),
-                                  child: Text(
-                                    activity?.name ?? 'Select activity status',
-                                    style: const TextStyle(
-                                        color: AppColors.darker,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width - 80,
+                                    child: Text(
+                                      activity?.name ??
+                                          'Select activity status',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.fade,
+                                      style: const TextStyle(
+                                          color: AppColors.darker,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                 ),
                                 const Icon(

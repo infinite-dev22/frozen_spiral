@@ -110,21 +110,41 @@ class _RequisitionFormState extends State<RequisitionForm> {
                           widget.currencies
                               .firstWhere((currency) => currency.code == 'UGX'),
                       onChanged: _onTapSearchedCurrency),
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(5),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: _showSearchFileBottomSheet,
-                      child: Text(
-                        file?.getName() ?? 'Select file',
-                        style: const TextStyle(color: AppColors.darker),
+                  GestureDetector(
+                    onTap: _showSearchFileBottomSheet,
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width - 89,
+                              child: Text(
+                                file?.getName() ?? 'Select file',
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                style: const TextStyle(
+                                    color: AppColors.darker,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: AppColors.darker,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -151,21 +171,42 @@ class _RequisitionFormState extends State<RequisitionForm> {
                     defaultValue: approver,
                     controller: approversController,
                   ),
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(5),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: _showSearchCategoryBottomSheet,
-                      child: Text(
-                        category?.getName() ?? 'Select requisition category',
-                        style: const TextStyle(color: AppColors.darker),
+                  GestureDetector(
+                    onTap: _showSearchCategoryBottomSheet,
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width - 89,
+                              child: Text(
+                                category?.getName() ??
+                                    'Select requisition category',
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                style: const TextStyle(
+                                    color: AppColors.darker,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: AppColors.darker,
+                          ),
+                        ],
                       ),
                     ),
                   ),

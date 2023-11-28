@@ -111,12 +111,18 @@ class _EngagementFormState extends State<EngagementForm> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    client?.getName() ?? 'Select client',
-                                    style: const TextStyle(
-                                        color: AppColors.darker,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width - 80,
+                                    child: Text(
+                                      client?.getName() ?? 'Select client',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.fade,
+                                      style: const TextStyle(
+                                          color: AppColors.darker,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                   const Icon(
                                     Icons.keyboard_arrow_down_rounded,
@@ -145,13 +151,19 @@ class _EngagementFormState extends State<EngagementForm> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    engagementType?.getName() ??
-                                        'Select engagement type',
-                                    style: const TextStyle(
-                                        color: AppColors.darker,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width - 80,
+                                    child: Text(
+                                      engagementType?.getName() ??
+                                          'Select engagement type',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.fade,
+                                      style: const TextStyle(
+                                          color: AppColors.darker,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                   const Icon(
                                     Icons.keyboard_arrow_down_rounded,
