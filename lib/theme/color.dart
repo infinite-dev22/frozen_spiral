@@ -19,6 +19,7 @@ class AppColors {
   static const orange = Colors.orange;
   static const purple = Colors.purple;
   static const yellow = Colors.yellow;
+  static const searchText = orange;
   static const transparent = Colors.transparent;
 }
 

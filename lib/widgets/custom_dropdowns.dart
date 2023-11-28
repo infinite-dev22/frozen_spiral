@@ -7,7 +7,7 @@ import '../theme/color.dart';
 import 'custom_icon_holder.dart';
 import 'custom_images/custom_elevated_image.dart';
 
-class CustomDropdownFilter extends StatelessWidget {
+class CustomDropdownFilter extends StatefulWidget {
   const CustomDropdownFilter({
     super.key,
     required this.menuItems,
@@ -26,6 +26,13 @@ class CustomDropdownFilter extends StatelessWidget {
   final double radius;
 
   @override
+  State<CustomDropdownFilter> createState() => _CustomDropdownFilterState();
+}
+
+class _CustomDropdownFilterState extends State<CustomDropdownFilter> {
+  bool checkValue = false;
+
+  @override
   Widget build(BuildContext context) {
     return _buildBody();
   }
@@ -36,27 +43,38 @@ class CustomDropdownFilter extends StatelessWidget {
         customButton: CustomIconHolder(
           width: 35,
           height: 35,
-          radius: radius,
-          size: size,
-          bgColor: bgColor,
-          graphic: icon,
+          radius: widget.radius,
+          size: widget.size,
+          bgColor: widget.bgColor,
+          graphic: widget.icon,
         ),
-        items: menuItems
+        items: widget.menuItems
             .map((item) => DropdownMenuItem<String>(
-                  alignment: Alignment.centerLeft,
-                  value: item,
-                  child: Text(
-                    item,
-                    style: const TextStyle(
-                      color: AppColors.darker,
-                      fontSize: 14,
+                alignment: Alignment.centerLeft,
+                value: item,
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: checkValue,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          checkValue = value!;
+                        });
+                      },
                     ),
-                  ),
-                ))
+                    Text(
+                      item,
+                      style: const TextStyle(
+                        color: AppColors.darker,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                )))
             .toList(),
-        onChanged: onChanged,
+        onChanged: widget.onChanged,
         dropdownStyleData: DropdownStyleData(
-          width: 100,
+          width: 170,
           padding: const EdgeInsets.symmetric(vertical: 6),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
