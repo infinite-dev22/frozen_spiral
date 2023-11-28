@@ -374,7 +374,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
       date: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
       amount: amountController.text.trim(),
       amounts: [amountController.text.trim()],
-      payoutAmount: amountController.toString(),
+      payoutAmount: amountController.text.trim(),
       descriptions: [
         descriptionController.text.trim(),
       ],
