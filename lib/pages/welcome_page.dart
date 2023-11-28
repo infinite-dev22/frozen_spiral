@@ -353,25 +353,26 @@ class _WelcomePageState extends State<WelcomePage> {
               size: 30,
             ),
           ),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: AppColors.gray45),
-              fixedSize:
-                  Size.fromWidth(MediaQuery.of(context).size.width * .75),
-            ),
-            onPressed: _onResetPressed,
-            child: isSendingResetRequest
-                ? const SizedBox(
-                    height: 25,
-                    width: 25,
-                    child: CupertinoActivityIndicator(
-                      color: AppColors.gray45,
+          SizedBox(
+            width: MediaQuery.of(context).size.width * .6,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppColors.gray45),
+              ),
+              onPressed: _onResetPressed,
+              child: isSendingResetRequest
+                  ? const SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.gray45,
+                      ),
+                    )
+                  : const Text(
+                      'Proceed',
+                      style: TextStyle(color: AppColors.gray45, fontSize: 20),
                     ),
-                  )
-                : const Text(
-                    'Proceed',
-                    style: TextStyle(color: AppColors.gray45, fontSize: 20),
-                  ),
+            ),
           ),
         ],
       ),
@@ -394,10 +395,14 @@ class _WelcomePageState extends State<WelcomePage> {
           ],
         ),
         const SizedBox(
-          height: 30,
+          height: 5,
         ),
         currentUserAvatar != null
-            ? CustomImage(currentUserAvatar)
+            ? CustomImage(
+                currentUserAvatar,
+                height: 70,
+                width: 70,
+              )
             : const CustomIconHolder(
                 width: 120,
                 height: 120,
@@ -408,7 +413,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 isProfile: true,
               ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         Focus(
           child: AuthPasswordTextField(
@@ -438,10 +443,10 @@ class _WelcomePageState extends State<WelcomePage> {
                 radius: 20,
               )
             : WideButton(
-                name: 'Sign me in',
+                name: 'Login',
                 onPressed: _onPressed,
                 bgColor: AppColors.gray45,
-                textStyle: const TextStyle(color: Colors.black54, fontSize: 22),
+                textStyle: const TextStyle(color: Colors.black54, fontSize: 18),
               ),
         const SizedBox(
           height: 10,
@@ -456,7 +461,7 @@ class _WelcomePageState extends State<WelcomePage> {
             },
             child: const Text(
               'Change User',
-              style: TextStyle(color: AppColors.gray45, fontSize: 20),
+              style: TextStyle(color: AppColors.gray45, fontSize: 18),
             ),
           ),
         const SizedBox(
@@ -481,6 +486,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Widget _buildBody() {
     return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Column(

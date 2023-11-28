@@ -189,7 +189,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     } else if (_doneLoading && requisitions.isEmpty) {
       return const Center(
         child: Text(
-          "Your requisitions appear here",
+          "No new submitted requisitions",
           style: TextStyle(color: AppColors.inActiveColor),
         ),
       );

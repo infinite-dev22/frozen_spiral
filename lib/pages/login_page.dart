@@ -28,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   final globalKey = GlobalKey();
 
   bool isAuthingUser = false;
+  bool showLogin = true;
   bool isSendingResetRequest = false;
   bool hasFocus1 = false;
   bool hasFocus2 = false;
@@ -306,7 +307,7 @@ class _LoginPageState extends State<LoginPage> {
                 name: 'Login',
                 onPressed: _onPressed,
                 bgColor: AppColors.gray45,
-                textStyle: const TextStyle(color: Colors.black54, fontSize: 20),
+                textStyle: const TextStyle(color: Colors.black54, fontSize: 18),
               ),
         const SizedBox(
           height: 10,
@@ -322,7 +323,7 @@ class _LoginPageState extends State<LoginPage> {
             },
             child: Text(
               'Back to ${currentUsername ?? "user"}',
-              style: const TextStyle(color: AppColors.gray45, fontSize: 20),
+              style: const TextStyle(color: AppColors.gray45, fontSize: 18),
             ),
           ),
         const SizedBox(
@@ -330,7 +331,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
         TextButton(
           onPressed: () {
-            setState(() {});
+            setState(() {
+              showLogin = false;
+            });
           },
           child: const Text(
             'Forgot password?',
@@ -363,6 +366,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildBody() {
     return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Column(
@@ -397,7 +401,9 @@ class _LoginPageState extends State<LoginPage> {
                                 imageFit: BoxFit.contain,
                                 radius: 0,
                               ),
-                              _buildLoginBody(),
+                              (showLogin)
+                                  ? _buildLoginBody()
+                                  : _buildPasswordResetBody(),
                               const SizedBox(height: 10),
                               _buildFooter(),
                             ],
@@ -413,6 +419,133 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildPasswordResetBody() {
+    return Column(
+      children: [
+        const Text(
+          'A Password reset link will be sent to the email entered below, '
+          'click Proceed to continue',
+          style: TextStyle(color: AppColors.white, fontSize: 18),
+        ),
+        const SizedBox(height: 20),
+        AuthTextField(
+          controller: emailController,
+          hintText: 'email',
+          enabled: !isAuthingUser,
+          obscureText: false,
+          isEmail: true,
+          style: const TextStyle(color: AppColors.white),
+          borderSide: const BorderSide(color: AppColors.white),
+          fillColor: AppColors.primary,
+        ),
+        const SizedBox(height: 10),
+        _buildButtons(),
+      ],
+    );
+  }
+
+  Widget _buildButtons() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateColor.resolveWith((states) => AppColors.gray45),
+            ),
+            onPressed: () {
+              setState(() {
+                isSendingResetRequest = false;
+                showLogin = true;
+              });
+            },
+            alignment: Alignment.center,
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.primary,
+              size: 30,
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * .6,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppColors.gray45),
+              ),
+              onPressed: _onResetPressed,
+              child: isSendingResetRequest
+                  ? const SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.gray45,
+                      ),
+                    )
+                  : const Text(
+                      'Proceed',
+                      style: TextStyle(color: AppColors.gray45, fontSize: 20),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _onResetPressed() {
+    if (EmailValidator.validate(emailController.text.trim())) {
+      setState(() {
+        isSendingResetRequest = true;
+      });
+
+      AuthApis.requestReset(
+        emailController.text,
+        onError: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+          Fluttertoast.showToast(
+              msg: "An error occurred",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: AppColors.red,
+              textColor: AppColors.white,
+              fontSize: 16.0);
+
+          setState(() {
+            isSendingResetRequest = false;
+            showLogin = false;
+          });
+        },
+        onSuccess: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+          Fluttertoast.showToast(
+              msg: "Reset password link sent on your email",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: AppColors.green,
+              textColor: AppColors.white,
+              fontSize: 16.0);
+          setState(() {
+            isSendingResetRequest = false;
+            showLogin = true;
+          });
+        },
+      );
+    } else {
+      Fluttertoast.showToast(
+          msg: "Email not valid",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: AppColors.red,
+          textColor: AppColors.white,
+          fontSize: 16.0);
+    }
   }
 
   _getCurrentUserData() async {
