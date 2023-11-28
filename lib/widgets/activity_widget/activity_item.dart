@@ -55,6 +55,10 @@ class ActivityItem extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
+                _buildStringItem('File Name', activity.file!.getName()),
+                const SizedBox(
+                  height: 10,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,6 +114,7 @@ class ActivityItem extends StatelessWidget {
         ),
         SearchHighlightText(
           data ?? 'Null',
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             // fontWeight: FontWeight.bold,
             color: AppColors.darker,
