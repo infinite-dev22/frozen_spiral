@@ -105,7 +105,7 @@ class _TaskFormState extends State<TaskForm> {
                               child: Text(
                                 file?.fileName ?? 'Select file',
                                 maxLines: 1,
-                                overflow: TextOverflow.fade,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: AppColors.darker,
                                     fontSize: 15,
@@ -143,7 +143,7 @@ class _TaskFormState extends State<TaskForm> {
                               child: Text(
                                 assignee?.getName() ?? 'Select assignee',
                                 maxLines: 1,
-                                overflow: TextOverflow.fade,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: AppColors.darker,
                                     fontSize: 15,

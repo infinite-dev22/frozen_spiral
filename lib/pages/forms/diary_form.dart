@@ -130,7 +130,7 @@ class _DiaryFormState extends State<DiaryForm> {
                               child: Text(
                                 file?.fileName ?? 'Select file',
                                 style: const TextStyle(
-                                    overflow: TextOverflow.fade,
+                                    overflow: TextOverflow.ellipsis,
                                     color: AppColors.darker,
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500),
@@ -167,7 +167,7 @@ class _DiaryFormState extends State<DiaryForm> {
                               child: Text(
                                 activity?.name ?? 'Select activity status',
                                 style: const TextStyle(
-                                    overflow: TextOverflow.fade,
+                                    overflow: TextOverflow.ellipsis,
                                     color: AppColors.darker,
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500),

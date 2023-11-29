@@ -29,7 +29,12 @@ class SearchItem<T extends SmartModel> extends StatelessWidget {
           ),
           color: color,
         ),
-        child: Center(child: Text(value.getName())),
+        child: Center(
+            child: Text(
+          value.getName(),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        )),
       ),
     );
   }

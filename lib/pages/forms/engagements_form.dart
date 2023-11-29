@@ -117,7 +117,7 @@ class _EngagementFormState extends State<EngagementForm> {
                                     child: Text(
                                       client?.getName() ?? 'Select client',
                                       maxLines: 1,
-                                      overflow: TextOverflow.fade,
+                                      overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                           color: AppColors.darker,
                                           fontSize: 15,
@@ -158,7 +158,7 @@ class _EngagementFormState extends State<EngagementForm> {
                                       engagementType?.getName() ??
                                           'Select engagement type',
                                       maxLines: 1,
-                                      overflow: TextOverflow.fade,
+                                      overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                           color: AppColors.darker,
                                           fontSize: 15,

@@ -132,7 +132,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
                               child: Text(
                                 file?.getName() ?? 'Select file',
                                 maxLines: 1,
-                                overflow: TextOverflow.fade,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: AppColors.darker,
                                     fontSize: 15,
@@ -194,7 +194,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
                                 category?.getName() ??
                                     'Select requisition category',
                                 maxLines: 1,
-                                overflow: TextOverflow.fade,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: AppColors.darker,
                                     fontSize: 15,
