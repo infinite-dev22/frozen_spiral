@@ -30,8 +30,7 @@ class _AlertsPageState extends State {
   }
 
   _buildBody() {
-    return (kDebugMode)
-        ? ValueListenableBuilder(
+    return ValueListenableBuilder(
             valueListenable:
                 Hive.box<Notifications>('notifications').listenable(),
             builder: (context, Box<Notifications> box, _) {
@@ -58,15 +57,7 @@ class _AlertsPageState extends State {
                   },
                 );
               }
-            })
-        : const Center(
-            child: Text(
-              'Coming soon...',
-              style: TextStyle(
-                color: AppColors.inActiveColor,
-              ),
-            ),
-          );
+            });
   }
 
   _deleteItem(int index) async {

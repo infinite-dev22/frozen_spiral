@@ -304,8 +304,7 @@ class _TaskFormState extends State<TaskForm> {
       caseStatus: 'TASK',
       priority: 'High',
       dueAt: DateFormat('dd/MM/yyyy').parse(dueDateController.text.trim()),
-      estimatedTime:
-          DateFormat('h:mm a').parse(startTimeController.text.trim()),
+      estimatedTime:startTimeController.text.trim(),
       assignees: [SmartEmployee(id: 1)],
     );
 

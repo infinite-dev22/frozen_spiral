@@ -1,6 +1,5 @@
-import 'package:intl/intl.dart';
-import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_model.dart';
 
 class SmartTask extends SmartModel {
@@ -14,7 +13,7 @@ class SmartTask extends SmartModel {
   final DateTime? dueAt;
   final int? taskStatus;
   final DateTime? endDate;
-  final DateTime? estimatedTime;
+  final String? estimatedTime;
   final DateTime? createdAt;
   final List<SmartEmployee>? assignees;
   final SmartEmployee? assigner;
@@ -49,17 +48,12 @@ class SmartTask extends SmartModel {
       matter: json['matter'],
       caseStatus: json['case_status'],
       priority: json['priority'],
-      dueAt: DateFormat('dd/MM/yyyy').parse(DateFormat('dd/MM/yyyy')
-          .format(DateFormat('yy-MM-dd').parse(json['due_at']))),
+      dueAt: DateTime.parse(json['due_at']),
       taskStatus: json['task_status'],
-      endDate: (json['end_date'] != null)
-          ? DateFormat('dd/MM/yyyy').parse(DateFormat('dd/MM/yyyy')
-              .format(DateFormat('dd-MM-yyyy').parse(json['end_date'])))
-          : null,
-      estimatedTime: DateFormat('h:mm a').parse(DateFormat('h:mm a')
-          .format(DateFormat('h:mm a').parse(json['estimated_time']))),
-      createdAt: DateFormat('dd/MM/yyyy').parse(DateFormat('dd/MM/yyyy')
-          .format(DateFormat('dd-MM-yyyy').parse(json['created_at']))),
+      endDate:
+          (json['end_date'] != null) ? DateTime.parse(json['end_date']) : null,
+      estimatedTime: json['estimated_time'],
+      createdAt: DateTime.parse(json['created_at']),
       assignees: (json['assignees'] as List?)
           ?.map((e) => SmartEmployee.fromJson(e))
           .toList(),
@@ -103,7 +97,7 @@ class SmartTask extends SmartModel {
       'priority': priority,
       'due_at': dueAt?.toIso8601String(),
       'task_status': taskStatus,
-      'estimated_time': estimatedTime?.toIso8601String(),
+      'estimated_time': estimatedTime,
       'assignees': assignees,
     };
   }

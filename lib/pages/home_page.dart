@@ -104,12 +104,12 @@ class _HomePageState extends State<HomePage> {
                 width: 20,
               ),
               Expanded(
-                child: ModuleItem2(
+                child: ModuleItem(
                   name: 'Tasks',
                   color: Colors.white,
                   padding: cardPadding,
                   icon: Icons.task_outlined,
-                  // onTap: () => Navigator.pushNamed(context, '/tasks'),
+                  onTap: () => Navigator.pushNamed(context, '/tasks'),
                 ),
               ),
             ],
@@ -120,25 +120,24 @@ class _HomePageState extends State<HomePage> {
           Row(
             children: [
               Expanded(
-                child: ModuleItem2(
+                child: ModuleItem(
                   name: 'Engagements',
                   color: Colors.white,
                   padding: cardPadding,
                   icon: Icons.handshake_outlined,
-                  onTap: () => const BetterSuccessToast(text: "Coming soon..."),
-                  // onTap: () => Navigator.pushNamed(context, '/engagements'),
+                  onTap: () => Navigator.pushNamed(context, '/engagements'),
                 ),
               ),
               const SizedBox(
                 width: 20,
               ),
               Expanded(
-                child: ModuleItem2(
+                child: ModuleItem(
                   name: 'Reports',
                   color: Colors.white,
                   padding: cardPadding,
                   icon: Icons.bar_chart_rounded,
-                  // onTap: () => Navigator.pushNamed(context, '/reports'),
+                  onTap: () => Navigator.pushNamed(context, '/reports'),
                 ),
               ),
             ],
