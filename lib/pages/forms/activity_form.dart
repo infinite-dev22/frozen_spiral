@@ -459,7 +459,7 @@ class _ActivityFormState extends State<ActivityForm> {
             Fluttertoast.showToast(
                 msg: "An error occurred",
                 toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
+                gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
                 backgroundColor: AppColors.red,
                 textColor: AppColors.white,
@@ -468,7 +468,7 @@ class _ActivityFormState extends State<ActivityForm> {
             Fluttertoast.showToast(
                 msg: "Activity added successfully",
                 toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
+                gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
                 backgroundColor: AppColors.green,
                 textColor: AppColors.white,
@@ -481,7 +481,7 @@ class _ActivityFormState extends State<ActivityForm> {
             Fluttertoast.showToast(
                 msg: "An error occurred",
                 toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
+                gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
                 backgroundColor: AppColors.red,
                 textColor: AppColors.white,
@@ -490,7 +490,7 @@ class _ActivityFormState extends State<ActivityForm> {
             Fluttertoast.showToast(
                 msg: "Activity updated successfully",
                 toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
+                gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
                 backgroundColor: AppColors.green,
                 textColor: AppColors.white,

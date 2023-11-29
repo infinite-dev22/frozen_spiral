@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_task.dart';
 
@@ -53,16 +52,9 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   _buildBody() {
-    return (kDebugMode)
-        ? (filteredTasks.isEmpty)
-            ? _buildNonSearchedBody()
-            : _buildSearchedBody()
-        : const Center(
-            child: Text(
-              'Coming soon...',
-              style: TextStyle(color: AppColors.inActiveColor),
-            ),
-          );
+    return (filteredTasks.isEmpty)
+        ? _buildNonSearchedBody()
+        : _buildSearchedBody();
   }
 
   _buildNonSearchedBody() {

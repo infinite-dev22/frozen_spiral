@@ -49,32 +49,23 @@ class _CustomDropdownFilterState extends State<CustomDropdownFilter> {
           graphic: widget.icon,
         ),
         items: widget.menuItems
-            .map((item) => DropdownMenuItem<String>(
+            .map(
+              (item) => DropdownMenuItem<String>(
                 alignment: Alignment.centerLeft,
                 value: item,
-                child: Row(
-                  children: [
-                    Checkbox(
-                      value: checkValue,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          checkValue = value!;
-                        });
-                      },
-                    ),
-                    Text(
-                      item,
-                      style: const TextStyle(
-                        color: AppColors.darker,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                )))
+                child: Text(
+                  item,
+                  style: const TextStyle(
+                    color: AppColors.darker,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            )
             .toList(),
         onChanged: widget.onChanged,
         dropdownStyleData: DropdownStyleData(
-          width: 170,
+          width: 100,
           padding: const EdgeInsets.symmetric(vertical: 6),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),

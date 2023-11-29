@@ -662,7 +662,6 @@ class _RequisitionItemState extends State<RequisitionItem> {
         animType: AnimType.bottomSlide,
         title: 'Success',
         desc: 'Requisition has been successfully approved',
-        autoDismiss: true,
         autoHide: const Duration(seconds: 3),
         btnCancel: null,
         btnOkOnPress: () {},
@@ -678,7 +677,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
     Fluttertoast.showToast(
         msg: "An error occurred",
         toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
+        gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
         backgroundColor: AppColors.red,
         textColor: Colors.white,
