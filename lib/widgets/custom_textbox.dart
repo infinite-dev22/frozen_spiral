@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
 import 'package:smart_case/theme/color.dart';
 
@@ -24,7 +25,7 @@ class CustomTextBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return (readOnly) ? _buildTextFieldButton() : _buildTextField();
+    return _buildTextField();
   }
 
   _buildTextField() {
@@ -54,7 +55,10 @@ class CustomTextBox extends StatelessWidget {
               controller: controller,
               onChanged: onChanged,
               autofocus: autoFocus,
+              maxLines: 1,
+              maxLength: 33,
               decoration: InputDecoration(
+                counterText: "",
                 prefixIcon: prefix,
                 border: InputBorder.none,
                 hintText: hint,
@@ -69,40 +73,6 @@ class CustomTextBox extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  _buildTextFieldButton() {
-    return Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.only(bottom: 3),
-        height: 40,
-        decoration: BoxDecoration(
-          color: AppColors.appBgColor,
-          border: Border.all(color: AppColors.textBoxColor),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadowColor.withOpacity(.05),
-              spreadRadius: .5,
-              blurRadius: .5,
-              offset: const Offset(0, 1), // changes position of shadow
-            ),
-          ],
-        ),
-        child: TextField(
-          readOnly: readOnly,
-          controller: controller,
-          onTap: onTap,
-          decoration: InputDecoration(
-            prefixIcon: prefix,
-            border: InputBorder.none,
-            hintText: hint,
-            hintStyle: const TextStyle(
-              color: Colors.grey,
-              fontSize: 15,
-            ),
-          ),
-        ));
   }
 }
 
@@ -181,7 +151,7 @@ class SmartCaseTextField extends StatelessWidget {
             controller: controller,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (val) =>
-            val!.isEmpty ? 'Required field, Please fill in.' : null,
+                val!.isEmpty ? 'Required field, Please fill in.' : null,
             decoration: InputDecoration(
               filled: true,
               fillColor: AppColors.textBoxColor,
@@ -224,7 +194,7 @@ class SmartCaseNumberField extends StatelessWidget {
             controller: controller,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (val) =>
-            val!.isEmpty ? 'Required field, Please fill in.' : null,
+                val!.isEmpty ? 'Required field, Please fill in.' : null,
             decoration: InputDecoration(
               filled: true,
               fillColor: AppColors.textBoxColor,

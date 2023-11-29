@@ -435,7 +435,7 @@ class _DiaryFormState extends State<DiaryForm> {
             Fluttertoast.showToast(
                 msg: "An error occurred",
                 toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
+                gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
                 backgroundColor: AppColors.red,
                 textColor: AppColors.white,
@@ -444,7 +444,7 @@ class _DiaryFormState extends State<DiaryForm> {
             Fluttertoast.showToast(
                 msg: "Event added successfully",
                 toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
+                gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
                 backgroundColor: AppColors.green,
                 textColor: AppColors.white,
@@ -455,7 +455,7 @@ class _DiaryFormState extends State<DiaryForm> {
             Fluttertoast.showToast(
                 msg: "An error occurred",
                 toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
+                gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
                 backgroundColor: AppColors.red,
                 textColor: AppColors.white,
@@ -464,7 +464,7 @@ class _DiaryFormState extends State<DiaryForm> {
             Fluttertoast.showToast(
                 msg: "Event updated successfully",
                 toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
+                gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
                 backgroundColor: AppColors.green,
                 textColor: AppColors.white,

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_engagement.dart';
 import 'package:smart_case/widgets/engagement_widget/engagement_item.dart';
@@ -54,16 +53,9 @@ class _EngagementsPageState extends State<EngagementsPage> {
   }
 
   _buildBody() {
-    return (kDebugMode)
-        ? (filteredEngagements.isEmpty)
-            ? _buildNonSearchedBody()
-            : _buildSearchedBody()
-        : const Center(
-            child: Text(
-              'Coming soon...',
-              style: TextStyle(color: AppColors.inActiveColor),
-            ),
-          );
+    return (filteredEngagements.isEmpty)
+        ? _buildNonSearchedBody()
+        : _buildSearchedBody();
   }
 
   _buildNonSearchedBody() {

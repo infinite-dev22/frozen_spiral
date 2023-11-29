@@ -16,7 +16,7 @@ import '../models/smart_currency.dart';
 import '../services/apis/smartcase_api.dart';
 import '../util/smart_case_init.dart';
 import '../widgets/better_toast.dart';
-import '../widgets/custom_appbar.dart';
+import '../widgets/requisition_widget/requisition_appbar.dart';
 
 class RequisitionsPage extends StatefulWidget {
   const RequisitionsPage({super.key});
@@ -40,16 +40,158 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   final scrollController = ScrollController();
   final gkey = GlobalKey<_RequisitionsPageState>();
 
+  bool _allFilter = true;
+  bool _submittedFilter = false;
+  bool _approvedFilter = false;
+  bool _preapprovedFilter = false;
+  bool _rejectedFilter = false;
+  bool _returnedFilter = false;
+
   List<SmartRequisition> filteredRequisitions = List.empty(growable: true);
   List<SmartCurrency> currencies = List.empty(growable: true);
-  final List<String>? filters = [
-    "All",
-    "Submitted",
-    "Approved",
-    "Pre-Approved",
-    "Rejected",
-    "Returned",
-  ];
+
+  List<DropdownMenuItem> _filters() {
+    return [
+      DropdownMenuItem<String>(
+        alignment: Alignment.centerLeft,
+        value: "All",
+        child: Row(
+          children: [
+            Checkbox(
+              value: _allFilter,
+              onChanged: (bool? value) {
+                setState(() {
+                  _allFilter = value!;
+                });
+              },
+            ),
+            const Text(
+              "All",
+              style: TextStyle(
+                color: AppColors.darker,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+      DropdownMenuItem<String>(
+        value: "All",
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Checkbox(
+              value: _submittedFilter,
+              onChanged: (bool? value) {
+                setState(() {
+                  _submittedFilter = value!;
+                });
+              },
+            ),
+            const Text(
+              "Submitted",
+              style: TextStyle(
+                color: AppColors.darker,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+      DropdownMenuItem<String>(
+        value: "All",
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Checkbox(
+              value: _approvedFilter,
+              onChanged: (bool? value) {
+                setState(() {
+                  _approvedFilter = value!;
+                });
+              },
+            ),
+            const Text(
+              "Approved",
+              style: TextStyle(
+                color: AppColors.darker,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+      DropdownMenuItem<String>(
+        value: "All",
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Checkbox(
+              value: _preapprovedFilter,
+              onChanged: (bool? value) {
+                setState(() {
+                  _preapprovedFilter = value!;
+                });
+              },
+            ),
+            const Text(
+              "Pre-Approved",
+              style: TextStyle(
+                color: AppColors.darker,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+      DropdownMenuItem<String>(
+        value: "All",
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Checkbox(
+              value: _rejectedFilter,
+              onChanged: (bool? value) {
+                setState(() {
+                  _rejectedFilter = value!;
+                });
+              },
+            ),
+            const Text(
+              "Rejected",
+              style: TextStyle(
+                color: AppColors.darker,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+      DropdownMenuItem<String>(
+        value: "All",
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Checkbox(
+              value: _returnedFilter,
+              onChanged: (bool? value) {
+                setState(() {
+                  _returnedFilter = value!;
+                });
+              },
+            ),
+            const Text(
+              "Returned",
+              style: TextStyle(
+                color: AppColors.darker,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +208,10 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           color: AppColors.white,
         ),
         backgroundColor: AppColors.primary,
-        title: AppBarContent(
-          searchable: true,
-          filterable: true,
-          canNavigate: true,
+        title: RequisitionAppBar(
           search: 'requisitions',
           filterController: filterController,
-          filters: filters,
+          filters: _filters(),
           onChanged: (search) {
             _searchActivities(search);
             searchText = search;
@@ -106,19 +245,20 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   }
 
   _buildNonSearchedBody() {
-    List<SmartRequisition> requisitions = preloadedRequisitions.where((requisition) =>
-    (
-        (requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
+    List<SmartRequisition> requisitions = preloadedRequisitions
+        .where((requisition) =>
+    ((requisition.requisitionStatus!.code
+        .toLowerCase()
+        .contains("submit") ||
         requisition.requisitionStatus!.name
             .toLowerCase()
             .contains("submit")) &&
-        requisition.supervisor!.id == currentUser.id)
-        || (requisition.employee!.id == currentUser.id)
-        || (requisition.canPay == true)
-        || ((requisition.secondApprover != null &&
-            requisition.secondApprover == true)
-                  && (
-                  (requisition.requisitionStatus!.code
+        requisition.supervisor!.id == currentUser.id) ||
+        (requisition.employee!.id == currentUser.id) ||
+        (requisition.canPay == true) ||
+        ((requisition.secondApprover != null &&
+            requisition.secondApprover == true) &&
+            ((requisition.requisitionStatus!.code
                 .toLowerCase()
                 .contains("submit") ||
                 requisition.requisitionStatus!.name
@@ -132,7 +272,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                         .contains("primary approved"))
                 //     && ((requisition.supervisor!.id == currentUser.id) ||
                 // (requisition.employee!.id == currentUser.id))
-        )))
+            )))
         .toList(growable: true);
 
     // return SmartRefresher(
@@ -235,9 +375,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _buildSearchedBody() {
     List<SmartRequisition> requisitions = filteredRequisitions
         .where((requisition) =>
-    ((requisition.requisitionStatus!.code
-        .toLowerCase()
-        .contains("submit") ||
+    ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
         requisition.requisitionStatus!.name
             .toLowerCase()
             .contains("submit")) &&
@@ -246,9 +384,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         (requisition.canPay == true) ||
         ((requisition.secondApprover != null &&
             requisition.secondApprover == true) &&
-            ((requisition.requisitionStatus!.code
-                .toLowerCase()
-                .contains("submit") ||
+            ((requisition.requisitionStatus!.code.toLowerCase().contains(
+                "submit") ||
                 requisition.requisitionStatus!.name
                     .toLowerCase()
                     .contains("submit")) ||

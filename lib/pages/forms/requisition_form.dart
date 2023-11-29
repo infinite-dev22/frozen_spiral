@@ -441,7 +441,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
               Fluttertoast.showToast(
                   msg: "An error occurred",
                   toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.BOTTOM,
+                  gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 1,
                   backgroundColor: AppColors.red,
                   textColor: AppColors.white,
@@ -451,7 +451,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
               Fluttertoast.showToast(
                   msg: "Requisition added successfully",
                   toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.BOTTOM,
+                  gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 1,
                   backgroundColor: AppColors.green,
                   textColor: AppColors.white,
@@ -467,7 +467,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
               Fluttertoast.showToast(
                   msg: "An error occurred",
                   toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.BOTTOM,
+                  gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 1,
                   backgroundColor: AppColors.red,
                   textColor: AppColors.white,
@@ -477,7 +477,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
               Fluttertoast.showToast(
                   msg: "Requisition updated successfully",
                   toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.BOTTOM,
+                  gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 1,
                   backgroundColor: AppColors.green,
                   textColor: AppColors.white,
