@@ -47,8 +47,11 @@ class _AsyncSearchableActivityBottomSheetContentsState
         !widget.isLoading
             ? Expanded(
                 child: ListView.builder(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   itemCount: widget.list.length,
-                  itemBuilder: (context, index) => SearchItem<SmartActivityStatus>(
+                  itemBuilder: (context, index) =>
+                      SearchItem<SmartActivityStatus>(
                     value: widget.list[index],
                     padding: 20,
                     color: AppColors.white,

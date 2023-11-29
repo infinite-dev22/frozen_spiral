@@ -47,6 +47,8 @@ class _AsyncSearchableSmartFileBottomSheetContentsState
         !widget.isLoading
             ? Expanded(
                 child: ListView.builder(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   itemCount: widget.list.length,
                   itemBuilder: (context, index) => SearchItem<SmartFile>(
                     value: widget.list[index],

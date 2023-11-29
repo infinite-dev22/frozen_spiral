@@ -47,6 +47,8 @@ class _AsyncSearchableBottomSheetContentsState<T extends SmartModel>
         !widget.isLoading
             ? Expanded(
                 child: ListView.builder(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   itemCount: widget.list.length,
                   itemBuilder: (context, index) => SearchItem<T>(
                     value: widget.list[index],

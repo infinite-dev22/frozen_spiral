@@ -37,7 +37,6 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   String? searchText;
   int _requisitionPage = 1;
 
-  final scrollController = ScrollController();
   final gkey = GlobalKey<_RequisitionsPageState>();
 
   bool _allFilter = true;
@@ -247,32 +246,33 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _buildNonSearchedBody() {
     List<SmartRequisition> requisitions = preloadedRequisitions
         .where((requisition) =>
-    ((requisition.requisitionStatus!.code
-        .toLowerCase()
-        .contains("submit") ||
-        requisition.requisitionStatus!.name
-            .toLowerCase()
-            .contains("submit")) &&
-        requisition.supervisor!.id == currentUser.id) ||
-        (requisition.employee!.id == currentUser.id) ||
-        (requisition.canPay == true) ||
-        ((requisition.secondApprover != null &&
-            requisition.secondApprover == true) &&
             ((requisition.requisitionStatus!.code
-                .toLowerCase()
-                .contains("submit") ||
-                requisition.requisitionStatus!.name
-                    .toLowerCase()
-                    .contains("submit")) ||
-                (requisition.requisitionStatus!.code
-                    .toLowerCase()
-                    .contains("primary_approved") ||
+                        .toLowerCase()
+                        .contains("submit") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("primary approved"))
+                        .contains("submit")) &&
+                requisition.supervisor!.id == currentUser.id) ||
+            (requisition.employee!.id == currentUser.id) ||
+            (requisition.canPay == true) ||
+            ((requisition.secondApprover != null &&
+                    requisition.secondApprover == true) &&
+                (((requisition.requisitionStatus!.code
+                                .toLowerCase()
+                                .contains("submit") ||
+                            requisition.requisitionStatus!.name
+                                .toLowerCase()
+                                .contains("submit")) &&
+                        (requisition.supervisor!.id == currentUser.id)) ||
+                    (requisition.requisitionStatus!.code
+                            .toLowerCase()
+                            .contains("primary_approved") ||
+                        requisition.requisitionStatus!.name
+                            .toLowerCase()
+                            .contains("primary approved"))
                 //     && ((requisition.supervisor!.id == currentUser.id) ||
                 // (requisition.employee!.id == currentUser.id))
-            )))
+                )))
         .toList(growable: true);
 
     // return SmartRefresher(
@@ -313,21 +313,20 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           controller: _scrollController,
           itemCount: requisitions.length,
           padding: const EdgeInsets.all(8),
-          itemBuilder: (context, index) =>
-              RequisitionItem(
-                color: AppColors.white,
-                padding: 10,
-                requisition: requisitions.elementAt(index),
-                currencies: currencies,
-                showActions: true,
-                showFinancialStatus: true,
-              ),
+          itemBuilder: (context, index) => RequisitionItem(
+            color: AppColors.white,
+            padding: 10,
+            requisition: requisitions.elementAt(index),
+            currencies: currencies,
+            showActions: true,
+            showFinancialStatus: true,
+          ),
         ),
       );
     } else if (_doneLoading && requisitions.isEmpty) {
       return const Center(
         child: Text(
-          "Your requisitions appear here",
+          "No new requisitions",
           style: TextStyle(color: AppColors.inActiveColor),
         ),
       );
@@ -349,7 +348,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   Widget _emptyWidget() {
     return const Center(
       child: Text(
-        "Your requisitions appear here",
+        "No new requisitions",
         style: TextStyle(color: AppColors.inActiveColor),
       ),
     );
@@ -375,28 +374,26 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _buildSearchedBody() {
     List<SmartRequisition> requisitions = filteredRequisitions
         .where((requisition) =>
-    ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
-        requisition.requisitionStatus!.name
-            .toLowerCase()
-            .contains("submit")) &&
-        requisition.supervisor!.id == currentUser.id) ||
-        (requisition.employee!.id == currentUser.id) ||
-        (requisition.canPay == true) ||
-        ((requisition.secondApprover != null &&
-            requisition.secondApprover == true) &&
-            ((requisition.requisitionStatus!.code.toLowerCase().contains(
-                "submit") ||
-                requisition.requisitionStatus!.name
-                    .toLowerCase()
-                    .contains("submit")) ||
-                (requisition.requisitionStatus!.code
-                    .toLowerCase()
-                    .contains("primar") ||
+            ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("primar")) &&
-                    (requisition.supervisor!.id == currentUser.id) ||
-                (requisition.employee!.id == currentUser.id))))
+                        .contains("submit")) &&
+                requisition.supervisor!.id == currentUser.id) ||
+            (requisition.employee!.id == currentUser.id) ||
+            (requisition.canPay == true) ||
+            ((requisition.secondApprover != null && requisition.secondApprover == true) &&
+                ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
+                        requisition.requisitionStatus!.name
+                            .toLowerCase()
+                            .contains("submit")) ||
+                    (requisition.requisitionStatus!.code
+                                .toLowerCase()
+                                .contains("primar") ||
+                            requisition.requisitionStatus!.name
+                                .toLowerCase()
+                                .contains("primar")) &&
+                        (requisition.supervisor!.id == currentUser.id) ||
+                    (requisition.employee!.id == currentUser.id))))
         .toList(growable: true);
 
     if ((requisitions.isNotEmpty)) {
@@ -428,8 +425,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   void initState() {
     super.initState();
 
-    _scrollController = ScrollController()
-      ..addListener(_scrollListener);
+    _scrollController = ScrollController()..addListener(_scrollListener);
     RequisitionApi.fetchAll().then((value) {
       _doneLoading = true;
       setState(() {});
@@ -453,10 +449,10 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _searchActivities(String value) {
     filteredRequisitions.clear();
     filteredRequisitions.addAll(preloadedRequisitions.where(
-            (smartRequisition) =>
-        smartRequisition.number!
-            .toLowerCase()
-            .contains(value.toLowerCase()) ||
+        (smartRequisition) =>
+            smartRequisition.number!
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
             smartRequisition.caseFile!.fileName!
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
@@ -485,8 +481,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                 .contains(value.toLowerCase()) ||
             (smartRequisition.description != null
                 ? smartRequisition.description!
-                .toLowerCase()
-                .contains(value.toLowerCase())
+                    .toLowerCase()
+                    .contains(value.toLowerCase())
                 : false)));
     setState(() {});
   }
