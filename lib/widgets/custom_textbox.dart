@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
 import 'package:smart_case/theme/color.dart';
 
@@ -85,6 +84,8 @@ class CustomTextArea extends StatelessWidget {
       this.controller,
       this.onChanged,
       this.minLines = 5,
+      this.maxLines = 500,
+      this.maxLength,
       this.onTap});
 
   final String hint;
@@ -94,6 +95,8 @@ class CustomTextArea extends StatelessWidget {
   final Function(String)? onChanged;
   final Function()? onTap;
   final int minLines;
+  final int maxLines;
+  final int? maxLength;
 
   @override
   Widget build(BuildContext context) {
@@ -101,41 +104,43 @@ class CustomTextArea extends StatelessWidget {
   }
 
   _buildBody() {
-    return Column(
-      children: [
-        TextFormField(
-          controller: controller,
-          readOnly: readOnly,
-          autofocus: autoFocus,
-          onChanged: onChanged,
-          minLines: minLines,
-          maxLines: 500,
-          onTap: onTap,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (val) =>
-              val!.isEmpty ? 'Required field, Please fill in.' : null,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: AppColors.textBoxColor,
-            hintText: hint,
-            hintStyle: const TextStyle(color: AppColors.inActiveColor),
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+    return TextFormField(
+      controller: controller,
+      readOnly: readOnly,
+      autofocus: autoFocus,
+      onChanged: onChanged,
+      minLines: minLines,
+      maxLines: maxLines,
+      onTap: onTap,
+      maxLength: maxLength,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (val) =>
+          val!.isEmpty ? 'Required field, Please fill in.' : null,
+      decoration: InputDecoration(
+        counterText: "",
+        filled: true,
+        fillColor: AppColors.textBoxColor,
+        hintText: hint,
+        hintStyle: const TextStyle(color: AppColors.inActiveColor),
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(10),
         ),
-      ],
+      ),
     );
   }
 }
 
 class SmartCaseTextField extends StatelessWidget {
   const SmartCaseTextField(
-      {super.key, required this.hint, required this.controller});
+      {super.key,
+      required this.hint,
+      required this.controller,
+      this.maxLength});
 
   final String hint;
   final TextEditingController controller;
+  final int? maxLength;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +157,10 @@ class SmartCaseTextField extends StatelessWidget {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (val) =>
                 val!.isEmpty ? 'Required field, Please fill in.' : null,
+            maxLength: maxLength,
+            maxLines: 1,
             decoration: InputDecoration(
+              counterText: "",
               filled: true,
               fillColor: AppColors.textBoxColor,
               hintText: hint,
@@ -175,10 +183,14 @@ class SmartCaseTextField extends StatelessWidget {
 
 class SmartCaseNumberField extends StatelessWidget {
   const SmartCaseNumberField(
-      {super.key, required this.hint, required this.controller});
+      {super.key,
+      required this.hint,
+      required this.controller,
+      this.maxLength});
 
   final String hint;
   final TextEditingController controller;
+  final int? maxLength;
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +207,10 @@ class SmartCaseNumberField extends StatelessWidget {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (val) =>
                 val!.isEmpty ? 'Required field, Please fill in.' : null,
+            maxLength: maxLength,
+            minLines: 1,
             decoration: InputDecoration(
+              counterText: "",
               filled: true,
               fillColor: AppColors.textBoxColor,
               hintText: hint,

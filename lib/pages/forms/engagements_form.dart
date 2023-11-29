@@ -24,6 +24,7 @@ class EngagementForm extends StatefulWidget {
 
 class _EngagementFormState extends State<EngagementForm> {
   final globalKey = GlobalKey();
+  final formKey = GlobalKey<FormState>();
   bool isTitleElevated = false;
 
   TextEditingController costController = TextEditingController();
@@ -87,6 +88,7 @@ class _EngagementFormState extends State<EngagementForm> {
                 padding: const EdgeInsets.all(16),
                 children: [
                   Form(
+                    key: formKey,
                     child: Column(
                       children: [
                         DateTimeAccordion2(
@@ -174,11 +176,22 @@ class _EngagementFormState extends State<EngagementForm> {
                             ),
                           ),
                         ),
-                        SmartCaseTextField(
-                            hint: 'Cost', controller: costController),
-                        SmartCaseTextField(
-                            hint: 'Cost description',
-                            controller: costDescriptionController),
+                        SmartCaseNumberField(
+                          hint: 'Cost',
+                          controller: costController,
+                          maxLength: 14,
+                        ),
+                        CustomTextArea(
+                          hint: 'Cost description',
+                          controller: costDescriptionController,
+                          minLines: 1,
+                          maxLines: 4,
+                          maxLength: 255,
+                          onTap: () {
+                            Scrollable.ensureVisible(globalKey.currentContext!);
+                          },
+                        ),
+                        const SizedBox(height: 10),
                         CustomTextArea(
                           key: globalKey,
                           hint: 'Description',
@@ -321,64 +334,68 @@ class _EngagementFormState extends State<EngagementForm> {
   }
 
   _submitForm() {
-    SmartEngagement smartEngagement = SmartEngagement(
-      cost: costController.text.trim(),
-      costDescription: costDescriptionController.text.trim(),
-      description: descriptionController.text.trim(),
-      date: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
-      from: DateFormat('h:mm a').parse(startTimeController.text.trim()),
-      to: DateFormat('h:mm a').parse(endTimeController.text.trim()),
-      engagementTypeId: engagementType!.id,
-      clientId: client!.id,
-      isNextEngagement: 0,
-      notifyOn: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
-      notifyOnAt: DateFormat('h:mm a').parse(startTimeController.text.trim()),
-      notifyWith: [SmartEmployee(id: 1)],
-      doneBy: [SmartEmployee(id: 1)],
-    );
+    if (formKey.currentState!.validate()) {
+      SmartEngagement smartEngagement = SmartEngagement(
+        cost: costController.text.trim(),
+        costDescription: costDescriptionController.text.trim(),
+        description: descriptionController.text.trim(),
+        date: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
+        from: DateFormat('h:mm a').parse(startTimeController.text.trim()),
+        to: DateFormat('h:mm a').parse(endTimeController.text.trim()),
+        engagementTypeId: engagementType!.id,
+        clientId: client!.id,
+        isNextEngagement: 0,
+        notifyOn: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
+        notifyOnAt: DateFormat('h:mm a').parse(startTimeController.text.trim()),
+        notifyWith: [SmartEmployee(id: 1)],
+        doneBy: [SmartEmployee(id: 1)],
+      );
 
-    (widget.engagement == null)
-        ? SmartCaseApi.smartPost('api/crm/engagements', currentUser.token,
-            smartEngagement.toCreateJson(), onError: () {
-            Fluttertoast.showToast(
-                msg: "An error occurred",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: AppColors.red,
-                textColor: AppColors.white,
-                fontSize: 16.0);
-          }, onSuccess: () {
-            Fluttertoast.showToast(
-                msg: "Engagement added successfully",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: AppColors.green,
-                textColor: AppColors.white,
-                fontSize: 16.0);
-          })
-        : SmartCaseApi.smartPut('api/crm/engagements/${widget.engagement!.id}',
-            currentUser.token, smartEngagement.toCreateJson(), onError: () {
-            Fluttertoast.showToast(
-                msg: "An error occurred",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: AppColors.red,
-                textColor: AppColors.white,
-                fontSize: 16.0);
-          }, onSuccess: () {
-            Fluttertoast.showToast(
-                msg: "Engagement updated successfully",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: AppColors.green,
-                textColor: AppColors.white,
-                fontSize: 16.0);
-          });
+      (widget.engagement == null)
+          ? SmartCaseApi.smartPost('api/crm/engagements', currentUser.token,
+              smartEngagement.toCreateJson(), onError: () {
+              Fluttertoast.showToast(
+                  msg: "An error occurred",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.red,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
+            }, onSuccess: () {
+              Fluttertoast.showToast(
+                  msg: "Engagement added successfully",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.green,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
+            })
+          : SmartCaseApi.smartPut(
+              'api/crm/engagements/${widget.engagement!.id}',
+              currentUser.token,
+              smartEngagement.toCreateJson(), onError: () {
+              Fluttertoast.showToast(
+                  msg: "An error occurred",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.red,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
+            }, onSuccess: () {
+              Fluttertoast.showToast(
+                  msg: "Engagement updated successfully",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.green,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
+            });
 
-    Navigator.pop(context);
+      Navigator.pop(context);
+    }
   }
 }

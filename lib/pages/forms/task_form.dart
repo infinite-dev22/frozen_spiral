@@ -82,7 +82,11 @@ class _TaskFormState extends State<TaskForm> {
                 controller: scrollController,
                 padding: const EdgeInsets.all(16),
                 children: [
-                  SmartCaseTextField(hint: 'Name', controller: nameController),
+                  SmartCaseTextField(
+                    hint: 'Name',
+                    controller: nameController,
+                    maxLength: 50,
+                  ),
                   GestureDetector(
                     onTap: _showSearchFileBottomSheet,
                     child: Container(
@@ -304,7 +308,7 @@ class _TaskFormState extends State<TaskForm> {
       caseStatus: 'TASK',
       priority: 'High',
       dueAt: DateFormat('dd/MM/yyyy').parse(dueDateController.text.trim()),
-      estimatedTime:startTimeController.text.trim(),
+      estimatedTime: startTimeController.text.trim(),
       assignees: [SmartEmployee(id: 1)],
     );
 

@@ -211,7 +211,10 @@ class _RequisitionFormState extends State<RequisitionForm> {
                     ),
                   ),
                   SmartCaseNumberField(
-                      hint: 'Amount', controller: amountController),
+                    hint: 'Amount',
+                    controller: amountController,
+                    maxLength: 14,
+                  ),
                   CustomTextArea(
                     key: globalKey,
                     hint: 'Description',
@@ -333,6 +336,9 @@ class _RequisitionFormState extends State<RequisitionForm> {
     List users = usersMap['search']['employees'];
 
     approvers = users.map((doc) => SmartEmployee.fromJson(doc)).toList();
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   _loadCategories() async {

@@ -48,24 +48,10 @@ class TaskItem extends StatelessWidget {
                   data: DateFormat('dd/MM/yyyy').format(DateFormat('yyyy-MM-dd')
                       .parse(
                           DateFormat('yyyy-MM-dd').format(task.dueAt!)))),
-              TextItem(title: 'Done by', data: task.assignees!.last.getName()),
+              TextItem(title: 'Assigner', data: task.assignees!.last.getName()),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextItem(
-                  title: 'Client', data: task.caseFile!.clientName ?? 'N/A'),
-              const TextItem(title: 'Cost', data: 'Coming soon...'),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildMediationStatusItem('Task'),
-              const TextItem(title: 'Cost description', data: 'Coming soon...'),
-            ],
-          ),
+          TextItem(title: 'Task', data: task.getName()),
           TextItem(title: 'Task description', data: task.description!),
         ],
       ),
