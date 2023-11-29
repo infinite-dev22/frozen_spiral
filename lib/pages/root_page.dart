@@ -4,6 +4,7 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/data/screen_arguments.dart';
 import 'package:smart_case/theme/color.dart';
 
@@ -314,6 +315,8 @@ class _RootPageState extends State<RootPage> {
     // Run code required to handle interacted messages in an async function
     // as initState() must not be async
     setupInteractedMessage();
+
+    preloadedRequisitions.clear();
 
     RequisitionApi.fetchAll();
     _loadCurrencies();

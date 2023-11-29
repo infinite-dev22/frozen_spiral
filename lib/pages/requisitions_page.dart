@@ -106,18 +106,19 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   }
 
   _buildNonSearchedBody() {
-    List<SmartRequisition> requisitions = preloadedRequisitions
-        .where((requisition) =>
-    ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
+    List<SmartRequisition> requisitions = preloadedRequisitions.where((requisition) =>
+    (
+        (requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
         requisition.requisitionStatus!.name
             .toLowerCase()
             .contains("submit")) &&
-        requisition.supervisor!.id == currentUser.id) ||
-        (requisition.employee!.id == currentUser.id) ||
-        (requisition.canPay == true) ||
-        ((requisition.secondApprover != null &&
-            requisition.secondApprover == true) &&
-            ((requisition.requisitionStatus!.code
+        requisition.supervisor!.id == currentUser.id)
+        || (requisition.employee!.id == currentUser.id)
+        || (requisition.canPay == true)
+        || ((requisition.secondApprover != null &&
+            requisition.secondApprover == true)
+                  && (
+                  (requisition.requisitionStatus!.code
                 .toLowerCase()
                 .contains("submit") ||
                 requisition.requisitionStatus!.name
@@ -125,12 +126,13 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                     .contains("submit")) ||
                 (requisition.requisitionStatus!.code
                     .toLowerCase()
-                    .contains("primar") ||
+                    .contains("primary_approved") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("primar")) &&
-                    (requisition.supervisor!.id == currentUser.id) ||
-                (requisition.employee!.id == currentUser.id))))
+                        .contains("primary approved"))
+                //     && ((requisition.supervisor!.id == currentUser.id) ||
+                // (requisition.employee!.id == currentUser.id))
+        )))
         .toList(growable: true);
 
     // return SmartRefresher(
