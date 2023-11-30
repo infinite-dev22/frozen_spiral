@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/models/smart_engagement.dart';
@@ -62,7 +63,7 @@ class EngagementItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildMediationStatusItem('Engagement'),
+              if (kDebugMode) _buildMediationStatusItem('Engagement'),
               TextItem(
                   title: 'Cost description',
                   data: engagement.costDescription ?? 'N/A'),

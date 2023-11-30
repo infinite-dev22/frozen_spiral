@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
@@ -74,14 +75,16 @@ class AppBarContent extends StatelessWidget {
               width: 20,
             ),
             filterable
-                ? CustomDropdownFilter(
-                    menuItems: filters!,
-                    bgColor: Colors.white,
-                    icon: Icons.filter_list_rounded,
-                    onChanged: (value) {
-                      filterController!.text = value!;
-                    },
-                  )
+                ? ((kDebugMode)
+                    ? CustomDropdownFilter(
+                        menuItems: filters!,
+                        bgColor: Colors.white,
+                        icon: Icons.filter_list_rounded,
+                        onChanged: (value) {
+                          filterController!.text = value!;
+                        },
+                      )
+                    : const SizedBox())
                 : isNetwork
                     ? CustomDropdownAction(
                         menuItems: (ModalRoute.of(context)!.settings.name ==
