@@ -26,6 +26,8 @@ class TaskForm extends StatefulWidget {
 }
 
 class _TaskFormState extends State<TaskForm> {
+  final formKey = GlobalKey<FormState>();
+
   bool isTitleElevated = false;
   bool isAssigneeLoading = false;
 
@@ -79,98 +81,112 @@ class _TaskFormState extends State<TaskForm> {
                 return true;
               },
               child: ListView(
-                controller: scrollController,
-                padding: const EdgeInsets.all(16),
-                children: [
-                  SmartCaseTextField(
-                    hint: 'Name',
-                    controller: nameController,
-                    maxLength: 50,
-                  ),
-                  GestureDetector(
-                    onTap: _showSearchFileBottomSheet,
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(5),
-                      margin: const EdgeInsets.only(bottom: 10),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    Form(
+                      key: formKey,
+                      child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width - 80,
-                              child: Text(
-                                file?.fileName ?? 'Select file',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                          SmartCaseTextField(
+                            hint: 'Name',
+                            controller: nameController,
+                            maxLength: 50,
+                            minLines: 1,
+                            maxLines: 2,
+                          ),
+                          GestureDetector(
+                            onTap: _showSearchFileBottomSheet,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(5),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width -
+                                          80,
+                                      child: Text(
+                                        file?.fileName ?? 'Select file',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: AppColors.darker,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
                                     color: AppColors.darker,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          const Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: AppColors.darker,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: _showSearchAssigneeBottomSheet,
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(5),
-                      margin: const EdgeInsets.only(bottom: 10),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width - 80,
-                              child: Text(
-                                assignee?.getName() ?? 'Select assignee',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                          GestureDetector(
+                            onTap: _showSearchAssigneeBottomSheet,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(5),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width -
+                                          80,
+                                      child: Text(
+                                        assignee?.getName() ??
+                                            'Select assignee',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: AppColors.darker,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
                                     color: AppColors.darker,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          const Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: AppColors.darker,
-                          ),
+                          DateTimeAccordion2(
+                              dateController: dueDateController,
+                              startTimeController: startTimeController,
+                              endTimeController: endTimeController),
+                          CustomTextArea(
+                              hint: 'Description',
+                              controller: descriptionController),
                         ],
                       ),
                     ),
-                  ),
-                  DateTimeAccordion2(
-                      dateController: dueDateController,
-                      startTimeController: startTimeController,
-                      endTimeController: endTimeController),
-                  CustomTextArea(
-                      hint: 'Description', controller: descriptionController),
-                ],
-              ),
+                  ]),
             ),
           ),
         ),
@@ -301,62 +317,64 @@ class _TaskFormState extends State<TaskForm> {
   }
 
   _submitForm() {
-    SmartTask smartTask = SmartTask(
-      taskName: nameController.text.trim(),
-      description: descriptionController.text.trim(),
-      matter: 1,
-      caseStatus: 'TASK',
-      priority: 'High',
-      dueAt: DateFormat('dd/MM/yyyy').parse(dueDateController.text.trim()),
-      estimatedTime: startTimeController.text.trim(),
-      assignees: [SmartEmployee(id: 1)],
-    );
+    if (formKey.currentState!.validate()) {
+      SmartTask smartTask = SmartTask(
+        taskName: nameController.text.trim(),
+        description: descriptionController.text.trim(),
+        matter: 1,
+        caseStatus: 'TASK',
+        priority: 'High',
+        dueAt: DateFormat('dd/MM/yyyy').parse(dueDateController.text.trim()),
+        estimatedTime: startTimeController.text.trim(),
+        assignees: [assignee!],
+      );
 
-    jsonEncode(smartTask.toCreateJson());
+      jsonEncode(smartTask.toCreateJson());
 
-    (widget.task == null)
-        ? SmartCaseApi.smartPost(
-            'api/crm/tasks', currentUser.token, smartTask.toCreateJson(),
-            onError: () {
-            Fluttertoast.showToast(
-                msg: "An error occurred",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: AppColors.red,
-                textColor: AppColors.white,
-                fontSize: 16.0);
-          }, onSuccess: () {
-            Fluttertoast.showToast(
-                msg: "Task added successfully",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: AppColors.green,
-                textColor: AppColors.white,
-                fontSize: 16.0);
-          })
-        : SmartCaseApi.smartPut('api/crm/tasks/${widget.task!.id}',
-            currentUser.token, smartTask.toCreateJson(), onError: () {
-            Fluttertoast.showToast(
-                msg: "An error occurred",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: AppColors.red,
-                textColor: AppColors.white,
-                fontSize: 16.0);
-          }, onSuccess: () {
-            Fluttertoast.showToast(
-                msg: "Task updated successfully",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: AppColors.green,
-                textColor: AppColors.white,
-                fontSize: 16.0);
-          });
+      (widget.task == null)
+          ? SmartCaseApi.smartPost(
+              'api/crm/tasks', currentUser.token, smartTask.toCreateJson(),
+              onError: () {
+              Fluttertoast.showToast(
+                  msg: "An error occurred",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.red,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
+            }, onSuccess: () {
+              Fluttertoast.showToast(
+                  msg: "Task added successfully",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.green,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
+            })
+          : SmartCaseApi.smartPut('api/crm/tasks/${widget.task!.id}',
+              currentUser.token, smartTask.toCreateJson(), onError: () {
+              Fluttertoast.showToast(
+                  msg: "An error occurred",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.red,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
+            }, onSuccess: () {
+              Fluttertoast.showToast(
+                  msg: "Task updated successfully",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: AppColors.green,
+                  textColor: AppColors.white,
+                  fontSize: 16.0);
+            });
 
-    Navigator.pop(context);
+      Navigator.pop(context);
+    }
   }
 }

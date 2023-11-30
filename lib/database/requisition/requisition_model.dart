@@ -51,6 +51,7 @@ class SmartRequisition {
   final bool? canPay;
   final List<String>? amounts;
   final String? payoutAmount;
+  final String? flowType;
   final List<String>? descriptions;
   final int? employeeId;
   final int? supervisorId;
@@ -81,6 +82,7 @@ class SmartRequisition {
     this.canPay,
     this.amounts,
     this.payoutAmount,
+    this.flowType,
     this.descriptions,
     this.employeeId,
     this.supervisorId,
@@ -154,6 +156,7 @@ class SmartRequisition {
     return SmartRequisition(
       id: json['id'] as int,
       date: DateTime.parse(json['date']),
+      flowType: json["flowtypetwo"],
       amount: json['payout_amount'],
       description: json['description'],
       number: json['number'],

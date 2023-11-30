@@ -4,11 +4,13 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:list_load_more/utils/ext/iterable_ext.dart';
 import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/data/screen_arguments.dart';
 import 'package:smart_case/theme/color.dart';
 
 import '../models/smart_currency.dart';
+import '../models/smart_employee.dart';
 import '../services/apis/smartcase_api.dart';
 import '../services/apis/smartcase_apis/requisition_api.dart';
 import '../services/navigation/locator.dart';
@@ -319,9 +321,32 @@ class _RootPageState extends State<RootPage> {
     preloadedRequisitions.clear();
 
     RequisitionApi.fetchAll();
+
+    if(preloadedRequisitions.isNotEmpty){
+      flowType = preloadedRequisitions.first.canApprove;
+    }
+
+    _checkCanApprove();
     _loadCurrencies();
 
     super.initState();
+  }
+
+  _checkCanApprove() async {
+    SmartEmployee? approver;
+    Map usersMap = await SmartCaseApi.smartFetch(
+        'api/hr/employees/requisitionApprovers', currentUser.token);
+
+    List users = usersMap['search']['employees'];
+
+    var approvers = users.map((doc) => SmartEmployee.fromJson(doc)).toList();
+    approver = approvers.firstWhereOrNull((element) => element.id == currentUser.id);
+
+    if (approver != null) {
+      canApprove = true;
+    } else {
+      canApprove = false;
+    }
   }
 
 // It is assumed that all messages contain a data field with the key 'type'

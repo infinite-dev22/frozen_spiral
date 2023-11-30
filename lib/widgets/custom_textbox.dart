@@ -136,10 +136,14 @@ class SmartCaseTextField extends StatelessWidget {
       {super.key,
       required this.hint,
       required this.controller,
+      this.minLines = 5,
+      this.maxLines = 500,
       this.maxLength});
 
   final String hint;
   final TextEditingController controller;
+  final int minLines;
+  final int maxLines;
   final int? maxLength;
 
   @override
@@ -158,7 +162,8 @@ class SmartCaseTextField extends StatelessWidget {
             validator: (val) =>
                 val!.isEmpty ? 'Required field, Please fill in.' : null,
             maxLength: maxLength,
-            maxLines: 1,
+            maxLines: maxLines,
+            minLines: minLines,
             decoration: InputDecoration(
               counterText: "",
               filled: true,

@@ -34,33 +34,38 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   bool _loadMoreData = true;
 
   Timer? _timer;
-  String? searchText;
+  String? _searchText;
   int _requisitionPage = 1;
 
-  final gkey = GlobalKey<_RequisitionsPageState>();
+  final _gKey = GlobalKey<_RequisitionsPageState>();
 
-  bool _allFilter = true;
+  bool _allFilter = false;
   bool _submittedFilter = false;
   bool _approvedFilter = false;
-  bool _preapprovedFilter = false;
+  bool _preApprovedFilter = false;
   bool _rejectedFilter = false;
   bool _returnedFilter = false;
 
-  List<SmartRequisition> filteredRequisitions = List.empty(growable: true);
-  List<SmartCurrency> currencies = List.empty(growable: true);
+  final List<SmartRequisition> _searchedRequisitions =
+  List.empty(growable: true);
+  final List<SmartRequisition> _filteredRequisitions =
+  List.empty(growable: true);
+  List<SmartCurrency> _currencies = List.empty(growable: true);
 
   List<DropdownMenuItem> _filters() {
     return [
-      DropdownMenuItem<String>(
+      if(canApprove) DropdownMenuItem<String>(
         alignment: Alignment.centerLeft,
         value: "All",
         child: Row(
           children: [
-            Checkbox(
+            CupertinoCheckbox(
               value: _allFilter,
               onChanged: (bool? value) {
                 setState(() {
                   _allFilter = value!;
+                  _buildFilteredList();
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -75,15 +80,17 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         ),
       ),
       DropdownMenuItem<String>(
-        value: "All",
+        value: "Submitted",
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            Checkbox(
+            CupertinoCheckbox(
               value: _submittedFilter,
               onChanged: (bool? value) {
                 setState(() {
                   _submittedFilter = value!;
+                  _buildFilteredList();
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -98,15 +105,17 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         ),
       ),
       DropdownMenuItem<String>(
-        value: "All",
+        value: "Approved",
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            Checkbox(
+            CupertinoCheckbox(
               value: _approvedFilter,
               onChanged: (bool? value) {
                 setState(() {
                   _approvedFilter = value!;
+                  _buildFilteredList();
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -120,16 +129,18 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           ],
         ),
       ),
-      DropdownMenuItem<String>(
-        value: "All",
+      if (flowType == "LV2") DropdownMenuItem<String>(
+        value: "Pre-Approved",
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            Checkbox(
-              value: _preapprovedFilter,
+            CupertinoCheckbox(
+              value: _preApprovedFilter,
               onChanged: (bool? value) {
                 setState(() {
-                  _preapprovedFilter = value!;
+                  _preApprovedFilter = value!;
+                  _buildFilteredList();
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -144,15 +155,17 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         ),
       ),
       DropdownMenuItem<String>(
-        value: "All",
+        value: "Rejected",
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            Checkbox(
+            CupertinoCheckbox(
               value: _rejectedFilter,
               onChanged: (bool? value) {
                 setState(() {
                   _rejectedFilter = value!;
+                  _buildFilteredList();
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -167,15 +180,17 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         ),
       ),
       DropdownMenuItem<String>(
-        value: "All",
+        value: "Returned",
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            Checkbox(
+            CupertinoCheckbox(
               value: _returnedFilter,
               onChanged: (bool? value) {
                 setState(() {
                   _returnedFilter = value!;
+                  _buildFilteredList();
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -213,7 +228,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           filters: _filters(),
           onChanged: (search) {
             _searchActivities(search);
-            searchText = search;
+            _searchText = search;
           },
         ),
       ),
@@ -238,41 +253,223 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   }
 
   _buildBody() {
-    return (filteredRequisitions.isNotEmpty)
+    return (_searchedRequisitions.isNotEmpty)
         ? _buildSearchedBody()
         : _buildNonSearchedBody();
   }
 
-  _buildNonSearchedBody() {
-    List<SmartRequisition> requisitions = preloadedRequisitions
-        .where((requisition) =>
-            ((requisition.requisitionStatus!.code
-                        .toLowerCase()
-                        .contains("submit") ||
+  _buildFilteredList() {
+    // Navigator.pop(context);
+    _filteredRequisitions.clear();
+    _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
+    (!_allFilter && !_submittedFilter && !_approvedFilter &&
+        !_preApprovedFilter && !_rejectedFilter && !_returnedFilter) ?
+    (((requisition.requisitionStatus!.code
+        .toLowerCase()
+        .contains("submit") ||
+        requisition.requisitionStatus!.name
+            .toLowerCase()
+            .contains("submit")) &&
+        requisition.supervisor!.id == currentUser.id) ||
+        (requisition.employee!.id == currentUser.id) ||
+        (requisition.canPay == true) ||
+        ((requisition.secondApprover != null &&
+            requisition.secondApprover == true) &&
+            (((requisition.requisitionStatus!.code
+                .toLowerCase()
+                .contains("submit") ||
+                requisition.requisitionStatus!.name
+                    .toLowerCase()
+                    .contains("submit")) &&
+                (requisition.supervisor!.id == currentUser.id)) ||
+                (requisition.requisitionStatus!.code
+                    .toLowerCase()
+                    .contains("primary_approved") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("submit")) &&
-                requisition.supervisor!.id == currentUser.id) ||
-            (requisition.employee!.id == currentUser.id) ||
-            (requisition.canPay == true) ||
-            ((requisition.secondApprover != null &&
-                    requisition.secondApprover == true) &&
-                (((requisition.requisitionStatus!.code
-                                .toLowerCase()
-                                .contains("submit") ||
-                            requisition.requisitionStatus!.name
-                                .toLowerCase()
-                                .contains("submit")) &&
-                        (requisition.supervisor!.id == currentUser.id)) ||
-                    (requisition.requisitionStatus!.code
-                            .toLowerCase()
-                            .contains("primary_approved") ||
-                        requisition.requisitionStatus!.name
-                            .toLowerCase()
-                            .contains("primary approved"))
+                        .contains("primary approved"))
                 //     && ((requisition.supervisor!.id == currentUser.id) ||
                 // (requisition.employee!.id == currentUser.id))
-                )))
+            ))) :
+    (_allFilter && !_submittedFilter && !_approvedFilter &&
+        !_preApprovedFilter && !_rejectedFilter && !_returnedFilter) ?
+    ((requisition.canApprove != null)
+        ? (requisition.employee!.id == currentUser.id ||
+        requisition.supervisor!.id == currentUser.id)
+        : requisition.employee!.id == currentUser.id) : (
+        (_submittedFilter) ?
+        ((requisition.requisitionStatus!.code.toLowerCase().contains(
+            "submit") ||
+            requisition.requisitionStatus!.name
+                .toLowerCase()
+                .contains("submit")) &&
+            (_allFilter
+                ? (requisition.employee!.id == currentUser.id ||
+                requisition.supervisor!.id == currentUser.id)
+                : ((requisition.canApprove != null)
+                ? (requisition.employee!.id == currentUser.id ||
+                requisition.supervisor!.id == currentUser.id)
+                : requisition.employee!.id == currentUser.id)))
+            : (_approvedFilter) ?
+        (((requisition.requisitionStatus!.code
+            .toLowerCase() == "approved" ||
+            requisition.requisitionStatus!.name
+                .toLowerCase() == "approved") &&
+            (_allFilter
+                ? (requisition.employee!.id == currentUser.id ||
+                requisition.supervisor!.id == currentUser.id)
+                : ((requisition.canApprove != null)
+                ? (requisition.employee!.id == currentUser.id ||
+                requisition.supervisor!.id == currentUser.id)
+                : requisition.employee!.id == currentUser.id))))
+            : (_preApprovedFilter) ?
+        ((requisition.requisitionStatus!.code
+            .toLowerCase()
+            .contains("primary_approved") ||
+            requisition.requisitionStatus!.name
+                .toLowerCase()
+                .contains("primary approved")))
+            : (_rejectedFilter) ?
+        (((requisition.requisitionStatus!.code
+            .toLowerCase()
+            .contains("rejected") ||
+            requisition.requisitionStatus!.name
+                .toLowerCase()
+                .contains("rejected")) &&
+            (_allFilter
+                ? (requisition.employee!.id == currentUser.id ||
+                requisition.supervisor!.id == currentUser.id)
+                : ((requisition.canApprove != null)
+                ? (requisition.employee!.id == currentUser.id ||
+                requisition.supervisor!.id == currentUser.id)
+                : requisition.employee!.id == currentUser.id))))
+            : (_returnedFilter) ?
+        (((requisition.requisitionStatus!.code
+            .toLowerCase()
+            .contains("returned") ||
+            requisition.requisitionStatus!.name
+                .toLowerCase()
+                .contains("returned")) &&
+            (_allFilter
+                ? (requisition.employee!.id == currentUser.id ||
+                requisition.supervisor!.id == currentUser.id)
+                : ((requisition.canApprove != null)
+                ? (requisition.employee!.id == currentUser.id ||
+                requisition.supervisor!.id == currentUser.id)
+                : requisition.employee!.id == currentUser.id)))) : false
+    )));
+
+    //     if (_allFilter && !_submittedFilter && !_approvedFilter &&
+    //         !_preApprovedFilter && !_rejectedFilter && !_returnedFilter) {
+    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
+    //       (requisition.canApprove != null)
+    //           ? (requisition.employee!.id == currentUser.id ||
+    //           requisition.supervisor!.id == currentUser.id)
+    //           : requisition.employee!.id == currentUser.id));
+    //     }
+    //     if (_submittedFilter) {
+    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
+    //       (requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
+    //           requisition.requisitionStatus!.name
+    //               .toLowerCase()
+    //               .contains("submit")) &&
+    //           (_allFilter
+    //               ? (requisition.employee!.id == currentUser.id ||
+    //               requisition.supervisor!.id == currentUser.id)
+    //               : ((requisition.canApprove != null)
+    //               ? (requisition.employee!.id == currentUser.id ||
+    //               requisition.supervisor!.id == currentUser.id)
+    //               : requisition.employee!.id == currentUser.id))));
+    //     }
+    //     if (_approvedFilter) {
+    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
+    //       ((requisition.requisitionStatus!.code
+    //           .toLowerCase()
+    //           .contains("approved") ||
+    //           requisition.requisitionStatus!.name
+    //               .toLowerCase()
+    //               .contains("approved")) &&
+    //           (_allFilter
+    //               ? (requisition.employee!.id == currentUser.id ||
+    //               requisition.supervisor!.id == currentUser.id)
+    //               : ((requisition.canApprove != null)
+    //               ? (requisition.employee!.id == currentUser.id ||
+    //               requisition.supervisor!.id == currentUser.id)
+    //               : requisition.employee!.id == currentUser.id)))));
+    //     }
+    //     if (_preApprovedFilter) {
+    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
+    //       (requisition.requisitionStatus!.code
+    //           .toLowerCase()
+    //           .contains("primary_approved") ||
+    //           requisition.requisitionStatus!.name
+    //               .toLowerCase()
+    //               .contains("primary approved"))));
+    //     }
+    //     if (_rejectedFilter) {
+    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
+    //       ((requisition.requisitionStatus!.code
+    //           .toLowerCase()
+    //           .contains("rejected") ||
+    //           requisition.requisitionStatus!.name
+    //               .toLowerCase()
+    //               .contains("rejected")) &&
+    //           (_allFilter
+    //               ? (requisition.employee!.id == currentUser.id ||
+    //               requisition.supervisor!.id == currentUser.id)
+    //               : ((requisition.canApprove != null)
+    //               ? (requisition.employee!.id == currentUser.id ||
+    //               requisition.supervisor!.id == currentUser.id)
+    //               : requisition.employee!.id == currentUser.id)))));
+    //     }
+    //     if (_returnedFilter) {
+    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
+    //       ((requisition.requisitionStatus!.code
+    //           .toLowerCase()
+    //           .contains("returned") ||
+    //           requisition.requisitionStatus!.name
+    //               .toLowerCase()
+    //               .contains("returned")) &&
+    //           (_allFilter
+    //               ? (requisition.employee!.id == currentUser.id ||
+    //               requisition.supervisor!.id == currentUser.id)
+    //               : ((requisition.canApprove != null)
+    //               ? (requisition.employee!.id == currentUser.id ||
+    //               requisition.supervisor!.id == currentUser.id)
+    //               : requisition.employee!.id == currentUser.id)))));
+    //     }
+  }
+
+  _buildNonSearchedBody() {
+    List<SmartRequisition> requisitions = _filteredRequisitions
+        .where((requisition) =>
+    ((requisition.requisitionStatus!.code
+        .toLowerCase()
+        .contains("submit") ||
+        requisition.requisitionStatus!.name
+            .toLowerCase()
+            .contains("submit")) &&
+        requisition.supervisor!.id == currentUser.id) ||
+        (requisition.employee!.id == currentUser.id) ||
+        (requisition.canPay == true) ||
+        ((requisition.secondApprover != null &&
+            requisition.secondApprover == true) &&
+            (((requisition.requisitionStatus!.code
+                .toLowerCase()
+                .contains("submit") ||
+                requisition.requisitionStatus!.name
+                    .toLowerCase()
+                    .contains("submit")) &&
+                (requisition.supervisor!.id == currentUser.id)) ||
+                (requisition.requisitionStatus!.code
+                    .toLowerCase()
+                    .contains("primary_approved") ||
+                    requisition.requisitionStatus!.name
+                        .toLowerCase()
+                        .contains("primary approved"))
+                //     && ((requisition.supervisor!.id == currentUser.id) ||
+                // (requisition.employee!.id == currentUser.id))
+            )))
         .toList(growable: true);
 
     // return SmartRefresher(
@@ -307,23 +504,24 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     //   onRefresh: _onRefresh,
     //   enableTwoLevel: true,
     // );
-    if ((requisitions.isNotEmpty)) {
+    if ((_filteredRequisitions.isNotEmpty)) {
       return Scrollbar(
         child: ListView.builder(
           controller: _scrollController,
-          itemCount: requisitions.length,
+          itemCount: _filteredRequisitions.length,
           padding: const EdgeInsets.all(8),
-          itemBuilder: (context, index) => RequisitionItem(
-            color: AppColors.white,
-            padding: 10,
-            requisition: requisitions.elementAt(index),
-            currencies: currencies,
-            showActions: true,
-            showFinancialStatus: true,
-          ),
+          itemBuilder: (context, index) =>
+              RequisitionItem(
+                color: AppColors.white,
+                padding: 10,
+                requisition: _filteredRequisitions.elementAt(index),
+                currencies: _currencies,
+                showActions: true,
+                showFinancialStatus: true,
+              ),
         ),
       );
-    } else if (_doneLoading && requisitions.isEmpty) {
+    } else if (_doneLoading && _filteredRequisitions.isEmpty) {
       return const Center(
         child: Text(
           "No new requisitions",
@@ -372,33 +570,35 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   }
 
   _buildSearchedBody() {
-    List<SmartRequisition> requisitions = filteredRequisitions
+    List<SmartRequisition> requisitions = _searchedRequisitions
         .where((requisition) =>
-            ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
+    ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
+        requisition.requisitionStatus!.name
+            .toLowerCase()
+            .contains("submit")) &&
+        requisition.supervisor!.id == currentUser.id) ||
+        (requisition.employee!.id == currentUser.id) ||
+        (requisition.canPay == true) ||
+        ((requisition.secondApprover != null &&
+            requisition.secondApprover == true) &&
+            ((requisition.requisitionStatus!.code.toLowerCase().contains(
+                "submit") ||
+                requisition.requisitionStatus!.name
+                    .toLowerCase()
+                    .contains("submit")) ||
+                (requisition.requisitionStatus!.code
+                    .toLowerCase()
+                    .contains("primar") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("submit")) &&
-                requisition.supervisor!.id == currentUser.id) ||
-            (requisition.employee!.id == currentUser.id) ||
-            (requisition.canPay == true) ||
-            ((requisition.secondApprover != null && requisition.secondApprover == true) &&
-                ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
-                        requisition.requisitionStatus!.name
-                            .toLowerCase()
-                            .contains("submit")) ||
-                    (requisition.requisitionStatus!.code
-                                .toLowerCase()
-                                .contains("primar") ||
-                            requisition.requisitionStatus!.name
-                                .toLowerCase()
-                                .contains("primar")) &&
-                        (requisition.supervisor!.id == currentUser.id) ||
-                    (requisition.employee!.id == currentUser.id))))
+                        .contains("primar")) &&
+                    (requisition.supervisor!.id == currentUser.id) ||
+                (requisition.employee!.id == currentUser.id))))
         .toList(growable: true);
 
     if ((requisitions.isNotEmpty)) {
       return SearchTextInheritedWidget(
-        searchText: searchText,
+        searchText: _searchText,
         child: ListView.builder(
           itemCount: requisitions.length,
           padding: const EdgeInsets.all(8),
@@ -407,7 +607,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
               color: AppColors.white,
               padding: 10,
               requisition: requisitions.elementAt(index),
-              currencies: currencies,
+              currencies: _currencies,
               showActions: true,
               showFinancialStatus: true,
             );
@@ -424,8 +624,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   @override
   void initState() {
     super.initState();
-
-    _scrollController = ScrollController()..addListener(_scrollListener);
+    _scrollController = ScrollController()
+      ..addListener(_scrollListener);
     RequisitionApi.fetchAll().then((value) {
       _doneLoading = true;
       setState(() {});
@@ -436,23 +636,27 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
       );
       if (mounted) setState(() {});
     });
+
     _loadCurrencies();
+    _buildFilteredList();
 
     if (mounted) {
       _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
         RequisitionApi.fetchAll();
+        _buildFilteredList();
         setState(() {});
       });
     }
   }
 
   _searchActivities(String value) {
-    filteredRequisitions.clear();
-    filteredRequisitions.addAll(preloadedRequisitions.where(
-        (smartRequisition) =>
-            smartRequisition.number!
-                .toLowerCase()
-                .contains(value.toLowerCase()) ||
+    _buildFilteredList();
+    _searchedRequisitions.clear();
+    _searchedRequisitions.addAll(_filteredRequisitions.where(
+            (smartRequisition) =>
+        smartRequisition.number!
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
             smartRequisition.caseFile!.fileName!
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
@@ -481,8 +685,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                 .contains(value.toLowerCase()) ||
             (smartRequisition.description != null
                 ? smartRequisition.description!
-                    .toLowerCase()
-                    .contains(value.toLowerCase())
+                .toLowerCase()
+                .contains(value.toLowerCase())
                 : false)));
     setState(() {});
   }
@@ -492,9 +696,13 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         'api/admin/currencytypes', currentUser.token);
     List? currencyList = currencyMap["currencytypes"];
     if (mounted) {
+      _currencies.clear();
+
       setState(() {
-        currencies =
-            currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList();
+        if (currencyList != null) {
+          _currencies.addAll(
+              currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList());
+        }
         currencyList = null;
       });
     }
@@ -519,7 +727,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
-      builder: (context) => RequisitionForm(currencies: currencies),
+      builder: (context) => RequisitionForm(currencies: _currencies),
     );
   }
 

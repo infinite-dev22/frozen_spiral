@@ -499,21 +499,22 @@ class _RequisitionItemState extends State<RequisitionItem> {
                         formatter
                             .format(double.parse(widget.requisition.amount!))),
                     RequisitionItemStatus(
-                        name: widget.requisition.requisitionStatus!.name ==
-                                'SECONDARY_APPROVED'
-                            ? 'Approved'
-                            : widget.requisition.requisitionStatus!.name ==
-                                    'SECONDARY_REJECTED'
-                                ? 'Rejected'
-                                : widget.requisition.requisitionStatus!.name ==
-                                        'SECONDARY_RETURNED'
-                                    ? 'Returned'
-                                    : widget.requisition.requisitionStatus!.name
-                                            .toLowerCase()
-                                            .contains("primary approver")
-                                        ? 'Primarily Approved'
-                                        : widget.requisition.requisitionStatus!
-                                            .name,
+                        name: widget.requisition.requisitionStatus!.name,
+                            // ==
+                            //     'SECONDARY_APPROVED'
+                            // ? 'Approved'
+                            // : widget.requisition.requisitionStatus!.name ==
+                            //         'SECONDARY_REJECTED'
+                            //     ? 'Rejected'
+                            //     : widget.requisition.requisitionStatus!.name ==
+                            //             'SECONDARY_RETURNED'
+                            //         ? 'Returned'
+                            //         : widget.requisition.requisitionStatus!.name
+                            //                 .toLowerCase()
+                            //                 .contains("primary approved")
+                            //             ? 'Primarily Approved'
+                            //             : widget.requisition.requisitionStatus!
+                            //                 .name,
                         bgColor: widget.requisition.requisitionStatus!.name
                                 .toLowerCase()
                                 .contains('approved')

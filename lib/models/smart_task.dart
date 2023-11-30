@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_model.dart';
@@ -95,7 +96,7 @@ class SmartTask extends SmartModel {
       'matter': matter,
       'case_status': caseStatus,
       'priority': priority,
-      'due_at': dueAt?.toIso8601String(),
+      'due_at': DateFormat('dd/MM/yyyy').format(dueAt!),
       'task_status': taskStatus,
       'estimated_time': estimatedTime,
       'assignees': assignees,

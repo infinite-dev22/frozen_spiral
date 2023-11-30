@@ -46,8 +46,7 @@ class TaskItem extends StatelessWidget {
               TextItem(
                   title: 'Date',
                   data: DateFormat('dd/MM/yyyy').format(DateFormat('yyyy-MM-dd')
-                      .parse(
-                          DateFormat('yyyy-MM-dd').format(task.dueAt!)))),
+                      .parse(DateFormat('yyyy-MM-dd').format(task.dueAt!)))),
               TextItem(title: 'Assigner', data: task.assignees!.last.getName()),
             ],
           ),
