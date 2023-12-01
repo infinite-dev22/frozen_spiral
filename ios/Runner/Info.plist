@@ -36,17 +36,17 @@
 			<string>remote-notification</string>
 		</array>
 		<key>NSPhotoLibraryUsageDescription</key>
-<string>Access to the photo library Allows you to pick a photo for your profile.</string>
-<key>NSCameraUsageDescription</key>
-<string>Access to the Camera allows you take photos for your profile .</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>This app requires access to the microphone to record your voice memo</string>
+        <string>Access to the photo library Allows you to pick a photo for your profile</string>
+        <key>NSCameraUsageDescription</key>
+        <string>Access to the Camera allows you take photos for your profile</string>
+		<key>NSMicrophoneUsageDescription</key>
+        <string>We need to access to the microphone to record audio file</string>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
 		<string>Main</string>
 		<key>UIStatusBarHidden</key>
-		<true/>
+		<false/>
 		<key>UISupportedInterfaceOrientations</key>
 		<array>
 			<string>UIInterfaceOrientationPortrait</string>
