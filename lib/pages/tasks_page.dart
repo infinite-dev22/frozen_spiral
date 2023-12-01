@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_task.dart';
+import 'package:smart_case/pages/forms/task_form.dart';
 
 import '../models/smart_client.dart';
 import '../services/apis/smartcase_api.dart';
@@ -46,6 +47,12 @@ class _TasksPageState extends State<TasksPage> {
           filters: filters,
           onChanged: _searchFiles,
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _buildTaskForm,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add),
       ),
       body: _buildBody(),
     );
@@ -137,6 +144,16 @@ class _TasksPageState extends State<TasksPage> {
           smartTask.getName().toLowerCase().contains(value.toLowerCase())));
       setState(() {});
     }
+  }
+
+  _buildTaskForm() {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => const TaskForm(),
+    );
   }
 
   @override

@@ -69,13 +69,20 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                 });
               },
             ),
-            const Text(
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _allFilter = !_allFilter;
+                  _buildFilteredList();
+                  Navigator.pop(context);
+                });
+              }, child: const Text(
               "All",
               style: TextStyle(
                 color: AppColors.darker,
                 fontSize: 14,
               ),
-            ),
+            ),),
           ],
         ),
       ),
@@ -89,18 +96,33 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
               onChanged: (bool? value) {
                 setState(() {
                   _submittedFilter = value!;
+                  _approvedFilter = false;
+                  _preApprovedFilter = false;
+                  _rejectedFilter = false;
+                  _returnedFilter = false;
                   _buildFilteredList();
                   Navigator.pop(context);
                 });
               },
             ),
-            const Text(
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _submittedFilter = !_submittedFilter;
+                  _approvedFilter = false;
+                  _preApprovedFilter = false;
+                  _rejectedFilter = false;
+                  _returnedFilter = false;
+                  _buildFilteredList();
+                  Navigator.pop(context);
+                });
+              }, child: const Text(
               "Submitted",
               style: TextStyle(
                 color: AppColors.darker,
                 fontSize: 14,
               ),
-            ),
+            ),),
           ],
         ),
       ),
@@ -114,18 +136,33 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
               onChanged: (bool? value) {
                 setState(() {
                   _approvedFilter = value!;
+                  _submittedFilter = false;
+                  _preApprovedFilter = false;
+                  _rejectedFilter = false;
+                  _returnedFilter = false;
                   _buildFilteredList();
                   Navigator.pop(context);
                 });
               },
             ),
-            const Text(
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _approvedFilter = !_approvedFilter;
+                  _submittedFilter = false;
+                  _preApprovedFilter = false;
+                  _rejectedFilter = false;
+                  _returnedFilter = false;
+                  _buildFilteredList();
+                  Navigator.pop(context);
+                });
+              }, child: const Text(
               "Approved",
               style: TextStyle(
                 color: AppColors.darker,
                 fontSize: 14,
               ),
-            ),
+            ),),
           ],
         ),
       ),
@@ -139,18 +176,33 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
               onChanged: (bool? value) {
                 setState(() {
                   _preApprovedFilter = value!;
+                  _submittedFilter = false;
+                  _approvedFilter = false;
+                  _rejectedFilter = false;
+                  _returnedFilter = false;
                   _buildFilteredList();
                   Navigator.pop(context);
                 });
               },
             ),
-            const Text(
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _preApprovedFilter = !_preApprovedFilter;
+                  _submittedFilter = false;
+                  _approvedFilter = false;
+                  _rejectedFilter = false;
+                  _returnedFilter = false;
+                  _buildFilteredList();
+                  Navigator.pop(context);
+                });
+              }, child: const Text(
               "Pre-Approved",
               style: TextStyle(
                 color: AppColors.darker,
                 fontSize: 14,
               ),
-            ),
+            ),),
           ],
         ),
       ),
@@ -164,18 +216,33 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
               onChanged: (bool? value) {
                 setState(() {
                   _rejectedFilter = value!;
+                  _submittedFilter = false;
+                  _approvedFilter = false;
+                  _preApprovedFilter = false;
+                  _returnedFilter = false;
                   _buildFilteredList();
                   Navigator.pop(context);
                 });
               },
             ),
-            const Text(
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _rejectedFilter = !_rejectedFilter;
+                  _submittedFilter = false;
+                  _approvedFilter = false;
+                  _preApprovedFilter = false;
+                  _returnedFilter = false;
+                  _buildFilteredList();
+                  Navigator.pop(context);
+                });
+              }, child: const Text(
               "Rejected",
               style: TextStyle(
                 color: AppColors.darker,
                 fontSize: 14,
               ),
-            ),
+            ),),
           ],
         ),
       ),
@@ -189,18 +256,32 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
               onChanged: (bool? value) {
                 setState(() {
                   _returnedFilter = value!;
+                  _submittedFilter = false;
+                  _approvedFilter = false;
+                  _preApprovedFilter = false;
+                  _rejectedFilter = false;
                   _buildFilteredList();
                   Navigator.pop(context);
                 });
               },
             ),
-            const Text(
+            TextButton(onPressed: () {
+              setState(() {
+                _returnedFilter = !_returnedFilter;
+                _submittedFilter = false;
+                _approvedFilter = false;
+                _preApprovedFilter = false;
+                _rejectedFilter = false;
+                _buildFilteredList();
+                Navigator.pop(context);
+              });
+            }, child: const Text(
               "Returned",
               style: TextStyle(
                 color: AppColors.darker,
                 fontSize: 14,
               ),
-            ),
+            ),),
           ],
         ),
       ),
@@ -259,7 +340,6 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   }
 
   _buildFilteredList() {
-    // Navigator.pop(context);
     _filteredRequisitions.clear();
     _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
     (!_allFilter && !_submittedFilter && !_approvedFilter &&
@@ -293,9 +373,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
             ))) :
     (_allFilter && !_submittedFilter && !_approvedFilter &&
         !_preApprovedFilter && !_rejectedFilter && !_returnedFilter) ?
-    ((requisition.canApprove != null)
-        ? (requisition.employee!.id == currentUser.id ||
-        requisition.supervisor!.id == currentUser.id)
+    ((canApprove)
+        ? (true)
         : requisition.employee!.id == currentUser.id) : (
         (_submittedFilter) ?
         ((requisition.requisitionStatus!.code.toLowerCase().contains(
@@ -304,9 +383,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                 .toLowerCase()
                 .contains("submit")) &&
             (_allFilter
-                ? (requisition.employee!.id == currentUser.id ||
-                requisition.supervisor!.id == currentUser.id)
-                : ((requisition.canApprove != null)
+                ? (true)
+                : ((canApprove)
                 ? (requisition.employee!.id == currentUser.id ||
                 requisition.supervisor!.id == currentUser.id)
                 : requisition.employee!.id == currentUser.id)))
@@ -316,9 +394,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
             requisition.requisitionStatus!.name
                 .toLowerCase() == "approved") &&
             (_allFilter
-                ? (requisition.employee!.id == currentUser.id ||
-                requisition.supervisor!.id == currentUser.id)
-                : ((requisition.canApprove != null)
+                ? (true)
+                : ((canApprove)
                 ? (requisition.employee!.id == currentUser.id ||
                 requisition.supervisor!.id == currentUser.id)
                 : requisition.employee!.id == currentUser.id))))
@@ -337,9 +414,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                 .toLowerCase()
                 .contains("rejected")) &&
             (_allFilter
-                ? (requisition.employee!.id == currentUser.id ||
-                requisition.supervisor!.id == currentUser.id)
-                : ((requisition.canApprove != null)
+                ? (true)
+                : ((canApprove)
                 ? (requisition.employee!.id == currentUser.id ||
                 requisition.supervisor!.id == currentUser.id)
                 : requisition.employee!.id == currentUser.id))))
@@ -351,9 +427,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                 .toLowerCase()
                 .contains("returned")) &&
             (_allFilter
-                ? (requisition.employee!.id == currentUser.id ||
-                requisition.supervisor!.id == currentUser.id)
-                : ((requisition.canApprove != null)
+                ? (true)
+                : ((canApprove)
                 ? (requisition.employee!.id == currentUser.id ||
                 requisition.supervisor!.id == currentUser.id)
                 : requisition.employee!.id == currentUser.id)))) : false
@@ -362,7 +437,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     //     if (_allFilter && !_submittedFilter && !_approvedFilter &&
     //         !_preApprovedFilter && !_rejectedFilter && !_returnedFilter) {
     //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
-    //       (requisition.canApprove != null)
+    //       (canApprove)
     //           ? (requisition.employee!.id == currentUser.id ||
     //           requisition.supervisor!.id == currentUser.id)
     //           : requisition.employee!.id == currentUser.id));
@@ -376,7 +451,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     //           (_allFilter
     //               ? (requisition.employee!.id == currentUser.id ||
     //               requisition.supervisor!.id == currentUser.id)
-    //               : ((requisition.canApprove != null)
+    //               : ((canApprove)
     //               ? (requisition.employee!.id == currentUser.id ||
     //               requisition.supervisor!.id == currentUser.id)
     //               : requisition.employee!.id == currentUser.id))));
@@ -392,7 +467,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     //           (_allFilter
     //               ? (requisition.employee!.id == currentUser.id ||
     //               requisition.supervisor!.id == currentUser.id)
-    //               : ((requisition.canApprove != null)
+    //               : ((canApprove)
     //               ? (requisition.employee!.id == currentUser.id ||
     //               requisition.supervisor!.id == currentUser.id)
     //               : requisition.employee!.id == currentUser.id)))));
@@ -417,7 +492,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     //           (_allFilter
     //               ? (requisition.employee!.id == currentUser.id ||
     //               requisition.supervisor!.id == currentUser.id)
-    //               : ((requisition.canApprove != null)
+    //               : ((canApprove)
     //               ? (requisition.employee!.id == currentUser.id ||
     //               requisition.supervisor!.id == currentUser.id)
     //               : requisition.employee!.id == currentUser.id)))));
@@ -433,7 +508,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     //           (_allFilter
     //               ? (requisition.employee!.id == currentUser.id ||
     //               requisition.supervisor!.id == currentUser.id)
-    //               : ((requisition.canApprove != null)
+    //               : ((canApprove)
     //               ? (requisition.employee!.id == currentUser.id ||
     //               requisition.supervisor!.id == currentUser.id)
     //               : requisition.employee!.id == currentUser.id)))));

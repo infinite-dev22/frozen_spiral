@@ -93,7 +93,7 @@ class _TaskFormState extends State<TaskForm> {
                             controller: nameController,
                             maxLength: 50,
                             minLines: 1,
-                            maxLines: 2,
+                            maxLines: 1,
                           ),
                           GestureDetector(
                             onTap: _showSearchFileBottomSheet,
@@ -312,8 +312,29 @@ class _TaskFormState extends State<TaskForm> {
   void initState() {
     super.initState();
 
+    _fillInFormDataForEdit();
     _loadFiles();
     _loadAssignees();
+  }
+
+  _fillInFormDataForEdit() {
+    if (widget.task != null) {
+      nameController.text = widget.task!.taskName!;
+      file = widget.task?.caseFile;
+      assignees = widget.task!.assignees!;
+
+      descriptionController.text = widget.task!.description!;
+      dueDateController.text = widget.task!.dueAt != null
+          ? DateFormat('dd/MM/yyyy').format(widget.task!.dueAt!)
+          : '';
+      // To Do: lines below will be uncommented when activity class is re-written.
+      startTimeController.text = widget.task!.endDate != null
+          ? DateFormat.jm().format(widget.task!.endDate!)
+          : "";
+      endTimeController.text = widget.task!.endDate != null
+          ? DateFormat.jm().format(widget.task!.endDate!)
+          : "";
+    }
   }
 
   _submitForm() {

@@ -326,13 +326,20 @@ class _RequisitionItemState extends State<RequisitionItem> {
                       (widget.requisition.canApprove == null &&
                               (widget.requisition.canPay == false ||
                                   widget.requisition.canPay == null) &&
-                              (!widget.requisition.isMine! &&
-                                      !widget.requisition.canEdit! &&
-                                      widget.requisition.requisitionStatus!
-                                              .code !=
-                                          'SUBMITTED' ||
-                                  widget.requisition.requisitionStatus!.code !=
-                                      'EDITED'))
+                              ((!widget.requisition.isMine! ||
+                                      widget.requisition.isMine!) &&
+                                  !widget.requisition.canEdit! &&
+                                  (!widget.requisition.requisitionStatus!.code
+                                          .toLowerCase()
+                                          .contains('submit') ||
+                                      !widget
+                                          .requisition.requisitionStatus!.code
+                                          .toLowerCase()
+                                          .contains('edit') ||
+                                      !widget
+                                          .requisition.requisitionStatus!.code
+                                          .toLowerCase()
+                                          .contains("returned"))))
                           ? Container()
                           : SizedBox(
                               height: 33,
@@ -406,14 +413,15 @@ class _RequisitionItemState extends State<RequisitionItem> {
                                         ],
                                       ),
                                     ),
-                                  if (widget.requisition.isMine! &&
-                                          widget.requisition.canEdit! &&
-                                          widget.requisition.requisitionStatus!
-                                                  .code ==
-                                              'SUBMITTED' ||
-                                      widget.requisition.requisitionStatus!
-                                              .code ==
-                                          'EDITED')
+                                  if (widget.requisition.requisitionStatus!.code
+                                          .toLowerCase()
+                                          .contains('submit') ||
+                                      widget.requisition.requisitionStatus!.code
+                                          .toLowerCase()
+                                          .contains('edit') ||
+                                      widget.requisition.requisitionStatus!.code
+                                          .toLowerCase()
+                                          .contains("returned"))
                                     TextButton(
                                       onPressed: () =>
                                           _buildRequisitionForm(context),
@@ -500,21 +508,21 @@ class _RequisitionItemState extends State<RequisitionItem> {
                             .format(double.parse(widget.requisition.amount!))),
                     RequisitionItemStatus(
                         name: widget.requisition.requisitionStatus!.name,
-                            // ==
-                            //     'SECONDARY_APPROVED'
-                            // ? 'Approved'
-                            // : widget.requisition.requisitionStatus!.name ==
-                            //         'SECONDARY_REJECTED'
-                            //     ? 'Rejected'
-                            //     : widget.requisition.requisitionStatus!.name ==
-                            //             'SECONDARY_RETURNED'
-                            //         ? 'Returned'
-                            //         : widget.requisition.requisitionStatus!.name
-                            //                 .toLowerCase()
-                            //                 .contains("primary approved")
-                            //             ? 'Primarily Approved'
-                            //             : widget.requisition.requisitionStatus!
-                            //                 .name,
+                        // ==
+                        //     'SECONDARY_APPROVED'
+                        // ? 'Approved'
+                        // : widget.requisition.requisitionStatus!.name ==
+                        //         'SECONDARY_REJECTED'
+                        //     ? 'Rejected'
+                        //     : widget.requisition.requisitionStatus!.name ==
+                        //             'SECONDARY_RETURNED'
+                        //         ? 'Returned'
+                        //         : widget.requisition.requisitionStatus!.name
+                        //                 .toLowerCase()
+                        //                 .contains("primary approved")
+                        //             ? 'Primarily Approved'
+                        //             : widget.requisition.requisitionStatus!
+                        //                 .name,
                         bgColor: widget.requisition.requisitionStatus!.name
                                 .toLowerCase()
                                 .contains('approved')

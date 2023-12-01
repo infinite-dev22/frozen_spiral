@@ -20,6 +20,7 @@ class SmartTask extends SmartModel {
   final SmartEmployee? assigner;
   final SmartFile? caseFile;
   final SmartTaskStatus? taskStatuses;
+  final int? createdBy;
 
   SmartTask({
     this.id,
@@ -38,6 +39,7 @@ class SmartTask extends SmartModel {
     this.assigner,
     this.caseFile,
     this.taskStatuses,
+    this.createdBy,
   });
 
   factory SmartTask.fromJson(Map<String, dynamic> json) {
@@ -67,6 +69,7 @@ class SmartTask extends SmartModel {
       taskStatuses: json['task_statuses'] != null
           ? SmartTaskStatus.fromJson(json['task_statuses'])
           : null,
+      createdBy: json['created_by'],
     );
   }
 

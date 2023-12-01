@@ -192,7 +192,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
       if (mounted) setState(() {});
     });
     filterController.text == 'Name';
-    setState(() {});
+    if(mounted) setState(() {});
   }
 
   _searchActivities(String value) {

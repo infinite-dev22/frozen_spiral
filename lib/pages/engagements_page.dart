@@ -102,7 +102,7 @@ class _EngagementsPageState extends State<EngagementsPage> {
         engagementsList.map((doc) => SmartEngagement.fromJson(doc)).toList();
 
     filterController.text == 'Name';
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   Future<void> getUser(int userId) async {
