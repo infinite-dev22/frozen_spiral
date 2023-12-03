@@ -109,7 +109,7 @@ class _TasksPageState extends State<TasksPage> {
     tasks = tasksList.map((doc) => SmartTask.fromJson(doc)).toList();
 
     filterController.text == 'Name';
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   Future<void> getUser(int userId) async {

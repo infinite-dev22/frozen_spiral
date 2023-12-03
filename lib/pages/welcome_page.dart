@@ -386,7 +386,7 @@ class _WelcomePageState extends State<WelcomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Hey $currentUsername! Good to see you again.',
+              'Welcome back, $currentUsername!',
               style: const TextStyle(
                   color: AppColors.white,
                   fontSize: 20,

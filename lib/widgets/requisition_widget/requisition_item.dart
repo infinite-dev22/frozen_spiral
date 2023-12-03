@@ -52,6 +52,37 @@ class _RequisitionItemState extends State<RequisitionItem> {
   }
 
   Widget _buildBody(BuildContext context) {
+    // print((!widget.requisition.isMine! ||
+    //     widget.requisition.isMine!) && (widget.requisition.canEdit! &&
+    //     widget.requisition.employee!.id !=
+    //         currentUser.id));
+    //
+    // print(widget.requisition.canApprove == null &&
+    //     (widget.requisition.canPay == false ||
+    //         widget.requisition.canPay == null) &&
+    //     ((!widget.requisition.isMine! ||
+    //         widget.requisition.isMine!) && (widget.requisition.canEdit! &&
+    //             widget.requisition.employee!.id !=
+    //                 currentUser.id) &&
+    //         (!widget.requisition.requisitionStatus!.code
+    //             .toLowerCase()
+    //             .contains('submit') ||
+    //             (!widget
+    //                 .requisition.requisitionStatus!.code
+    //                 .toLowerCase()
+    //                 .contains('edit') &&
+    //                 widget.requisition.employee!.id !=
+    //                     currentUser.id) ||
+    //             !widget
+    //                 .requisition.requisitionStatus!.code
+    //                 .toLowerCase()
+    //                 .contains("returned") ||
+    //             (widget.requisition.requisitionStatus!
+    //                 .code
+    //                 .toLowerCase()
+    //                 .contains("returned") &&
+    //                 widget.requisition.employee!.id !=
+    //                     currentUser.id))));
     return Container(
       padding: EdgeInsets.fromLTRB(
         widget.padding,
@@ -324,22 +355,31 @@ class _RequisitionItemState extends State<RequisitionItem> {
                   Column(
                     children: [
                       (widget.requisition.canApprove == null &&
-                              (widget.requisition.canPay == false ||
-                                  widget.requisition.canPay == null) &&
-                              ((!widget.requisition.isMine! ||
-                                      widget.requisition.isMine!) &&
-                                  !widget.requisition.canEdit! &&
-                                  (!widget.requisition.requisitionStatus!.code
-                                          .toLowerCase()
-                                          .contains('submit') ||
-                                      !widget
-                                          .requisition.requisitionStatus!.code
-                                          .toLowerCase()
-                                          .contains('edit') ||
-                                      !widget
-                                          .requisition.requisitionStatus!.code
-                                          .toLowerCase()
-                                          .contains("returned"))))
+                          (widget.requisition.canPay == false ||
+                              widget.requisition.canPay == null) &&
+                          ((!widget.requisition.isMine! ||
+                              widget.requisition.isMine!) && (widget.requisition.canEdit! &&
+                              widget.requisition.employee!.id !=
+                                  currentUser.id) &&
+                              (!widget.requisition.requisitionStatus!.code
+                                  .toLowerCase()
+                                  .contains('submit') ||
+                                  (!widget
+                                      .requisition.requisitionStatus!.code
+                                      .toLowerCase()
+                                      .contains('edit') &&
+                                      widget.requisition.employee!.id !=
+                                          currentUser.id) ||
+                                  !widget
+                                      .requisition.requisitionStatus!.code
+                                      .toLowerCase()
+                                      .contains("returned") ||
+                                  (widget.requisition.requisitionStatus!
+                                      .code
+                                      .toLowerCase()
+                                      .contains("returned") &&
+                                      widget.requisition.employee!.id !=
+                                          currentUser.id))))
                           ? Container()
                           : SizedBox(
                               height: 33,
@@ -413,15 +453,20 @@ class _RequisitionItemState extends State<RequisitionItem> {
                                         ],
                                       ),
                                     ),
-                                  if (widget.requisition.requisitionStatus!.code
-                                          .toLowerCase()
-                                          .contains('submit') ||
-                                      widget.requisition.requisitionStatus!.code
-                                          .toLowerCase()
-                                          .contains('edit') ||
-                                      widget.requisition.requisitionStatus!.code
-                                          .toLowerCase()
-                                          .contains("returned"))
+                                  if ((widget.requisition.requisitionStatus!
+                                              .code
+                                              .toLowerCase()
+                                              .contains('submit') ||
+                                          widget.requisition.requisitionStatus!
+                                              .code
+                                              .toLowerCase()
+                                              .contains('edit') ||
+                                          widget.requisition.requisitionStatus!
+                                              .code
+                                              .toLowerCase()
+                                              .contains("returned")) &&
+                                      widget.requisition.employee!.id ==
+                                          currentUser.id)
                                     TextButton(
                                       onPressed: () =>
                                           _buildRequisitionForm(context),

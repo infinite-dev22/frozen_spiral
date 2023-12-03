@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
@@ -24,6 +26,8 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
   TextEditingController filterController = TextEditingController();
   bool _doneLoading = false;
   String? searchText;
+
+  Timer? _timer;
 
   List<SmartActivity> filteredActivities = List.empty(growable: true);
   final List<String>? filters = [
@@ -146,28 +150,29 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
   _buildSearchedBody() {
     return (filteredActivities.isNotEmpty)
         ? SearchTextInheritedWidget(
-        searchText: searchText,
-        child: ListView.builder(
-            padding: const EdgeInsets.only(
-              left: 10,
-              top: 16,
-              right: 10,
-              bottom: 80,
+            searchText: searchText,
+            child: ListView.builder(
+              padding: const EdgeInsets.only(
+                left: 10,
+                top: 16,
+                right: 10,
+                bottom: 80,
+              ),
+              itemCount: filteredActivities.length,
+              itemBuilder: (context, index) {
+                return ActivityItem(
+                  activity: filteredActivities[index],
+                  padding: 20,
+                  color: Colors.white,
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    '/activity',
+                    arguments: filteredActivities[index],
+                  ),
+                );
+              },
             ),
-            itemCount: filteredActivities.length,
-            itemBuilder: (context, index) {
-              return ActivityItem(
-                activity: filteredActivities[index],
-                padding: 20,
-                color: Colors.white,
-                onTap: () => Navigator.pushNamed(
-                  context,
-                  '/activity',
-                  arguments: filteredActivities[index],
-                ),
-              );
-            },
-          ),)
+          )
         : const Center(
             child: Text('No result found'),
           );
@@ -175,9 +180,17 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
 
   @override
   void initState() {
+    super.initState();
+
     _setUpData();
 
-    super.initState();
+    if (mounted) {
+      _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+        ActivityApi.fetchAll();
+        // _buildFilteredList();
+        setState(() {});
+      });
+    }
   }
 
   Future<void> _setUpData() async {
@@ -192,13 +205,15 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
       if (mounted) setState(() {});
     });
     filterController.text == 'Name';
-    if(mounted) setState(() {});
+    if (mounted) setState(() {});
   }
 
   _searchActivities(String value) {
     filteredActivities.clear();
     filteredActivities.addAll(preloadedActivities.where((smartActivity) =>
-        smartActivity.getName()
+        smartActivity.getName().toLowerCase().contains(value.toLowerCase()) ||
+        smartActivity.file!
+            .getName()
             .toLowerCase()
             .contains(value.toLowerCase()) ||
         smartActivity.date!
@@ -212,6 +227,9 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
         smartActivity.caseActivityStatus!
             .getName()
             .toLowerCase()
+            .contains(value.toLowerCase()) ||
+        smartActivity.date!
+            .toString()
             .contains(value.toLowerCase())));
     setState(() {});
   }
@@ -237,5 +255,14 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
       context: context,
       builder: (context) => const ActivityForm(),
     );
+  }
+
+  @override
+  void dispose() {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+
+    super.dispose();
   }
 }

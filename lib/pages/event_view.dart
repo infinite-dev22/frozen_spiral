@@ -45,6 +45,7 @@ class _EventViewState extends State<EventView> {
   }
 
   Widget _buildBody(BuildContext context) {
+    print(widget.eventId);
     return (event != null)
         ? Column(
             children: [
@@ -98,12 +99,12 @@ class _EventViewState extends State<EventView> {
                               Column(
                                 children: [
                                   Text(
-                                    'from: ${DateFormat('dd/MM/yyyy - h:mm a').format(DateFormat('dd-MM-yy - h:mm a').parse(DateFormat('yy-MM-dd - h:mm a').format(event!.startDate!)))}',
+                                    'from: ${DateFormat('dd/MM/yyyy - h:mm a').format(event!.startDate!)}',
                                     style: const TextStyle(fontSize: 18),
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    'to:   ${DateFormat('dd/MM/yyyy - h:mm a').format(DateFormat('dd-MM-yy - h:mm a').parse(DateFormat('yy-MM-dd - h:mm a').format(event!.endDate!)))}',
+                                    'to:   ${DateFormat('dd/MM/yyyy - h:mm a').format(event!.endDate!)}',
                                     style: const TextStyle(fontSize: 18),
                                   ),
                                 ],
@@ -196,10 +197,7 @@ class _EventViewState extends State<EventView> {
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    DateFormat('dd/MM/yyyy - h:mm a').format(
-                                        DateFormat('dd-MM-yy - h:mm a').parse(
-                                            DateFormat('yy-MM-dd - h:mm a')
-                                                .format(event!.notifyOnDate!))),
+                                    DateFormat('dd/MM/yyyy - h:mm a').format(event!.notifyOnDate!),
                                     style: const TextStyle(fontSize: 18),
                                   ),
                                 ],

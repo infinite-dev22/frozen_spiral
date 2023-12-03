@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
@@ -22,6 +24,7 @@ class _FilesPageState extends State<FilesPage> {
   TextEditingController filterController = TextEditingController();
   bool _doneLoading = false;
   String? searchText;
+  Timer? _timer;
 
   List<SmartFile> filteredFiles = List.empty(growable: true);
   final List<String>? filters = [
@@ -135,9 +138,16 @@ class _FilesPageState extends State<FilesPage> {
 
   @override
   void initState() {
-    _setUpData();
-
     super.initState();
+
+    _setUpData();
+    if (mounted) {
+      _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+        FileApi.fetchAll();
+        // _buildFilteredList();
+        setState(() {});
+      });
+    }
   }
 
   Future<void> _setUpData() async {
@@ -158,7 +168,7 @@ class _FilesPageState extends State<FilesPage> {
   _searchFiles(String value) {
     filteredFiles.clear();
     filteredFiles.addAll(preloadedFiles.where((smartFile) =>
-        smartFile.fileName!
+        smartFile.getName()
             .toLowerCase()
             .contains(value.toLowerCase()) ||
         smartFile.fileNumber!
@@ -187,5 +197,14 @@ class _FilesPageState extends State<FilesPage> {
       );
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+
+    super.dispose();
   }
 }

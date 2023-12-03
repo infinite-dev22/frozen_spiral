@@ -235,14 +235,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   SmartCaseTextField(
                     hint: 'First name',
                     controller: firstNameController,
+                    maxLength: 60,
+                    minLines: 1,
+                    maxLines: 1,
                   ),
                   SmartCaseTextField(
                     hint: 'Last name',
                     controller: lastNameController,
+                    maxLength: 60,
+                    minLines: 1,
+                    maxLines: 1,
                   ),
                   SmartCaseTextField(
                     hint: 'Other name',
                     controller: otherNameController,
+                    maxLength: 60,
+                    minLines: 1,
+                    maxLines: 1,
                   ),
                   GenderDropdown(onChanged: (value) {
                     genderController.text = value.toString();
@@ -254,18 +263,30 @@ class _ProfilePageState extends State<ProfilePage> {
                   SmartCaseTextField(
                     hint: 'Personal email',
                     controller: personalEmailController,
+                    maxLength: 60,
+                    minLines: 1,
+                    maxLines: 1,
                   ),
                   SmartCaseTextField(
                     hint: 'Telephone',
                     controller: telephoneController,
+                    maxLength: 60,
+                    minLines: 1,
+                    maxLines: 1,
                   ),
                   SmartCaseTextField(
                     hint: 'Social Security Number',
                     controller: socialSecurityNumberController,
+                    maxLength: 60,
+                    minLines: 1,
+                    maxLines: 1,
                   ),
                   SmartCaseTextField(
                     hint: 'Tin number',
                     controller: tinNumberController,
+                    maxLength: 60,
+                    minLines: 1,
+                    maxLines: 1,
                   ),
                   const SizedBox(height: 300),
                 ],

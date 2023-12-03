@@ -23,6 +23,7 @@ class SmartActivity extends SmartModel {
   final SmartEmployee? employee;
   final SmartFile? file;
   final SmartActivityStatus? caseActivityStatus;
+  final int? createdBy;
 
   SmartActivity({
     this.id,
@@ -44,6 +45,7 @@ class SmartActivity extends SmartModel {
     this.employee,
     this.file,
     this.caseActivityStatus,
+    this.createdBy,
   });
 
   factory SmartActivity.fromJson(Map json) {
@@ -68,6 +70,7 @@ class SmartActivity extends SmartModel {
       file: SmartFile.fromJson(json['case_file']),
       caseActivityStatus:
           SmartActivityStatus.fromJson(json['case_activity_status']),
+      createdBy: json['created_by'],
     );
   }
 

@@ -38,6 +38,7 @@ class _EventViewPageState extends State<EventViewPage> {
   }
 
   Widget _buildBody(BuildContext context) {
+    print("Date: ${event!.endDate!}");
     return (event != null)
         ? Column(
             children: [
@@ -91,12 +92,12 @@ class _EventViewPageState extends State<EventViewPage> {
                               Column(
                                 children: [
                                   Text(
-                                    'from: ${DateFormat('dd/MM/yyyy - h:mm a').format(DateFormat('dd-MM-yy - h:mm a').parse(DateFormat('yy-MM-dd - h:mm a').format(event!.startDate!)))}',
+                                    'from: ${DateFormat('dd/MM/yyyy - h:mm a').format(event!.startDate!)}',
                                     style: const TextStyle(fontSize: 18),
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    'to:   ${DateFormat('dd/MM/yyyy - h:mm a').format(DateFormat('dd-MM-yy - h:mm a').parse(DateFormat('yy-MM-dd - h:mm a').format(event!.endDate!)))}',
+                                    'to:   ${DateFormat('dd/MM/yyyy - h:mm a').format(event!.endDate!)}',
                                     style: const TextStyle(fontSize: 18),
                                   ),
                                 ],

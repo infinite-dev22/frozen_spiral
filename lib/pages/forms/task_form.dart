@@ -33,6 +33,7 @@ class _TaskFormState extends State<TaskForm> {
 
   SmartFile? file;
   SmartEmployee? assignee;
+  int? assigneeId;
 
   List<SmartFile> files = List.empty(growable: true);
   List<SmartEmployee> assignees = List.empty(growable: true);
@@ -304,7 +305,7 @@ class _TaskFormState extends State<TaskForm> {
 
   _onTapSearchedAssignee(SmartEmployee value) {
     setState(() {
-      assignee = value;
+      assigneeId = value.id;
     });
   }
 
@@ -347,14 +348,15 @@ class _TaskFormState extends State<TaskForm> {
         priority: 'High',
         dueAt: DateFormat('dd/MM/yyyy').parse(dueDateController.text.trim()),
         estimatedTime: startTimeController.text.trim(),
-        assignees: [assignee!],
+        // assignees: [assignee!],
+        assigneeIds: [assigneeId!],
       );
 
       jsonEncode(smartTask.toCreateJson());
 
       (widget.task == null)
           ? SmartCaseApi.smartPost(
-              'api/crm/tasks', currentUser.token, smartTask.toCreateJson(),
+              'api/tasks', currentUser.token, smartTask.toCreateJson(),
               onError: () {
               Fluttertoast.showToast(
                   msg: "An error occurred",
@@ -374,7 +376,7 @@ class _TaskFormState extends State<TaskForm> {
                   textColor: AppColors.white,
                   fontSize: 16.0);
             })
-          : SmartCaseApi.smartPut('api/crm/tasks/${widget.task!.id}',
+          : SmartCaseApi.smartPut('api/tasks/${widget.task!.id}',
               currentUser.token, smartTask.toCreateJson(), onError: () {
               Fluttertoast.showToast(
                   msg: "An error occurred",

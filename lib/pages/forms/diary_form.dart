@@ -408,6 +408,8 @@ class _DiaryFormState extends State<DiaryForm> {
   }
 
   _submitFormData() {
+    // Something fishy below
+    // Wrong Activity placed on event.
     SmartEvent smartEvent = SmartEvent(
         title: activity!.getName(),
         description: descriptionController.text.trim(),
@@ -417,7 +419,7 @@ class _DiaryFormState extends State<DiaryForm> {
         endDate: DateFormat('dd/MM/yyyy').parse(endDateController.text.trim()),
         endTime: DateFormat('h:mm a').parse(endTimeController.text.trim()),
         employeeId: currentUser.id,
-        caseActivityStatusId: activity!.id!,
+        caseActivityStatusId: activity!.id!, // I think this should be file.id.
         calendarEventTypeId: 1,
         externalTypeId: 1,
         firmEvent: 'yes',

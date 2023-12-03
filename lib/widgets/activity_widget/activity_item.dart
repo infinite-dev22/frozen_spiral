@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 
 import '../../../theme/color.dart';
 import '../../pages/forms/activity_form.dart';
@@ -75,15 +76,16 @@ class ActivityItem extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(
-            right: 0,
-            top: 0,
-            child: MaterialButton(
-              padding: const EdgeInsets.all(5),
-              onPressed: () => _onPressed(context),
-              child: const CustomIconButton(),
+          if (activity.createdBy == currentUser.id)
+            Positioned(
+              right: 0,
+              top: 0,
+              child: MaterialButton(
+                padding: const EdgeInsets.all(5),
+                onPressed: () => _onPressed(context),
+                child: const CustomIconButton(),
+              ),
             ),
-          ),
         ],
       ),
     );

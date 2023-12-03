@@ -699,6 +699,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   @override
   void initState() {
     super.initState();
+
     _scrollController = ScrollController()
       ..addListener(_scrollListener);
     RequisitionApi.fetchAll().then((value) {
@@ -711,6 +712,13 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
       );
       if (mounted) setState(() {});
     });
+
+    // Not sure if this is what is actually needed for better UX.
+    // For now I will just comment it out.
+    // if (canApprove) {
+    //   _allFilter = true;
+    //   _submittedFilter = true;
+    // }
 
     _loadCurrencies();
     _buildFilteredList();

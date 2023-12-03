@@ -77,7 +77,7 @@ class _ActivityViewPageState extends State<ActivityViewPage> {
                                 .format(activity!.date!)),
                         TextItem(
                             title: "From:",
-                            data: DateFormat('h:mm a')
+                            data: DateFormat.jm()
                                 .format(activity!.startTime!)),
                       ],
                     ),
@@ -91,7 +91,7 @@ class _ActivityViewPageState extends State<ActivityViewPage> {
                                 " ${activity!.employee!.lastName}"),
                         TextItem(
                             title: "To:",
-                            data: DateFormat('h:mm a')
+                            data: DateFormat.jm()
                                 .format(activity!.endTime!)),
                       ],
                     ),

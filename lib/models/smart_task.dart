@@ -17,6 +17,7 @@ class SmartTask extends SmartModel {
   final String? estimatedTime;
   final DateTime? createdAt;
   final List<SmartEmployee>? assignees;
+  final List<int>? assigneeIds;
   final SmartEmployee? assigner;
   final SmartFile? caseFile;
   final SmartTaskStatus? taskStatuses;
@@ -36,6 +37,7 @@ class SmartTask extends SmartModel {
     this.estimatedTime,
     this.createdAt,
     this.assignees,
+    this.assigneeIds,
     this.assigner,
     this.caseFile,
     this.taskStatuses,
@@ -80,9 +82,9 @@ class SmartTask extends SmartModel {
       'description': description,
       'matter': matter,
       'case_status': caseStatus,
-      'due_at': dueAt?.toIso8601String(),
+      'due_at': DateFormat("dd/MM/yyyy").format(dueAt!),
       'task_status': taskStatus,
-      'end_date': endDate?.toIso8601String(),
+      'end_date': DateFormat("dd/MM/yyyy").format(endDate!),
       'estimated_time': estimatedTime,
       'assignees': assignees,
       'assigner': assigner?.toJson(),
@@ -102,7 +104,7 @@ class SmartTask extends SmartModel {
       'due_at': DateFormat('dd/MM/yyyy').format(dueAt!),
       'task_status': taskStatus,
       'estimated_time': estimatedTime,
-      'assignees': assignees,
+      'assignees': assigneeIds,
     };
   }
 

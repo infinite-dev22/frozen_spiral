@@ -108,9 +108,9 @@ class SmartEvent {
       backgroundColor: doc["calendarEvents"]['backgroundColor'],
       borderColor: doc["calendarEvents"]['borderColor'],
       fullName:
-          "${doc["calendarEvents"]['created_by']['employee']['first_name']}"
-          " ${doc["calendarEvents"]['created_by']['employee']['middle_name']}"
-          " ${doc["calendarEvents"]['created_by']['employee']['last_name']}",
+          "${doc["calendarEvents"]['created_by']['employee']['first_name'] ?? ""}"
+          " ${doc["calendarEvents"]['created_by']['employee']['middle_name'] ?? ""}"
+          " ${doc["calendarEvents"]['created_by']['employee']['last_name'] ?? ""}",
       activityStatusId: param['case_activity_status_id'],
       file: SmartFile.fromJson(doc['caseFile']),
       notifyOnDate: DateTime.parse(doc['notifyOn']),
