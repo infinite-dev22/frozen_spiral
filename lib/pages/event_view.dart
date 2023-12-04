@@ -45,7 +45,6 @@ class _EventViewState extends State<EventView> {
   }
 
   Widget _buildBody(BuildContext context) {
-    print(widget.eventId);
     return (event != null)
         ? Column(
             children: [

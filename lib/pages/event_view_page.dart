@@ -38,7 +38,6 @@ class _EventViewPageState extends State<EventViewPage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    print("Date: ${event!.endDate!}");
     return (event != null)
         ? Column(
             children: [

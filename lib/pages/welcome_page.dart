@@ -108,7 +108,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     color: AppColors.white),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () async {
-                    await FlutterPhoneDirectCaller.callNumber('+256770456789');
+                    await FlutterPhoneDirectCaller.callNumber('+256779416755');
                   },
               ),
             ],
@@ -549,7 +549,7 @@ class _WelcomePageState extends State<WelcomePage> {
       children: [
         _buildTextWithLink('contact us: ', 'info@infosectechno.com'),
         const SizedBox(height: 8),
-        _buildTextWithAction('+256 (0)770456789'),
+        _buildTextWithAction('+256 (0)779416755'),
         const SizedBox(height: 8),
         Text(
           'copyright @ ${DateTime.now().year} SmartCase Manager',

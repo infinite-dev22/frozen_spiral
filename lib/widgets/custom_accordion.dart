@@ -961,7 +961,7 @@ class _DOBAccordionState extends State<DOBAccordion> {
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 child: CalendarDatePicker(
                   initialDate: DateTime.now(),
-                  firstDate: DateTime(DateTime.now().year),
+                  firstDate: DateTime(DateTime.now().year - 99),
                   lastDate: DateTime(DateTime.now().year + 99),
                   onDateChanged: (DateTime newDate) {
                     setState(() {
@@ -1017,5 +1017,9 @@ class _DOBAccordionState extends State<DOBAccordion> {
   void initState() {
     super.initState();
     _showContent = false;
+
+    widget.dateController.text.isNotEmpty
+        ? selectedDate = widget.dateController.text
+        : "";
   }
 }

@@ -3,6 +3,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/models/smart_model.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_icon_holder.dart';
 import 'package:smart_case/widgets/custom_images/custom_image.dart';
 
@@ -283,9 +284,11 @@ class GenderDropdown extends StatelessWidget {
   const GenderDropdown({
     super.key,
     this.onChanged,
+    this.value,
   });
 
   final Function(int?)? onChanged;
+  final String? value;
 
   @override
   Widget build(BuildContext context) {
@@ -298,6 +301,7 @@ class GenderDropdown extends StatelessWidget {
         SizedBox(
           height: 50,
           child: DropdownButtonFormField2<int>(
+            value: currentUser.gender,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             isExpanded: true,
             decoration: InputDecoration(
