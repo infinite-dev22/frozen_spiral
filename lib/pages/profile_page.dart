@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:full_picker/full_picker.dart';
+import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/auth_text_field.dart';
+import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
+import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
+import 'package:smart_case/widgets/form_title.dart';
 import 'package:smart_case/widgets/profile_widget/profile_detail_item.dart';
 import 'package:smart_case/widgets/profile_widget/profile_master_item.dart';
 import 'package:smart_case/widgets/wide_button.dart';
-
-import '../widgets/custom_accordion.dart';
-import '../widgets/custom_dropdowns.dart';
-import '../widgets/form_title.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -111,11 +111,12 @@ class _ProfilePageState extends State<ProfilePage> {
       url: false,
       onError: (int value) {
         if (kDebugMode) {
-          print(" ----  onError ----=$value");
+          print(" ---- onError ----=$value");
         }
       },
       onSelected: (value) {
         SmartCaseApi.uploadProfilePicture(value.file.first!, onError: () {
+          setState(() {});
           Fluttertoast.showToast(
               msg: "An error occurred! Profile not updated",
               toastLength: Toast.LENGTH_LONG,
@@ -124,6 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
               backgroundColor: AppColors.red,
               textColor: AppColors.white,
               fontSize: 16.0);
+          // _buildImage();
         }, onSuccess: () {
           Fluttertoast.showToast(
               msg: "Profile photo updated successfully",
@@ -137,6 +139,10 @@ class _ProfilePageState extends State<ProfilePage> {
         });
       },
     );
+  }
+
+  _buildImage() async {
+    await PCacheImage.clearAllCacheImages();
   }
 
   _changePasswordTapped() {

@@ -306,6 +306,7 @@ class _TaskFormState extends State<TaskForm> {
   _onTapSearchedAssignee(SmartEmployee value) {
     setState(() {
       assigneeId = value.id;
+      assignee = value;
     });
   }
 

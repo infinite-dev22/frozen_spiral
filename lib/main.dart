@@ -5,6 +5,7 @@ import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
+import 'package:smart_case/firebase_options.dart';
 import 'package:smart_case/models/local/notifications.dart';
 import 'package:smart_case/pages/activities_page.dart';
 import 'package:smart_case/pages/activity_view_page.dart';
@@ -16,7 +17,6 @@ import 'package:smart_case/pages/file_page.dart';
 import 'package:smart_case/pages/home_page.dart';
 import 'package:smart_case/pages/locator_page.dart';
 import 'package:smart_case/pages/login_page.dart';
-import 'package:smart_case/pages/login_prompt_page.dart';
 import 'package:smart_case/pages/notifications_page.dart';
 import 'package:smart_case/pages/profile_page.dart';
 import 'package:smart_case/pages/reports_page.dart';
@@ -30,8 +30,6 @@ import 'package:smart_case/services/navigation/locator.dart';
 import 'package:smart_case/services/navigation/navigator_service.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-
-import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

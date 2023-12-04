@@ -11,6 +11,7 @@ import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/models/smart_event.dart';
@@ -228,10 +229,9 @@ class SmartCaseApi {
       {Function()? onSuccess, Function()? onError}) async {
     String? uniquePhotoId = const Uuid().v4();
     File image = await compressImage(uniquePhotoId, imageFile);
+    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
 
-    var client = RetryClient(http.Client());
     try {
-      Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
       Uri url = Uri.https(currentUser.url.replaceRange(0, 8, ''),
           'api/hr/employees/update_avatarSubmit');
 
@@ -267,7 +267,7 @@ class SmartCaseApi {
         }
       }
     } finally {
-      client.close();
+      dio.close();
     }
   }
 

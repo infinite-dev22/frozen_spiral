@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/global_data.dart';
+import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
+import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/better_toast.dart';
+import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/file_widget/file_item.dart';
-
-import '../database/file/file_model.dart';
-import '../services/apis/smartcase_apis/file_api.dart';
-import '../theme/color.dart';
-import '../util/smart_case_init.dart';
-import '../widgets/better_toast.dart';
-import '../widgets/custom_appbar.dart';
 
 class FilesPage extends StatefulWidget {
   const FilesPage({super.key});
@@ -153,33 +152,25 @@ class _FilesPageState extends State<FilesPage> {
   Future<void> _setUpData() async {
     await FileApi.fetchAll().then((value) {
       _doneLoading = true;
-      setState(() {});
+      if (mounted) setState(() {});
     }).onError((error, stackTrace) {
       _doneLoading = true;
       const BetterErrorToast(
         text: "An error occurred",
       );
-      setState(() {});
+      if (mounted) setState(() {});
     });
     filterController.text == 'Name';
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   _searchFiles(String value) {
     filteredFiles.clear();
     filteredFiles.addAll(preloadedFiles.where((smartFile) =>
-        smartFile.getName()
-            .toLowerCase()
-            .contains(value.toLowerCase()) ||
-        smartFile.fileNumber!
-            .toLowerCase()
-            .contains(value.toLowerCase()) ||
-        smartFile.clientName!
-            .toLowerCase()
-            .contains(value.toLowerCase()) ||
-        smartFile.dateOpened!
-            .toLowerCase()
-            .contains(value.toLowerCase()) ||
+        smartFile.getName().toLowerCase().contains(value.toLowerCase()) ||
+        smartFile.fileNumber!.toLowerCase().contains(value.toLowerCase()) ||
+        smartFile.clientName!.toLowerCase().contains(value.toLowerCase()) ||
+        smartFile.dateOpened!.toLowerCase().contains(value.toLowerCase()) ||
         (smartFile.status ?? "N/A")
             .toLowerCase()
             .contains(value.toLowerCase())));

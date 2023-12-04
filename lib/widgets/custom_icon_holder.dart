@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../theme/color.dart';
-import 'custom_images/custom_elevated_image.dart';
+import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/custom_images/custom_image.dart';
 
 class CustomIconHolder extends StatelessWidget {
   const CustomIconHolder(
@@ -52,7 +51,7 @@ class CustomIconHolder extends StatelessWidget {
               ],
             ),
             child: (isImage)
-                ? CustomElevatedImage(
+                ? CustomImage(
                     graphic,
                     width: 35,
                     height: 35,

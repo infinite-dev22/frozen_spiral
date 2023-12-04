@@ -10,13 +10,12 @@ import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/loading_widget/shimmers/requisition_shimmer.dart';
 import 'package:smart_case/widgets/requisition_widget/requisition_item.dart';
-
-import '../data/global_data.dart';
-import '../models/smart_currency.dart';
-import '../services/apis/smartcase_api.dart';
-import '../util/smart_case_init.dart';
-import '../widgets/better_toast.dart';
-import '../widgets/requisition_widget/requisition_appbar.dart';
+import 'package:smart_case/data/global_data.dart';
+import 'package:smart_case/models/smart_currency.dart';
+import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/better_toast.dart';
+import 'package:smart_case/widgets/requisition_widget/requisition_appbar.dart';
 
 class RequisitionsPage extends StatefulWidget {
   const RequisitionsPage({super.key});
@@ -50,7 +49,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   List.empty(growable: true);
   final List<SmartRequisition> _filteredRequisitions =
   List.empty(growable: true);
-  List<SmartCurrency> _currencies = List.empty(growable: true);
+  final List<SmartCurrency> _currencies = List.empty(growable: true);
 
   List<DropdownMenuItem> _filters() {
     return [

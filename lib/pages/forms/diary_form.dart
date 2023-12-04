@@ -13,8 +13,7 @@ import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
-import 'package:smart_case/widgets/custom_searchable_async_activity_bottom_sheet_contents.dart';
-import 'package:smart_case/widgets/custom_searchable_async_file_bottom_sheet_contents.dart';
+import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
 
@@ -271,7 +270,7 @@ class _DiaryFormState extends State<DiaryForm> {
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return AsyncSearchableSmartFileBottomSheetContents(
+              return AsyncSearchableBottomSheetContents(
                 hint: "Search file",
                 list: searchedList,
                 onTap: (value) {
@@ -316,7 +315,7 @@ class _DiaryFormState extends State<DiaryForm> {
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return AsyncSearchableActivityBottomSheetContents(
+              return AsyncSearchableBottomSheetContents(
                 hint: "Search activity",
                 list: searchedList,
                 onTap: (value) {
@@ -408,8 +407,6 @@ class _DiaryFormState extends State<DiaryForm> {
   }
 
   _submitFormData() {
-    // Something fishy below
-    // Wrong Activity placed on event.
     SmartEvent smartEvent = SmartEvent(
         title: activity!.getName(),
         description: descriptionController.text.trim(),
@@ -419,9 +416,9 @@ class _DiaryFormState extends State<DiaryForm> {
         endDate: DateFormat('dd/MM/yyyy').parse(endDateController.text.trim()),
         endTime: DateFormat('h:mm a').parse(endTimeController.text.trim()),
         employeeId: currentUser.id,
-        caseActivityStatusId: activity!.id!, // I think this should be file.id.
+        caseActivityStatusId: activity!.id!,
         calendarEventTypeId: 1,
-        externalTypeId: 1,
+        externalTypeId: file!.id,
         firmEvent: 'yes',
         notifyOnDate:
             DateFormat('dd/MM/yyyy').parse(reminderDateController.text.trim()),

@@ -12,10 +12,9 @@ import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
-import 'package:smart_case/widgets/custom_searchable_async_activity_bottom_sheet_contents.dart';
-import 'package:smart_case/widgets/custom_searchable_async_file_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
+import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 
 class ActivityForm extends StatefulWidget {
   const ActivityForm({super.key, this.activity});
@@ -276,7 +275,7 @@ class _ActivityFormState extends State<ActivityForm> {
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return AsyncSearchableSmartFileBottomSheetContents(
+              return AsyncSearchableBottomSheetContents(
                 hint: "Search file",
                 list: searchedList,
                 onTap: (value) {
@@ -319,7 +318,7 @@ class _ActivityFormState extends State<ActivityForm> {
         builder: (BuildContext context) {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return AsyncSearchableActivityBottomSheetContents(
+              return AsyncSearchableBottomSheetContents(
                 hint: "Search activity",
                 list: searchedList,
                 onTap: (value) {

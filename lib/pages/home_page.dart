@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/module_item.dart';
-
-import '../util/smart_case_init.dart';
-import '../widgets/better_toast.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

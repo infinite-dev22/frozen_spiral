@@ -695,7 +695,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
     //     .onError((error, stackTrace) => _onError());
 
     SmartCaseApi.smartPost(
-      'api/accounts/requisitions/${widget.requisition!.id}/process',
+      'api/accounts/requisitions/${widget.requisition.id}/process',
       currentUser.token,
       {
         "forms": 1,

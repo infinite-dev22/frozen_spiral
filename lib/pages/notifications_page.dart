@@ -1,12 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:smart_case/models/local/notifications.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/notification_item.dart';
-
-import '../models/local/notifications.dart';
 
 class AlertsPage extends StatefulWidget {
   const AlertsPage({super.key});
@@ -31,33 +29,32 @@ class _AlertsPageState extends State {
 
   _buildBody() {
     return ValueListenableBuilder(
-            valueListenable:
-                Hive.box<Notifications>('notifications').listenable(),
-            builder: (context, Box<Notifications> box, _) {
-              if (box.values.isEmpty) {
-                return const Center(
-                    child: Text(
-                  "Your alerts appear here",
-                  style: TextStyle(color: AppColors.inActiveColor),
-                ));
-              } else {
-                return ListView.builder(
-                  itemCount: box.values.length,
-                  padding: const EdgeInsets.only(right: 10),
-                  itemBuilder: (context, index) {
-                    var result = box.getAt(index);
-                    return NotificationItem(
-                      title: result!.title!,
-                      time: result.time ?? "",
-                      body: result.body!,
-                      onDismissed: () {
-                        _deleteItem(index);
-                      },
-                    );
+        valueListenable: Hive.box<Notifications>('notifications').listenable(),
+        builder: (context, Box<Notifications> box, _) {
+          if (box.values.isEmpty) {
+            return const Center(
+                child: Text(
+              "Your alerts appear here",
+              style: TextStyle(color: AppColors.inActiveColor),
+            ));
+          } else {
+            return ListView.builder(
+              itemCount: box.values.length,
+              padding: const EdgeInsets.only(right: 10),
+              itemBuilder: (context, index) {
+                var result = box.getAt(index);
+                return NotificationItem(
+                  title: result!.title!,
+                  time: result.time ?? "",
+                  body: result.body!,
+                  onDismissed: () {
+                    _deleteItem(index);
                   },
                 );
-              }
-            });
+              },
+            );
+          }
+        });
   }
 
   _deleteItem(int index) async {

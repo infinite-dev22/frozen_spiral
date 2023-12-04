@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 
 class CustomImage extends StatelessWidget {
   const CustomImage(
@@ -45,9 +44,13 @@ class CustomImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
         image: (isNetwork)
             ? DecorationImage(
-                image: PCacheImage(file),
+                image: NetworkImage(file),
                 fit: imageFit,
               )
+            // DecorationImage(
+            //         image: PCacheImage(file, clearCacheImage: true),
+            //         fit: imageFit,
+            //       )
             : (isFile)
                 ? DecorationImage(
                     image: FileImage(file),

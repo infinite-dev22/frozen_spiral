@@ -8,6 +8,7 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:smart_case/services/apis/auth_apis.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/auth_text_field.dart';
@@ -16,7 +17,7 @@ import 'package:smart_case/widgets/custom_images/custom_image.dart';
 import 'package:smart_case/widgets/wide_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../util/smart_case_init.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -245,6 +246,8 @@ class _WelcomePageState extends State<WelcomePage> {
     box.write('email', emailController.text.trim());
     box.write('name', currentUser.firstName);
     box.write('image', currentUser.avatar);
+
+    await PCacheImage.clearAllCacheImages();
   }
 
   _handleWrongEmail() {

@@ -1,11 +1,10 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
-
-import '../models/smart_model.dart';
-import '../theme/color.dart';
-import 'custom_icon_holder.dart';
-import 'custom_images/custom_elevated_image.dart';
+import 'package:smart_case/models/smart_model.dart';
+import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/custom_icon_holder.dart';
+import 'package:smart_case/widgets/custom_images/custom_image.dart';
 
 class CustomDropdownFilter extends StatefulWidget {
   const CustomDropdownFilter({
@@ -101,7 +100,7 @@ class CustomDropdownAction extends StatelessWidget {
   _buildBody() {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
-        customButton: CustomElevatedImage(
+        customButton: CustomImage(
           image,
           width: 40,
           height: 40,

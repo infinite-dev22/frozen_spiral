@@ -127,7 +127,6 @@ class AuthApis {
     final preferences = GetSecureStorage(
         password: 'infosec_technologies_ug_smart_case_law_manager');
 
-    await PCacheImage.clearAllCacheImages();
     await preferences.remove('email');
     await preferences.remove('name');
     await preferences.remove('image');

@@ -1,11 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-
-import 'custom_dropdowns.dart';
-import 'custom_images/custom_image.dart';
-import 'custom_spacer.dart';
-import 'custom_textbox.dart';
+import 'package:smart_case/widgets/custom_dropdowns.dart';
+import 'package:smart_case/widgets/custom_images/custom_image.dart';
+import 'package:smart_case/widgets/custom_spacer.dart';
+import 'package:smart_case/widgets/custom_textbox.dart';
 
 class AppBarContent extends StatelessWidget {
   AppBarContent(
@@ -92,7 +91,7 @@ class AppBarContent extends StatelessWidget {
                             ? ["Sign out"]
                             : profileActions,
                         bgColor: Colors.white,
-                        isNetwork: isNetwork,
+                        isNetwork: true,
                         onChanged: (value) =>
                             _buildOnProfileDropdownValueChanged(value, context),
                         image: currentUser.avatar,
@@ -115,7 +114,8 @@ class AppBarContent extends StatelessWidget {
     );
   }
 
-  _buildOnProfileDropdownValueChanged(String? value, BuildContext context) {
+  _buildOnProfileDropdownValueChanged(
+      String? value, BuildContext context) async {
     if (value == 'Profile') {
       return Navigator.pushNamed(context, '/profile');
     }
