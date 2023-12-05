@@ -128,6 +128,8 @@ class SmartCaseApi {
             "Accept": "application/json",
           });
 
+      print(response.statusCode);
+
       if (response.statusCode == 200) {
         if (onSuccess != null) {
           onSuccess();
@@ -137,14 +139,16 @@ class SmartCaseApi {
           onError();
         }
       }
-    } catch (e) {
-      if (onError != null) {
-        onError();
-        if (kDebugMode) {
-          print(e);
-        }
-      }
-    } finally {
+    }
+    // catch (e) {
+    //   if (onError != null) {
+    //     onError();
+    //     if (kDebugMode) {
+    //       print(e);
+    //     }
+    //   }
+    // }
+    finally {
       client.close();
     }
     return [];

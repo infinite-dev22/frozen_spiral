@@ -146,9 +146,10 @@ class _LoginPageState extends State<LoginPage> {
               onSuccess: _signUserIn,
               onWrongPassword: _handleWrongPass,
               onError: _handleError,
-            ).then(
-              (user) => AuthApis.uploadFCMToken(emailController.text.trim()),
-            ),
+            ).then((user) => {
+                  if (user != null)
+                    AuthApis.uploadFCMToken(emailController.text.trim())
+                }),
           );
         } else {
           Fluttertoast.showToast(

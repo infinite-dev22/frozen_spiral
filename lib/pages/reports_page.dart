@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:smart_case/widgets/report_widget/report_type_widget.dart';
 
 import '../theme/color.dart';
+import '../util/smart_case_init.dart';
 import '../widgets/custom_appbar.dart';
 
 class ReportsPage extends StatefulWidget {
@@ -11,8 +13,6 @@ class ReportsPage extends StatefulWidget {
 }
 
 class _ReportsPageState extends State<ReportsPage> {
-  List<String> filters = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,10 +22,10 @@ class _ReportsPageState extends State<ReportsPage> {
         ),
         backgroundColor: AppColors.primary,
         title: AppBarContent(
-          searchable: true,
-          filterable: true,
-          search: 'reports',
-          filters: filters,
+          searchable: false,
+          filterable: false,
+          canNavigate: true,
+          isNetwork: currentUser.avatar != null ? true : false,
         ),
       ),
       body: _buildBody(),
@@ -33,11 +33,20 @@ class _ReportsPageState extends State<ReportsPage> {
   }
 
   _buildBody() {
-    return const Center(
-      child: Text(
-        'Your reports appear here',
-        style: TextStyle(color: AppColors.inActiveColor),
-      ),
+    return ListView(
+      padding: const EdgeInsets.all(8.0),
+      children: [
+        ReportTypeWidget(
+          image: "assets/images/report_types/law_hammer.jpg",
+          title: "Cause List",
+          onTap: () => Navigator.pushNamed(context, "/cause_list_report"),
+        ),
+        ReportTypeWidget(
+          image: "assets/images/report_types/done_list.jpg",
+          title: "Done Activities",
+          onTap: () => Navigator.pushNamed(context, "/done_activities_report"),
+        ),
+      ],
     );
   }
 }

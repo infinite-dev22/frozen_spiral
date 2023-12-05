@@ -9,7 +9,9 @@ import 'package:smart_case/firebase_options.dart';
 import 'package:smart_case/models/local/notifications.dart';
 import 'package:smart_case/pages/activities_page.dart';
 import 'package:smart_case/pages/activity_view_page.dart';
+import 'package:smart_case/pages/cause_list_report_page.dart';
 import 'package:smart_case/pages/diary_page.dart';
+import 'package:smart_case/pages/done_activities_report_page.dart';
 import 'package:smart_case/pages/engagements_page.dart';
 import 'package:smart_case/pages/event_view.dart';
 import 'package:smart_case/pages/event_view_page.dart';
@@ -143,6 +145,8 @@ class MyApp extends StatelessWidget {
           '/file': (context) => const EventView(),
           '/activity': (context) => const ActivityViewPage(),
           '/event': (context) => const EventViewPage(),
+          '/cause_list_report': (context) => const CauseListReportPage(),
+          '/done_activities_report': (context) => const DoneActivitiesReportPage(),
         },
       ),
     );

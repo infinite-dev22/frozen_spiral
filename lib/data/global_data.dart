@@ -43,6 +43,8 @@ List<SmartRequisition> preloadedRequisitions = List.empty(growable: true);
 List<SmartActivity> preloadedActivities = List.empty(growable: true);
 List<SmartFile> preloadedFiles = List.empty(growable: true);
 List<SmartDrawer> preloadedDrawers = List.empty(growable: true);
+List<SmartActivity> preloadedCauseListReport = List.empty(growable: true);
+List<SmartActivity> preloadedDoneActivitiesReport = List.empty(growable: true);
 
 String requisitionNextPage =
     "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=1";

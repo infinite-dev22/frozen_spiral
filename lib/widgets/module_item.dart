@@ -30,7 +30,7 @@ class ModuleItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(padding),
+        padding: const EdgeInsets.all(5),
         height: MediaQuery.of(context).size.height / 4.2,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
@@ -46,26 +46,30 @@ class ModuleItem extends StatelessWidget {
           ],
           color: color,
         ),
-        child: Column(
-          children: [
-            ModuleItemIcon(
-              icon: icon,
-              iconSize: screenHeight * .04,
-              radius: 100,
-              padding: screenHeight * .03,
-              color: AppColors.secondary.withOpacity(.5),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              name,
-              style: TextStyle(
-                  fontSize: fontSize,
-                  color: AppColors.darker,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ModuleItemIcon(
+                icon: icon,
+                iconSize: screenHeight * .04,
+                radius: 100,
+                padding: screenHeight * .03,
+                color: AppColors.secondary.withOpacity(.5),
+              ),
+              SizedBox(
+                height: screenHeight * .03,
+              ),
+              Text(
+                name,
+                style: TextStyle(
+                    fontSize: fontSize,
+                    color: AppColors.darker,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -142,7 +146,8 @@ class ModuleItem2 extends StatelessWidget {
         Positioned(
             top: 0,
             right: 0,
-            child: Container(padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
               decoration: BoxDecoration(
                   color: AppColors.primary.withOpacity(.6),
                   borderRadius:

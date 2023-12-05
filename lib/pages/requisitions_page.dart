@@ -432,152 +432,9 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                 requisition.supervisor!.id == currentUser.id)
                 : requisition.employee!.id == currentUser.id)))) : false
     )));
-
-    //     if (_allFilter && !_submittedFilter && !_approvedFilter &&
-    //         !_preApprovedFilter && !_rejectedFilter && !_returnedFilter) {
-    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
-    //       (canApprove)
-    //           ? (requisition.employee!.id == currentUser.id ||
-    //           requisition.supervisor!.id == currentUser.id)
-    //           : requisition.employee!.id == currentUser.id));
-    //     }
-    //     if (_submittedFilter) {
-    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
-    //       (requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
-    //           requisition.requisitionStatus!.name
-    //               .toLowerCase()
-    //               .contains("submit")) &&
-    //           (_allFilter
-    //               ? (requisition.employee!.id == currentUser.id ||
-    //               requisition.supervisor!.id == currentUser.id)
-    //               : ((canApprove)
-    //               ? (requisition.employee!.id == currentUser.id ||
-    //               requisition.supervisor!.id == currentUser.id)
-    //               : requisition.employee!.id == currentUser.id))));
-    //     }
-    //     if (_approvedFilter) {
-    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
-    //       ((requisition.requisitionStatus!.code
-    //           .toLowerCase()
-    //           .contains("approved") ||
-    //           requisition.requisitionStatus!.name
-    //               .toLowerCase()
-    //               .contains("approved")) &&
-    //           (_allFilter
-    //               ? (requisition.employee!.id == currentUser.id ||
-    //               requisition.supervisor!.id == currentUser.id)
-    //               : ((canApprove)
-    //               ? (requisition.employee!.id == currentUser.id ||
-    //               requisition.supervisor!.id == currentUser.id)
-    //               : requisition.employee!.id == currentUser.id)))));
-    //     }
-    //     if (_preApprovedFilter) {
-    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
-    //       (requisition.requisitionStatus!.code
-    //           .toLowerCase()
-    //           .contains("primary_approved") ||
-    //           requisition.requisitionStatus!.name
-    //               .toLowerCase()
-    //               .contains("primary approved"))));
-    //     }
-    //     if (_rejectedFilter) {
-    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
-    //       ((requisition.requisitionStatus!.code
-    //           .toLowerCase()
-    //           .contains("rejected") ||
-    //           requisition.requisitionStatus!.name
-    //               .toLowerCase()
-    //               .contains("rejected")) &&
-    //           (_allFilter
-    //               ? (requisition.employee!.id == currentUser.id ||
-    //               requisition.supervisor!.id == currentUser.id)
-    //               : ((canApprove)
-    //               ? (requisition.employee!.id == currentUser.id ||
-    //               requisition.supervisor!.id == currentUser.id)
-    //               : requisition.employee!.id == currentUser.id)))));
-    //     }
-    //     if (_returnedFilter) {
-    //       _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
-    //       ((requisition.requisitionStatus!.code
-    //           .toLowerCase()
-    //           .contains("returned") ||
-    //           requisition.requisitionStatus!.name
-    //               .toLowerCase()
-    //               .contains("returned")) &&
-    //           (_allFilter
-    //               ? (requisition.employee!.id == currentUser.id ||
-    //               requisition.supervisor!.id == currentUser.id)
-    //               : ((canApprove)
-    //               ? (requisition.employee!.id == currentUser.id ||
-    //               requisition.supervisor!.id == currentUser.id)
-    //               : requisition.employee!.id == currentUser.id)))));
-    //     }
   }
 
   _buildNonSearchedBody() {
-    List<SmartRequisition> requisitions = _filteredRequisitions
-        .where((requisition) =>
-    ((requisition.requisitionStatus!.code
-        .toLowerCase()
-        .contains("submit") ||
-        requisition.requisitionStatus!.name
-            .toLowerCase()
-            .contains("submit")) &&
-        requisition.supervisor!.id == currentUser.id) ||
-        (requisition.employee!.id == currentUser.id) ||
-        (requisition.canPay == true) ||
-        ((requisition.secondApprover != null &&
-            requisition.secondApprover == true) &&
-            (((requisition.requisitionStatus!.code
-                .toLowerCase()
-                .contains("submit") ||
-                requisition.requisitionStatus!.name
-                    .toLowerCase()
-                    .contains("submit")) &&
-                (requisition.supervisor!.id == currentUser.id)) ||
-                (requisition.requisitionStatus!.code
-                    .toLowerCase()
-                    .contains("primary_approved") ||
-                    requisition.requisitionStatus!.name
-                        .toLowerCase()
-                        .contains("primary approved"))
-                //     && ((requisition.supervisor!.id == currentUser.id) ||
-                // (requisition.employee!.id == currentUser.id))
-            )))
-        .toList(growable: true);
-
-    // return SmartRefresher(
-    //   enablePullDown: true,
-    //   enablePullUp: true,
-    //   header: const WaterDropHeader(
-    //       refresh: CupertinoActivityIndicator(),
-    //       waterDropColor: AppColors.primary),
-    //   footer: CustomFooter(
-    //     builder: (context, mode) {
-    //       Widget body;
-    //       if (mode == LoadStatus.idle) {
-    //         body = const Text("more data");
-    //       } else if (mode == LoadStatus.loading) {
-    //         body = const CupertinoActivityIndicator();
-    //       } else if (mode == LoadStatus.failed) {
-    //         body = const Text("Load Failed! Pull up to retry");
-    //       } else if (mode == LoadStatus.noMore) {
-    //         body = const Text("That's all for now");
-    //       } else {
-    //         body = const Text("No more Data");
-    //       }
-    //       return SizedBox(
-    //         height: 15,
-    //         child: Center(child: body),
-    //       );
-    //     },
-    //   ),
-    //   controller: _refreshController,
-    //   child: _buildBody(),
-    //   onLoading: _onLoading,
-    //   onRefresh: _onRefresh,
-    //   enableTwoLevel: true,
-    // );
     if ((_filteredRequisitions.isNotEmpty)) {
       return Scrollbar(
         child: ListView.builder(
@@ -609,38 +466,6 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
         itemBuilder: (context, index) => const RequisitionShimmer(),
       );
     }
-  }
-
-  Widget _loadingWidget() {
-    return const Center(
-      child: CupertinoActivityIndicator(),
-    );
-  }
-
-  Widget _emptyWidget() {
-    return const Center(
-      child: Text(
-        "No new requisitions",
-        style: TextStyle(color: AppColors.inActiveColor),
-      ),
-    );
-  }
-
-  Widget _errorWidget() {
-    return const Center(
-      child: Text(
-        "An error occurred",
-        style: TextStyle(color: AppColors.inActiveColor),
-      ),
-    );
-  }
-
-  Widget _shimmerWidget() {
-    return ListView.builder(
-      itemCount: 3,
-      padding: const EdgeInsets.all(10),
-      itemBuilder: (context, index) => const RequisitionShimmer(),
-    );
   }
 
   _buildSearchedBody() {
@@ -777,16 +602,17 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     Map currencyMap = await SmartCaseApi.smartFetch(
         'api/admin/currencytypes', currentUser.token);
     List? currencyList = currencyMap["currencytypes"];
-    if (mounted) {
-      _currencies.clear();
+    _currencies.clear();
 
-      setState(() {
-        if (currencyList != null) {
-          _currencies.addAll(
-              currencyList!.map((doc) => SmartCurrency.fromJson(doc)).toList());
-        }
-        currencyList = null;
-      });
+    if (currencyList != null) {
+      _currencies.addAll(
+          currencyList.map((doc) => SmartCurrency.fromJson(doc)).toList());
+    }
+
+    currencyList = null;
+
+    if (mounted) {
+      setState(() {});
     }
   }
 

@@ -399,7 +399,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
       category = widget.requisition!.requisitionCategory!;
       amountController.text =
           formatter.format(double.parse(widget.requisition!.amount!));
-      descriptionController.text = widget.requisition!.description!;
+      descriptionController.text = widget.requisition!.description ?? "";
       _loadFileFinancialStatus();
     }
   }
@@ -410,8 +410,10 @@ class _RequisitionFormState extends State<RequisitionForm> {
     _loadApprovers();
     _loadCategories();
     _fillFormsForEdit();
-    currency =
-        widget.currencies.firstWhere((currency) => currency.code == 'UGX');
+    if (widget.currencies.isNotEmpty && currency != null) {
+      currency =
+          widget.currencies.firstWhere((currency) => currency.code == 'UGX');
+    }
 
     super.initState();
   }
@@ -422,6 +424,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
       amount: amountController.text.trim(),
       amounts: [amountController.text.trim()],
       payoutAmount: amountController.text.trim(),
+      description: descriptionController.text.trim(),
       descriptions: [
         descriptionController.text.trim(),
       ],
@@ -465,8 +468,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
             },
           )
         : SmartCaseApi.smartPut(
-            'api/accounts/cases/${file!.getId()}/requisitions/'
-            '${widget.requisition!.id}',
+            'api/accounts/requisitions/${widget.requisition!.id}/update',
             currentUser.token,
             smartRequisition.createRequisitionToJson(),
             onError: () {
