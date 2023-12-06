@@ -87,124 +87,126 @@ class _EngagementFormState extends State<EngagementForm> {
                 controller: scrollController,
                 padding: const EdgeInsets.all(16),
                 children: [
-                  Form(
-                    key: formKey,
-                    child: Column(
-                      children: [
-                        DateTimeAccordion2(
-                            dateController: dateController,
-                            startTimeController: startTimeController,
-                            endTimeController: endTimeController),
-                        GestureDetector(
-                          onTap: _showSearchClientBottomSheet,
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(5),
-                            margin: const EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 6),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width - 80,
-                                    child: Text(
-                                      client?.getName() ?? 'Select client',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                          color: AppColors.darker,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500),
-                                    ),
+                  LayoutBuilder(
+                      builder: (context, constraints) {
+                      return Form(
+                        key: formKey,
+                        child: Column(
+                          children: [
+                            DateTimeAccordion2(
+                                dateController: dateController,
+                                startTimeController: startTimeController,
+                                endTimeController: endTimeController),
+                            GestureDetector(
+                              onTap: _showSearchClientBottomSheet,
+                              child: Container(
+                                height: 50,
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(5),
+                                margin: const EdgeInsets.only(bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 6),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: constraints.maxWidth - 50,
+                                        child: Text(
+                                          client?.getName() ?? 'Select client',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: AppColors.darker,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: AppColors.darker,
+                                      ),
+                                    ],
                                   ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.darker,
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: _showSearchEngagementTypeBottomSheet,
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(5),
-                            margin: const EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 7),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width - 80,
-                                    child: Text(
-                                      engagementType?.getName() ??
-                                          'Select engagement type',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                          color: AppColors.darker,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500),
-                                    ),
+                            GestureDetector(
+                              onTap: _showSearchEngagementTypeBottomSheet,
+                              child: Container(
+                                height: 50,
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(5),
+                                margin: const EdgeInsets.only(bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 7),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width:constraints.maxWidth - 50,
+                                        child: Text(
+                                          engagementType?.getName() ??
+                                              'Select engagement type',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: AppColors.darker,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: AppColors.darker,
+                                      ),
+                                    ],
                                   ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.darker,
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                            SmartCaseNumberField(
+                              hint: 'Cost',
+                              controller: costController,
+                              maxLength: 14,
+                            ),
+                            CustomTextArea(
+                              hint: 'Cost description',
+                              controller: costDescriptionController,
+                              minLines: 1,
+                              maxLines: 4,
+                              maxLength: 255,
+                              onTap: () {
+                                Scrollable.ensureVisible(globalKey.currentContext!);
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            CustomTextArea(
+                              key: globalKey,
+                              hint: 'Description',
+                              controller: descriptionController,
+                              onTap: () {
+                                Scrollable.ensureVisible(globalKey.currentContext!);
+                              },
+                            ),
+                            const SizedBox(
+                                height:
+                                    300 /* MediaQuery.of(context).viewInsets.bottom */),
+                          ],
                         ),
-                        SmartCaseNumberField(
-                          hint: 'Cost',
-                          controller: costController,
-                          maxLength: 14,
-                        ),
-                        CustomTextArea(
-                          hint: 'Cost description',
-                          controller: costDescriptionController,
-                          minLines: 1,
-                          maxLines: 4,
-                          maxLength: 255,
-                          onTap: () {
-                            Scrollable.ensureVisible(globalKey.currentContext!);
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        CustomTextArea(
-                          key: globalKey,
-                          hint: 'Description',
-                          controller: descriptionController,
-                          onTap: () {
-                            Scrollable.ensureVisible(globalKey.currentContext!);
-                          },
-                        ),
-                        const SizedBox(
-                            height:
-                                300 /* MediaQuery.of(context).viewInsets.bottom */),
-                      ],
-                    ),
+                      );
+                    }
                   ),
                 ],
               ),

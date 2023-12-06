@@ -1,5 +1,7 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -58,7 +60,11 @@ Future<void> main() async {
   // Image Caching.
   await PCacheImage.init(enableInMemory: true, maxInMemoryImages: 1);
   // Start App.
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(DevicePreview(
+    enabled: !kReleaseMode,
+    builder: (context) => const MyApp(), // Wrap your app
+  ),);
 }
 
 class MyApp extends StatelessWidget {

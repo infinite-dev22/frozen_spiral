@@ -85,107 +85,111 @@ class _TaskFormState extends State<TaskForm> {
                   controller: scrollController,
                   padding: const EdgeInsets.all(16),
                   children: [
-                    Form(
-                      key: formKey,
-                      child: Column(
-                        children: [
-                          SmartCaseTextField(
-                            hint: 'Name',
-                            controller: nameController,
-                            maxLength: 50,
-                            minLines: 1,
-                            maxLines: 1,
-                          ),
-                          GestureDetector(
-                            onTap: _showSearchFileBottomSheet,
-                            child: Container(
-                              height: 50,
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(5),
-                              margin: const EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(10),
+                    LayoutBuilder(
+                        builder: (context, constraints) {
+                        return Form(
+                          key: formKey,
+                          child: Column(
+                            children: [
+                              SmartCaseTextField(
+                                hint: 'Name',
+                                controller: nameController,
+                                maxLength: 50,
+                                minLines: 1,
+                                maxLines: 1,
                               ),
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width -
-                                          80,
-                                      child: Text(
-                                        file?.fileName ?? 'Select file',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: AppColors.darker,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500),
+                              GestureDetector(
+                                onTap: _showSearchFileBottomSheet,
+                                child: Container(
+                                  height: 50,
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(5),
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(6),
+                                        child: SizedBox(
+                                          width:
+                                        constraints.maxWidth - 50,
+                                          child: Text(
+                                            file?.fileName ?? 'Select file',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: AppColors.darker,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.darker,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: _showSearchAssigneeBottomSheet,
-                            child: Container(
-                              height: 50,
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(5),
-                              margin: const EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width -
-                                          80,
-                                      child: Text(
-                                        assignee?.getName() ??
-                                            'Select assignee',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: AppColors.darker,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500),
+                                      const Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: AppColors.darker,
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.darker,
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
+                              GestureDetector(
+                                onTap: _showSearchAssigneeBottomSheet,
+                                child: Container(
+                                  height: 50,
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(5),
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(6),
+                                        child: SizedBox(
+                                          width:
+                                        constraints.maxWidth - 50,
+                                          child: Text(
+                                            assignee?.getName() ??
+                                                'Select assignee',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: AppColors.darker,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: AppColors.darker,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              DateTimeAccordion2(
+                                  dateController: dueDateController,
+                                  startTimeController: startTimeController,
+                                  endTimeController: endTimeController),
+                              CustomTextArea(
+                                  hint: 'Description',
+                                  controller: descriptionController),
+                            ],
                           ),
-                          DateTimeAccordion2(
-                              dateController: dueDateController,
-                              startTimeController: startTimeController,
-                              endTimeController: endTimeController),
-                          CustomTextArea(
-                              hint: 'Description',
-                              controller: descriptionController),
-                        ],
-                      ),
+                        );
+                      }
                     ),
                   ]),
             ),

@@ -100,132 +100,145 @@ class _RequisitionFormState extends State<RequisitionForm> {
                 controller: scrollController,
                 padding: const EdgeInsets.all(16),
                 children: [
-                  DateAccordion(
-                    dateController: dateController,
-                  ),
-                  CustomGenericDropdown<SmartCurrency>(
-                      hintText: 'currency',
-                      menuItems: widget.currencies,
-                      defaultValue: currency ??
-                          widget.currencies
-                              .firstWhere((currency) => currency.code == 'UGX'),
-                      onChanged: _onTapSearchedCurrency),
-                  GestureDetector(
-                    onTap: _showSearchFileBottomSheet,
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-                      margin: const EdgeInsets.only(bottom: 10),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  LayoutBuilder(builder: (context, constraints) {
+                    return Form(
+                      child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width - 89,
-                              child: Text(
-                                file?.getName() ?? 'Select file',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                          DateAccordion(
+                            dateController: dateController,
+                          ),
+                          CustomGenericDropdown<SmartCurrency>(
+                              hintText: 'currency',
+                              menuItems: widget.currencies,
+                              defaultValue: currency ??
+                                  widget.currencies.firstWhere(
+                                      (currency) => currency.code == 'UGX'),
+                              onChanged: _onTapSearchedCurrency),
+                          GestureDetector(
+                            onTap: _showSearchFileBottomSheet,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: SizedBox(
+                                      width: constraints.maxWidth - 51,
+                                      child: Text(
+                                        file?.getName() ?? 'Select file',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: AppColors.darker,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
                                     color: AppColors.darker,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          const Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: AppColors.darker,
+                          if (file != null)
+                            SmartText(
+                                value: formatter
+                                    .format(financialStatus)
+                                    .toString(),
+                                icon: (financialStatus > 0)
+                                    ? Icons.arrow_upward_rounded
+                                    : (financialStatus < 0)
+                                        ? Icons.arrow_downward_rounded
+                                        : Icons.circle_outlined,
+                                color: (financialStatus > 0)
+                                    ? AppColors.green
+                                    : (financialStatus < 0)
+                                        ? AppColors.red
+                                        : AppColors.blue),
+                          SearchableDropDown<SmartEmployee>(
+                            hintText: 'approver',
+                            menuItems: approvers.toSet().toList(),
+                            onChanged: (value) {
+                              _onTapSearchedApprover(
+                                  approversController.dropDownValue?.value);
+                            },
+                            defaultValue: approver,
+                            controller: approversController,
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (file != null)
-                    SmartText(
-                        value: formatter.format(financialStatus).toString(),
-                        icon: (financialStatus > 0)
-                            ? Icons.arrow_upward_rounded
-                            : (financialStatus < 0)
-                                ? Icons.arrow_downward_rounded
-                                : Icons.circle_outlined,
-                        color: (financialStatus > 0)
-                            ? AppColors.green
-                            : (financialStatus < 0)
-                                ? AppColors.red
-                                : AppColors.blue),
-                  SearchableDropDown<SmartEmployee>(
-                    hintText: 'approver',
-                    menuItems: approvers.toSet().toList(),
-                    onChanged: (value) {
-                      _onTapSearchedApprover(
-                          approversController.dropDownValue?.value);
-                    },
-                    defaultValue: approver,
-                    controller: approversController,
-                  ),
-                  GestureDetector(
-                    onTap: _showSearchCategoryBottomSheet,
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-                      margin: const EdgeInsets.only(bottom: 10),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width - 89,
-                              child: Text(
-                                category?.getName() ??
-                                    'Select requisition category',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                          GestureDetector(
+                            onTap: _showSearchCategoryBottomSheet,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: SizedBox(
+                                      width: constraints.maxWidth - 51,
+                                      child: Text(
+                                        category?.getName() ??
+                                            'Select requisition category',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: AppColors.darker,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
                                     color: AppColors.darker,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          const Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: AppColors.darker,
+                          SmartCaseNumberField(
+                            hint: 'Amount',
+                            controller: amountController,
+                            maxLength: 14,
                           ),
+                          CustomTextArea(
+                            key: globalKey,
+                            hint: 'Description',
+                            controller: descriptionController,
+                            onTap: () {
+                              Scrollable.ensureVisible(
+                                  globalKey.currentContext!);
+                            },
+                          ),
+                          const SizedBox(
+                              height:
+                                  300 /* MediaQuery.of(context).viewInsets.bottom */),
                         ],
                       ),
-                    ),
-                  ),
-                  SmartCaseNumberField(
-                    hint: 'Amount',
-                    controller: amountController,
-                    maxLength: 14,
-                  ),
-                  CustomTextArea(
-                    key: globalKey,
-                    hint: 'Description',
-                    controller: descriptionController,
-                    onTap: () {
-                      Scrollable.ensureVisible(globalKey.currentContext!);
-                    },
-                  ),
-                  const SizedBox(
-                      height:
-                          300 /* MediaQuery.of(context).viewInsets.bottom */),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -390,6 +403,8 @@ class _RequisitionFormState extends State<RequisitionForm> {
   }
 
   _fillFormsForEdit() {
+    currency =
+        widget.currencies.firstWhere((currency) => currency.code == 'UGX');
     if (widget.requisition != null) {
       dateController.text =
           DateFormat('dd/MM/yyyy').format(widget.requisition!.date!);
@@ -410,10 +425,10 @@ class _RequisitionFormState extends State<RequisitionForm> {
     _loadApprovers();
     _loadCategories();
     _fillFormsForEdit();
-    if (widget.currencies.isNotEmpty && currency != null) {
-      currency =
-          widget.currencies.firstWhere((currency) => currency.code == 'UGX');
-    }
+    // if (widget.currencies.isNotEmpty && currency == null) {
+    //   currency =
+    //       widget.currencies.firstWhere((currency) => currency.code == 'UGX');
+    // }
 
     super.initState();
   }
