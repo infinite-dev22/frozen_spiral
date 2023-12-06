@@ -179,7 +179,7 @@ class _RootPageState extends State<RootPage> {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
     return Container(
-      height: (Platform.isIOS) ? 80 : screenHeight * .087,
+      height: 80, // (Platform.isIOS) ? 80 : screenHeight * .087,
       // formerly 80.
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),

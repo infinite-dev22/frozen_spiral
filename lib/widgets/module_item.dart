@@ -26,7 +26,7 @@ class ModuleItem extends StatelessWidget {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
     double screenWidth = screenSize.width;
-    double fontSize = screenWidth * .04;
+    double fontSize = 16;
     return GestureDetector(
       onTap: onTap,
       child: Container(
