@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
-import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:smart_case/models/user.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 

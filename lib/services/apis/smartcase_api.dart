@@ -11,7 +11,6 @@ import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/models/smart_event.dart';

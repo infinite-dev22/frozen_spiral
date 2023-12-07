@@ -63,7 +63,20 @@ class RequisitionApi {
   static Future post(Map<String, dynamic> data, int id,
       {Function()? onSuccess, Function()? onError}) async {
     RequisitionRepo requisitionRepo = RequisitionRepo();
-    var response = await requisitionRepo.post(data, id);
+    var response = await requisitionRepo
+        .post(data, id)
+        .then((value) => onSuccess)
+        .onError((error, stackTrace) => onError);
+    return response;
+  }
+
+  static Future process(Map<String, dynamic> data, int id,
+      {Function()? onSuccess, Function()? onError}) async {
+    RequisitionRepo requisitionRepo = RequisitionRepo();
+    var response = await requisitionRepo
+        .process(data, id)
+        .then((value) => onSuccess)
+        .onError((error, stackTrace) => onError);
     return response;
   }
 

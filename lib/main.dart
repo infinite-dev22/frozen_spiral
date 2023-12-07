@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
-import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:smart_case/firebase_options.dart';
 import 'package:smart_case/models/local/notifications.dart';
 import 'package:smart_case/pages/activities_page.dart';
@@ -58,11 +57,11 @@ Future<void> main() async {
   }
   localStorage = await Hive.openBox<Notifications>('notifications');
   // Image Caching.
-  await PCacheImage.init(enableInMemory: true, maxInMemoryImages: 1);
+  // await PCacheImage.init(enableInMemory: true, maxInMemoryImages: 1);
   // Start App.
   // runApp(const MyApp());
   runApp(DevicePreview(
-    enabled: !kReleaseMode,
+    enabled: false,
     builder: (context) => const MyApp(), // Wrap your app
   ),);
 }
@@ -157,4 +156,9 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+  /*
+  * For the profile image to change on SignIn, Try clearing the former image when the user clicks on the Login button.
+  * Else implement Streams here.
+   */
 }

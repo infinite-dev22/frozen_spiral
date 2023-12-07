@@ -21,7 +21,8 @@ class RequisitionRepo extends RequisitionRepoInterface {
   @override
   Future<Map<String, dynamic>> fetchAll(
       {Map<String, dynamic>? body, int page = 1}) async {
-    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';
@@ -49,7 +50,8 @@ class RequisitionRepo extends RequisitionRepoInterface {
 
   @override
   Future<Map<String, dynamic>> fetch(int id) async {
-    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';
@@ -84,13 +86,14 @@ class RequisitionRepo extends RequisitionRepoInterface {
 
   @override
   Future<dynamic> post(Map<String, dynamic> data, int id) async {
-    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers['Accept'] = 'application/json';
       dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      // dio.options.followRedirects = false;
+      dio.options.followRedirects = false;
 
       var response = await dio.post(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
@@ -102,6 +105,7 @@ class RequisitionRepo extends RequisitionRepoInterface {
       if (response.statusCode == 200) {
         if (kDebugMode) {
           print("A Success occurred: ${response.statusCode}");
+          print(response.data);
         }
         return response.data;
       } else {
@@ -115,8 +119,44 @@ class RequisitionRepo extends RequisitionRepoInterface {
   }
 
   @override
+  Future<dynamic> process(Map<String, dynamic> data, int id) async {
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
+
+    try {
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers['Accept'] = 'application/json';
+      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
+      dio.options.followRedirects = false;
+
+      var response = await dio.post(
+        Uri.https(currentUser.url.replaceRange(0, 8, ''),
+                'api/accounts/requisitions/$id/process')
+            .toString(),
+        data: json.encode(data),
+      );
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print("A Success occurred: ${response.statusCode}");
+        }
+        return response.data;
+      } else {
+        if (kDebugMode) {
+          print("An Error occurred: ${response.statusCode}");
+        }
+        throw Exception("Got a status code ${response.statusCode} while "
+            "processing a requisition");
+      }
+    } finally {
+      dio.close();
+    }
+  }
+
+  @override
   Future<dynamic> put(Map<String, dynamic> data, int id) async {
-    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';

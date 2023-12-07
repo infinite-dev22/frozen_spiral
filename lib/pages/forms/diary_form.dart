@@ -98,7 +98,7 @@ class _DiaryFormState extends State<DiaryForm> {
               },
               child: ListView(
                 controller: scrollController,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(8),
                 children: [
                   LayoutBuilder(
                       builder: (context, constraints) {

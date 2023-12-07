@@ -16,7 +16,7 @@ class FileRepo extends FileRepoInterface {
 
   @override
   Future<Map<String, dynamic>> fetchAll() async {
-    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';
@@ -43,7 +43,7 @@ class FileRepo extends FileRepoInterface {
 
   @override
   Future<Map<String, dynamic>> fetch(int id) async {
-    // Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    // Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
     //
     // try {
     //   dio.options.headers['content-Type'] = 'application/json';
@@ -80,7 +80,7 @@ class FileRepo extends FileRepoInterface {
 
   @override
   Future<dynamic> post(Map<String, dynamic> data, int id) async {
-    // Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    // Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
     //
     // try {
     //   dio.options.headers['content-Type'] = 'application/json';
@@ -112,7 +112,7 @@ class FileRepo extends FileRepoInterface {
 
   @override
   Future<dynamic> put(Map<String, dynamic> data, int id) async {
-    // Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    // Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
     //
     // try {
     //   dio.options.headers['content-Type'] = 'application/json';

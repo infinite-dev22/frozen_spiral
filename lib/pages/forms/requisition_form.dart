@@ -9,6 +9,7 @@ import 'package:smart_case/models/smart_currency.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
@@ -98,7 +99,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
               },
               child: ListView(
                 controller: scrollController,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(8),
                 children: [
                   LayoutBuilder(builder: (context, constraints) {
                     return Form(
@@ -457,10 +458,9 @@ class _RequisitionFormState extends State<RequisitionForm> {
     );
 
     (widget.requisition == null)
-        ? SmartCaseApi.smartPost(
-            'api/accounts/cases/${file!.getId()}/requisitions',
-            currentUser.token,
+        ? RequisitionApi.post(
             smartRequisition.createRequisitionToJson(),
+            file!.getId(),
             onError: () {
               Fluttertoast.showToast(
                   msg: "An error occurred",

@@ -19,7 +19,7 @@ class EmployeeRepo extends EmployeeRepoInterface {
   // @override
   // Future<Map<String, dynamic>> fetchAll(
   //     {Map<String, dynamic>? body, int page = 1}) async {
-  //   Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+  //   Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
   //
   //   try {
   //     dio.options.headers['content-Type'] = 'application/json';
@@ -47,7 +47,7 @@ class EmployeeRepo extends EmployeeRepoInterface {
 
   // @override
   // Future<Map<String, dynamic>> fetch(int id) async {
-  //   Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+  //   Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
   //
   //   try {
   //     dio.options.headers['content-Type'] = 'application/json';
@@ -82,7 +82,7 @@ class EmployeeRepo extends EmployeeRepoInterface {
   //
   // @override
   // Future<dynamic> post(Map<String, dynamic> data, int id) async {
-  //   Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+  //   Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
   //
   //   try {
   //     dio.options.headers['content-Type'] = 'application/json';
@@ -114,7 +114,7 @@ class EmployeeRepo extends EmployeeRepoInterface {
 
   @override
   Future<dynamic> post(Object data, int id) async {
-    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';

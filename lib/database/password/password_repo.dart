@@ -18,7 +18,8 @@ class PasswordRepo extends PasswordRepoInterface {
 
   @override
   Future<dynamic> post(Object data) async {
-    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';

@@ -83,7 +83,7 @@ class _TaskFormState extends State<TaskForm> {
               },
               child: ListView(
                   controller: scrollController,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(8),
                   children: [
                     LayoutBuilder(
                         builder: (context, constraints) {
@@ -179,7 +179,7 @@ class _TaskFormState extends State<TaskForm> {
                                   ),
                                 ),
                               ),
-                              DateTimeAccordion2(
+                              TaskDateTimeAccordion(
                                   dateController: dueDateController,
                                   startTimeController: startTimeController,
                                   endTimeController: endTimeController),

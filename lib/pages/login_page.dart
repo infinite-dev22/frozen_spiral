@@ -2,13 +2,13 @@ import 'dart:ui';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:smart_case/services/apis/auth_apis.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
@@ -194,8 +194,6 @@ class _LoginPageState extends State<LoginPage> {
     box.write('email', emailController.text.trim());
     box.write('name', currentUser.firstName);
     box.write('image', currentUser.avatar);
-
-    await PCacheImage.clearAllCacheImages();
   }
 
   _handleWrongEmail() {
@@ -243,18 +241,24 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginBody() {
     return Column(
       children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              'Hello, We are happy to see you here.',
-              style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w300),
-            ),
-          ],
-        ),
+        LayoutBuilder(builder: (context, constraints) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: constraints.maxWidth,
+                child: const Text(
+                  'Hello, We are happy to see you here.',
+                  softWrap: true,
+                  style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w300),
+                ),
+              ),
+            ],
+          );
+        }),
         const SizedBox(
           height: 30,
         ),
@@ -332,19 +336,20 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(
           height: 10,
         ),
-        TextButton(
-          onPressed: () {
-            setState(() {
-              showLogin = false;
-            });
-          },
-          child: const Text(
-            'Forgot password?',
-            style: TextStyle(
-              color: AppColors.white,
+        if (kDebugMode)
+          TextButton(
+            onPressed: () {
+              setState(() {
+                showLogin = false;
+              });
+            },
+            child: const Text(
+              'Forgot password?',
+              style: TextStyle(
+                color: AppColors.white,
+              ),
             ),
           ),
-        ),
       ],
     );
   }

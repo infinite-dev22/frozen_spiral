@@ -21,7 +21,7 @@ class DrawerRepo extends DrawerRepoInterface {
 
   @override
   Future<Map<String, dynamic>> fetchAll({Map<String, dynamic>? body}) async {
-    Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';
@@ -51,7 +51,7 @@ class DrawerRepo extends DrawerRepoInterface {
 
   // @override
   // Future<Map<String, dynamic>> fetch(int id) async {
-  //   Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+  //   Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
   //
   //   try {
   //     dio.options.headers['content-Type'] = 'application/json';
@@ -86,7 +86,7 @@ class DrawerRepo extends DrawerRepoInterface {
 
   // @override
   // Future<dynamic> post(Map<String, dynamic> data, int id) async {
-  //   Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+  //   Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
   //
   //   try {
   //     dio.options.headers['content-Type'] = 'application/json';
@@ -118,7 +118,7 @@ class DrawerRepo extends DrawerRepoInterface {
 
   // @override
   // Future<dynamic> put(Map<String, dynamic> data, int id) async {
-  //   Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
+  //   Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
   //
   //   try {
   //     dio.options.headers['content-Type'] = 'application/json';

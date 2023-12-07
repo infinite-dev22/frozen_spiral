@@ -7,5 +7,7 @@ abstract class RequisitionRepoInterface {
 
   Future<dynamic> post(Map<String, dynamic> data, int id);
 
+  Future<dynamic> process(Map<String, dynamic> data, int id);
+
   Future<Map<String, dynamic>> filter();
 }

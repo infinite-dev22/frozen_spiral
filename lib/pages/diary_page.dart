@@ -37,7 +37,7 @@ class _DiaryPageState extends State<DiaryPage> {
 
   final bool _showLeadingAndTrailingDates = false;
   final bool _showDatePickerButton = true;
-  bool _allowViewNavigation = true;
+  bool _allowViewNavigation = false;
   final bool _showCurrentTimeIndicator = true;
 
   final ViewNavigationMode _viewNavigationMode = ViewNavigationMode.snap;
@@ -46,12 +46,7 @@ class _DiaryPageState extends State<DiaryPage> {
 
   @override
   void initState() {
-    // if (preloadedEvents.isEmpty) {
     _fetchEvents().then((value) => _dataCollection = value);
-    // } else if (preloadedEvents.isNotEmpty) {
-    //   _dataCollection = preloadedEvents;
-    //   setState(() {});
-    // }
     _eventsDataSource = _EventDataSource(<SmartEvent>[]);
     _calendarController.view = CalendarView.month;
 
@@ -188,14 +183,14 @@ class _DiaryPageState extends State<DiaryPage> {
             _buildEventView(calendarTapDetails.appointments![0]);
           }
 
-          // if (calendarTapDetails.appointments!.length > 1) {
-          //   _allowViewNavigation = true;
-          //   setState(() {});
-          // } else {
-          //   _allowViewNavigation = false;
-          //   setState(() {});
-          //   _buildEventView(calendarTapDetails.appointments![0]);
-          // }
+          if (calendarTapDetails.appointments!.length > 1) {
+            _allowViewNavigation = true;
+            setState(() {});
+          } else {
+            _allowViewNavigation = false;
+            setState(() {});
+            _buildEventView(calendarTapDetails.appointments![0]);
+          }
         } else {
           _allowViewNavigation = false;
           setState(() {});
