@@ -37,6 +37,8 @@
 		</array>
 		<key>NSPhotoLibraryUsageDescription</key>
         <string>Access to the photo library Allows you to pick a photo for your profile</string>
+        <key>NSPhotoLibraryAddUsageDescription</key>
+        <string>This app requires access to the photo library.</string>
         <key>NSCameraUsageDescription</key>
         <string>Access to the Camera allows you take photos for your profile</string>
 		<key>NSMicrophoneUsageDescription</key>
