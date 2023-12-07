@@ -453,10 +453,10 @@ packages:
     dependency: transitive
     description:
       name: firebase_messaging_platform_interface
-      sha256: "9a32b356acd2172694856006e88613c66e4be33da11462f9ad0f324bdc70feea"
+      sha256: "200f27b70a6330d1ac3f0fbf5328412ef3b215cd9dbb7dcea1701d1fd705d37a"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.16"
+    version: "4.5.17"
   firebase_messaging_web:
     dependency: transitive
     description:
