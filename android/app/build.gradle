@@ -85,4 +85,6 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation 'com.github.AbedElazizShe:LightCompressor:1.0.0'
+}

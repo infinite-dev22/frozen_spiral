@@ -21,7 +21,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # ==================================================================================================
 # Style: year.quarter.version_number+build_version_number
 # Update version_number whenever the build_version_number reaches 100.
-version: 2023.1.0+1
+version: 2023.1.0+2
 
 environment:
   sdk: '>=3.1.3 <4.0.0'

@@ -198,14 +198,13 @@ class _DateTimeAccordionState extends State<DateTimeAccordion> {
 
 class DoubleDateTimeAccordion extends StatefulWidget {
   const DoubleDateTimeAccordion(
-      {Key? key,
+      {super.key,
       required this.startName,
       required this.endName,
       required this.startDateController,
       required this.startTimeController,
       required this.endDateController,
-      required this.endTimeController})
-      : super(key: key);
+      required this.endTimeController});
 
   final String startName;
   final String endName;
@@ -1396,8 +1395,7 @@ class _DateAccordionState extends State<DateAccordion> {
 }
 
 class DOBAccordion extends StatefulWidget {
-  const DOBAccordion({Key? key, required this.dateController, this.hint})
-      : super(key: key);
+  const DOBAccordion({super.key, required this.dateController, this.hint});
 
   final TextEditingController dateController;
   final String? hint;

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -295,7 +297,8 @@ class _ActivityFormState extends State<ActivityForm> {
                     if (preloadedFiles.isNotEmpty) {
                       isLoading = false;
                       searchedList.addAll(preloadedFiles.where((smartFile) =>
-                          smartFile.getName()
+                          smartFile
+                              .getName()
                               .toLowerCase()
                               .contains(value.toLowerCase())));
                     } else {
@@ -445,15 +448,17 @@ class _ActivityFormState extends State<ActivityForm> {
 
   _submitForm() {
     SmartActivity smartActivity = SmartActivity(
-      description: descriptionController.text.trim(),
-      caseActivityStatusId: activity!.id,
-      employeeId: currentUser.id,
-      date: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
-      billable: billable,
-      startTime: DateFormat('h:mm a').parse(startTimeController.text.trim()),
-      endTime: DateFormat('h:mm a').parse(endTimeController.text.trim()),
-      emails: emails,
-    );
+        description: descriptionController.text.trim(),
+        caseActivityStatusId: activity!.id,
+        employeeId: currentUser.id,
+        date: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
+        billable: billable,
+        startTime: DateFormat('h:mm a').parse(startTimeController.text.trim()),
+        endTime: DateFormat('h:mm a').parse(endTimeController.text.trim()),
+        emails: emails,
+        file: file);
+
+    print(jsonEncode(SmartActivity.toActivityCreateJson(smartActivity)));
 
     (widget.activity == null)
         ? SmartCaseApi.smartPost(
@@ -464,7 +469,7 @@ class _ActivityFormState extends State<ActivityForm> {
                 msg: "An error occurred",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
+                timeInSecForIosWeb: 5,
                 backgroundColor: AppColors.red,
                 textColor: AppColors.white,
                 fontSize: 16.0);
@@ -473,7 +478,7 @@ class _ActivityFormState extends State<ActivityForm> {
                 msg: "Activity added successfully",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
+                timeInSecForIosWeb: 5,
                 backgroundColor: AppColors.green,
                 textColor: AppColors.white,
                 fontSize: 16.0);
@@ -486,7 +491,7 @@ class _ActivityFormState extends State<ActivityForm> {
                 msg: "An error occurred",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
+                timeInSecForIosWeb: 5,
                 backgroundColor: AppColors.red,
                 textColor: AppColors.white,
                 fontSize: 16.0);
@@ -495,7 +500,7 @@ class _ActivityFormState extends State<ActivityForm> {
                 msg: "Activity updated successfully",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
+                timeInSecForIosWeb: 5,
                 backgroundColor: AppColors.green,
                 textColor: AppColors.white,
                 fontSize: 16.0);

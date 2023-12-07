@@ -97,7 +97,7 @@ class SmartCaseApi {
               msg: e.toString(),
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.red,
               textColor: Colors.white,
               fontSize: 16.0);

@@ -1,7 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
@@ -63,13 +62,12 @@ Future<void> main() async {
       builder: (context) => const MyApp(), // Wrap your app
     ),);
   } catch(e) {
-    print(e);
     Fluttertoast.showToast(
         msg: e.toString(),
         toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: AppColors.green,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: AppColors.red,
         textColor: AppColors.white,
         fontSize: 16.0);
   }

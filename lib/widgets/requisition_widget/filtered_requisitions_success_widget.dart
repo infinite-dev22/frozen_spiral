@@ -6,7 +6,7 @@ import '../../theme/color.dart';
 import 'bloc/requisition_bloc.dart';
 
 class FilteredRequisitionsWidget extends StatelessWidget {
-  const FilteredRequisitionsWidget({Key? key}) : super(key: key);
+  const FilteredRequisitionsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

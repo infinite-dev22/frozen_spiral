@@ -12,8 +12,7 @@ class UnfilteredRequisitionsWidget extends StatelessWidget {
   final List<SmartCurrency> currencies;
 
   const UnfilteredRequisitionsWidget(
-      {Key? key, required this.requisitions, required this.currencies})
-      : super(key: key);
+      {super.key, required this.requisitions, required this.currencies});
 
   @override
   Widget build(BuildContext context) {

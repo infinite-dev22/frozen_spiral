@@ -59,12 +59,12 @@ class SmartEngagement {
     client =
         json['client'] != null ? SmartClient.fromJson(json['client']) : null;
     doneBy = List<SmartEmployee>.from(
-        json['done_by'].map((x) => SmartEmployee.fromJson(x)));
+        json['done_by'].map((doc) => SmartEmployee.fromJson(doc)));
     engagementType = json['engagement_type'] != null
         ? SmartEngagementType.fromJson(json['engagement_type'])
         : null;
     notifyWith = List<SmartEmployee>.from(
-        json['notify_with'].map((x) => SmartEmployee.fromJson(x)));
+        json['notify_with'].map((doc) => SmartEmployee.fromJson(doc)));
   }
 
   Map<String, dynamic> toJson() {
@@ -82,9 +82,11 @@ class SmartEngagement {
       'client_id': clientId,
       'engagement_type_id': engagementTypeId,
       'client': client?.toJson(),
-      'done_by': List<dynamic>.from(doneBy!.map((x) => x.toJson())),
       'engagement_type': engagementType?.toJson(),
-      'notify_with': List<dynamic>.from(notifyWith!.map((x) => x.toJson())),
+      'notify_with': List<String>.from(
+          notifyWith!.map((smartEmployee) => smartEmployee.id.toString())),
+      'done_by': List<String>.from(
+          doneBy!.map((smartEmployee) => smartEmployee.id.toString())),
     };
   }
 
@@ -92,17 +94,19 @@ class SmartEngagement {
     return {
       'description': description,
       'date': DateFormat('dd/MM/yyyy').format(date!),
-      'from': DateFormat('h:mm a').format(from!),
-      'to': DateFormat('h:mm a').format(to!),
+      'from': DateFormat('hh:mm a').format(from!),
+      'to': DateFormat('hh:mm a').format(to!),
       'engagement_type_id': engagementTypeId,
       'client_id': clientId,
       'cost': cost,
       'cost_description': costDescription,
       'is_next_engagement': isNextEngagement,
       'notify_on': DateFormat('dd/MM/yyyy').format(notifyOn!),
-      'notify_on_at': DateFormat('h:mm a').format(notifyOnAt!),
-      'notify_with': List<dynamic>.from(notifyWith!.map((x) => x.id)),
-      'done_by': List<dynamic>.from(doneBy!.map((x) => x.id)),
+      'notify_on_at': DateFormat('hh:mm a').format(notifyOnAt!),
+      'notify_with': List<String>.from(
+          notifyWith!.map((smartEmployee) => smartEmployee.id.toString())),
+      'done_by': List<String>.from(
+          doneBy!.map((smartEmployee) => smartEmployee.id.toString())),
     };
   }
 }

@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/data/global_data.dart';
-import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_task.dart';
@@ -363,7 +362,7 @@ class _TaskFormState extends State<TaskForm> {
                   msg: "An error occurred",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.red,
                   textColor: AppColors.white,
                   fontSize: 16.0);
@@ -372,7 +371,7 @@ class _TaskFormState extends State<TaskForm> {
                   msg: "Task added successfully",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.green,
                   textColor: AppColors.white,
                   fontSize: 16.0);
@@ -383,7 +382,7 @@ class _TaskFormState extends State<TaskForm> {
                   msg: "An error occurred",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.red,
                   textColor: AppColors.white,
                   fontSize: 16.0);
@@ -392,7 +391,7 @@ class _TaskFormState extends State<TaskForm> {
                   msg: "Task updated successfully",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.green,
                   textColor: AppColors.white,
                   fontSize: 16.0);

@@ -102,7 +102,7 @@ class SmartActivity extends SmartModel {
       'from': DateFormat('h:mm a').format(activity.startTime!),
       'to': DateFormat('h:mm a').format(activity.endTime!),
       'to_be_notified': activity.emails,
-      'file': activity.file,
+      'file': SmartFile.toJson(activity.file!),
     };
   }
 

@@ -4,7 +4,7 @@ import 'package:smart_case/theme/color.dart';
 
 class CustomTextBox extends StatelessWidget {
   const CustomTextBox({
-    Key? key,
+    super.key,
     this.hint = "",
     this.prefix,
     this.controller,
@@ -12,7 +12,7 @@ class CustomTextBox extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.autoFocus = false,
-  }) : super(key: key);
+  });
 
   final String hint;
   final Widget? prefix;

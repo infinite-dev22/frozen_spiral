@@ -1,9 +1,3 @@
-import 'dart:async';
-
-import 'dart:async';
-
-import 'dart:async';
-
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
@@ -12,6 +6,7 @@ import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
+import '../database/client/client_model.dart';
 import '../models/smart_drawer.dart';
 
 // Global options
@@ -57,6 +52,7 @@ List<SmartFile> preloadedFiles = List.empty(growable: true);
 List<SmartDrawer> preloadedDrawers = List.empty(growable: true);
 List<SmartActivity> preloadedCauseListReport = List.empty(growable: true);
 List<SmartActivity> preloadedDoneActivitiesReport = List.empty(growable: true);
+List<SmartClient> preloadedClients = List.empty(growable: true);
 
 String requisitionNextPage =
     "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=1";
