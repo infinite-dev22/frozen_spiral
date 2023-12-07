@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_contact.dart';
@@ -12,9 +13,9 @@ import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
+import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
-import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 
 class ActivityForm extends StatefulWidget {
   const ActivityForm({super.key, this.activity});
@@ -41,7 +42,6 @@ class _ActivityFormState extends State<ActivityForm> {
       ValueNotifier<SmartFile?>(null);
 
   List<SmartActivityStatus> activities = List.empty(growable: true);
-  List<SmartFile> files = List.empty(growable: true);
   List<SmartContact> contacts = List.empty(growable: true);
 
   SmartActivityStatus? activity;
@@ -90,133 +90,135 @@ class _ActivityFormState extends State<ActivityForm> {
                 controller: scrollController,
                 padding: const EdgeInsets.all(8),
                 children: [
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      return Form(
-                        child: Column(
-                          children: [
-                            GestureDetector(
-                              onTap: _showSearchFileBottomSheet,
-                              child: Container(
-                                height: 50,
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(5),
-                                margin: const EdgeInsets.only(bottom: 10),
-                                decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(6),
-                                      child: SizedBox(
-                                        width:
-                                        constraints.maxWidth - 50,
-                                        child: Text(
-                                          file?.fileName ?? 'Select file',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                              color: AppColors.darker,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500),
-                                        ),
+                  LayoutBuilder(builder: (context, constraints) {
+                    return Form(
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: _showSearchFileBottomSheet,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(5),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: SizedBox(
+                                      width: constraints.maxWidth - 50,
+                                      child: Text(
+                                        file?.fileName ?? 'Select file',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: AppColors.darker,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ),
-                                    const Icon(
-                                      Icons.keyboard_arrow_down_rounded,
-                                      color: AppColors.darker,
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: AppColors.darker,
+                                  ),
+                                ],
                               ),
                             ),
-                            GestureDetector(
-                              onTap: _showSearchActivityBottomSheet,
-                              child: Container(
-                                height: 50,
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(5),
-                                margin: const EdgeInsets.only(bottom: 10),
-                                decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(6),
-                                      child: SizedBox(
-                                        width:
-                                        constraints.maxWidth - 50,
-                                        child: Text(
-                                          activity?.name ??
-                                              'Select activity status',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                              color: AppColors.darker,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500),
-                                        ),
+                          ),
+                          GestureDetector(
+                            onTap: _showSearchActivityBottomSheet,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(5),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: SizedBox(
+                                      width: constraints.maxWidth - 50,
+                                      child: Text(
+                                        activity?.name ??
+                                            'Select activity status',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: AppColors.darker,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ),
-                                    const Icon(
-                                      Icons.keyboard_arrow_down_rounded,
-                                      color: AppColors.darker,
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: AppColors.darker,
+                                  ),
+                                ],
                               ),
                             ),
-                            ActivityDateTimeAccordion(
-                                dateController: dateController,
-                                startTimeController: startTimeController,
-                                endTimeController: endTimeController),
-                            _buildGroupedRadios(),
-                            CustomTextArea(
-                              key: globalKey,
-                              hint: 'Description',
-                              controller: descriptionController,
-                              onTap: () {
-                                Scrollable.ensureVisible(globalKey.currentContext!);
+                          ),
+                          ActivityDateTimeAccordion(
+                              dateController: dateController,
+                              startTimeController: startTimeController,
+                              endTimeController: endTimeController),
+                          _buildGroupedRadios(),
+                          CustomTextArea(
+                            key: globalKey,
+                            hint: 'Description',
+                            controller: descriptionController,
+                            onTap: () {
+                              Scrollable.ensureVisible(
+                                  globalKey.currentContext!);
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          if (file != null && contacts.isNotEmpty)
+                            MultiSelectDropDown(
+                              showClearIcon: true,
+                              hint: 'Client to notify',
+                              onOptionSelected: (options) {
+                                for (var element in options) {
+                                  emails.add(element.value!);
+                                }
                               },
+                              options: contacts
+                                  .map((contact) => ValueItem(
+                                      label:
+                                          '${contact.name} - ${contact.email}',
+                                      value:
+                                          '${contact.name}|${contact.email}'))
+                                  .toList(),
+                              selectionType: SelectionType.multi,
+                              chipConfig:
+                                  const ChipConfig(wrapType: WrapType.wrap),
+                              borderColor: AppColors.white,
+                              optionTextStyle: const TextStyle(fontSize: 16),
+                              selectedOptionIcon:
+                                  const Icon(Icons.check_circle),
                             ),
-                            const SizedBox(height: 10),
-                            if (file != null && contacts.isNotEmpty)
-                              MultiSelectDropDown(
-                                showClearIcon: true,
-                                hint: 'Client to notify',
-                                onOptionSelected: (options) {
-                                  for (var element in options) {
-                                    emails.add(element.value!);
-                                  }
-                                },
-                                options: contacts
-                                    .map((contact) => ValueItem(
-                                        label: '${contact.name} - ${contact.email}',
-                                        value: '${contact.name}|${contact.email}'))
-                                    .toList(),
-                                selectionType: SelectionType.multi,
-                                chipConfig:
-                                    const ChipConfig(wrapType: WrapType.wrap),
-                                borderColor: AppColors.white,
-                                optionTextStyle: const TextStyle(fontSize: 16),
-                                selectedOptionIcon: const Icon(Icons.check_circle),
-                              ),
-                            const SizedBox(
-                                height:
-                                    300 /* MediaQuery.of(context).viewInsets.bottom */),
-                          ],
-                        ),
-                      );
-                    }
-                  ),
+                          const SizedBox(
+                              height:
+                                  300 /* MediaQuery.of(context).viewInsets.bottom */),
+                        ],
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -290,18 +292,18 @@ class _ActivityFormState extends State<ActivityForm> {
                 onSearch: (value) {
                   searchedList.clear();
                   if (value.length > 2) {
-                    if (files.isNotEmpty) {
+                    if (preloadedFiles.isNotEmpty) {
                       isLoading = false;
-                      searchedList.addAll(files.where((smartFile) => smartFile
-                          .fileName!
-                          .toLowerCase()
-                          .contains(value.toLowerCase())));
-                      setState(() {});
+                      searchedList.addAll(preloadedFiles.where((smartFile) =>
+                          smartFile.getName()
+                              .toLowerCase()
+                              .contains(value.toLowerCase())));
                     } else {
                       _reloadFiles();
                       isLoading = true;
-                      setState(() {});
                     }
+
+                    setState(() {});
                   }
                 },
                 isLoading: isLoading,
@@ -364,8 +366,7 @@ class _ActivityFormState extends State<ActivityForm> {
   }
 
   _reloadFiles() async {
-    files = await FileApi.fetchAll();
-    setState(() {});
+    await FileApi.fetchAll();
   }
 
   _loadContacts() async {
@@ -399,7 +400,7 @@ class _ActivityFormState extends State<ActivityForm> {
     activities =
         activityList.map((doc) => SmartActivityStatus.fromJson(doc)).toList();
 
-    files = await FileApi.fetchAll();
+    await FileApi.fetchAll();
   }
 
   _onTapSearchedActivity(SmartActivityStatus value) {

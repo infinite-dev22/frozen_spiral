@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_contact.dart';
@@ -51,7 +52,6 @@ class _DiaryFormState extends State<DiaryForm> {
       ValueNotifier<SmartFile?>(null);
 
   List<SmartActivityStatus> activities = List.empty(growable: true);
-  List<SmartFile> files = List.empty(growable: true);
   List<SmartContact> contacts = List.empty(growable: true);
   List<SmartUser> employees = List.empty(growable: true);
 
@@ -100,175 +100,177 @@ class _DiaryFormState extends State<DiaryForm> {
                 controller: scrollController,
                 padding: const EdgeInsets.all(8),
                 children: [
-                  LayoutBuilder(
-                      builder: (context, constraints) {
-                      return Form(
-                        child: Column(
-                          children: [
-                            DoubleDateTimeAccordion(
-                                startName: 'Starts on',
-                                endName: 'Ends on',
-                                startDateController: startDateController,
-                                startTimeController: startTimeController,
-                                endDateController: endDateController,
-                                endTimeController: endTimeController),
-                            GestureDetector(
-                              onTap: _showSearchFileBottomSheet,
-                              child: Container(
-                                height: 50,
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(5),
-                                margin: const EdgeInsets.only(bottom: 10),
-                                alignment: Alignment.centerLeft,
-                                decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(6),
-                                      child: SizedBox(
-                                        width:
-                                            constraints.maxWidth - 50,
-                                        child: Text(
-                                          file?.fileName ?? 'Select file',
-                                          style: const TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              color: AppColors.darker,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500),
-                                        ),
+                  LayoutBuilder(builder: (context, constraints) {
+                    return Form(
+                      child: Column(
+                        children: [
+                          DoubleDateTimeAccordion(
+                              startName: 'Starts on',
+                              endName: 'Ends on',
+                              startDateController: startDateController,
+                              startTimeController: startTimeController,
+                              endDateController: endDateController,
+                              endTimeController: endTimeController),
+                          GestureDetector(
+                            onTap: _showSearchFileBottomSheet,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(5),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              alignment: Alignment.centerLeft,
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: SizedBox(
+                                      width: constraints.maxWidth - 50,
+                                      child: Text(
+                                        file?.fileName ?? 'Select file',
+                                        style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: AppColors.darker,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ),
-                                    const Icon(
-                                      Icons.keyboard_arrow_down_rounded,
-                                      color: AppColors.darker,
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: AppColors.darker,
+                                  ),
+                                ],
                               ),
                             ),
-                            GestureDetector(
-                              onTap: _showSearchActivityBottomSheet,
-                              child: Container(
-                                height: 50,
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(5),
-                                margin: const EdgeInsets.only(bottom: 10),
-                                alignment: Alignment.centerLeft,
-                                decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(6),
-                                      child: SizedBox(
-                                        width:
-                                            constraints.maxWidth - 50,
-                                        child: Text(
-                                          activity?.name ??
-                                              'Select activity status',
-                                          style: const TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              color: AppColors.darker,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500),
-                                        ),
+                          ),
+                          GestureDetector(
+                            onTap: _showSearchActivityBottomSheet,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(5),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              alignment: Alignment.centerLeft,
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: SizedBox(
+                                      width: constraints.maxWidth - 50,
+                                      child: Text(
+                                        activity?.name ??
+                                            'Select activity status',
+                                        style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: AppColors.darker,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ),
-                                    const Icon(
-                                      Icons.keyboard_arrow_down_rounded,
-                                      color: AppColors.darker,
-                                    ),
-                                  ],
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: AppColors.darker,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          if (file != null)
+                            Column(
+                              children: [
+                                MultiSelectDropDown(
+                                  showClearIcon: true,
+                                  hint: 'Select contact to notify',
+                                  onOptionSelected: (options) {
+                                    for (var element in options) {
+                                      emails.add(element.value!);
+                                    }
+                                  },
+                                  options: contacts
+                                      .map((contact) => ValueItem(
+                                          label:
+                                              '${contact.name} - ${contact.email}',
+                                          value:
+                                              '${contact.name}|${contact.email}'))
+                                      .toList(),
+                                  selectionType: SelectionType.multi,
+                                  chipConfig:
+                                      const ChipConfig(wrapType: WrapType.wrap),
+                                  dropdownHeight: 300,
+                                  borderColor: AppColors.white,
+                                  optionTextStyle:
+                                      const TextStyle(fontSize: 16),
+                                  selectedOptionIcon:
+                                      const Icon(Icons.check_circle),
                                 ),
-                              ),
+                                const SizedBox(height: 10),
+                              ],
                             ),
-                            if (file != null)
-                              Column(
-                                children: [
-                                  MultiSelectDropDown(
-                                    showClearIcon: true,
-                                    hint: 'Select contact to notify',
-                                    onOptionSelected: (options) {
-                                      for (var element in options) {
-                                        emails.add(element.value!);
-                                      }
-                                    },
-                                    options: contacts
-                                        .map((contact) => ValueItem(
-                                            label:
-                                                '${contact.name} - ${contact.email}',
-                                            value:
-                                                '${contact.name}|${contact.email}'))
-                                        .toList(),
-                                    selectionType: SelectionType.multi,
-                                    chipConfig:
-                                        const ChipConfig(wrapType: WrapType.wrap),
-                                    dropdownHeight: 300,
-                                    borderColor: AppColors.white,
-                                    optionTextStyle: const TextStyle(fontSize: 16),
-                                    selectedOptionIcon:
-                                        const Icon(Icons.check_circle),
-                                  ),
-                                  const SizedBox(height: 10),
-                                ],
-                              ),
-                            DateTimeAccordion(
-                              name: 'Set reminder',
-                              dateController: reminderDateController,
-                              timeController: reminderTimeController,
+                          DateTimeAccordion(
+                            name: 'Set reminder',
+                            dateController: reminderDateController,
+                            timeController: reminderTimeController,
+                          ),
+                          if (file != null)
+                            Column(
+                              children: [
+                                MultiSelectDropDown(
+                                  hint: 'Remind me with',
+                                  searchEnabled: true,
+                                  showClearIcon: true,
+                                  dropdownHeight: 300,
+                                  onOptionSelected: (options) {
+                                    for (var element in options) {
+                                      employeeIds
+                                          .add(int.parse(element.value!));
+                                    }
+                                  },
+                                  options: employees
+                                      .map((employee) => ValueItem(
+                                          label: employee.getName(),
+                                          value: employee.id.toString()))
+                                      .toList(),
+                                  selectionType: SelectionType.multi,
+                                  chipConfig:
+                                      const ChipConfig(wrapType: WrapType.wrap),
+                                  borderColor: AppColors.white,
+                                  optionTextStyle:
+                                      const TextStyle(fontSize: 16),
+                                  selectedOptionIcon:
+                                      const Icon(Icons.check_circle),
+                                ),
+                                const SizedBox(height: 10),
+                              ],
                             ),
-                            if (file != null)
-                              Column(
-                                children: [
-                                  MultiSelectDropDown(
-                                    hint: 'Remind me with',
-                                    searchEnabled: true,
-                                    showClearIcon: true,
-                                    dropdownHeight: 300,
-                                    onOptionSelected: (options) {
-                                      for (var element in options) {
-                                        employeeIds.add(int.parse(element.value!));
-                                      }
-                                    },
-                                    options: employees
-                                        .map((employee) => ValueItem(
-                                            label: employee.getName(),
-                                            value: employee.id.toString()))
-                                        .toList(),
-                                    selectionType: SelectionType.multi,
-                                    chipConfig:
-                                        const ChipConfig(wrapType: WrapType.wrap),
-                                    borderColor: AppColors.white,
-                                    optionTextStyle: const TextStyle(fontSize: 16),
-                                    selectedOptionIcon:
-                                        const Icon(Icons.check_circle),
-                                  ),
-                                  const SizedBox(height: 10),
-                                ],
-                              ),
-                            CustomTextArea(
-                              key: globalKey,
-                              hint: 'Description',
-                              controller: descriptionController,
-                              onTap: () {
-                                Scrollable.ensureVisible(globalKey.currentContext!);
-                              },
-                            ),
-                            const SizedBox(
-                                height:
-                                    300 /* MediaQuery.of(context).viewInsets.bottom */),
-                          ],
-                        ),
-                      );
-                    }
-                  ),
+                          CustomTextArea(
+                            key: globalKey,
+                            hint: 'Description',
+                            controller: descriptionController,
+                            onTap: () {
+                              Scrollable.ensureVisible(
+                                  globalKey.currentContext!);
+                            },
+                          ),
+                          const SizedBox(
+                              height:
+                                  300 /* MediaQuery.of(context).viewInsets.bottom */),
+                        ],
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -303,12 +305,12 @@ class _DiaryFormState extends State<DiaryForm> {
                   setState(() {
                     searchedList.clear();
                     if (value.length > 2) {
-                      if (files.isNotEmpty) {
+                      if (preloadedFiles.isNotEmpty) {
                         isLoading = false;
-                        searchedList.addAll(files.where((smartFile) => smartFile
-                            .fileName!
-                            .toLowerCase()
-                            .contains(value.toLowerCase())));
+                        searchedList.addAll(preloadedFiles.where((smartFile) =>
+                            smartFile.getName()
+                                .toLowerCase()
+                                .contains(value.toLowerCase())));
                       } else {
                         _reloadFiles();
                         isLoading = true;
@@ -376,8 +378,7 @@ class _DiaryFormState extends State<DiaryForm> {
   }
 
   _reloadFiles() async {
-    files = await FileApi.fetchAll();
-    setState(() {});
+    await FileApi.fetchAll();
   }
 
   _loadContacts() async {
@@ -409,7 +410,7 @@ class _DiaryFormState extends State<DiaryForm> {
     activities =
         activityList.map((doc) => SmartActivityStatus.fromJson(doc)).toList();
 
-    files = await FileApi.fetchAll();
+    await FileApi.fetchAll();
   }
 
   _onTapSearchedActivity(SmartActivityStatus value) {

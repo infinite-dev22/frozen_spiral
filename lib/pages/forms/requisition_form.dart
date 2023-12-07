@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/models/smart_currency.dart';
@@ -43,7 +44,6 @@ class _RequisitionFormState extends State<RequisitionForm> {
   final TextEditingController amountController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  List<SmartFile> files = List.empty(growable: true);
   List<SmartEmployee> approvers = List.empty(growable: true);
   List<SmartRequisitionCategory> categories = List.empty(growable: true);
   int financialStatus = 0;
@@ -270,15 +270,16 @@ class _RequisitionFormState extends State<RequisitionForm> {
                 onSearch: (value) {
                   searchedList.clear();
                   if (value.length > 2) {
-                    if (files.isNotEmpty) {
+                    if (preloadedFiles.isNotEmpty) {
                       isActivityLoading = false;
-                      searchedList.addAll(files.where((smartFile) => smartFile
-                          .getName()
-                          .toLowerCase()
-                          .contains(value.toLowerCase())));
+                      searchedList.addAll(preloadedFiles.where((smartFile) =>
+                          smartFile
+                              .getName()
+                              .toLowerCase()
+                              .contains(value.toLowerCase())));
                       setState(() {});
                     } else {
-                      _reloadFiles();
+                      _loadFiles();
                       isActivityLoading = true;
                     }
                   }
@@ -334,13 +335,8 @@ class _RequisitionFormState extends State<RequisitionForm> {
         });
   }
 
-  _reloadFiles() async {
-    files = await FileApi.fetchAll();
-    setState(() {});
-  }
-
   _loadFiles() async {
-    files = await FileApi.fetchAll();
+    await FileApi.fetchAll();
   }
 
   _loadApprovers() async {

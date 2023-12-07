@@ -21,7 +21,7 @@ class FileApi {
 
     preloadedFiles.clear();
     preloadedFiles = files;
-    return files;
+    return preloadedFiles;
   }
 
   static fetch(int id, {Function()? onSuccess, Function()? onError}) async {

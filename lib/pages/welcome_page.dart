@@ -9,6 +9,7 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/services/apis/auth_apis.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
@@ -307,10 +308,12 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget _buildPasswordResetBody() {
     return Column(
       children: [
-        const Text(
-          'A Password reset link will be sent to the email entered below, '
-          'click Proceed to continue',
-          style: TextStyle(color: AppColors.white, fontSize: 18),
+        const Center(
+          child: Text(
+            'A Password reset link will be sent to the email entered below, '
+            'click Proceed to continue',
+            style: TextStyle(color: AppColors.white, fontSize: 18),
+          ),
         ),
         const SizedBox(height: 20),
         AuthTextField(
@@ -382,17 +385,14 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget _buildSignInBody() {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              'Welcome back, $currentUsername!',
-              style: const TextStyle(
-                  color: AppColors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w300),
-            ),
-          ],
+        Center(
+          child: Text(
+            'Welcome back, $currentUsername!',
+            style: const TextStyle(
+                color: AppColors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w300),
+          ),
         ),
         const SizedBox(
           height: 5,
@@ -562,7 +562,8 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
-    _getCurrentUserData();
     super.initState();
+
+    _getCurrentUserData();
   }
 }

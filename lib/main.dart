@@ -56,10 +56,7 @@ Future<void> main() async {
     Hive.registerAdapter(NotificationsAdapter());
   }
   localStorage = await Hive.openBox<Notifications>('notifications');
-  // Image Caching.
-  // await PCacheImage.init(enableInMemory: true, maxInMemoryImages: 1);
-  // Start App.
-  // runApp(const MyApp());
+
   runApp(DevicePreview(
     enabled: false,
     builder: (context) => const MyApp(), // Wrap your app
@@ -160,5 +157,7 @@ class MyApp extends StatelessWidget {
   /*
   * For the profile image to change on SignIn, Try clearing the former image when the user clicks on the Login button.
   * Else implement Streams here.
+  *
+  * File search bottom sheet has an error, doesn't search files well.
    */
 }

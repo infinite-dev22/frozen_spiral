@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_case/data/global_data.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_task.dart';
@@ -35,7 +37,6 @@ class _TaskFormState extends State<TaskForm> {
   SmartEmployee? assignee;
   int? assigneeId;
 
-  List<SmartFile> files = List.empty(growable: true);
   List<SmartEmployee> assignees = List.empty(growable: true);
 
   final TextEditingController nameController = TextEditingController();
@@ -221,15 +222,15 @@ class _TaskFormState extends State<TaskForm> {
                 onSearch: (value) {
                   searchedList.clear();
                   if (value.length > 2) {
-                    if (files.isNotEmpty) {
+                    if (preloadedFiles.isNotEmpty) {
                       isLoading = false;
-                      searchedList.addAll(files.where((smartFile) => smartFile
-                          .fileName!
+                      searchedList.addAll(preloadedFiles.where((smartFile) => smartFile
+                          .getName()
                           .toLowerCase()
                           .contains(value.toLowerCase())));
                       setState(() {});
                     } else {
-                      _reloadFiles();
+                      _loadFiles();
                       isLoading = true;
                       setState(() {});
                     }
@@ -271,7 +272,7 @@ class _TaskFormState extends State<TaskForm> {
                               .contains(value.toLowerCase())));
                       setState(() {});
                     } else {
-                      _reloadFiles();
+                      _loadAssignees();
                       isAssigneeLoading = true;
                     }
                   }
@@ -283,13 +284,8 @@ class _TaskFormState extends State<TaskForm> {
         });
   }
 
-  _reloadFiles() async {
-    files = await FileApi.fetchAll();
-    setState(() {});
-  }
-
   _loadFiles() async {
-    files = await FileApi.fetchAll();
+    await FileApi.fetchAll();
   }
 
   _loadAssignees() async {

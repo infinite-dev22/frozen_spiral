@@ -17,6 +17,8 @@ import 'package:smart_case/widgets/custom_images/custom_image.dart';
 import 'package:smart_case/widgets/wide_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../data/global_data.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -240,25 +242,18 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginBody() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        LayoutBuilder(builder: (context, constraints) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: constraints.maxWidth,
-                child: const Text(
-                  'Hello, We are happy to see you here.',
-                  softWrap: true,
-                  style: TextStyle(
-                      color: AppColors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w300),
-                ),
-              ),
-            ],
-          );
-        }),
+        const Center(
+          child: Text(
+            'Welcome',
+            softWrap: true,
+            style: TextStyle(
+                color: AppColors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w300),
+          ),
+        ),
         const SizedBox(
           height: 30,
         ),
@@ -567,7 +562,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    _getCurrentUserData();
     super.initState();
+
+    _getCurrentUserData();
   }
 }
