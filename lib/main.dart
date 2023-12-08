@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
@@ -35,32 +36,53 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  // Firebase core.
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  // FCM.
-  await FirebaseApi().initPushNotification();
-  appFCMInit();
-  handleForegroundMasseges();
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  // Navigator.
-  setupLocator();
-  // Shared Preferences.
-  await GetSecureStorage.init(
-      password: 'infosec_technologies_ug_smart_case_law_manager');
-  // Local Storage.
-  await Hive.initFlutter();
-  if (!Hive.isAdapterRegistered(1)) {
-    Hive.registerAdapter(NotificationsAdapter());
-  }
-  localStorage = await Hive.openBox<Notifications>('notifications');
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    // Firebase core.
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    // FCM.
+    await FirebaseApi().initPushNotification();
+    appFCMInit();
+    handleForegroundMasseges();
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    // Navigator.
+    setupLocator();
+    // Shared Preferences.
+    await GetSecureStorage.init(
+        password: 'infosec_technologies_ug_smart_case_law_manager');
+    // Local Storage.
+    await Hive.initFlutter();
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(NotificationsAdapter());
+    }
+    localStorage = await Hive.openBox<Notifications>('notifications');
 
-  runApp(DevicePreview(
-    enabled: false,
-    builder: (context) => const MyApp(), // Wrap your app
-  ),);
+    Fluttertoast.showToast(
+        msg: "Hey, App started",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.green,
+        textColor: AppColors.white,
+        fontSize: 16.0);
+
+    runApp(DevicePreview(
+      enabled: false,
+      builder: (context) => const MyApp(), // Wrap your app
+    ),);
+  } catch(e) {
+    print(e);
+    Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.green,
+        textColor: AppColors.white,
+        fontSize: 16.0);
+  }
 }
 
 class MyApp extends StatelessWidget {

@@ -35,6 +35,8 @@
 			<string>fetch</string>
 			<string>remote-notification</string>
 		</array>
+		<key>FirebaseAppDelegateProxyEnabled</key>
+        <false/>
 		<key>NSPhotoLibraryUsageDescription</key>
         <string>Access to the photo library Allows you to pick a photo for your profile</string>
         <key>NSPhotoLibraryAddUsageDescription</key>
