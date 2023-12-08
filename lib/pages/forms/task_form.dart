@@ -363,7 +363,7 @@ class _TaskFormState extends State<TaskForm> {
                   msg: "An error occurred",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.red,
                   textColor: AppColors.white,
                   fontSize: 16.0);
@@ -372,7 +372,7 @@ class _TaskFormState extends State<TaskForm> {
                   msg: "Task added successfully",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.green,
                   textColor: AppColors.white,
                   fontSize: 16.0);
@@ -383,7 +383,7 @@ class _TaskFormState extends State<TaskForm> {
                   msg: "An error occurred",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.red,
                   textColor: AppColors.white,
                   fontSize: 16.0);
@@ -392,7 +392,7 @@ class _TaskFormState extends State<TaskForm> {
                   msg: "Task updated successfully",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.green,
                   textColor: AppColors.white,
                   fontSize: 16.0);

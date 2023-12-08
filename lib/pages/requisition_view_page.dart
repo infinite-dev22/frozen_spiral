@@ -342,7 +342,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
         msg: text,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 5,
         backgroundColor: AppColors.green,
         textColor: Colors.white,
         fontSize: 16.0);
@@ -358,7 +358,7 @@ class _RequisitionViewPageState extends State<RequisitionViewPage> {
         msg: "An error occurred",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 5,
         backgroundColor: AppColors.red,
         textColor: Colors.white,
         fontSize: 16.0);

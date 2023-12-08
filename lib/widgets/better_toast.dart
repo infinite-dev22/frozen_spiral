@@ -19,7 +19,7 @@ class BetterSuccessToast extends StatelessWidget {
           msg: text,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
+          timeInSecForIosWeb: 5,
           backgroundColor: AppColors.green,
           textColor: Colors.white,
           fontSize: 16.0);
@@ -42,7 +42,7 @@ class BetterErrorToast extends StatelessWidget {
           msg: text,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
+          timeInSecForIosWeb: 5,
           backgroundColor: AppColors.red,
           textColor: Colors.white,
           fontSize: 16.0);

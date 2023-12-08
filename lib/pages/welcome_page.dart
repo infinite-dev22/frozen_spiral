@@ -156,7 +156,7 @@ class _WelcomePageState extends State<WelcomePage> {
               msg: "No Password provided",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.red,
               textColor: AppColors.white,
               fontSize: 16.0);
@@ -166,7 +166,7 @@ class _WelcomePageState extends State<WelcomePage> {
             msg: "Email not valid",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
+            timeInSecForIosWeb: 5,
             backgroundColor: AppColors.red,
             textColor: AppColors.white,
             fontSize: 16.0);
@@ -176,7 +176,7 @@ class _WelcomePageState extends State<WelcomePage> {
           msg: "No email provided",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
+          timeInSecForIosWeb: 5,
           backgroundColor: AppColors.red,
           textColor: AppColors.white,
           fontSize: 16.0);
@@ -197,7 +197,7 @@ class _WelcomePageState extends State<WelcomePage> {
               msg: "An error occurred",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.red,
               textColor: AppColors.white,
               fontSize: 16.0);
@@ -213,7 +213,7 @@ class _WelcomePageState extends State<WelcomePage> {
               msg: "Reset password link sent on your email",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.green,
               textColor: AppColors.white,
               fontSize: 16.0);
@@ -228,7 +228,7 @@ class _WelcomePageState extends State<WelcomePage> {
           msg: "Email not valid",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
+          timeInSecForIosWeb: 5,
           backgroundColor: AppColors.red,
           textColor: AppColors.white,
           fontSize: 16.0);
@@ -253,7 +253,7 @@ class _WelcomePageState extends State<WelcomePage> {
         msg: "User not found",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 5,
         backgroundColor: AppColors.red,
         textColor: AppColors.white,
         fontSize: 16.0);
@@ -267,7 +267,7 @@ class _WelcomePageState extends State<WelcomePage> {
         msg: "Incorrect password",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 5,
         backgroundColor: AppColors.red,
         textColor: AppColors.white,
         fontSize: 16.0);
@@ -281,7 +281,7 @@ class _WelcomePageState extends State<WelcomePage> {
         msg: "An error occurred",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 5,
         backgroundColor: AppColors.red,
         textColor: AppColors.white,
         fontSize: 16.0);

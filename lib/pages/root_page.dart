@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +10,7 @@ import 'package:smart_case/theme/color.dart';
 import '../models/smart_currency.dart';
 import '../models/smart_employee.dart';
 import '../services/apis/smartcase_api.dart';
+import '../services/apis/smartcase_apis/client_api.dart';
 import '../services/apis/smartcase_apis/requisition_api.dart';
 import '../services/navigation/locator.dart';
 import '../services/navigation/navigator_service.dart';
@@ -179,7 +178,8 @@ class _RootPageState extends State<RootPage> {
     Size screenSize = MediaQuery.of(context).size;
     double screenHeight = screenSize.height;
     return Container(
-      height: 80, // (Platform.isIOS) ? 80 : screenHeight * .087,
+      height: 80,
+      // (Platform.isIOS) ? 80 : screenHeight * .087,
       // formerly 80.
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -321,8 +321,9 @@ class _RootPageState extends State<RootPage> {
     preloadedRequisitions.clear();
 
     RequisitionApi.fetchAll();
+    ClientApi.fetchAll();
 
-    if(preloadedRequisitions.isNotEmpty){
+    if (preloadedRequisitions.isNotEmpty) {
       flowType = preloadedRequisitions.first.canApprove;
     }
 
@@ -340,7 +341,8 @@ class _RootPageState extends State<RootPage> {
     List users = usersMap['search']['employees'];
 
     var approvers = users.map((doc) => SmartEmployee.fromJson(doc)).toList();
-    approver = approvers.firstWhereOrNull((element) => element.id == currentUser.id);
+    approver =
+        approvers.firstWhereOrNull((element) => element.id == currentUser.id);
 
     if (approver != null) {
       canApprove = true;

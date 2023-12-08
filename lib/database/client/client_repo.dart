@@ -4,23 +4,22 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:smart_case/data/global_data.dart';
-import 'package:smart_case/database/interface/requisition_repo_interface.dart';
+import 'package:smart_case/database/interface/client_repo_interface.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
-import '../../services/apis/smartcase_apis/requisition_api.dart';
+import '../../services/apis/smartcase_apis/client_api.dart';
 
-class RequisitionRepo extends RequisitionRepoInterface {
-  static final RequisitionRepo _instance = RequisitionRepo._internal();
+class ClientRepo extends ClientRepoInterface {
+  static final ClientRepo _instance = ClientRepo._internal();
 
-  factory RequisitionRepo() {
+  factory ClientRepo() {
     return _instance;
   }
 
-  RequisitionRepo._internal();
+  ClientRepo._internal();
 
   @override
-  Future<Map<String, dynamic>> fetchAll(
-      {Map<String, dynamic>? body, int page = 1}) async {
+  Future<Map<String, dynamic>> fetchAll() async {
     Dio dio = Dio(baseOps)
       ..interceptors.add(DioCacheInterceptor(options: options));
 
@@ -30,10 +29,7 @@ class RequisitionRepo extends RequisitionRepoInterface {
       dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
       dio.options.followRedirects = false;
 
-      var response = await dio.get(
-        '${currentUser.url}/api/accounts/cases/requisitions/allapi?page=$page',
-        data: json.encode(body),
-      );
+      var response = await dio.get('${currentUser.url}/api/crm/clients');
 
       if (response.statusCode == 200) {
         return response.data;
@@ -103,6 +99,10 @@ class RequisitionRepo extends RequisitionRepoInterface {
       );
 
       if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print("A Success occurred: ${response.statusCode}");
+          print(response.data);
+        }
         return response.data;
       } else {
         if (kDebugMode) {
@@ -171,7 +171,7 @@ class RequisitionRepo extends RequisitionRepoInterface {
         if (kDebugMode) {
           print("A Success occurred: ${response.statusCode}");
         }
-        await RequisitionApi
+        await ClientApi
             .fetchAll(); // TODO: Remove when bloc is successfully added.
         return response.data;
       } else {

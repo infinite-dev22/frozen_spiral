@@ -1,17 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_case/models/smart_client.dart';
+import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_engagement.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/client_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
+
+import '../../database/client/client_model.dart';
 
 class EngagementForm extends StatefulWidget {
   final SmartEngagement? engagement;
@@ -39,7 +44,6 @@ class _EngagementFormState extends State<EngagementForm> {
   final ValueNotifier<SmartEngagementType?> fileSelectedValue =
       ValueNotifier<SmartEngagementType?>(null);
 
-  List<SmartClient> clients = List.empty(growable: true);
   List<SmartEngagementType> engagementTypes = List.empty(growable: true);
 
   SmartClient? client;
@@ -239,9 +243,9 @@ class _EngagementFormState extends State<EngagementForm> {
                 onSearch: (value) {
                   searchedList.clear();
                   if (value.length > 2) {
-                    if (clients.isNotEmpty) {
+                    if (preloadedClients.isNotEmpty) {
                       isLoading = false;
-                      searchedList.addAll(clients.where((smartClient) =>
+                      searchedList.addAll(preloadedClients.where((smartClient) =>
                           smartClient
                               .getName()
                               .toLowerCase()
@@ -327,12 +331,7 @@ class _EngagementFormState extends State<EngagementForm> {
   }
 
   _reloadClients() async {
-    Map clientsMap =
-        await SmartCaseApi.smartFetch('api/crm/clients', currentUser.token);
-    List clientList = clientsMap['clients'];
-
-    clients = clientList.map((doc) => SmartClient.fromJson(doc)).toList();
-    setState(() {});
+    await ClientApi.fetchAll();
   }
 
   _submitForm() {
@@ -342,16 +341,18 @@ class _EngagementFormState extends State<EngagementForm> {
         costDescription: costDescriptionController.text.trim(),
         description: descriptionController.text.trim(),
         date: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
-        from: DateFormat('h:mm a').parse(startTimeController.text.trim()),
-        to: DateFormat('h:mm a').parse(endTimeController.text.trim()),
+        from: DateFormat('hh:mm a').parse(startTimeController.text.trim()),
+        to: DateFormat('hh:mm a').parse(endTimeController.text.trim()),
         engagementTypeId: engagementType!.id,
         clientId: client!.id,
         isNextEngagement: 0,
         notifyOn: DateFormat('dd/MM/yyyy').parse(dateController.text.trim()),
-        notifyOnAt: DateFormat('h:mm a').parse(startTimeController.text.trim()),
+        notifyOnAt: DateFormat('hh:mm a').parse(startTimeController.text.trim()),
         notifyWith: [SmartEmployee(id: 1)],
         doneBy: [SmartEmployee(id: 1)],
       );
+
+      print(jsonEncode(smartEngagement.toCreateJson()));
 
       (widget.engagement == null)
           ? SmartCaseApi.smartPost('api/crm/engagements', currentUser.token,
@@ -360,7 +361,7 @@ class _EngagementFormState extends State<EngagementForm> {
                   msg: "An error occurred",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.red,
                   textColor: AppColors.white,
                   fontSize: 16.0);
@@ -369,7 +370,7 @@ class _EngagementFormState extends State<EngagementForm> {
                   msg: "Engagement added successfully",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.green,
                   textColor: AppColors.white,
                   fontSize: 16.0);
@@ -382,7 +383,7 @@ class _EngagementFormState extends State<EngagementForm> {
                   msg: "An error occurred",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.red,
                   textColor: AppColors.white,
                   fontSize: 16.0);
@@ -391,7 +392,7 @@ class _EngagementFormState extends State<EngagementForm> {
                   msg: "Engagement updated successfully",
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 5,
                   backgroundColor: AppColors.green,
                   textColor: AppColors.white,
                   fontSize: 16.0);

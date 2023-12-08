@@ -68,7 +68,7 @@ Future<void> main() async {
         msg: e.toString(),
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 5,
         backgroundColor: AppColors.green,
         textColor: AppColors.white,
         fontSize: 16.0);

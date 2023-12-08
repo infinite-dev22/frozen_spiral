@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:full_picker/full_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_case/database/password/password_model.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/password_api.dart';
@@ -105,16 +106,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return FullPicker(
       context: context,
       prefixName: "Profile Photo",
-      file: false,
       image: true,
-      video: false,
-      videoCamera: false,
-      imageCamera: true,
-      voiceRecorder: false,
-      videoCompressor: false,
+      imageCamera: kDebugMode,
       imageCropper: true,
-      multiFile: false,
-      url: false,
       onError: (int value) {
         if (kDebugMode) {
           print(" ---- onError ----=$value");
@@ -127,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
               msg: "An error occurred! Profile not updated",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.red,
               textColor: AppColors.white,
               fontSize: 16.0);
@@ -137,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
               msg: "Profile photo updated successfully",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.green,
               textColor: AppColors.white,
               fontSize: 16.0);
@@ -214,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 msg: "Password changed successfully",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
+                timeInSecForIosWeb: 5,
                 backgroundColor: AppColors.green,
                 textColor: AppColors.white,
                 fontSize: 16.0);
@@ -223,7 +217,7 @@ class _ProfilePageState extends State<ProfilePage> {
               msg: "An error occurred",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.red,
               textColor: AppColors.white,
               fontSize: 16.0),
@@ -233,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
             msg: "Passwords do not match",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
+            timeInSecForIosWeb: 5,
             backgroundColor: AppColors.red,
             textColor: AppColors.white,
             fontSize: 16.0);
@@ -292,7 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
               msg: "User details changed successfully",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.green,
               textColor: AppColors.white,
               fontSize: 16.0);
@@ -301,7 +295,7 @@ class _ProfilePageState extends State<ProfilePage> {
             msg: "An error occurred",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
+            timeInSecForIosWeb: 5,
             backgroundColor: AppColors.red,
             textColor: AppColors.white,
             fontSize: 16.0),

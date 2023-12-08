@@ -158,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
               msg: "No Password provided",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.red,
               textColor: AppColors.white,
               fontSize: 16.0);
@@ -168,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
             msg: "Email not valid",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
+            timeInSecForIosWeb: 5,
             backgroundColor: AppColors.red,
             textColor: AppColors.white,
             fontSize: 16.0);
@@ -178,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
           msg: "No email provided",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
+          timeInSecForIosWeb: 5,
           backgroundColor: AppColors.red,
           textColor: AppColors.white,
           fontSize: 16.0);
@@ -203,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
         msg: "User not found",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 5,
         backgroundColor: AppColors.red,
         textColor: AppColors.white,
         fontSize: 16.0);
@@ -217,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
         msg: "Incorrect password",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 5,
         backgroundColor: AppColors.red,
         textColor: AppColors.white,
         fontSize: 16.0);
@@ -231,7 +231,7 @@ class _LoginPageState extends State<LoginPage> {
         msg: "An error occurred",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
+        timeInSecForIosWeb: 5,
         backgroundColor: AppColors.red,
         textColor: AppColors.white,
         fontSize: 16.0);
@@ -513,7 +513,7 @@ class _LoginPageState extends State<LoginPage> {
               msg: "An error occurred",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.red,
               textColor: AppColors.white,
               fontSize: 16.0);
@@ -529,7 +529,7 @@ class _LoginPageState extends State<LoginPage> {
               msg: "Reset password link sent on your email",
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
+              timeInSecForIosWeb: 5,
               backgroundColor: AppColors.green,
               textColor: AppColors.white,
               fontSize: 16.0);
@@ -544,7 +544,7 @@ class _LoginPageState extends State<LoginPage> {
           msg: "Email not valid",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
+          timeInSecForIosWeb: 5,
           backgroundColor: AppColors.red,
           textColor: AppColors.white,
           fontSize: 16.0);
