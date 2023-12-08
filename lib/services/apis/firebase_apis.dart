@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/foundation.dart";
 import "package:intl/intl.dart";
@@ -8,6 +10,16 @@ import "../../util/smart_case_init.dart";
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 class FirebaseApi {
+  _getFCMToken() {
+    messaging.onTokenRefresh.listen((fcmToken) async {
+      currentUserFcmToken = await messaging.getToken();
+    }).onError((err) {
+      if (kDebugMode) {
+        print(err);
+      }
+    });
+  }
+
   Future<void> initPushNotification() async {
     // NotificationSettings settings =
     await messaging.requestPermission(
@@ -20,26 +32,26 @@ class FirebaseApi {
       sound: true,
     );
 
-    currentUserFcmToken = await messaging.getToken();
 
-    if (kDebugMode) {
-      print("FCM Token: $currentUserFcmToken");
+    if (Platform.isIOS) {
+      String? apnsToken = await messaging.getAPNSToken();
+      if (apnsToken != null) {
+        _getFCMToken();
+      } else {
+        await Future<void>.delayed(
+          const Duration(
+            seconds: 2,
+          ),
+        );
+        apnsToken = await messaging.getAPNSToken();
+        if (apnsToken != null) {
+          _getFCMToken();
+        }
+      }
+    } else {
+      _getFCMToken();
     }
   }
-}
-
-appFCMInit() {
-  messaging.onTokenRefresh.listen((fcmToken) async {
-    // TODO: If necessary send token to application server.
-    // Note: This callback is fired at each app startup and whenever a new
-    // token is generated.
-
-    currentUserFcmToken = await messaging.getToken();
-  }).onError((err) {
-    if (kDebugMode) {
-      print(err);
-    }
-  });
 }
 
 handleForegroundMasseges() {
