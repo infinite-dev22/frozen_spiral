@@ -28,7 +28,7 @@ import 'locator_page.dart';
 import 'notifications_page.dart';
 
 class RootPage extends StatefulWidget {
-  const RootPage({Key? key}) : super(key: key);
+  const RootPage({super.key});
 
   @override
   State<RootPage> createState() => _RootPageState();

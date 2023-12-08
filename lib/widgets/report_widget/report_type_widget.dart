@@ -5,11 +5,11 @@ import '../custom_images/custom_image.dart';
 
 class ReportTypeWidget extends StatelessWidget {
   const ReportTypeWidget({
-    Key? key,
+    super.key,
     required this.image,
     required this.title,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   final String image;
   final String title;

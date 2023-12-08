@@ -17,7 +17,6 @@ import 'package:smart_case/widgets/custom_images/custom_image.dart';
 import 'package:smart_case/widgets/wide_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../data/global_data.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
