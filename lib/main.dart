@@ -44,7 +44,6 @@ Future<void> main() async {
     );
     // FCM.
     await FirebaseApi().initPushNotification();
-    appFCMInit();
     handleForegroundMasseges();
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     // Navigator.
@@ -58,15 +57,6 @@ Future<void> main() async {
       Hive.registerAdapter(NotificationsAdapter());
     }
     localStorage = await Hive.openBox<Notifications>('notifications');
-
-    Fluttertoast.showToast(
-        msg: "Hey, App started",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: AppColors.green,
-        textColor: AppColors.white,
-        fontSize: 16.0);
 
     runApp(DevicePreview(
       enabled: false,
