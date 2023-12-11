@@ -458,6 +458,7 @@ class _ActivityFormState extends State<ActivityForm> {
         emails: emails,
         file: file);
 
+    print(widget.activity!.id);
     print(jsonEncode(SmartActivity.toActivityCreateJson(smartActivity)));
 
     (widget.activity == null)
