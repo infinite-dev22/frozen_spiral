@@ -171,12 +171,10 @@ class SmartCaseApi {
       if (response.statusCode == 200) {
         var decodedResponse =
             jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-
+        if (onSuccess != null) onSuccess();
         return decodedResponse;
       } else {
-        if (onError != null) {
-          onError();
-        }
+        if (onError != null) onError();
       }
     } catch (e) {
       if (onError != null) {

@@ -20,6 +20,7 @@ class TasksPage extends StatefulWidget {
 class _TasksPageState extends State<TasksPage> {
   late SmartClient client;
   TextEditingController filterController = TextEditingController();
+  bool isLoading = true;
 
   List<SmartTask> tasks = List.empty(growable: true);
   List<SmartTask> filteredTasks = List.empty(growable: true);
@@ -78,8 +79,28 @@ class _TasksPageState extends State<TasksPage> {
               // getUser(tasks[index].caseFile!.clientId!);
               return TaskItem(task: tasks[index]);
             })
-        : const Center(
-            child: CupertinoActivityIndicator(radius: 20),
+        : Center(
+            child: (isLoading)
+                ? const CupertinoActivityIndicator(radius: 20)
+                : const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "You have no tasks currently",
+                        style: TextStyle(
+                            color: AppColors.inActiveColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Tasks appear here",
+                        style: TextStyle(
+                          color: AppColors.inActiveColor,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
           );
   }
 
@@ -103,8 +124,12 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   Future<void> _setUpData() async {
-    Map response =
-        await SmartCaseApi.smartFetch('api/tasks', currentUser.token);
+    Map response = await SmartCaseApi.smartFetch('api/tasks', currentUser.token,
+        onSuccess: () => {
+              setState(() {
+                isLoading = false;
+              })
+            });
     List tasksList = response["search"]["tasks"];
     tasks = tasksList.map((doc) => SmartTask.fromJson(doc)).toList();
 
