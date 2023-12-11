@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_case/models/smart_engagement.dart';
 import 'package:smart_case/widgets/engagement_widget/engagement_item.dart';
 
+import '../database/engagement/engagement_model.dart';
 import '../models/smart_client.dart';
 import '../services/apis/smartcase_api.dart';
 import '../theme/color.dart';

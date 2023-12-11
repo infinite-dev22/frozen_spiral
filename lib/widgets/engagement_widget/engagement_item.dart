@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_case/models/smart_engagement.dart';
 import 'package:smart_case/widgets/engagement_widget/engagement_status_item.dart';
 import 'package:smart_case/widgets/text_item.dart';
 
+import '../../database/engagement/engagement_model.dart';
 import '../../theme/color.dart';
 
 class EngagementItem extends StatelessWidget {

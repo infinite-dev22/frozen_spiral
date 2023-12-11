@@ -6,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/models/smart_employee.dart';
-import 'package:smart_case/models/smart_engagement.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/client_api.dart';
 import 'package:smart_case/theme/color.dart';
@@ -17,6 +16,8 @@ import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
 
 import '../../database/client/client_model.dart';
+import '../../database/engagement/engagement_model.dart';
+import '../../services/apis/smartcase_apis/engagement_api.dart';
 
 class EngagementForm extends StatefulWidget {
   final SmartEngagement? engagement;
@@ -43,8 +44,6 @@ class _EngagementFormState extends State<EngagementForm> {
       ValueNotifier<SmartClient?>(null);
   final ValueNotifier<SmartEngagementType?> fileSelectedValue =
       ValueNotifier<SmartEngagementType?>(null);
-
-  List<SmartEngagementType> engagementTypes = List.empty(growable: true);
 
   SmartClient? client;
   SmartEngagementType? engagementType;
@@ -286,9 +285,9 @@ class _EngagementFormState extends State<EngagementForm> {
                 onSearch: (value) {
                   searchedList.clear();
                   if (value.length > 2) {
-                    if (engagementTypes.isNotEmpty) {
+                    if (preloadedEngagements.isNotEmpty) {
                       isLoading = false;
-                      searchedList.addAll(engagementTypes.where(
+                      searchedList.addAll(preloadedEngagements.where(
                           (engagementType) => engagementType.name!
                               .toLowerCase()
                               .contains(value.toLowerCase())));
@@ -320,13 +319,7 @@ class _EngagementFormState extends State<EngagementForm> {
   }
 
   _reloadEngagementTypes() async {
-    Map engagementTypesMap = await SmartCaseApi.smartFetch(
-        'api/admin/engagementypes', currentUser.token);
-    List engagementTypeList = engagementTypesMap['engagementypes'];
-
-    engagementTypes = engagementTypeList
-        .map((doc) => SmartEngagementType.fromJson(doc))
-        .toList();
+    EngagementApi.fetchAll();
     setState(() {});
   }
 

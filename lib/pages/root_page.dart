@@ -5,6 +5,7 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:list_load_more/utils/ext/iterable_ext.dart';
 import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/data/screen_arguments.dart';
+import 'package:smart_case/services/apis/smartcase_apis/engagement_api.dart';
 import 'package:smart_case/theme/color.dart';
 
 import '../models/smart_currency.dart';
@@ -322,6 +323,7 @@ class _RootPageState extends State<RootPage> {
 
     RequisitionApi.fetchAll();
     ClientApi.fetchAll();
+    EngagementApi.fetchAll();
 
     if (preloadedRequisitions.isNotEmpty) {
       flowType = preloadedRequisitions.first.canApprove;
