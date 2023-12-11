@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -111,8 +113,11 @@ class _RequisitionFormState extends State<RequisitionForm> {
                           CustomGenericDropdown<SmartCurrency>(
                               hintText: 'currency',
                               menuItems: widget.currencies,
-                              defaultValue: currency ??
-                                  widget.currencies.firstWhere(
+                              defaultValue: (currency != null)
+                                  ? widget.currencies.firstWhere((currency) =>
+                                      currency.code ==
+                                      widget.requisition!.currency!.code)
+                                  : widget.currencies.firstWhere(
                                       (currency) => currency.code == 'UGX'),
                               onChanged: _onTapSearchedCurrency),
                           GestureDetector(
@@ -400,8 +405,6 @@ class _RequisitionFormState extends State<RequisitionForm> {
   }
 
   _fillFormsForEdit() {
-    currency =
-        widget.currencies.firstWhere((currency) => currency.code == 'UGX');
     if (widget.requisition != null) {
       dateController.text =
           DateFormat('dd/MM/yyyy').format(widget.requisition!.date!);
@@ -452,6 +455,9 @@ class _RequisitionFormState extends State<RequisitionForm> {
         file!.getId().toString(),
       ],
     );
+
+    print(widget.requisition!.id);
+    print(jsonEncode(smartRequisition.createRequisitionToJson()));
 
     (widget.requisition == null)
         ? RequisitionApi.post(
