@@ -431,11 +431,9 @@ class _ActivityFormState extends State<ActivityForm> {
       }
 
       descriptionController.text = widget.activity!.description!;
-      dateController.text = widget.activity!.activityDate != null
-          ? DateFormat('dd/MM/yyyy').format(
-              DateFormat('yy-MM-dd').parse(widget.activity!.activityDate!))
+      dateController.text = widget.activity!.date != null
+          ? DateFormat('dd/MM/yyyy').format(widget.activity!.date!)
           : '';
-      // To Do: lines below will be uncommented when activity class is re-written.
       startTimeController.text = widget.activity!.startTime != null
           ? DateFormat('h:mm a').format(widget.activity!.startTime!)
           : "";

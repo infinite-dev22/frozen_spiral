@@ -11,7 +11,6 @@ class SmartActivity extends SmartModel {
   final int? categoryId;
   final int? isActive;
   final int? caseActivityStatusId;
-  final String? activityDate;
   final String? fileNumber;
   final String? courtFileNumber;
   final int? employeeId;
@@ -33,7 +32,6 @@ class SmartActivity extends SmartModel {
     this.categoryId,
     this.isActive,
     this.caseActivityStatusId,
-    this.activityDate,
     this.fileNumber,
     this.courtFileNumber,
     this.employeeId,
@@ -62,7 +60,6 @@ class SmartActivity extends SmartModel {
       caseActivityStatusId: json['case_activity_status_id'],
       fileNumber: json['case_file']['file_number'],
       courtFileNumber: json['case_file']['court_file_number'],
-      activityDate: json['created_at'],
       employeeId: json['employee_id'],
       date: DateTime.parse(json['date']),
       billable: json['is_billable'],
@@ -88,7 +85,6 @@ class SmartActivity extends SmartModel {
       'file_number': activity.fileNumber,
       'court_file_number': activity.courtFileNumber,
       'file': activity.file,
-      'created_at': activity.activityDate,
     };
   }
 
