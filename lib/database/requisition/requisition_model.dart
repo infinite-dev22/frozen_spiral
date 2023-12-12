@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
+import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_currency.dart';
 import 'package:smart_case/models/smart_employee.dart';
-import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_model.dart';
 
 class SmartRequisitionCategory extends SmartModel {
@@ -57,6 +57,7 @@ class SmartRequisition {
   final int? supervisorId;
   final int? requisitionStatusId;
   final int? requisitionCategoryId;
+  final int? caseFileId;
   final List<String>? requisitionCategoryIds;
   final List<String>? caseFileIds;
   final int? currencyId;
@@ -88,6 +89,7 @@ class SmartRequisition {
     this.supervisorId,
     this.requisitionStatusId,
     this.requisitionCategoryId,
+    this.caseFileId,
     this.requisitionCategoryIds,
     this.caseFileIds,
     this.currencyId,
@@ -119,6 +121,7 @@ class SmartRequisition {
       'supervisor_id': supervisorId,
       'requisition_status_id': requisitionStatusId,
       'requisition_category_id': requisitionCategoryId,
+      'case_file_id': caseFileId,
       'requisition_category_ids': requisitionCategoryIds,
       'case_file_ids': caseFileIds,
       'currency_id': currencyId,
@@ -146,6 +149,7 @@ class SmartRequisition {
       'supervisor_id': supervisorId,
       'requisition_status_id': requisitionStatusId,
       'requisition_category_id': requisitionCategoryId,
+      'case_file_id': caseFileId,
       'requisition_category_ids': requisitionCategoryIds,
       'case_file_ids': caseFileIds,
       'currency_id': currencyId,

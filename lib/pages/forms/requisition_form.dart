@@ -451,6 +451,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
       requisitionCategoryIds: [
         category!.getId().toString(),
       ],
+      caseFileId: file!.getId(),
       caseFileIds: [
         file!.getId().toString(),
       ],
