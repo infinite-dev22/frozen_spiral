@@ -1,6 +1,6 @@
 import 'package:smart_case/models/smart_model.dart';
 
-class SmartEmployee extends SmartModel{
+class SmartEmployee extends SmartModel {
   final int? id;
   final String? firstName;
   final String? lastName;

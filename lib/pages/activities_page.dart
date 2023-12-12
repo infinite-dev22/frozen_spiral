@@ -228,9 +228,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
             .getName()
             .toLowerCase()
             .contains(value.toLowerCase()) ||
-        smartActivity.date!
-            .toString()
-            .contains(value.toLowerCase())));
+        smartActivity.date!.toString().contains(value.toLowerCase())));
     setState(() {});
   }
 

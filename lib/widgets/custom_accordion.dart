@@ -598,10 +598,12 @@ class EngagementDateTimeAccordion extends StatefulWidget {
   final TextEditingController endTimeController;
 
   @override
-  State<EngagementDateTimeAccordion> createState() => _EngagementDateTimeAccordionState();
+  State<EngagementDateTimeAccordion> createState() =>
+      _EngagementDateTimeAccordionState();
 }
 
-class _EngagementDateTimeAccordionState extends State<EngagementDateTimeAccordion> {
+class _EngagementDateTimeAccordionState
+    extends State<EngagementDateTimeAccordion> {
   bool isDate = true;
   bool isStartTime = true;
   bool isEndTime = true;
@@ -1070,7 +1072,8 @@ class ActivityDateTimeAccordion extends StatefulWidget {
   final TextEditingController endTimeController;
 
   @override
-  State<ActivityDateTimeAccordion> createState() => _ActivityDateTimeAccordionState();
+  State<ActivityDateTimeAccordion> createState() =>
+      _ActivityDateTimeAccordionState();
 }
 
 class _ActivityDateTimeAccordionState extends State<ActivityDateTimeAccordion> {

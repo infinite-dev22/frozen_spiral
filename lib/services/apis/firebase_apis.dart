@@ -32,7 +32,6 @@ class FirebaseApi {
       sound: true,
     );
 
-
     if (Platform.isIOS) {
       String? apnsToken = await messaging.getAPNSToken();
       if (apnsToken != null) {

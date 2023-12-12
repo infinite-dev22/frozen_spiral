@@ -196,7 +196,8 @@ class _EventViewState extends State<EventView> {
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    DateFormat('dd/MM/yyyy - h:mm a').format(event!.notifyOnDate!),
+                                    DateFormat('dd/MM/yyyy - h:mm a')
+                                        .format(event!.notifyOnDate!),
                                     style: const TextStyle(fontSize: 18),
                                   ),
                                 ],

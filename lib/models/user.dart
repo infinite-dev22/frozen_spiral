@@ -26,32 +26,31 @@ class SmartUser extends SmartModel {
   int? salutationId;
   int? maritalStatusId;
 
-  SmartUser({
-    required this.id,
-    this.initials,
-    required this.firstName,
-    this.middleName,
-    required this.lastName,
-    required this.telephone,
-    required this.dateOfBirth,
-    required this.gender,
-    this.departmentId,
-    this.code,
-    this.idNumber,
-    this.nssfNumber,
-    this.tinNumber,
-    this.height,
-    this.bloodGroup,
-    required this.personalEmail,
-    this.permanentAddress,
-    this.presentAddress,
-    this.isAddressSame,
-    this.officeNumber,
-    this.mobileNumber,
-    required this.userId,
-    this.salutationId,
-    this.maritalStatusId
-  });
+  SmartUser(
+      {required this.id,
+      this.initials,
+      required this.firstName,
+      this.middleName,
+      required this.lastName,
+      required this.telephone,
+      required this.dateOfBirth,
+      required this.gender,
+      this.departmentId,
+      this.code,
+      this.idNumber,
+      this.nssfNumber,
+      this.tinNumber,
+      this.height,
+      this.bloodGroup,
+      required this.personalEmail,
+      this.permanentAddress,
+      this.presentAddress,
+      this.isAddressSame,
+      this.officeNumber,
+      this.mobileNumber,
+      required this.userId,
+      this.salutationId,
+      this.maritalStatusId});
 
   factory SmartUser.fromJson(Map json) {
     return SmartUser(

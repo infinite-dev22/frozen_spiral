@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class EngagementItemStatus extends StatelessWidget {
   const EngagementItemStatus(
       {super.key,
-        required this.name,
-        required this.bgColor,
-        required this.horizontalPadding,
-        required this.verticalPadding});
+      required this.name,
+      required this.bgColor,
+      required this.horizontalPadding,
+      required this.verticalPadding});
 
   final String name;
   final Color bgColor;

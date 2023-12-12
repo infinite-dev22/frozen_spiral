@@ -18,7 +18,8 @@ class ActivityRepo extends ActivityRepoInterface {
 
   @override
   Future<Map<String, dynamic>> fetchAll({Map<String, dynamic>? body}) async {
-    Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';
@@ -47,7 +48,8 @@ class ActivityRepo extends ActivityRepoInterface {
 
   @override
   Future<Map<String, dynamic>> fetch(int fileId, int activityId) async {
-    Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';
@@ -86,7 +88,8 @@ class ActivityRepo extends ActivityRepoInterface {
 
   @override
   Future<dynamic> post(Map<String, dynamic> data, int fileId) async {
-    Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';
@@ -119,7 +122,8 @@ class ActivityRepo extends ActivityRepoInterface {
   @override
   Future<dynamic> put(
       Map<String, dynamic> data, int fileId, int activityId) async {
-    Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';

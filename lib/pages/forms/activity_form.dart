@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -60,7 +58,7 @@ class _ActivityFormState extends State<ActivityForm> {
     return Column(
       children: [
         FormTitle(
-          name: 'New Activity',
+          name: '${(widget.activity == null) ? 'New' : 'Edit'} Activity',
           addButtonText: (widget.activity == null) ? 'Add' : 'Update',
           isElevated: isTitleElevated,
           onSave: () => _submitForm(),
@@ -456,8 +454,8 @@ class _ActivityFormState extends State<ActivityForm> {
         emails: emails,
         file: file);
 
-    print(widget.activity!.id);
-    print(jsonEncode(SmartActivity.toActivityCreateJson(smartActivity)));
+    // print(widget.activity!.id);
+    // print(jsonEncode(SmartActivity.toActivityCreateJson(smartActivity)));
 
     (widget.activity == null)
         ? SmartCaseApi.smartPost(

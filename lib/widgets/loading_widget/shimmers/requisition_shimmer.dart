@@ -14,7 +14,8 @@ class RequisitionShimmer extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 5),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: LoadingSkeleton(animationDuration: 4000,
+        child: LoadingSkeleton(
+          animationDuration: 4000,
           width: double.infinity,
           height: 275,
           child: Padding(

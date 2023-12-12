@@ -14,15 +14,14 @@ class BetterSuccessToast extends StatelessWidget {
   }
 
   _buildBody() {
-    return
-      Fluttertoast.showToast(
-          msg: text,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: AppColors.green,
-          textColor: Colors.white,
-          fontSize: 16.0);
+    return Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: AppColors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 }
 
@@ -37,14 +36,13 @@ class BetterErrorToast extends StatelessWidget {
   }
 
   _buildBody() {
-    return
-      Fluttertoast.showToast(
-          msg: text,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: AppColors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+    return Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: AppColors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 }

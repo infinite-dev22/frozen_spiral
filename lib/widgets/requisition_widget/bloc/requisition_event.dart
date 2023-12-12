@@ -6,8 +6,11 @@ abstract class RequisitionEvent extends Equatable {
 }
 
 class GetRequisitions extends RequisitionEvent {}
+
 class GetRequisition extends RequisitionEvent {}
+
 class PostRequisition extends RequisitionEvent {}
+
 class PutRequisition extends RequisitionEvent {}
 
 class SelectRequisition extends RequisitionEvent {

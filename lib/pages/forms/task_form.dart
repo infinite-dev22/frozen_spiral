@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:smart_case/data/global_data.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_employee.dart';
@@ -37,6 +38,9 @@ class _TaskFormState extends State<TaskForm> {
   int? assigneeId;
 
   List<SmartEmployee> assignees = List.empty(growable: true);
+  List<SmartEmployee> selectedAssignees = List.empty(growable: true);
+  List<int> selectedAssigneesIds = List.empty(growable: true);
+  bool isLoading = false;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dueDateController = TextEditingController();
@@ -85,117 +89,172 @@ class _TaskFormState extends State<TaskForm> {
                   controller: scrollController,
                   padding: const EdgeInsets.all(8),
                   children: [
-                    LayoutBuilder(
-                        builder: (context, constraints) {
-                        return Form(
-                          key: formKey,
-                          child: Column(
-                            children: [
-                              SmartCaseTextField(
-                                hint: 'Name',
-                                controller: nameController,
-                                maxLength: 50,
-                                minLines: 1,
-                                maxLines: 1,
-                              ),
-                              GestureDetector(
-                                onTap: _showSearchFileBottomSheet,
-                                child: Container(
-                                  height: 50,
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(5),
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(6),
-                                        child: SizedBox(
-                                          width:
-                                        constraints.maxWidth - 50,
-                                          child: Text(
-                                            file?.fileName ?? 'Select file',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                                color: AppColors.darker,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w500),
-                                          ),
+                    LayoutBuilder(builder: (context, constraints) {
+                      return Form(
+                        key: formKey,
+                        child: Column(
+                          children: [
+                            SmartCaseTextField(
+                              hint: 'Name',
+                              controller: nameController,
+                              maxLength: 50,
+                              minLines: 1,
+                              maxLines: 1,
+                            ),
+                            GestureDetector(
+                              onTap: _showSearchFileBottomSheet,
+                              child: Container(
+                                height: 50,
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(5),
+                                margin: const EdgeInsets.only(bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(6),
+                                      child: SizedBox(
+                                        width: constraints.maxWidth - 50,
+                                        child: Text(
+                                          file?.fileName ?? 'Select file',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: AppColors.darker,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500),
                                         ),
                                       ),
-                                      const Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        color: AppColors.darker,
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                    const Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: AppColors.darker,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: _showSearchAssigneeBottomSheet,
-                                child: Container(
-                                  height: 50,
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(5),
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(6),
-                                        child: SizedBox(
-                                          width:
-                                        constraints.maxWidth - 50,
-                                          child: Text(
-                                            assignee?.getName() ??
-                                                'Select assignee',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                                color: AppColors.darker,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ),
-                                      ),
-                                      const Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        color: AppColors.darker,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              TaskDateTimeAccordion(
-                                  dateController: dueDateController,
-                                  startTimeController: startTimeController,
-                                  endTimeController: endTimeController),
-                              CustomTextArea(
-                                  hint: 'Description',
-                                  controller: descriptionController),
-                            ],
-                          ),
-                        );
-                      }
-                    ),
+                            ),
+                            _chipDisplay(constraints),
+                            TaskDateTimeAccordion(
+                                dateController: dueDateController,
+                                startTimeController: startTimeController,
+                                endTimeController: endTimeController),
+                            CustomTextArea(
+                                hint: 'Description',
+                                controller: descriptionController),
+                          ],
+                        ),
+                      );
+                    }),
                   ]),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  void _showMultiSelect() async {
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (ctx) {
+        return MultiSelectBottomSheet<SmartEmployee>(
+          searchable: true,
+          searchHint: "Search assignees",
+          title: const Text(
+            "Assignees",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          items: assignees
+              .map((assignee) => MultiSelectItem(assignee, assignee.getName()))
+              .toList(),
+          initialValue: selectedAssignees,
+          onConfirm: (employees) {
+            selectedAssignees.clear();
+            selectedAssigneesIds.clear();
+            for (var employee in employees) {
+              selectedAssignees.add(employee);
+              selectedAssigneesIds.add(employee.getId());
+            }
+            setState(() {});
+          },
+          maxChildSize: 0.8,
+        );
+      },
+    );
+  }
+
+  Widget _chipDisplay(BoxConstraints constraints) {
+    return GestureDetector(
+      onTap: () => _showMultiSelect(),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(5),
+        margin: const EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        alignment: Alignment.centerLeft,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Wrap(
+              children: List.generate(
+                  selectedAssignees.length,
+                  (index) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: SelectTag(
+                            label: selectedAssignees.elementAt(index).getName(),
+                            onDeleted: (value) {
+                              selectedAssignees.removeAt(index);
+                              selectedAssigneesIds.removeAt(index);
+                              setState(() {});
+                            },
+                            index: index),
+                      )),
+            ),
+            SizedBox(
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: SizedBox(
+                      width: constraints.maxWidth - 50,
+                      child: const Text(
+                        'Select assignees',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: AppColors.darker,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: AppColors.darker,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -223,10 +282,11 @@ class _TaskFormState extends State<TaskForm> {
                   if (value.length > 2) {
                     if (preloadedFiles.isNotEmpty) {
                       isLoading = false;
-                      searchedList.addAll(preloadedFiles.where((smartFile) => smartFile
-                          .getName()
-                          .toLowerCase()
-                          .contains(value.toLowerCase())));
+                      searchedList.addAll(preloadedFiles.where((smartFile) =>
+                          smartFile
+                              .getName()
+                              .toLowerCase()
+                              .contains(value.toLowerCase())));
                       setState(() {});
                     } else {
                       _loadFiles();
@@ -236,47 +296,6 @@ class _TaskFormState extends State<TaskForm> {
                   }
                 },
                 isLoading: isLoading,
-              );
-            },
-          );
-        });
-  }
-
-  _showSearchAssigneeBottomSheet() {
-    List<SmartEmployee> searchedList = List.empty(growable: true);
-    return showModalBottomSheet(
-        isScrollControlled: true,
-        constraints: BoxConstraints.expand(
-            height: MediaQuery.of(context).size.height * .8),
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return AsyncSearchableBottomSheetContents(
-                hint: "Search assignee",
-                list: searchedList,
-                onTap: (value) {
-                  _onTapSearchedAssignee(value!);
-                  Navigator.pop(context);
-                },
-                onSearch: (value) {
-                  searchedList.clear();
-                  if (value.length > 2) {
-                    if (assignees.isNotEmpty) {
-                      isAssigneeLoading = false;
-                      searchedList.addAll(assignees.where((smartEmployee) =>
-                          smartEmployee
-                              .getName()
-                              .toLowerCase()
-                              .contains(value.toLowerCase())));
-                      setState(() {});
-                    } else {
-                      _loadAssignees();
-                      isAssigneeLoading = true;
-                    }
-                  }
-                },
-                isLoading: isAssigneeLoading,
               );
             },
           );
@@ -302,13 +321,6 @@ class _TaskFormState extends State<TaskForm> {
     });
   }
 
-  _onTapSearchedAssignee(SmartEmployee value) {
-    setState(() {
-      assigneeId = value.id;
-      assignee = value;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -322,7 +334,7 @@ class _TaskFormState extends State<TaskForm> {
     if (widget.task != null) {
       nameController.text = widget.task!.taskName!;
       file = widget.task?.caseFile;
-      assignees = widget.task!.assignees!;
+      selectedAssignees = widget.task!.assignees!;
 
       descriptionController.text = widget.task!.description!;
       dueDateController.text = widget.task!.dueAt != null
@@ -349,7 +361,8 @@ class _TaskFormState extends State<TaskForm> {
         dueAt: DateFormat('dd/MM/yyyy').parse(dueDateController.text.trim()),
         estimatedTime: startTimeController.text.trim(),
         // assignees: [assignee!],
-        assigneeIds: [assigneeId!],
+        // assigneeIds: [assigneeId!],
+        assigneeIds: selectedAssigneesIds,
       );
 
       jsonEncode(smartTask.toCreateJson());
@@ -399,5 +412,42 @@ class _TaskFormState extends State<TaskForm> {
 
       Navigator.pop(context);
     }
+  }
+
+  Future<List<SmartEmployee>> searchFunction(query) async {
+    return assignees.where((element) {
+      return element.getName().toLowerCase().contains(query.toLowerCase());
+    }).toList();
+  }
+}
+
+class SelectTag extends StatelessWidget {
+  const SelectTag({
+    super.key,
+    required this.label,
+    required this.onDeleted,
+    required this.index,
+  });
+
+  final String label;
+  final ValueChanged<int> onDeleted;
+  final int index;
+  final Color darkAlias6 = const Color.fromRGBO(36, 37, 51, 0.06);
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      backgroundColor: darkAlias6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      labelPadding: const EdgeInsets.only(left: 8.0),
+      label: Text(label),
+      deleteIcon: const Icon(
+        Icons.close,
+        size: 18,
+      ),
+      onDeleted: () {
+        onDeleted(index);
+      },
+    );
   }
 }

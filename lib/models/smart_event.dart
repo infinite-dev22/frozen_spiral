@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
-import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/models/smart_employee.dart';
 
 class SmartEvent {
   final int? id;

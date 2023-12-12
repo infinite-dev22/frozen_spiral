@@ -10,7 +10,8 @@ class RequisitionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RequisitionBloc, RequisitionState>(
-        buildWhen: (previous, current) => current.status.isSuccess,
-    builder: (context, state) => const FilteredRequisitionsWidget(),);
+      buildWhen: (previous, current) => current.status.isSuccess,
+      builder: (context, state) => const FilteredRequisitionsWidget(),
+    );
   }
 }

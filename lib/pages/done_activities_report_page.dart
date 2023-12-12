@@ -19,7 +19,8 @@ class DoneActivitiesReportPage extends StatefulWidget {
   const DoneActivitiesReportPage({super.key});
 
   @override
-  State<DoneActivitiesReportPage> createState() => _DoneActivitiesReportPageState();
+  State<DoneActivitiesReportPage> createState() =>
+      _DoneActivitiesReportPageState();
 }
 
 class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
@@ -210,27 +211,29 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
 
   _searchDoneActivitiesReport(String value) {
     filteredDoneActivitiesReport.clear();
-    filteredDoneActivitiesReport.addAll(preloadedDoneActivitiesReport.where((smartActivity) =>
-        smartActivity.getName().toLowerCase().contains(value.toLowerCase()) ||
-        smartActivity.file!
-            .getName()
-            .toLowerCase()
-            .contains(value.toLowerCase()) ||
-        smartActivity.date!
-            .toString()
-            .toLowerCase()
-            .contains(value.toLowerCase()) ||
-        smartActivity.employee!
-            .getName()
-            .toLowerCase()
-            .contains(value.toLowerCase()) ||
-        smartActivity.caseActivityStatus!
-            .getName()
-            .toLowerCase()
-            .contains(value.toLowerCase()) ||
-        smartActivity.date!
-            .toString()
-            .contains(value.toLowerCase())));
+    filteredDoneActivitiesReport.addAll(preloadedDoneActivitiesReport.where(
+        (smartActivity) =>
+            smartActivity
+                .getName()
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartActivity.file!
+                .getName()
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartActivity.date!
+                .toString()
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartActivity.employee!
+                .getName()
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartActivity.caseActivityStatus!
+                .getName()
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartActivity.date!.toString().contains(value.toLowerCase())));
     setState(() {});
   }
 

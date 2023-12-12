@@ -25,10 +25,16 @@ class _ActivityViewPageState extends State<ActivityViewPage> {
   @override
   Widget build(BuildContext context) {
     try {
-      activity = ModalRoute.of(context)!.settings.arguments as SmartActivity;
+      activity = ModalRoute
+          .of(context)!
+          .settings
+          .arguments as SmartActivity;
     } catch (e) {
       ScreenArguments screenArguments =
-          ModalRoute.of(context)!.settings.arguments as ScreenArguments;
+      ModalRoute
+          .of(context)!
+          .settings
+          .arguments as ScreenArguments;
       fileId = int.parse(screenArguments.fieldOne);
       activityId = int.parse(screenArguments.fieldTwo);
 
@@ -54,60 +60,60 @@ class _ActivityViewPageState extends State<ActivityViewPage> {
   Widget _buildBody() {
     return (activity != null)
         ? Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextItem(title: "Activity Name:", data: activity!.getName()),
-                const Divider(),
-                TextItem(
-                    title: "Case File Name:", data: activity!.file!.fileName!),
-                const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextItem(
-                            title: "Activity Date:",
-                            data: DateFormat('dd/MM/yyyy')
-                                .format(activity!.date!)),
-                        TextItem(
-                            title: "From:",
-                            data: DateFormat.jm()
-                                .format(activity!.startTime!)),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextItem(
-                            title: "Done By:",
-                            data: "${activity!.employee!.firstName}"
-                                " ${activity!.employee!.lastName}"),
-                        TextItem(
-                            title: "To:",
-                            data: DateFormat.jm()
-                                .format(activity!.endTime!)),
-                      ],
-                    ),
-                  ],
-                ),
-                const Divider(),
-                TextItem(title: "Description:", data: activity!.description!),
-              ],
-            ),
-          )
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextItem(title: "Activity Name:", data: activity!.getName()),
+          const Divider(),
+          TextItem(
+              title: "Case File Name:", data: activity!.file!.fileName!),
+          const Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextItem(
+                      title: "Activity Date:",
+                      data: DateFormat('dd/MM/yyyy')
+                          .format(activity!.date!)),
+                  TextItem(
+                      title: "From:",
+                      data: DateFormat.jm()
+                          .format(activity!.startTime!)),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextItem(
+                      title: "Done By:",
+                      data: "${activity!.employee!.firstName}"
+                          " ${activity!.employee!.lastName}"),
+                  TextItem(
+                      title: "To:",
+                      data: DateFormat.jm()
+                          .format(activity!.endTime!)),
+                ],
+              ),
+            ],
+          ),
+          const Divider(),
+          TextItem(title: "Description:", data: activity!.description!),
+        ],
+      ),
+    )
         : const Center(
-            child: CupertinoActivityIndicator(
-              color: AppColors.gray45,
-              radius: 20,
-            ),
-          );
+      child: CupertinoActivityIndicator(
+        color: AppColors.gray45,
+        radius: 20,
+      ),
+    );
   }
 
 // _setupData() async {

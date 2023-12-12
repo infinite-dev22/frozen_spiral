@@ -308,7 +308,8 @@ class _DiaryFormState extends State<DiaryForm> {
                       if (preloadedFiles.isNotEmpty) {
                         isLoading = false;
                         searchedList.addAll(preloadedFiles.where((smartFile) =>
-                            smartFile.getName()
+                            smartFile
+                                .getName()
                                 .toLowerCase()
                                 .contains(value.toLowerCase())));
                       } else {

@@ -114,7 +114,8 @@ class EmployeeRepo extends EmployeeRepoInterface {
 
   @override
   Future<dynamic> post(Object data, int id) async {
-    Dio dio = Dio(baseOps)..interceptors.add(DioCacheInterceptor(options: options));
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
       dio.options.headers['content-Type'] = 'application/json';

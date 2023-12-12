@@ -47,8 +47,10 @@ class SmartActivity extends SmartModel {
   });
 
   factory SmartActivity.fromJson(Map json) {
-    List<int> timeFromList = json['from'].toString().split(":").toList().map(int.parse).toList();
-    List<int> timeToList = json['to'].toString().split(":").toList().map(int.parse).toList();
+    List<int> timeFromList =
+        json['from'].toString().split(":").toList().map(int.parse).toList();
+    List<int> timeToList =
+        json['to'].toString().split(":").toList().map(int.parse).toList();
 
     return SmartActivity(
       id: json['id'],
@@ -63,8 +65,10 @@ class SmartActivity extends SmartModel {
       employeeId: json['employee_id'],
       date: DateTime.parse(json['date']),
       billable: json['is_billable'],
-      startTime: DateTime(1970, 01, 10, timeFromList[0], timeFromList[1], timeFromList[2]),
-      endTime: DateTime(1970, 01, 10, timeToList[0], timeToList[1], timeToList[2]),
+      startTime: DateTime(
+          1970, 01, 10, timeFromList[0], timeFromList[1], timeFromList[2]),
+      endTime:
+          DateTime(1970, 01, 10, timeToList[0], timeToList[1], timeToList[2]),
       emails: json['to_be_notified'],
       employee: SmartEmployee.fromJson(json['employee']),
       file: SmartFile.fromJson(json['case_file']),

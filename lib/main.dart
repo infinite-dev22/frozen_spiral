@@ -57,11 +57,13 @@ Future<void> main() async {
     }
     localStorage = await Hive.openBox<Notifications>('notifications');
 
-    runApp(DevicePreview(
-      enabled: false,
-      builder: (context) => const MyApp(), // Wrap your app
-    ),);
-  } catch(e) {
+    runApp(
+      DevicePreview(
+        enabled: false,
+        builder: (context) => const MyApp(), // Wrap your app
+      ),
+    );
+  } catch (e) {
     Fluttertoast.showToast(
         msg: e.toString(),
         toastLength: Toast.LENGTH_LONG,
@@ -158,13 +160,14 @@ class MyApp extends StatelessWidget {
           '/activity': (context) => const ActivityViewPage(),
           '/event': (context) => const EventViewPage(),
           '/cause_list_report': (context) => const CauseListReportPage(),
-          '/done_activities_report': (context) => const DoneActivitiesReportPage(),
+          '/done_activities_report': (context) =>
+              const DoneActivitiesReportPage(),
         },
       ),
     );
   }
 
-  /*
+/*
   * For the profile image to change on SignIn, Try clearing the former image when the user clicks on the Login button.
   * Else implement Streams here.
   *

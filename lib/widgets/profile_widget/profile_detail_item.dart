@@ -92,7 +92,9 @@ class ProfileDetailItem extends StatelessWidget {
         _profileDetailItem("Telephone", telephone),
         const SizedBox(height: 10),
         _profileDetailItem(
-            "Date of birth", DateFormat('dd/MM/yyyy').format(DateFormat('yyyy-MM-dd').parse(dateOfBirth))),
+            "Date of birth",
+            DateFormat('dd/MM/yyyy')
+                .format(DateFormat('yyyy-MM-dd').parse(dateOfBirth))),
         const SizedBox(height: 10),
         _profileDetailItem("Height(cm)", height),
         const SizedBox(height: 10),
