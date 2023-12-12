@@ -114,9 +114,9 @@ class _RequisitionFormState extends State<RequisitionForm> {
                               hintText: 'currency',
                               menuItems: widget.currencies,
                               defaultValue: (currency != null)
-                                  ? widget.currencies.firstWhere((currency) =>
-                                      currency.code ==
-                                      widget.requisition!.currency!.code)
+                                  ? widget.currencies.firstWhere((cur) =>
+                                      cur.code ==
+                                      currency!.code)
                                   : widget.currencies.firstWhere(
                                       (currency) => currency.code == 'UGX'),
                               onChanged: _onTapSearchedCurrency),
@@ -425,10 +425,10 @@ class _RequisitionFormState extends State<RequisitionForm> {
     _loadApprovers();
     _loadCategories();
     _fillFormsForEdit();
-    // if (widget.currencies.isNotEmpty && currency == null) {
-    //   currency =
-    //       widget.currencies.firstWhere((currency) => currency.code == 'UGX');
-    // }
+    if (widget.currencies.isNotEmpty && currency == null) {
+      currency =
+          widget.currencies.firstWhere((currency) => currency.code == 'UGX');
+    }
 
     super.initState();
   }
@@ -457,8 +457,8 @@ class _RequisitionFormState extends State<RequisitionForm> {
       ],
     );
 
-    print(widget.requisition!.id);
-    print(jsonEncode(smartRequisition.createRequisitionToJson()));
+    // print(widget.requisition!.id);
+    // print(jsonEncode(smartRequisition.createRequisitionToJson()));
 
     (widget.requisition == null)
         ? RequisitionApi.post(
