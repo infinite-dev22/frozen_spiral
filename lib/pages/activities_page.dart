@@ -184,13 +184,11 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
 
     _setUpData();
 
-    if (mounted) {
-      _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
-        ActivityApi.fetchAll();
-        // _buildFilteredList();
-        setState(() {});
-      });
-    }
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+      ActivityApi.fetchAll();
+      // _buildFilteredList();
+      if (mounted) setState(() {});
+    });
   }
 
   Future<void> _setUpData() async {

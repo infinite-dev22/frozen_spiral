@@ -26,8 +26,6 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
   bool _doneLoading = false;
   String? searchText;
 
-  Timer? _timer;
-
   List<SmartActivity> filteredCauseListReport = List.empty(growable: true);
   final List<String>? filters = [
     "Name",
@@ -182,14 +180,6 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
     super.initState();
 
     _setUpData();
-
-    if (mounted) {
-      _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
-        ActivityApi.fetchAll();
-        // _buildFilteredList();
-        setState(() {});
-      });
-    }
   }
 
   Future<void> _setUpData() async {
@@ -257,14 +247,5 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
       context: context,
       builder: (context) => const ActivityForm(),
     );
-  }
-
-  @override
-  void dispose() {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-
-    super.dispose();
   }
 }

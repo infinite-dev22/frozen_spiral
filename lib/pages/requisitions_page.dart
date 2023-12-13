@@ -647,7 +647,7 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
       });
     }
 
-    if (_isLoading && _requisitionPage <= pagesLength) {
+    if (_isLoading && _requisitionPage <= (pagesLength ?? _requisitionPage + 1)) {  // add ?? _requisitionPage + 1
       _requisitionPage++;
       RequisitionApi.fetchAll(page: _requisitionPage).then((value) {
         setState(() {

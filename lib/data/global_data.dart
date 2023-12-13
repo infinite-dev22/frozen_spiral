@@ -56,7 +56,7 @@ List<SmartActivity> preloadedDoneActivitiesReport = List.empty(growable: true);
 List<SmartClient> preloadedClients = List.empty(growable: true);
 List<SmartEngagementType> preloadedEngagements = List.empty(growable: true);
 
-String requisitionNextPage =
+String? requisitionNextPage =
     "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=1";
 
-int pagesLength = 1;
+int? pagesLength = 1;

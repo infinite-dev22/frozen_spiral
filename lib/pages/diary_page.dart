@@ -107,8 +107,9 @@ class _DiaryPageState extends State<DiaryPage> {
     visibleDatesChangedDetails.visibleDates.sort();
     var minDate = DateFormat('yyyy-MM-dd')
         .format(visibleDatesChangedDetails.visibleDates.first);
-    var maxDate = DateFormat('yyyy-MM-dd')
-        .format(visibleDatesChangedDetails.visibleDates.last);
+    var maxDate = DateFormat('yyyy-MM-dd').format(visibleDatesChangedDetails
+        .visibleDates.last
+        .add(const Duration(days: 1)));
 
     final List<SmartEvent> appointments = <SmartEvent>[];
     // _eventsDataSource.appointments.clear();
@@ -287,6 +288,7 @@ class _DiaryPageState extends State<DiaryPage> {
     _dataCollection.clear();
 
     var now = DateTime.now();
+
     var responseEventsList = await SmartCaseApi.smartDioFetch(
         'api/calendar/events', currentUser.token,
         body: {

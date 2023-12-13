@@ -28,8 +28,6 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
   bool _doneLoading = false;
   String? searchText;
 
-  Timer? _timer;
-
   List<SmartActivity> filteredDoneActivitiesReport = List.empty(growable: true);
   final List<String>? filters = [
     "Name",
@@ -184,14 +182,6 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
     super.initState();
 
     _setUpData();
-
-    if (mounted) {
-      _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
-        ActivityApi.fetchAll();
-        // _buildFilteredList();
-        setState(() {});
-      });
-    }
   }
 
   Future<void> _setUpData() async {
@@ -258,14 +248,5 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
       context: context,
       builder: (context) => const ActivityForm(),
     );
-  }
-
-  @override
-  void dispose() {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-
-    super.dispose();
   }
 }

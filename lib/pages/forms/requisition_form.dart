@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -453,9 +455,6 @@ class _RequisitionFormState extends State<RequisitionForm> {
         file!.getId().toString(),
       ],
     );
-
-    // print(widget.requisition!.id);
-    // print(jsonEncode(smartRequisition.createRequisitionToJson()));
 
     (widget.requisition == null)
         ? RequisitionApi.post(

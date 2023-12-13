@@ -517,7 +517,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildStringItem(
-                        'Amount (UGX)',
+                        'Amount (${widget.requisition.currency!.code})',
                         formatter
                             .format(double.parse(widget.requisition.amount!))),
                     RequisitionItemStatus(

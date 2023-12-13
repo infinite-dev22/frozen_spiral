@@ -188,7 +188,7 @@ class _DiaryFormState extends State<DiaryForm> {
                               ),
                             ),
                           ),
-                          if (file != null)
+                          if (file != null && contacts.isNotEmpty)
                             Column(
                               children: [
                                 MultiSelectDropDown(
@@ -387,11 +387,9 @@ class _DiaryFormState extends State<DiaryForm> {
         'api/cases/${file!.id}/contactsandfinancialstatus', currentUser.token);
 
     List? contacts = contactsMap['contacts'];
-    setState(() {
-      this.contacts =
-          contacts!.map((doc) => SmartContact.fromJson(doc)).toList();
-      contacts = null;
-    });
+    this.contacts = contacts!.map((doc) => SmartContact.fromJson(doc)).toList();
+    // contacts = null;
+    setState(() {});
   }
 
   @override
