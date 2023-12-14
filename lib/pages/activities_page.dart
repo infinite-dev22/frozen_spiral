@@ -26,8 +26,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
   TextEditingController filterController = TextEditingController();
   bool _doneLoading = false;
   String? searchText;
-
-  Timer? _timer;
+  // Timer? _timer;
 
   List<SmartActivity> filteredActivities = List.empty(growable: true);
   final List<String>? filters = [
@@ -184,11 +183,11 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
 
     _setUpData();
 
-    _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
-      ActivityApi.fetchAll();
-      // _buildFilteredList();
-      if (mounted) setState(() {});
-    });
+    // _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+    //   ActivityApi.fetchAll();
+    //   // _buildFilteredList();
+    //   if (mounted) setState(() {});
+    // });
   }
 
   Future<void> _setUpData() async {
@@ -253,12 +252,12 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
     );
   }
 
-  @override
-  void dispose() {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   if (_timer != null) {
+  //     _timer!.cancel();
+  //   }
+  //
+  //   super.dispose();
+  // }
 }

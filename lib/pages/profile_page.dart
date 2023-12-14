@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -274,6 +276,9 @@ class _ProfilePageState extends State<ProfilePage> {
         "salutation_id": 1,
         "marital_status_id": null
       };
+
+      print(currentUser.id);
+      print(jsonEncode(employee));
 
       Navigator.pop(context);
 
