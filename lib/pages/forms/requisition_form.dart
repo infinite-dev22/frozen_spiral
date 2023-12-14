@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -99,6 +97,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
                 }
                 return true;
               },
+              // child: SingleChildScrollView()
               child: ListView(
                 controller: scrollController,
                 padding: const EdgeInsets.all(8),
@@ -113,11 +112,13 @@ class _RequisitionFormState extends State<RequisitionForm> {
                           CustomGenericDropdown<SmartCurrency>(
                               hintText: 'currency',
                               menuItems: widget.currencies,
-                              defaultValue: (currency != null)
-                                  ? widget.currencies.firstWhere(
-                                      (cur) => cur.code == currency!.code)
-                                  : widget.currencies.firstWhere(
-                                      (currency) => currency.code == 'UGX'),
+                              defaultValue: (widget.currencies.isNotEmpty)
+                                  ? (currency != null)
+                                      ? widget.currencies.firstWhere(
+                                          (cur) => cur.code == currency!.code)
+                                      : widget.currencies.firstWhere(
+                                          (currency) => currency.code == 'UGX')
+                                  : null,
                               onChanged: _onTapSearchedCurrency),
                           GestureDetector(
                             onTap: _showSearchFileBottomSheet,
@@ -232,14 +233,16 @@ class _RequisitionFormState extends State<RequisitionForm> {
                             key: globalKey,
                             hint: 'Description',
                             controller: descriptionController,
+                            maxLines: 12,
                             onTap: () {
                               Scrollable.ensureVisible(
                                   globalKey.currentContext!);
                             },
                           ),
-                          const SizedBox(
-                              height:
-                                  300 /* MediaQuery.of(context).viewInsets.bottom */),
+                          SizedBox(
+                              height: /*300*/
+                                  MediaQuery.of(context).viewInsets.bottom +
+                                      20),
                         ],
                       ),
                     );

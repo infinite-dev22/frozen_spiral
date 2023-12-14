@@ -277,9 +277,6 @@ class _ProfilePageState extends State<ProfilePage> {
         "marital_status_id": null
       };
 
-      print(currentUser.id);
-      print(jsonEncode(employee));
-
       Navigator.pop(context);
 
       EmployeeApi.post(
