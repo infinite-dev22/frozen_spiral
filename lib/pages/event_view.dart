@@ -153,18 +153,6 @@ class _EventViewState extends State<EventView> {
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    // const SizedBox(height: 10),SizedBox(
-                                    //   width: MediaQuery.of(context).size.width - 70,
-                                    //   height: 50,
-                                    //   child: Marquee(
-                                    //     text:
-                                    //     "${event!.title!} | ",
-                                    //     velocity: 50.0,
-                                    //     style: const TextStyle(fontSize: 18),
-                                    //     blankSpace: 0,
-                                    //     pauseAfterRound: const Duration(seconds: 3),
-                                    //   ),
-                                    // ),
                                     Text(
                                       event!.title!,
                                       style: const TextStyle(
@@ -195,11 +183,12 @@ class _EventViewState extends State<EventView> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 10),
-                                  Text(
-                                    DateFormat('dd/MM/yyyy - h:mm a')
-                                        .format(event!.notifyOnDate!),
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
+                                  if ((event!.notifyOnDate != null))
+                                    Text(
+                                      DateFormat('dd/MM/yyyy - h:mm a')
+                                          .format(event!.notifyOnDate!),
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
                                 ],
                               ),
                             ],
@@ -264,6 +253,7 @@ class _EventViewState extends State<EventView> {
     event = SmartEvent.fromJsonView(eventResponse);
     Map activityStatusResponse = await SmartCaseApi.smartFetch(
         'api/admin/caseActivityStatus/${event!.activityStatusId!}',
+        // Cause of not loading
         currentUser.token);
     activityStatus = SmartActivityStatus.fromJson(
         activityStatusResponse['caseActivityStatus']);

@@ -15,7 +15,6 @@ import 'package:smart_case/pages/diary_page.dart';
 import 'package:smart_case/pages/done_activities_report_page.dart';
 import 'package:smart_case/pages/engagements_page.dart';
 import 'package:smart_case/pages/event_view.dart';
-import 'package:smart_case/pages/event_view_page.dart';
 import 'package:smart_case/pages/file_page.dart';
 import 'package:smart_case/pages/home_page.dart';
 import 'package:smart_case/pages/locator_page.dart';
@@ -156,9 +155,8 @@ class MyApp extends StatelessWidget {
           '/locator': (context) => const LocatorPage(),
           '/profile': (context) => const ProfilePage(),
           '/requisition': (context) => const RequisitionViewPage(),
-          '/file': (context) => const EventView(),
+          '/event': (context) => const EventView(),
           '/activity': (context) => const ActivityViewPage(),
-          '/event': (context) => const EventViewPage(),
           '/cause_list_report': (context) => const CauseListReportPage(),
           '/done_activities_report': (context) =>
               const DoneActivitiesReportPage(),

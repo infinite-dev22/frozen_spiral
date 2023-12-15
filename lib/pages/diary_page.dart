@@ -37,7 +37,7 @@ class _DiaryPageState extends State<DiaryPage> {
 
   final bool _showLeadingAndTrailingDates = false;
   final bool _showDatePickerButton = true;
-  bool _allowViewNavigation = false;
+  bool _allowViewNavigation = true;
   final bool _showCurrentTimeIndicator = true;
 
   final ViewNavigationMode _viewNavigationMode = ViewNavigationMode.snap;
@@ -180,21 +180,12 @@ class _DiaryPageState extends State<DiaryPage> {
       onTap: (calendarTapDetails) {
         if (calendarTapDetails.appointments != null &&
             calendarTapDetails.appointments!.isNotEmpty) {
-          if (calendarController!.view == CalendarView.day) {
+          if (calendarTapDetails.appointments!.length == 1) {
             _buildEventView(calendarTapDetails.appointments![0]);
+            setState(() {
+              
+            });
           }
-
-          if (calendarTapDetails.appointments!.length > 1) {
-            _allowViewNavigation = true;
-            setState(() {});
-          } else {
-            _allowViewNavigation = false;
-            setState(() {});
-            _buildEventView(calendarTapDetails.appointments![0]);
-          }
-        } else {
-          _allowViewNavigation = false;
-          setState(() {});
         }
       },
       controller: calendarController,
@@ -422,11 +413,13 @@ class _EventDataSource extends CalendarDataSource<SmartEvent> {
 
   @override
   DateTime getStartTime(int index) {
+    print("Start: ${source[index].startDate!}");
     return source[index].startDate!;
   }
 
   @override
   DateTime getEndTime(int index) {
+    print("End: ${source[index].endDate!}");
     return source[index].endDate!;
   }
 

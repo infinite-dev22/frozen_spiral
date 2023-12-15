@@ -675,7 +675,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
         desc: 'Requisition has been successfully approved',
         autoHide: const Duration(seconds: 3),
         btnCancel: null,
-        btnOkOnPress: () {},
+        // btnOkOnPress: () {},
       ).show();
       isProcessing = false;
       preloadedRequisitions.remove(widget.requisition);

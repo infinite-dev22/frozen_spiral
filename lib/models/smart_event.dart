@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/models/smart_employee.dart';
@@ -80,7 +81,14 @@ class SmartEvent {
   }
 
   factory SmartEvent.fromJsonView(Map<dynamic, dynamic> doc) {
-    Map<String, dynamic> param = jsonDecode(doc["calendarEvents"]['params']);
+    dynamic activityStatusIdVar;
+    try {
+      Map<String, dynamic> param = jsonDecode(doc["calendarEvents"]['params']);
+      activityStatusIdVar = param['case_activity_status_id'];
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
+
     var toNotifyMap = doc['toNotify'];
     List<SmartEmployee> toNotifyList = List.empty(growable: true);
     try {
@@ -88,9 +96,11 @@ class SmartEvent {
         toNotifyList.add(SmartEmployee.fromJson(value["employee"]));
       });
     } catch (e) {
-      toNotifyMap.forEach((value) {
+      if (toNotifyMap != null) {
+        toNotifyMap.forEach((value) {
         toNotifyList.add(SmartEmployee.fromJson(value["employee"]));
       });
+      }
     }
 
     return SmartEvent(
@@ -111,10 +121,10 @@ class SmartEvent {
           "${doc["calendarEvents"]['created_by']['employee']['first_name'] ?? ""}"
           " ${doc["calendarEvents"]['created_by']['employee']['middle_name'] ?? ""}"
           " ${doc["calendarEvents"]['created_by']['employee']['last_name'] ?? ""}",
-      activityStatusId: param['case_activity_status_id'],
+      activityStatusId: activityStatusIdVar,
       file: SmartFile.fromJson(doc['caseFile']),
-      notifyOnDate: DateTime.parse(doc['notifyOn']),
-      notifyOnTime: DateTime.parse(doc['notifyOn']),
+      notifyOnDate: (doc['notifyOn'] != null) ? DateTime.parse(doc['notifyOn']) : null,
+      notifyOnTime: (doc['notifyOn'] != null) ? DateTime.parse(doc['notifyOn']) : null,
       toNotify: toNotifyList,
       employeeIds: toNotifyList.map((e) => e.id).toList(),
     );
@@ -127,12 +137,10 @@ class SmartEvent {
       description: doc['description'],
       url: doc['url'],
       editable: doc['editable'],
-      startDate: DateFormat('dd/MM/yyyy')
-          .parse(DateFormat('dd/MM/yyyy').format(DateTime.parse(doc['start']))),
+      startDate: DateTime.parse(doc['start']),
       startTime: DateFormat('h:mm a')
           .parse(DateFormat('h:mm a').format(DateTime.parse(doc['start']))),
-      endDate: DateFormat('dd/MM/yyyy')
-          .parse(DateFormat('dd/MM/yyyy').format(DateTime.parse(doc['end']))),
+      endDate: DateTime.parse(doc['end']),
       endTime: DateFormat('h:mm a')
           .parse(DateFormat('h:mm a').format(DateTime.parse(doc['end']))),
       backgroundColor: doc['backgroundColor'],

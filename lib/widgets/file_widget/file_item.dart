@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
+import 'package:smart_case/widgets/text_item.dart';
 
 import '../../theme/color.dart';
 import 'file_item_status.dart';
@@ -26,10 +27,10 @@ class FileItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildBody();
+    return _buildBody(context);
   }
 
-  _buildBody() {
+  _buildBody(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(padding),
       margin: EdgeInsets.only(bottom: padding),
@@ -47,67 +48,52 @@ class FileItem extends StatelessWidget {
         ],
         color: color,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildStringItem('File Name', fileName),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildStringItem('File Number', fileNumber),
-              _buildStringItem(
-                  'Date opened',
-                  DateFormat("dd/MM/yyyy").format(
-                      DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(dateCreated))),
+              FreeTextItem(title: 'File Name', data: fileName),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextItem(title: 'File Number', data: fileNumber),
+                  TextItem(
+                      title: 'Date opened',
+                      data: DateFormat("dd/MM/yyyy").format(
+                          DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(dateCreated))),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: constraints.maxWidth * .655,
+                    child: FreeTextItem(
+                      title: 'Client Name',
+                      data: clientName,
+                    ),
+                  ),
+                  FileItemStatus(
+                      name:
+                          status.contains('OUT OF COURT') ? 'Out Of Court' : status,
+                      bgColor: (status == 'No Activity')
+                          ? AppColors.orange
+                          : AppColors.green,
+                      horizontalPadding: 20,
+                      verticalPadding: 5),
+                ],
+              ),
             ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildStringItem('Client Name', clientName),
-              FileItemStatus(
-                  name:
-                      status.contains('OUT OF COURT') ? 'Out Of Court' : status,
-                  bgColor: Colors.green,
-                  horizontalPadding: 20,
-                  verticalPadding: 5),
-            ],
-          ),
-        ],
+          );
+        }
       ),
-    );
-  }
-
-  _buildStringItem(String title, String? data) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: AppColors.inActiveColor,
-          ),
-        ),
-        SearchHighlightText(
-          data ?? 'Null',
-          style: const TextStyle(
-            // fontWeight: FontWeight.bold,
-            color: AppColors.darker,
-          ),
-          highlightStyle: const TextStyle(
-            // fontSize: 14,
-            // fontWeight: FontWeight.bold,
-            color: AppColors.darker,
-            backgroundColor: AppColors.searchText,
-          ),
-        ),
-      ],
     );
   }
 }

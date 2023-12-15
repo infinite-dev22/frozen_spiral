@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_case/pages/forms/engagements_form.dart';
 import 'package:smart_case/widgets/engagement_widget/engagement_item.dart';
 
 import '../database/engagement/engagement_model.dart';
@@ -47,6 +48,12 @@ class _EngagementsPageState extends State<EngagementsPage> {
           onChanged: _searchFiles,
           filters: filters,
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _buildEngagementsForm,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add),
       ),
       body: _buildBody(),
     );
@@ -152,6 +159,16 @@ class _EngagementsPageState extends State<EngagementsPage> {
               .contains(value.toLowerCase())));
       setState(() {});
     }
+  }
+
+  _buildEngagementsForm() {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => const EngagementForm(),
+    );
   }
 
   @override
