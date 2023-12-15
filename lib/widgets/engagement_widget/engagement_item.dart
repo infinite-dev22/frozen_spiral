@@ -69,68 +69,13 @@ class EngagementItem extends StatelessWidget {
                   data: engagement.costDescription ?? 'N/A'),
             ],
           ),
-          TextItem(
-              title: 'Engagement description', data: engagement.description!),
+          if (engagement.description != null)
+            TextItem(
+                title: 'Engagement description', data: engagement.description!),
         ],
       ),
     );
   }
-
-  // _buildBody() {
-  //   return Container(
-  //     padding: const EdgeInsets.all(20),
-  //     margin: const EdgeInsets.only(bottom: 20),
-  //     decoration: BoxDecoration(
-  //       borderRadius: const BorderRadius.all(
-  //         Radius.circular(8),
-  //       ),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: AppColors.shadowColor.withOpacity(.1),
-  //           spreadRadius: 1,
-  //           blurRadius: 1,
-  //           offset: const Offset(0, 1), // changes position of shadow
-  //         ),
-  //       ],
-  //       color: AppColors.white,
-  //     ),
-  //     child: Row(
-  //       children: [
-  //         Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             TextItem(
-  //                 title: 'Date',
-  //                 data: DateFormat('dd/MM/YYYY')
-  //                     .parse(DateFormat('yy-MM-dd').format(engagement.date!))
-  //                     .toString()),
-  //             TextItem(title: 'Client', data: engagement.client!.name!),
-  //             _buildMediationStatusItem('Engagement'),
-  //             TextItem(
-  //                 title: 'Engagement description',
-  //                 data: engagement
-  //                     .description! /*and a bunch of other petty stuff*/),
-  //           ],
-  //         ),
-  //         const Expanded(child: SizedBox()),
-  //         Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             TextItem(
-  //                 title: 'Done by',
-  //                 data: (engagement.doneBy!.lastOrNull != null)
-  //                     ? engagement.doneBy!.last.getName()
-  //                     : 'Null'),
-  //             TextItem(title: 'Cost', data: engagement.cost ?? '0.00'),
-  //             TextItem(
-  //                 title: 'Cost description',
-  //                 data: engagement.costDescription ?? 'N/A'),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   _buildMediationStatusItem(String title) {
     return Column(

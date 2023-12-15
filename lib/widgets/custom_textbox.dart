@@ -84,7 +84,7 @@ class CustomTextArea extends StatelessWidget {
       this.controller,
       this.onChanged,
       this.minLines = 5,
-      this.maxLines = 500,
+      this.maxLines = 5,
       this.maxLength,
       this.onTap});
 

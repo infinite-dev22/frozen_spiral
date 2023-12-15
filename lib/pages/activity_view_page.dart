@@ -67,7 +67,7 @@ class _ActivityViewPageState extends State<ActivityViewPage> {
         children: [
           TextItem(title: "Activity Name:", data: activity!.getName()),
           const Divider(),
-          TextItem(
+          TextItemMacquee(
               title: "Case File Name:", data: activity!.file!.fileName!),
           const Divider(),
           Row(
@@ -104,7 +104,7 @@ class _ActivityViewPageState extends State<ActivityViewPage> {
             ],
           ),
           const Divider(),
-          TextItem(title: "Description:", data: activity!.description!),
+          FreeTextItem(title: "Description:", data: activity!.description!),
         ],
       ),
     )

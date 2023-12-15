@@ -89,7 +89,7 @@ class _FilesPageState extends State<FilesPage> {
                 clientName: preloadedFiles[index].clientName!,
                 color: Colors.white,
                 padding: 20,
-                status: preloadedFiles[index].status ?? 'N/A',
+                status: preloadedFiles[index].status ?? 'No Activity',
               );
             },
           )
@@ -125,7 +125,7 @@ class _FilesPageState extends State<FilesPage> {
                   clientName: filteredFiles[index].clientName!,
                   color: Colors.white,
                   padding: 20,
-                  status: filteredFiles[index].status ?? "N/A",
+                  status: filteredFiles[index].status ?? 'No Activity',
                 );
               },
             ),

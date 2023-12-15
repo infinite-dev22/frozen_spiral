@@ -37,7 +37,7 @@ class _DiaryPageState extends State<DiaryPage> {
 
   final bool _showLeadingAndTrailingDates = false;
   final bool _showDatePickerButton = true;
-  bool _allowViewNavigation = false;
+  bool _allowViewNavigation = true;
   final bool _showCurrentTimeIndicator = true;
 
   final ViewNavigationMode _viewNavigationMode = ViewNavigationMode.snap;
@@ -180,21 +180,12 @@ class _DiaryPageState extends State<DiaryPage> {
       onTap: (calendarTapDetails) {
         if (calendarTapDetails.appointments != null &&
             calendarTapDetails.appointments!.isNotEmpty) {
-          if (calendarController!.view == CalendarView.day) {
+          if (calendarTapDetails.appointments!.length == 1) {
+            // if(calendarTapDetails.appointments![0].calendarEventTypeId == 1) {  // Check for type if calendar event then show else don't
             _buildEventView(calendarTapDetails.appointments![0]);
-          }
-
-          if (calendarTapDetails.appointments!.length > 1) {
-            _allowViewNavigation = true;
+            // }
             setState(() {});
-          } else {
-            _allowViewNavigation = false;
-            setState(() {});
-            _buildEventView(calendarTapDetails.appointments![0]);
           }
-        } else {
-          _allowViewNavigation = false;
-          setState(() {});
         }
       },
       controller: calendarController,
@@ -240,14 +231,14 @@ class _DiaryPageState extends State<DiaryPage> {
 
     var now = DateTime.now();
     var responseEventsList = await SmartCaseApi.smartDioFetch(
-        'api/calendar/events', currentUser.token,
+        'api/calendar/eventsDispapi', currentUser.token,
         body: {
           "start": minDate ?? "${now.year}-${now.month}-01",
           "end": maxDate ??
               "${now.year}-${now.month}-${DateTime(now.year, now.month + 1, 0).day}",
           "viewRdbtn": "all",
           "isFirmEventRdbtn": "ALLEVENTS",
-          "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"],
+          "checkedChk": ["MEETING", "NEXTACTIVITY",  "LEAVE",  "HOLIDAY"],
         });
     List eventsList = jsonDecode(responseEventsList);
     _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();

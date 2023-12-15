@@ -233,7 +233,6 @@ class _RequisitionFormState extends State<RequisitionForm> {
                             key: globalKey,
                             hint: 'Description',
                             controller: descriptionController,
-                            maxLines: 12,
                             onTap: () {
                               Scrollable.ensureVisible(
                                   globalKey.currentContext!);
