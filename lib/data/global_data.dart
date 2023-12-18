@@ -4,6 +4,7 @@ import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/database/engagement/engagement_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
+import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
@@ -55,6 +56,7 @@ List<SmartActivity> preloadedCauseListReport = List.empty(growable: true);
 List<SmartActivity> preloadedDoneActivitiesReport = List.empty(growable: true);
 List<SmartClient> preloadedClients = List.empty(growable: true);
 List<SmartEngagementType> preloadedEngagements = List.empty(growable: true);
+List<SmartEmployee> preloadedApprovers = List.empty(growable: true);
 
 String? requisitionNextPage =
     "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=1";

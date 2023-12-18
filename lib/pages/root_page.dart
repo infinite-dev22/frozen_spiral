@@ -311,6 +311,18 @@ class _RootPageState extends State<RootPage> {
     currencyList = null;
   }
 
+  _loadApprovers() async {
+    Map usersMap = await SmartCaseApi.smartFetch(
+        'api/hr/employees/requisitionApprovers', currentUser.token);
+
+    List users = usersMap['search']['employees'];
+
+    preloadedApprovers = users.map((doc) => SmartEmployee.fromJson(doc)).toList();
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   void initState() {
     currentUser.avatar = currentUserAvatar;
@@ -324,6 +336,7 @@ class _RootPageState extends State<RootPage> {
     RequisitionApi.fetchAll();
     ClientApi.fetchAll();
     EngagementApi.fetchAll();
+    _loadApprovers;
 
     if (preloadedRequisitions.isNotEmpty) {
       flowType = preloadedRequisitions.first.canApprove;

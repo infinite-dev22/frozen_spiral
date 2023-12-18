@@ -174,16 +174,17 @@ class _RequisitionFormState extends State<RequisitionForm> {
                                     : (financialStatus < 0)
                                         ? AppColors.red
                                         : AppColors.blue),
-                          SearchableDropDown<SmartEmployee>(
-                            hintText: 'approver',
-                            menuItems: approvers.toSet().toList(),
-                            onChanged: (value) {
-                              _onTapSearchedApprover(
-                                  approversController.dropDownValue?.value);
-                            },
-                            defaultValue: approver,
-                            controller: approversController,
-                          ),
+                          if (preloadedApprovers.isNotEmpty)
+                            SearchableDropDown<SmartEmployee>(
+                              hintText: 'approver',
+                              menuItems: preloadedApprovers.toSet().toList(),
+                              onChanged: (value) {
+                                _onTapSearchedApprover(
+                                    approversController.dropDownValue?.value);
+                              },
+                              defaultValue: approver,
+                              controller: approversController,
+                            ),
                           GestureDetector(
                             onTap: _showSearchCategoryBottomSheet,
                             child: Container(
@@ -351,7 +352,7 @@ class _RequisitionFormState extends State<RequisitionForm> {
 
     List users = usersMap['search']['employees'];
 
-    approvers = users.map((doc) => SmartEmployee.fromJson(doc)).toList();
+    preloadedApprovers = users.map((doc) => SmartEmployee.fromJson(doc)).toList();
     if (mounted) {
       setState(() {});
     }
