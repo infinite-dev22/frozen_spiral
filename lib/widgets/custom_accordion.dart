@@ -1331,7 +1331,7 @@ class _DateAccordionState extends State<DateAccordion> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 child: CalendarDatePicker(
-                  initialDate: DateTime.now(),
+                  initialDate: DateFormat('dd/MM/yyyy').parse(selectedDate),
                   firstDate: DateTime(DateTime.now().year - 99),
                   lastDate: DateTime.now(),
                   onDateChanged: (DateTime newDate) {
@@ -1430,7 +1430,9 @@ class _DOBAccordionState extends State<DOBAccordion> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 child: CalendarDatePicker(
-                  initialDate: DateTime.now(),
+                  initialDate: (selectedDate == null)
+                      ? DateTime.now()
+                      : DateFormat('dd/MM/yyyy').parse(selectedDate!),
                   firstDate: DateTime(DateTime.now().year - 99),
                   lastDate: DateTime(DateTime.now().year + 99),
                   onDateChanged: (DateTime newDate) {
