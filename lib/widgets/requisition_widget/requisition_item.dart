@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -667,20 +666,30 @@ class _RequisitionItemState extends State<RequisitionItem> {
 
   _onSuccess(String text) async {
     RequisitionApi.fetchAll().then((value) {
-      AwesomeDialog(
-        context: context,
-        dialogType: DialogType.success,
-        animType: AnimType.bottomSlide,
-        title: 'Success',
-        desc: 'Requisition has been successfully approved',
-        autoHide: const Duration(seconds: 3),
-        btnCancel: null,
-        // btnOkOnPress: () {},
-      ).show();
+      // AwesomeDialog(
+      //   context: widget.parentContext!,
+      //   dialogType: DialogType.success,
+      //   animType: AnimType.bottomSlide,
+      //   title: 'Success',
+      //   desc: 'Requisition has been successfully approved',
+      //   autoHide: const Duration(seconds: 2),
+      //   btnCancel: null,
+      //   btnOkOnPress: () {},
+      // ).show();
+
+      Fluttertoast.showToast(
+          msg: "Requisition approved successfully",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 5,
+          backgroundColor: AppColors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+
       isProcessing = false;
       preloadedRequisitions.remove(widget.requisition);
       isLoading = false;
-      setState(() {});
+      if (mounted) setState(() {});
     });
   }
 
