@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/global_data.dart';
-import 'package:smart_case/database/activity/activity_model.dart';
+import 'package:smart_case/database/reports/models/done_activities_report.dart';
 import 'package:smart_case/pages/forms/activity_form.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-import 'package:smart_case/widgets/activity_widget/activity_item.dart';
+import 'package:smart_case/widgets/report_widget/cause_list_report/done_activity_report_item.dart';
 
 import '../services/apis/smartcase_apis/activity_api.dart';
+import '../services/apis/smartcase_apis/done_activities_api.dart';
 import '../theme/color.dart';
 import '../widgets/better_toast.dart';
 import '../widgets/custom_appbar.dart';
@@ -28,7 +29,8 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
   bool _doneLoading = false;
   String? searchText;
 
-  List<SmartActivity> filteredDoneActivitiesReport = List.empty(growable: true);
+  List<SmartDoneActivityReport> filteredDoneActivities =
+      List.empty(growable: true);
   final List<String>? filters = [
     "Name",
     "File Name",
@@ -106,13 +108,13 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
   }
 
   _buildBody() {
-    return (filteredDoneActivitiesReport.isEmpty)
+    return (filteredDoneActivities.isEmpty)
         ? _buildNonSearchedBody()
         : _buildSearchedBody();
   }
 
   _buildNonSearchedBody() {
-    return (preloadedDoneActivitiesReport.isNotEmpty)
+    return (preloadedDoneActivities.isNotEmpty)
         ? ListView.builder(
             padding: const EdgeInsets.only(
               left: 10,
@@ -120,21 +122,12 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
               right: 10,
               bottom: 80,
             ),
-            itemCount: preloadedDoneActivitiesReport.length,
-            itemBuilder: (context, index) {
-              return ActivityItem(
-                activity: preloadedDoneActivitiesReport[index],
-                padding: 20,
-                color: Colors.white,
-                onTap: () => Navigator.pushNamed(
-                  context,
-                  '/activity',
-                  arguments: preloadedDoneActivitiesReport[index],
-                ),
-              );
-            },
+            itemCount: preloadedDoneActivities.length,
+            itemBuilder: (context, index) => DoneActivityReportItem(
+                doneActivity: preloadedDoneActivities.elementAt(index),
+              ),
           )
-        : (_doneLoading && preloadedDoneActivitiesReport.isEmpty)
+        : (_doneLoading && preloadedDoneActivities.isEmpty)
             ? const Center(
                 child: Text(
                   "You currently have no done activities",
@@ -147,7 +140,7 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
   }
 
   _buildSearchedBody() {
-    return (filteredDoneActivitiesReport.isNotEmpty)
+    return (filteredDoneActivities.isNotEmpty)
         ? SearchTextInheritedWidget(
             searchText: searchText,
             child: ListView.builder(
@@ -157,19 +150,10 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
                 right: 10,
                 bottom: 80,
               ),
-              itemCount: filteredDoneActivitiesReport.length,
-              itemBuilder: (context, index) {
-                return ActivityItem(
-                  activity: filteredDoneActivitiesReport[index],
-                  padding: 20,
-                  color: Colors.white,
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    '/activity',
-                    arguments: filteredDoneActivitiesReport[index],
-                  ),
-                );
-              },
+              itemCount: filteredDoneActivities.length,
+              itemBuilder: (context, index) => DoneActivityReportItem(
+                doneActivity: filteredDoneActivities.elementAt(index),
+    ),
             ),
           )
         : const Center(
@@ -185,7 +169,7 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
   }
 
   Future<void> _setUpData() async {
-    await ActivityApi.fetchAll().then((value) {
+    await DoneActivitiesApi.fetchAll().then((value) {
       _doneLoading = true;
       setState(() {});
     }).onError((error, stackTrace) {
@@ -200,30 +184,32 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
   }
 
   _searchDoneActivitiesReport(String value) {
-    filteredDoneActivitiesReport.clear();
-    filteredDoneActivitiesReport.addAll(preloadedDoneActivitiesReport.where(
-        (smartActivity) =>
-            smartActivity
-                .getName()
+    filteredDoneActivities.clear();
+    filteredDoneActivities.addAll(preloadedDoneActivities.where(
+        (doneActivity) =>
+            doneActivity.lockedBy!
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
-            smartActivity.file!
-                .getName()
+            doneActivity.notifyClient!
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
-            smartActivity.date!
+            doneActivity.date!
                 .toString()
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
-            smartActivity.employee!
+            doneActivity.caseFile!
                 .getName()
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
-            smartActivity.caseActivityStatus!
+            doneActivity.employee!
                 .getName()
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
-            smartActivity.date!.toString().contains(value.toLowerCase())));
+            doneActivity.caseActivityStatus!
+                .getName()
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            doneActivity.date!.toString().contains(value.toLowerCase())));
     setState(() {});
   }
 

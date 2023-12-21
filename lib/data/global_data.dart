@@ -3,12 +3,14 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/database/engagement/engagement_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/database/reports/models/done_activities_report.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/models/smart_employee.dart';
 import 'package:smart_case/models/smart_event.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
 import '../database/client/client_model.dart';
+import '../database/reports/models/cause_list_report.dart';
 import '../models/smart_drawer.dart';
 
 // Global options
@@ -52,11 +54,11 @@ List<SmartRequisition> preloadedRequisitions = List.empty(growable: true);
 List<SmartActivity> preloadedActivities = List.empty(growable: true);
 List<SmartFile> preloadedFiles = List.empty(growable: true);
 List<SmartDrawer> preloadedDrawers = List.empty(growable: true);
-List<SmartActivity> preloadedCauseListReport = List.empty(growable: true);
-List<SmartActivity> preloadedDoneActivitiesReport = List.empty(growable: true);
 List<SmartClient> preloadedClients = List.empty(growable: true);
 List<SmartEngagementType> preloadedEngagements = List.empty(growable: true);
 List<SmartEmployee> preloadedApprovers = List.empty(growable: true);
+List<SmartCauseListReport> preloadedCauseList = List.empty(growable: true);
+List<SmartDoneActivityReport> preloadedDoneActivities = List.empty(growable: true);
 
 String? requisitionNextPage =
     "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=1";

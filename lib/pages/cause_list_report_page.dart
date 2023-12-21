@@ -5,14 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/global_data.dart';
-import 'package:smart_case/database/activity/activity_model.dart';
+import 'package:smart_case/database/reports/models/cause_list_report.dart';
 import 'package:smart_case/pages/forms/activity_form.dart';
 import 'package:smart_case/services/apis/smartcase_apis/activity_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-import 'package:smart_case/widgets/activity_widget/activity_item.dart';
 import 'package:smart_case/widgets/better_toast.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
+import 'package:smart_case/widgets/report_widget/cause_list_report/cause_list_report_item.dart';
+
+import '../services/apis/smartcase_apis/cause_list_api.dart';
 
 class CauseListReportPage extends StatefulWidget {
   const CauseListReportPage({super.key});
@@ -26,7 +28,8 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
   bool _doneLoading = false;
   String? searchText;
 
-  List<SmartActivity> filteredCauseListReport = List.empty(growable: true);
+  List<SmartCauseListReport> filteredCauseListReport =
+      List.empty(growable: true);
   final List<String>? filters = [
     "Name",
     "File Name",
@@ -54,12 +57,6 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
           },
           filters: filters,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _buildCauseListReportForm,
-        foregroundColor: AppColors.white,
-        backgroundColor: AppColors.primary,
-        child: const Icon(Icons.add),
       ),
       body: LiquidPullToRefresh(
         onRefresh: _onRefresh,
@@ -110,7 +107,7 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
   }
 
   _buildNonSearchedBody() {
-    return (preloadedCauseListReport.isNotEmpty)
+    return (preloadedCauseList.isNotEmpty)
         ? ListView.builder(
             padding: const EdgeInsets.only(
               left: 10,
@@ -118,21 +115,14 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
               right: 10,
               bottom: 80,
             ),
-            itemCount: preloadedCauseListReport.length,
+            itemCount: preloadedCauseList.length,
             itemBuilder: (context, index) {
-              return ActivityItem(
-                activity: preloadedCauseListReport[index],
-                padding: 20,
-                color: Colors.white,
-                onTap: () => Navigator.pushNamed(
-                  context,
-                  '/activity',
-                  arguments: preloadedCauseListReport[index],
-                ),
+              return CauseListReportItem(
+                causeReport: preloadedCauseList.elementAt(index),
               );
             },
           )
-        : (_doneLoading && preloadedCauseListReport.isEmpty)
+        : (_doneLoading && preloadedCauseList.isEmpty)
             ? const Center(
                 child: Text(
                   "You currently have no cause lists",
@@ -157,15 +147,8 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
               ),
               itemCount: filteredCauseListReport.length,
               itemBuilder: (context, index) {
-                return ActivityItem(
-                  activity: filteredCauseListReport[index],
-                  padding: 20,
-                  color: Colors.white,
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    '/activity',
-                    arguments: filteredCauseListReport[index],
-                  ),
+                return CauseListReportItem(
+                  causeReport: filteredCauseListReport.elementAt(index),
                 );
               },
             ),
@@ -183,10 +166,13 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
   }
 
   Future<void> _setUpData() async {
-    await ActivityApi.fetchAll().then((value) {
+
+    CauseListApi.fetchAll().then((value) {
       _doneLoading = true;
       setState(() {});
     }).onError((error, stackTrace) {
+      print(error);
+      debugPrintStack(stackTrace: stackTrace);
       _doneLoading = true;
       const BetterErrorToast(
         text: "An error occurred",
@@ -199,35 +185,32 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
 
   _searchCauseListReport(String value) {
     filteredCauseListReport.clear();
-    filteredCauseListReport.addAll(
-        preloadedCauseListReport.where(
-            (smartActivity) =>
-                smartActivity
-                    .getName()
-                    .toLowerCase()
-                    .contains(value.toLowerCase()) ||
-                smartActivity.file!
-                    .getName()
-                    .toLowerCase()
-                    .contains(value.toLowerCase()) ||
-                smartActivity.date!
-                    .toString()
-                    .toLowerCase()
-                    .contains(value.toLowerCase()) ||
-                smartActivity.employee!
-                    .getName()
-                    .toLowerCase()
-                    .contains(value.toLowerCase()) ||
-                smartActivity.caseActivityStatus!
-                    .getName()
-                    .toLowerCase()
-                    .contains(value.toLowerCase()) ||
-                smartActivity.date!.toString().contains(value.toLowerCase())));
+    filteredCauseListReport.addAll(preloadedCauseList.where(
+        (smartCauseListReport) =>
+            smartCauseListReport.fileName!
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartCauseListReport.fileNumber!
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartCauseListReport.title!
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            (smartCauseListReport.court?.name ?? "N/A")
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartCauseListReport.toBeDoneBy!
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            smartCauseListReport.partners!.first
+                .getName()
+                .toString()
+                .contains(value.toLowerCase())));
     setState(() {});
   }
 
   Future<void> _onRefresh() async {
-    await ActivityApi.fetchAll().then((value) {
+    CauseListApi.fetchAll().then((value) {
       _doneLoading = true;
       setState(() {});
     }).onError((error, stackTrace) {
@@ -237,15 +220,5 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
       );
       setState(() {});
     });
-  }
-
-  _buildCauseListReportForm() {
-    return showModalBottomSheet(
-      enableDrag: true,
-      isScrollControlled: true,
-      useSafeArea: true,
-      context: context,
-      builder: (context) => const ActivityForm(),
-    );
   }
 }
