@@ -3,9 +3,8 @@ import "dart:io";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/foundation.dart";
 import "package:intl/intl.dart";
-import "package:smart_case/models/local/notifications.dart";
-
-import "../../util/smart_case_init.dart";
+import "package:smart_case/database/local/notifications.dart";
+import 'package:smart_case/util/smart_case_init.dart';
 
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 

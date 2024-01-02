@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
+import 'package:smart_case/database/currency/smart_currency.dart';
+import 'package:smart_case/database/employee/employee_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
-import 'package:smart_case/models/smart_currency.dart';
-import 'package:smart_case/models/smart_employee.dart';
-import 'package:smart_case/models/smart_model.dart';
+import 'package:smart_case/database/smart_model.dart';
 
 class SmartRequisitionCategory extends SmartModel {
   final int id;

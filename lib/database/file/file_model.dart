@@ -1,4 +1,4 @@
-import 'package:smart_case/models/smart_model.dart';
+import 'package:smart_case/database/smart_model.dart';
 
 class SmartFile extends SmartModel {
   int? id;

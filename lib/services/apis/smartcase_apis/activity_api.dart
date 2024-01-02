@@ -1,4 +1,4 @@
-import '../../../data/global_data.dart';
+import '../../../data/app_config.dart';
 import '../../../database/activity/activity_model.dart';
 import '../../../database/activity/activty_repo.dart';
 

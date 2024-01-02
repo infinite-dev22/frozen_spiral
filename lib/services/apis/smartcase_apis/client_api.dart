@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:smart_case/data/global_data.dart';
+import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/client/client_model.dart';
 import 'package:smart_case/database/client/client_repo.dart';
-import 'package:smart_case/models/smart_drawer.dart';
+import 'package:smart_case/database/drawer/drawer_model.dart';
 
 class ClientApi {
   static Future<List<SmartClient>> fetchAll(

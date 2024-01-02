@@ -1,7 +1,6 @@
-import 'package:smart_case/data/global_data.dart';
-
-import '../../../database/reports/cause_list_repo.dart';
-import '../../../database/reports/models/cause_list_report.dart';
+import 'package:smart_case/data/app_config.dart';
+import 'package:smart_case/database/reports/cause_list_repo.dart';
+import 'package:smart_case/database/reports/models/cause_list_report.dart';
 
 class CauseListApi {
   static Future<List<SmartCauseListReport>> fetchAll() async {

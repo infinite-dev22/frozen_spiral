@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../data/global_data.dart';
+import '../../data/app_config.dart';
 import '../../util/smart_case_init.dart';
 import '../interface/drawer_repo_interface.dart';
 

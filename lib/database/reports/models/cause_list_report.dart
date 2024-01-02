@@ -1,5 +1,5 @@
-import '../../court.dart';
-import '../../partner.dart';
+import 'package:smart_case/database/court/court_model.dart';
+import 'package:smart_case/database/partner/partner_model.dart';
 
 class SmartCauseListReport {
   int id;
@@ -37,9 +37,11 @@ class SmartCauseListReport {
       fileNumber: json['file_number'],
       court: (json['court'] != null) ? Court.fromJson(json['court']) : null,
       practiceArea: json['practiceArea'],
-      partners: (json['partners'] != null) ? (json['partners'] as List)
-          .map((partner) => Partner.fromJson(partner))
-          .toList() : null,
+      partners: (json['partners'] != null)
+          ? (json['partners'] as List)
+              .map((partner) => Partner.fromJson(partner))
+              .toList()
+          : null,
     );
   }
 }
