@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/database/employee/employee_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
@@ -40,13 +41,14 @@ class SmartDoneActivityReport {
   });
 
   factory SmartDoneActivityReport.fromJson(Map<String, dynamic> json) {
+    var now = DateFormat("yyyy-MM-dd").format(DateTime.now());
     return SmartDoneActivityReport(
       id: json['id'],
       description: json['description'],
       state: json['state'],
       date: DateTime.parse(json['date']),
-      from: DateTime.parse(json['from']),
-      to: DateTime.parse(json['to']),
+      from: DateTime.parse("$now ${json['from']}.000"),
+      to: DateTime.parse("$now ${json['to']}.000"),
       isBillable: json['is_billable'],
       isLocked: json['is_locked'],
       lockedBy: json['locked_by'],

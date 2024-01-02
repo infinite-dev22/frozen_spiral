@@ -182,6 +182,8 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
                 textColor: AppColors.white,
                 fontSize: 16.0);
       if (mounted) setState(() {});
+      print(error);
+      throw stackTrace;
     });
     filterController.text == 'Name';
     if (mounted) setState(() {});

@@ -46,7 +46,7 @@ class CauseListReportItem extends StatelessWidget {
                     FreeTextItem(
                       title: "Event Date",
                       data: (causeReport.date != null)
-                          ? DateFormat('dd/MM/yyyy h:m a')
+                          ? DateFormat('dd/MM/yyyy h:mm a')
                               .format(causeReport.date!)
                           : "N/A",
                     ),
