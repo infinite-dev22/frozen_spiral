@@ -1,4 +1,4 @@
-import 'package:smart_case/data/global_data.dart';
+import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/file/file_repo.dart';
 

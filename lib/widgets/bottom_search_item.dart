@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_case/models/smart_model.dart';
+import 'package:smart_case/database/smart_model.dart';
 
 class SearchItem<T extends SmartModel> extends StatelessWidget {
   const SearchItem({

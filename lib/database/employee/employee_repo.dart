@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
-import 'package:smart_case/data/global_data.dart';
+import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/interface/employee_repo_interface.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 

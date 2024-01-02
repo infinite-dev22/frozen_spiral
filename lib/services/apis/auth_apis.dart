@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
-import 'package:smart_case/models/user.dart';
+import 'package:smart_case/data/app_config.dart';
+import 'package:smart_case/database/user/user_model.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-
-import '../../data/global_data.dart';
 
 class AuthApis {
   static Future uploadFCMToken(String email) async {

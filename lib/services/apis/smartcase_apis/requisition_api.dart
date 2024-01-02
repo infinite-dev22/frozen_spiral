@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:smart_case/models/smart_drawer.dart';
-
-import '../../../data/global_data.dart';
-import '../../../database/requisition/requisition_model.dart';
-import '../../../database/requisition/requisition_repo.dart';
+import 'package:smart_case/data/app_config.dart';
+import 'package:smart_case/database/drawer/drawer_model.dart';
+import 'package:smart_case/database/requisition/requisition_model.dart';
+import 'package:smart_case/database/requisition/requisition_repo.dart';
 
 class RequisitionApi {
   static Future<List<SmartRequisition>> fetchAll(

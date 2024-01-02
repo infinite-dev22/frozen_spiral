@@ -6,27 +6,27 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
+import 'package:smart_case/database/local/notifications.dart';
 import 'package:smart_case/firebase_options.dart';
-import 'package:smart_case/models/local/notifications.dart';
-import 'package:smart_case/pages/activities_page.dart';
-import 'package:smart_case/pages/activity_view_page.dart';
-import 'package:smart_case/pages/cause_list_report_page.dart';
-import 'package:smart_case/pages/diary_page.dart';
-import 'package:smart_case/pages/done_activities_report_page.dart';
-import 'package:smart_case/pages/engagements_page.dart';
-import 'package:smart_case/pages/event_view.dart';
-import 'package:smart_case/pages/file_page.dart';
-import 'package:smart_case/pages/home_page.dart';
-import 'package:smart_case/pages/locator_page.dart';
-import 'package:smart_case/pages/login_page.dart';
-import 'package:smart_case/pages/notifications_page.dart';
-import 'package:smart_case/pages/profile_page.dart';
-import 'package:smart_case/pages/reports_page.dart';
-import 'package:smart_case/pages/requisition_view_page.dart';
-import 'package:smart_case/pages/requisitions_page.dart';
-import 'package:smart_case/pages/root_page.dart';
-import 'package:smart_case/pages/tasks_page.dart';
-import 'package:smart_case/pages/welcome_page.dart';
+import 'package:smart_case/pages/activity_page/activities_page.dart';
+import 'package:smart_case/pages/activity_page/widgets/activity_view_page.dart';
+import 'package:smart_case/pages/auth_pages/login_page/login_page.dart';
+import 'package:smart_case/pages/auth_pages/signin_page/signin_page.dart';
+import 'package:smart_case/pages/engagement_page/engagements_page.dart';
+import 'package:smart_case/pages/event_page/event_page.dart';
+import 'package:smart_case/pages/event_page/widgets/event_view.dart';
+import 'package:smart_case/pages/file_page/file_page.dart';
+import 'package:smart_case/pages/home_page/home_page.dart';
+import 'package:smart_case/pages/locator_page/locator_page.dart';
+import 'package:smart_case/pages/notification_page/notifications_page.dart';
+import 'package:smart_case/pages/profile_page/profile_page.dart';
+import 'package:smart_case/pages/report_page/reports_page.dart';
+import 'package:smart_case/pages/report_page/widgets/reports/cause_list_report_page.dart';
+import 'package:smart_case/pages/report_page/widgets/reports/done_activities_report_page.dart';
+import 'package:smart_case/pages/requisition_page/requisitions_page.dart';
+import 'package:smart_case/pages/requisition_page/widgets/requisition_view_page.dart';
+import 'package:smart_case/pages/root_page/root_page.dart';
+import 'package:smart_case/pages/task_page/tasks_page.dart';
 import 'package:smart_case/services/apis/firebase_apis.dart';
 import 'package:smart_case/services/navigation/locator.dart';
 import 'package:smart_case/services/navigation/navigator_service.dart';
@@ -157,7 +157,7 @@ class MyApp extends StatelessWidget {
           '/requisition': (context) => const RequisitionViewPage(),
           '/event': (context) => const EventView(),
           '/activity': (context) => const ActivityViewPage(),
-          '/cause_list_report': (context) => const CauseListReportPage(),
+          '/causeListReports': (context) => const CauseListReportPage(),
           '/done_activities_report': (context) =>
               const DoneActivitiesReportPage(),
         },

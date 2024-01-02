@@ -11,13 +11,12 @@ import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:smart_case/data/global_data.dart';
+import 'package:smart_case/data/app_config.dart';
+import 'package:smart_case/database/event/event_model.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
-import 'package:smart_case/models/smart_event.dart';
+import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../theme/color.dart';
 
 class SmartCaseApi {
   static Future<List<SmartRequisition>> fetchAllRequisitions(String token,
