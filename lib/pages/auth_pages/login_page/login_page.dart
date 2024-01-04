@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:email_validator/email_validator.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
@@ -14,6 +16,7 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/auth_text_field.dart';
 import 'package:smart_case/widgets/custom_image.dart';
+import 'package:smart_case/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
 import 'package:smart_case/widgets/wide_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -43,7 +46,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: _buildBody(),
+      body: BlocBuilder<ProfilePicBloc, ProfilePicState>(
+        builder: (context, state) {
+          return _buildBody();
+        },
+      ),
     );
   }
 
@@ -191,9 +198,14 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.popUntil(context, (route) => false);
     Navigator.pushNamed(context, '/root');
 
+    var rand = Random(2024).nextInt(2024);
+
     box.write('email', emailController.text.trim());
     box.write('name', currentUser.firstName);
     box.write('image', currentUser.avatar);
+
+    context.read<ProfilePicBloc>().add(GetProfilePic());
+    // profilePicBloc.add(GetProfilePic());
   }
 
   _handleWrongEmail() {

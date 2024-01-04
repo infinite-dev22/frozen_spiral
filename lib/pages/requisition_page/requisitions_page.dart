@@ -44,9 +44,9 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   bool _returnedFilter = false;
 
   final List<SmartRequisition> _searchedRequisitions =
-      List.empty(growable: true);
+  List.empty(growable: true);
   final List<SmartRequisition> _filteredRequisitions =
-      List.empty(growable: true);
+  List.empty(growable: true);
   final List<SmartCurrency> _currencies = List.empty(growable: true);
 
   List<DropdownMenuItem> _filters() {
@@ -353,53 +353,84 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
 
   _buildFilteredList() {
     _filteredRequisitions.clear();
-    _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) => (!_allFilter &&
-            !_submittedFilter &&
-            !_approvedFilter &&
-            !_preApprovedFilter &&
-            !_rejectedFilter &&
-            !_returnedFilter)
-        ? (((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
+    _filteredRequisitions.addAll(preloadedRequisitions.where((requisition) =>
+    (!_allFilter &&
+        !_submittedFilter &&
+        !_approvedFilter &&
+        !_preApprovedFilter &&
+        !_rejectedFilter &&
+        !_returnedFilter)
+        ? (((requisition.requisitionStatus!.code.toLowerCase().contains(
+        "submit") ||
+        requisition.requisitionStatus!.name
+            .toLowerCase()
+            .contains("submit")) &&
+        requisition.supervisor!.id == currentUser.id) ||
+        (requisition.employee!.id == currentUser.id) ||
+        (requisition.canPay == true) ||
+        ((requisition.secondApprover != null &&
+            requisition.secondApprover == true) &&
+            (((requisition.requisitionStatus!.code.toLowerCase().contains(
+                "submit") ||
+                requisition.requisitionStatus!.name
+                    .toLowerCase()
+                    .contains("submit")) &&
+                (requisition.supervisor!.id == currentUser.id)) ||
+                (requisition.requisitionStatus!.code
+                    .toLowerCase()
+                    .contains("primary_approved") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("submit")) &&
-                requisition.supervisor!.id == currentUser.id) ||
-            (requisition.employee!.id == currentUser.id) ||
-            (requisition.canPay == true) ||
-            ((requisition.secondApprover != null &&
-                    requisition.secondApprover == true) &&
-                (((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
-                            requisition.requisitionStatus!.name
-                                .toLowerCase()
-                                .contains("submit")) &&
-                        (requisition.supervisor!.id == currentUser.id)) ||
-                    (requisition.requisitionStatus!.code
-                            .toLowerCase()
-                            .contains("primary_approved") ||
-                        requisition.requisitionStatus!.name
-                            .toLowerCase()
-                            .contains("primary approved"))
+                        .contains("primary approved"))
                 //     && ((requisition.supervisor!.id == currentUser.id) ||
                 // (requisition.employee!.id == currentUser.id))
-                )))
+            )))
         : (_allFilter &&
-                !_submittedFilter &&
-                !_approvedFilter &&
-                !_preApprovedFilter &&
-                !_rejectedFilter &&
-                !_returnedFilter)
-            ? ((canApprove) ? (true) : requisition.employee!.id == currentUser.id)
-            : ((_submittedFilter)
-                ? ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") || requisition.requisitionStatus!.name.toLowerCase().contains("submit")) && (_allFilter ? (true) : ((canApprove) ? (requisition.employee!.id == currentUser.id || requisition.supervisor!.id == currentUser.id) : requisition.employee!.id == currentUser.id)))
-                : (_approvedFilter)
-                    ? (((requisition.requisitionStatus!.code.toLowerCase() == "approved" || requisition.requisitionStatus!.name.toLowerCase() == "approved") && (_allFilter ? (true) : ((canApprove) ? (requisition.employee!.id == currentUser.id || requisition.supervisor!.id == currentUser.id) : requisition.employee!.id == currentUser.id))))
-                    : (_preApprovedFilter)
-                        ? ((requisition.requisitionStatus!.code.toLowerCase().contains("primary_approved") || requisition.requisitionStatus!.name.toLowerCase().contains("primary approved")))
-                        : (_rejectedFilter)
-                            ? (((requisition.requisitionStatus!.code.toLowerCase().contains("rejected") || requisition.requisitionStatus!.name.toLowerCase().contains("rejected")) && (_allFilter ? (true) : ((canApprove) ? (requisition.employee!.id == currentUser.id || requisition.supervisor!.id == currentUser.id) : requisition.employee!.id == currentUser.id))))
-                            : (_returnedFilter)
-                                ? (((requisition.requisitionStatus!.code.toLowerCase().contains("returned") || requisition.requisitionStatus!.name.toLowerCase().contains("returned")) && (_allFilter ? (true) : ((canApprove) ? (requisition.employee!.id == currentUser.id || requisition.supervisor!.id == currentUser.id) : requisition.employee!.id == currentUser.id))))
-                                : false)));
+        !_submittedFilter &&
+        !_approvedFilter &&
+        !_preApprovedFilter &&
+        !_rejectedFilter &&
+        !_returnedFilter)
+        ? ((canApprove) ? (true) : requisition.employee!.id == currentUser.id)
+        : ((_submittedFilter)
+        ? ((requisition.requisitionStatus!.code.toLowerCase().contains(
+        "submit") ||
+        requisition.requisitionStatus!.name.toLowerCase().contains("submit")) &&
+        (_allFilter ? (true) : ((canApprove)
+            ? (requisition.employee!.id == currentUser.id ||
+            requisition.supervisor!.id == currentUser.id)
+            : requisition.employee!.id == currentUser.id)))
+        : (_approvedFilter)
+        ? (((requisition.requisitionStatus!.code.toLowerCase() == "approved" ||
+        requisition.requisitionStatus!.name.toLowerCase() == "approved") &&
+        (_allFilter ? (true) : ((canApprove)
+            ? (requisition.employee!.id == currentUser.id ||
+            requisition.supervisor!.id == currentUser.id)
+            : requisition.employee!.id == currentUser.id))))
+        : (_preApprovedFilter)
+        ? ((requisition.requisitionStatus!.code.toLowerCase().contains(
+        "primary_approved") ||
+        requisition.requisitionStatus!.name.toLowerCase().contains(
+            "primary approved")))
+        : (_rejectedFilter)
+        ? (((requisition.requisitionStatus!.code.toLowerCase().contains(
+        "rejected") ||
+        requisition.requisitionStatus!.name.toLowerCase().contains(
+            "rejected")) &&
+        (_allFilter ? (true) : ((canApprove)
+            ? (requisition.employee!.id == currentUser.id ||
+            requisition.supervisor!.id == currentUser.id)
+            : requisition.employee!.id == currentUser.id))))
+        : (_returnedFilter)
+        ? (((requisition.requisitionStatus!.code.toLowerCase().contains(
+        "returned") ||
+        requisition.requisitionStatus!.name.toLowerCase().contains(
+            "returned")) &&
+        (_allFilter ? (true) : ((canApprove)
+            ? (requisition.employee!.id == currentUser.id ||
+            requisition.supervisor!.id == currentUser.id)
+            : requisition.employee!.id == currentUser.id))))
+        : false)));
   }
 
   _buildNonSearchedBody() {
@@ -409,14 +440,15 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
           controller: _scrollController,
           itemCount: _filteredRequisitions.length,
           padding: const EdgeInsets.all(8),
-          itemBuilder: (context, index) => RequisitionItem(
-            color: AppColors.white,
-            padding: 10,
-            requisition: _filteredRequisitions.elementAt(index),
-            currencies: _currencies,
-            showActions: true,
-            showFinancialStatus: true,
-          ),
+          itemBuilder: (context, index) =>
+              RequisitionItem(
+                color: AppColors.white,
+                padding: 10,
+                requisition: _filteredRequisitions.elementAt(index),
+                currencies: _currencies,
+                showActions: true,
+                showFinancialStatus: true,
+              ),
         ),
       );
     } else if (_doneLoading && _filteredRequisitions.isEmpty) {
@@ -438,26 +470,28 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   _buildSearchedBody() {
     List<SmartRequisition> requisitions = _searchedRequisitions
         .where((requisition) =>
-            ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
+    ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
+        requisition.requisitionStatus!.name
+            .toLowerCase()
+            .contains("submit")) &&
+        requisition.supervisor!.id == currentUser.id) ||
+        (requisition.employee!.id == currentUser.id) ||
+        (requisition.canPay == true) ||
+        ((requisition.secondApprover != null &&
+            requisition.secondApprover == true) &&
+            ((requisition.requisitionStatus!.code.toLowerCase().contains(
+                "submit") ||
+                requisition.requisitionStatus!.name
+                    .toLowerCase()
+                    .contains("submit")) ||
+                (requisition.requisitionStatus!.code
+                    .toLowerCase()
+                    .contains("primar") ||
                     requisition.requisitionStatus!.name
                         .toLowerCase()
-                        .contains("submit")) &&
-                requisition.supervisor!.id == currentUser.id) ||
-            (requisition.employee!.id == currentUser.id) ||
-            (requisition.canPay == true) ||
-            ((requisition.secondApprover != null && requisition.secondApprover == true) &&
-                ((requisition.requisitionStatus!.code.toLowerCase().contains("submit") ||
-                        requisition.requisitionStatus!.name
-                            .toLowerCase()
-                            .contains("submit")) ||
-                    (requisition.requisitionStatus!.code
-                                .toLowerCase()
-                                .contains("primar") ||
-                            requisition.requisitionStatus!.name
-                                .toLowerCase()
-                                .contains("primar")) &&
-                        (requisition.supervisor!.id == currentUser.id) ||
-                    (requisition.employee!.id == currentUser.id))))
+                        .contains("primar")) &&
+                    (requisition.supervisor!.id == currentUser.id) ||
+                (requisition.employee!.id == currentUser.id))))
         .toList(growable: true);
 
     if ((requisitions.isNotEmpty)) {
@@ -489,7 +523,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
   void initState() {
     super.initState();
 
-    _scrollController = ScrollController()..addListener(_scrollListener);
+    _scrollController = ScrollController()
+      ..addListener(_scrollListener);
     RequisitionApi.fetchAll().then((value) {
       _doneLoading = true;
       setState(() {});
@@ -529,10 +564,10 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
     _buildFilteredList();
     _searchedRequisitions.clear();
     _searchedRequisitions.addAll(_filteredRequisitions.where(
-        (smartRequisition) =>
-            smartRequisition.number!
-                .toLowerCase()
-                .contains(value.toLowerCase()) ||
+            (smartRequisition) =>
+        smartRequisition.number!
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
             smartRequisition.caseFile!.fileName!
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
@@ -561,8 +596,8 @@ class _RequisitionsPageState extends State<RequisitionsPage> {
                 .contains(value.toLowerCase()) ||
             (smartRequisition.description != null
                 ? smartRequisition.description!
-                    .toLowerCase()
-                    .contains(value.toLowerCase())
+                .toLowerCase()
+                .contains(value.toLowerCase())
                 : false)));
     setState(() {});
   }

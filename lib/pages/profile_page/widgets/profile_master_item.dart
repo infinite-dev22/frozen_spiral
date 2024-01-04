@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/widgets/custom_icon_holder.dart';
-import 'package:smart_case/widgets/custom_image.dart';
+import 'package:smart_case/widgets/profile_pic_widget/profile_pic.dart';
 
 class ProfileMasterItem extends StatelessWidget {
   const ProfileMasterItem({
     super.key,
-    this.image,
-    required this.isFile,
-    required this.isNetwork,
     required this.color,
     required this.padding,
     this.changePhotoTap,
@@ -17,9 +13,6 @@ class ProfileMasterItem extends StatelessWidget {
     required this.lastName,
   });
 
-  final dynamic image;
-  final bool isFile;
-  final bool isNetwork;
   final Color color;
   final double padding;
   final String firstName;
@@ -63,19 +56,11 @@ class ProfileMasterItem extends StatelessWidget {
   _buildProfileImage() {
     return Column(
       children: [
-        isNetwork
-            ? CustomImage(
-                image,
-                isFile: isFile,
-                isNetwork: isNetwork,
-              )
-            : const CustomIconHolder(
-                width: 150,
-                height: 150,
-                graphic: Icons.account_circle,
-                radius: 100,
-                size: 150,
-              ),
+        const ProfilePic(
+          width: 150,
+          height: 150,
+          radius: 100,
+        ),
         const SizedBox(
           height: 10,
         ),

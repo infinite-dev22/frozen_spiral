@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:full_picker/full_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/password/password_model.dart';
 import 'package:smart_case/pages/profile_page/widgets/profile_detail_item.dart';
 import 'package:smart_case/pages/profile_page/widgets/profile_master_item.dart';
-import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/employee_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/password_api.dart';
 import 'package:smart_case/theme/color.dart';
@@ -18,6 +18,7 @@ import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
+import 'package:smart_case/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -69,9 +70,6 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.all(16),
       children: [
         ProfileMasterItem(
-          image: currentUser.avatar,
-          isFile: false,
-          isNetwork: currentUser.avatar != null ? true : false,
           color: Colors.white,
           padding: 20,
           changePhotoTap: _changePhotoTapped,
@@ -113,28 +111,30 @@ class _ProfilePageState extends State<ProfilePage> {
         }
       },
       onSelected: (value) {
-        SmartCaseApi.uploadProfilePicture(value.file.first!, onError: () {
-          setState(() {});
-          Fluttertoast.showToast(
-              msg: "An error occurred! Profile not updated",
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 5,
-              backgroundColor: AppColors.red,
-              textColor: AppColors.white,
-              fontSize: 16.0);
-          // _buildImage();
-        }, onSuccess: () {
-          Fluttertoast.showToast(
-              msg: "Profile photo updated successfully",
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 5,
-              backgroundColor: AppColors.green,
-              textColor: AppColors.white,
-              fontSize: 16.0);
-          setState(() {});
-        });
+        // SmartCaseApi.uploadProfilePicture(value.file.first!, onError: () {
+        //   setState(() {});
+        //   Fluttertoast.showToast(
+        //       msg: "An error occurred! Profile not updated",
+        //       toastLength: Toast.LENGTH_LONG,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 5,
+        //       backgroundColor: AppColors.red,
+        //       textColor: AppColors.white,
+        //       fontSize: 16.0);
+        //   // _buildImage();
+        //   Fluttertoast.showToast(
+        //       msg: "Profile photo updated successfully",
+        //       toastLength: Toast.LENGTH_LONG,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 5,
+        //       backgroundColor: AppColors.green,
+        //       textColor: AppColors.white,
+        //       fontSize: 16.0);
+        // }, onSuccess: () {
+        // });
+
+        context.read<ProfilePicBloc>().add(UpdateProfilePic(value.file.first!));
+        context.read<ProfilePicBloc>().add(GetProfilePic());
       },
     );
   }

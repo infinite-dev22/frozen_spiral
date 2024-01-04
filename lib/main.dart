@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -32,6 +33,7 @@ import 'package:smart_case/services/navigation/locator.dart';
 import 'package:smart_case/services/navigation/navigator_service.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
 
 Future<void> main() async {
   try {
@@ -131,17 +133,23 @@ class MyApp extends StatelessWidget {
          ThemeMode.light for light theme,
          ThemeMode.dark for dark theme */
         routes: {
-          // '/': (context) => const WelcomePage(),
-          // '/': (context) => (email != null && email.isNotEmpty && email != "")
-          //     ? const LoginPromptPage()
-          //     : const WelcomePage(),
-          '/login': (context) => const LoginPage(),
-          '/sign_in': (context) => const WelcomePage(),
+          '/login': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const LoginPage(),
+              ),
+          '/sign_in': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const WelcomePage(),
+              ),
           '/': (context) => (email != null && email.isNotEmpty && email != "")
-              ? const WelcomePage()
-              : const LoginPage(),
-          // '/login': (context) => const WelcomePage(),
-          // '/welcome': (context) => const LoginPromptPage(),
+              ? BlocProvider(
+                  create: (context) => ProfilePicBloc(),
+                  child: const WelcomePage(),
+                )
+              : BlocProvider(
+                  create: (context) => ProfilePicBloc(),
+                  child: const LoginPage(),
+                ),
           '/root': (context) => const RootPage(),
           '/home': (context) => const HomePage(),
           '/files': (context) => const FilesPage(),
@@ -153,7 +161,10 @@ class MyApp extends StatelessWidget {
           '/reports': (context) => const ReportsPage(),
           '/alerts': (context) => const AlertsPage(),
           '/locator': (context) => const LocatorPage(),
-          '/profile': (context) => const ProfilePage(),
+          '/profile': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const ProfilePage(),
+              ),
           '/requisition': (context) => const RequisitionViewPage(),
           '/event': (context) => const EventView(),
           '/activity': (context) => const ActivityViewPage(),

@@ -89,6 +89,7 @@ dependencies:
   permission_handler: ^11.1.0  # Marked for removal due to unfulfilled promise of solving issue but didn't
   flutter_simple_multiselect: ^2.0.0  # Marked for removal due to breaking changes.
   multi_select_flutter: ^4.1.3
+  profile_photo: ^1.0.3
 
 dev_dependencies:
   flutter_test:

@@ -167,17 +167,16 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
       _doneLoading = true;
       setState(() {});
     }).onError((error, stackTrace) {
-      print(error);
       debugPrintStack(stackTrace: stackTrace);
       _doneLoading = true;
-            Fluttertoast.showToast(
-                msg: "An error occurred",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 5,
-                backgroundColor: AppColors.red,
-                textColor: AppColors.white,
-                fontSize: 16.0);
+      Fluttertoast.showToast(
+          msg: "An error occurred",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 5,
+          backgroundColor: AppColors.red,
+          textColor: AppColors.white,
+          fontSize: 16.0);
       if (mounted) setState(() {});
     });
     filterController.text == 'Name';
@@ -216,14 +215,14 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
       setState(() {});
     }).onError((error, stackTrace) {
       _doneLoading = true;
-            Fluttertoast.showToast(
-                msg: "An error occurred",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 5,
-                backgroundColor: AppColors.red,
-                textColor: AppColors.white,
-                fontSize: 16.0);
+      Fluttertoast.showToast(
+          msg: "An error occurred",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 5,
+          backgroundColor: AppColors.red,
+          textColor: AppColors.white,
+          fontSize: 16.0);
       setState(() {});
     });
   }

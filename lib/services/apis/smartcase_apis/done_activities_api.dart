@@ -10,7 +10,6 @@ class DoneActivitiesApi {
     var response = await causeListRepo.fetchAll();
 
     List causeListsMap = response['search']['doneActivities'];
-    print("Dope List: ${causeListsMap.length}");
 
     if (causeListsMap.isNotEmpty) {
       causeLists = causeListsMap

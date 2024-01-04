@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
-
 import 'package:smart_case/theme/color.dart';
 
 class RequisitionItemStatus extends StatelessWidget {

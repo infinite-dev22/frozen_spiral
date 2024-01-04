@@ -240,14 +240,14 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
       setState(() {});
     }).onError((error, stackTrace) {
       _doneLoading = true;
-            Fluttertoast.showToast(
-                msg: "An error occurred",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 5,
-                backgroundColor: AppColors.red,
-                textColor: AppColors.white,
-                fontSize: 16.0);
+      Fluttertoast.showToast(
+          msg: "An error occurred",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 5,
+          backgroundColor: AppColors.red,
+          textColor: AppColors.white,
+          fontSize: 16.0);
       setState(() {});
     });
   }

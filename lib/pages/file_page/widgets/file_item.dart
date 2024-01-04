@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/text_item.dart';
 
-import 'package:smart_case/theme/color.dart';
 import 'file_item_status.dart';
 
 class FileItem extends StatelessWidget {

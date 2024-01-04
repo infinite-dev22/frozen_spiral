@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_case/widgets/custom_icon_button.dart';
-
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/custom_icon_button.dart';
 
 class ProfileDetailItem extends StatelessWidget {
   const ProfileDetailItem(

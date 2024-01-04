@@ -323,7 +323,7 @@ class _RootPageState extends State<RootPage> {
 
   @override
   void initState() {
-    currentUser.avatar = currentUserAvatar;
+    // currentUser.avatar = currentUserAvatar;
 
     // Run code required to handle interacted messages in an async function
     // as initState() must not be async

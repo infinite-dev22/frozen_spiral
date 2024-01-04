@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -344,8 +342,6 @@ class _EngagementFormState extends State<EngagementForm> {
         notifyWith: [SmartEmployee(id: 1)],
         doneBy: [SmartEmployee(id: 1)],
       );
-
-      print(jsonEncode(smartEngagement.toCreateJson()));
 
       (widget.engagement == null)
           ? SmartCaseApi.smartPost('api/crm/engagements', currentUser.token,

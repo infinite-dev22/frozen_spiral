@@ -45,18 +45,15 @@ class DoneActivityReportItem extends StatelessWidget {
                   children: [
                     FreeTextItem(
                       title: "Activity Date",
-                      data: DateFormat('dd/MM/yyyy')
-                          .format(doneActivity.date),
+                      data: DateFormat('dd/MM/yyyy').format(doneActivity.date),
                     ),
                     FreeTextItem(
                       title: "From",
-                      data: DateFormat('h:mm a')
-                          .format(doneActivity.from),
+                      data: DateFormat('h:mm a').format(doneActivity.from),
                     ),
                     FreeTextItem(
                       title: "To",
-                      data: DateFormat('h:mm a')
-                          .format(doneActivity.to),
+                      data: DateFormat('h:mm a').format(doneActivity.to),
                     ),
                   ],
                 ),

@@ -10,6 +10,7 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+
 class DiaryPage extends StatefulWidget {
   const DiaryPage({super.key});
 

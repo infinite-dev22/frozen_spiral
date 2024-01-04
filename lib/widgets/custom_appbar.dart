@@ -120,9 +120,7 @@ class AppBarContent extends StatelessWidget {
       return Navigator.pushNamed(context, '/profile');
     }
     if (value == 'Sign out') {
-      // AuthApis.signOutUser().then((value) {
       Navigator.pushNamedAndRemoveUntil(context, '/sign_in', (route) => false);
-      // });
     }
   }
 }
