@@ -84,30 +84,17 @@ class AppBarContent extends StatelessWidget {
                         },
                       )
                     : const SizedBox())
-                : isNetwork
-                    ? CustomDropdownAction(
-                        menuItems: (ModalRoute.of(context)!.settings.name ==
-                                "/profile")
+                : CustomDropdownAction(
+                    menuItems:
+                        (ModalRoute.of(context)!.settings.name == "/profile")
                             ? ["Sign out"]
                             : profileActions,
-                        bgColor: Colors.white,
-                        isNetwork: true,
-                        onChanged: (value) =>
-                            _buildOnProfileDropdownValueChanged(value, context),
-                        image: currentUser.avatar,
-                      )
-                    : CustomDropdownFilter(
-                        menuItems: (ModalRoute.of(context)!.settings.name ==
-                                "/profile")
-                            ? ["Sign out"]
-                            : profileActions,
-                        bgColor: Colors.white,
-                        icon: Icons.account_circle,
-                        radius: 50,
-                        size: 35,
-                        onChanged: (value) =>
-                            _buildOnProfileDropdownValueChanged(value, context),
-                      ),
+                    bgColor: Colors.white,
+                    isNetwork: true,
+                    onChanged: (value) =>
+                        _buildOnProfileDropdownValueChanged(value, context),
+                    image: currentUser.avatar,
+                  ),
           ],
         ),
       ],

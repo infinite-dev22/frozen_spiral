@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_case/theme/color.dart';
 
 class NoPic extends StatelessWidget {
   const NoPic({
@@ -27,8 +28,12 @@ class NoPic extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(radius),
       ),
-      child: const Center(
-        child: Icon(Icons.person),
+      child: Center(
+        child: Icon(
+          Icons.person,
+          color: AppColors.darker,
+          size: width,
+        ),
       ),
     );
   }
