@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/widgets/custom_images/custom_image.dart';
+import 'package:smart_case/widgets/custom_image.dart';
 
 class CustomIconHolder extends StatelessWidget {
   const CustomIconHolder(

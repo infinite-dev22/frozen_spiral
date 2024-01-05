@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_case/models/smart_model.dart';
+import 'package:smart_case/database/smart_model.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/bottom_search_item.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';

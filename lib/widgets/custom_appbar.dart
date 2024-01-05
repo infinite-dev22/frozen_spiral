@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
-import 'package:smart_case/widgets/custom_images/custom_image.dart';
+import 'package:smart_case/widgets/custom_image.dart';
 import 'package:smart_case/widgets/custom_spacer.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 
@@ -120,9 +120,7 @@ class AppBarContent extends StatelessWidget {
       return Navigator.pushNamed(context, '/profile');
     }
     if (value == 'Sign out') {
-      // AuthApis.signOutUser().then((value) {
       Navigator.pushNamedAndRemoveUntil(context, '/sign_in', (route) => false);
-      // });
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:smart_case/database/employee/employee_repo.dart';
 
 class EmployeeApi {
@@ -64,12 +66,20 @@ class EmployeeApi {
 
   static post(Object data, int id,
       {Function()? onSuccess, Function()? onError}) async {
-    EmployeeRepo requisitionRepo = EmployeeRepo();
+    EmployeeRepo employeeRepo = EmployeeRepo();
 
-    var response = await requisitionRepo
+    var response = await employeeRepo
         .post(data, id)
         .then((value) => onSuccess!())
         .onError((error, stackTrace) => onError!());
+    return response;
+  }
+
+  static Future<File> getUserAvatar() async {
+    EmployeeRepo employeeRepo = EmployeeRepo();
+
+    var response = await employeeRepo
+        .getAvatar();
     return response;
   }
 }

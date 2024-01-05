@@ -1,10 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
-import 'package:smart_case/data/global_data.dart';
+import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
-import '../interface/cause_list_repo_interface.dart';
 import '../interface/done_activities_repo_interface.dart';
 
 class DoneActivitiesRepo extends DoneActivitiesRepoInterface {

@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
-import 'package:smart_case/data/global_data.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/interface/employee_repo_interface.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
@@ -140,6 +143,39 @@ class EmployeeRepo extends EmployeeRepoInterface {
           print("An Error occurred: ${response.statusCode}");
         }
       }
+    } finally {
+      dio.close();
+    }
+  }
+
+  @override
+  Future<File> getAvatar() async {
+    Dio dio = Dio(baseOps);
+
+    try {
+      dio.options.followRedirects = false;
+      dio.options.responseType = ResponseType.bytes;
+
+      var rand = Random().nextInt(2024);
+      var response = await dio.get("$currentUserAvatar?v=$rand");
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print("A Success occurred: ${response.statusCode}");
+        }
+
+        File file =
+            File("${(await getTemporaryDirectory()).path}/user_pic.jpg");
+        var raf = file.openSync(mode: FileMode.write);
+        raf.writeFromSync(response.data);
+        await raf.close();
+        return file;
+      } else {
+        if (kDebugMode) {
+          print("An Error occurred: ${response.statusCode}");
+        }
+      }
+      return response.data;
     } finally {
       dio.close();
     }
