@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class PicSuccess extends StatelessWidget {
   const PicSuccess(
-    this.image,this.imageUrl,
-      {
+    this.imageUrl, {
     super.key,
     this.width = 100,
     this.height = 100,
@@ -14,7 +11,6 @@ class PicSuccess extends StatelessWidget {
     this.imageFit = BoxFit.cover,
   });
 
-  final File? image;
   final String imageUrl;
   final double width;
   final double height;
@@ -35,7 +31,8 @@ class PicSuccess extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(radius),
         image: DecorationImage(
-          image: NetworkImage(imageUrl),
+          image: NetworkImage(
+              "$imageUrl?${DateTime.now().millisecondsSinceEpoch.toString()}"),
           fit: imageFit,
         ),
       ),

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -19,8 +18,8 @@ class ProfilePicBloc extends Bloc<ProfilePicEvent, ProfilePicState> {
 
   _mapGetProfilePicEventToState(
       GetProfilePic event, Emitter<ProfilePicState> emit) {
+    emit(state.copyWith(status: ProfilePicStatus.loading));
     try {
-      print(currentUserAvatar);
       emit(state.copyWith(
           status: ProfilePicStatus.success, imageUrl: currentUserAvatar));
     } catch (e) {
@@ -31,13 +30,9 @@ class ProfilePicBloc extends Bloc<ProfilePicEvent, ProfilePicState> {
   _mapUpdateProfilePicEventToState(
       UpdateProfilePic event, Emitter<ProfilePicState> emit) async {
     emit(state.copyWith(status: ProfilePicStatus.loading));
-    await SmartCaseApi.uploadProfilePicture(event.file).whenComplete(() {
-      currentUserAvatar = currentUser.avatar;
-      var rand = Random(2024).nextInt(2024);
-      emit(state.copyWith(
-          status: ProfilePicStatus.success, imageUrl: currentUserAvatar));
-    }).onError((error, stackTrace) =>
-        emit(state.copyWith(status: ProfilePicStatus.error)));
+    await SmartCaseApi.uploadProfilePicture(event.file).onError(
+        (error, stackTrace) =>
+            emit(state.copyWith(status: ProfilePicStatus.error)));
   }
 
   // _mapGetProfilePicEventToState(

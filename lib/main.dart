@@ -150,27 +150,74 @@ class MyApp extends StatelessWidget {
                   create: (context) => ProfilePicBloc(),
                   child: const LoginPage(),
                 ),
-          '/root': (context) => const RootPage(),
-          '/home': (context) => const HomePage(),
-          '/files': (context) => const FilesPage(),
-          '/activities': (context) => const ActivitiesPage(),
-          '/requisitions': (context) => const RequisitionsPage(),
-          '/events': (context) => const DiaryPage(),
-          '/tasks': (context) => const TasksPage(),
-          '/engagements': (context) => const EngagementsPage(),
-          '/reports': (context) => const ReportsPage(),
-          '/alerts': (context) => const AlertsPage(),
-          '/locator': (context) => const LocatorPage(),
+          '/root': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const RootPage(),
+              ),
+          '/home': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const HomePage(),
+              ),
+          '/files': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const FilesPage(),
+              ),
+          '/activities': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const ActivitiesPage(),
+              ),
+          '/requisitions': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const RequisitionsPage(),
+              ),
+          '/events': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const DiaryPage(),
+              ),
+          '/tasks': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const TasksPage(),
+              ),
+          '/engagements': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const EngagementsPage(),
+              ),
+          '/reports': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const ReportsPage(),
+              ),
+          '/alerts': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const AlertsPage(),
+              ),
+          '/locator': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const LocatorPage(),
+              ),
           '/profile': (context) => BlocProvider(
                 create: (context) => ProfilePicBloc(),
                 child: const ProfilePage(),
               ),
-          '/requisition': (context) => const RequisitionViewPage(),
-          '/event': (context) => const EventView(),
-          '/activity': (context) => const ActivityViewPage(),
-          '/cause_list_report': (context) => const CauseListReportPage(),
-          '/done_activities_report': (context) =>
-              const DoneActivitiesReportPage(),
+          '/requisition': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const RequisitionViewPage(),
+              ),
+          '/event': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const EventView(),
+              ),
+          '/activity': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const ActivityViewPage(),
+              ),
+          '/cause_list_report': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const CauseListReportPage(),
+              ),
+          '/done_activities_report': (context) => BlocProvider(
+                create: (context) => ProfilePicBloc(),
+                child: const DoneActivitiesReportPage(),
+              ),
         },
       ),
     );

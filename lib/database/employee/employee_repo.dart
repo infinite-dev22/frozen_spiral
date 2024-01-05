@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
@@ -155,14 +156,16 @@ class EmployeeRepo extends EmployeeRepoInterface {
       dio.options.followRedirects = false;
       dio.options.responseType = ResponseType.bytes;
 
-      var response = await dio.get(currentUserAvatar!);
+      var rand = Random().nextInt(2024);
+      var response = await dio.get("$currentUserAvatar?v=$rand");
 
       if (response.statusCode == 200) {
         if (kDebugMode) {
           print("A Success occurred: ${response.statusCode}");
         }
 
-        File file = File("${(await getTemporaryDirectory()).path}/user_pic.jpg");
+        File file =
+            File("${(await getTemporaryDirectory()).path}/user_pic.jpg");
         var raf = file.openSync(mode: FileMode.write);
         raf.writeFromSync(response.data);
         await raf.close();

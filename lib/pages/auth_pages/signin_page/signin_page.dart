@@ -252,13 +252,10 @@ class _WelcomePageState extends State<WelcomePage> {
     Navigator.popUntil(context, (route) => false);
     Navigator.pushNamed(context, '/root');
 
-    var rand = Random(2024).nextInt(2024);
-
     box.write('email', emailController.text.trim());
     box.write('name', currentUser.firstName);
     box.write('image', currentUser.avatar);
 
-    // profilePicBloc.add(GetProfilePic());
     context.read<ProfilePicBloc>().add(GetProfilePic());
   }
 

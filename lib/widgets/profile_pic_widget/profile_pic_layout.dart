@@ -41,7 +41,6 @@ class _ProfilePicLayoutState extends State<ProfilePicLayout> {
         if (state.status == ProfilePicStatus.success) {
           if (state.imageUrl != null) {
             return PicSuccess(
-              state.file,
               state.imageUrl!,
               width: widget.width,
               height: widget.height,
