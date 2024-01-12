@@ -20,7 +20,7 @@ import 'package:smart_case/pages/root_page/widgets/bottom_bar_item.dart';
 import 'package:smart_case/pages/task_page/widgets/task_form.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/client_api.dart';
-import 'package:smart_case/services/apis/smartcase_apis/engagement_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/engagement_type_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
 import 'package:smart_case/services/navigation/locator.dart';
 import 'package:smart_case/services/navigation/navigator_service.dart';
@@ -333,7 +333,7 @@ class _RootPageState extends State<RootPage> {
 
     RequisitionApi.fetchAll();
     ClientApi.fetchAll();
-    EngagementApi.fetchAll();
+    EngagementTypeApi.fetchAll();
     _loadApprovers;
 
     if (preloadedRequisitions.isNotEmpty) {

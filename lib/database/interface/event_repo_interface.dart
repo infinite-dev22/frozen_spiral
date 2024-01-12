@@ -1,13 +1,11 @@
-abstract class EngagementRepoInterface {
+abstract class EventRepoInterface {
   Future<Map<String, dynamic>> fetch(int id);
 
-  Future<Map<String, dynamic>> fetchAll({Map<String, dynamic>? body});
+  Future<Map<String, dynamic>> fetchAll();
 
   Future<dynamic> put(Map<String, dynamic> data, int id);
 
   Future<dynamic> post(Map<String, dynamic> data, int id);
-
-  Future<dynamic> delete(int id);
 
   Future<dynamic> process(Map<String, dynamic> data, int id);
 

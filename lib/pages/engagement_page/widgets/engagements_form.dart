@@ -8,7 +8,7 @@ import 'package:smart_case/database/employee/employee_model.dart';
 import 'package:smart_case/database/engagement/engagement_model.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/client_api.dart';
-import 'package:smart_case/services/apis/smartcase_apis/engagement_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/engagement_type_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
@@ -282,9 +282,9 @@ class _EngagementFormState extends State<EngagementForm> {
                 onSearch: (value) {
                   searchedList.clear();
                   if (value.length > 2) {
-                    if (preloadedEngagements.isNotEmpty) {
+                    if (preloadedEngagementTypes.isNotEmpty) {
                       isLoading = false;
-                      searchedList.addAll(preloadedEngagements.where(
+                      searchedList.addAll(preloadedEngagementTypes.where(
                           (engagementType) => engagementType.name!
                               .toLowerCase()
                               .contains(value.toLowerCase())));
@@ -316,7 +316,7 @@ class _EngagementFormState extends State<EngagementForm> {
   }
 
   _reloadEngagementTypes() async {
-    EngagementApi.fetchAll();
+    EngagementTypeApi.fetchAll();
     setState(() {});
   }
 

@@ -152,4 +152,36 @@ class ActivityRepo extends ActivityRepoInterface {
       dio.close();
     }
   }
+
+  @override
+  Future<dynamic> delete(int fileId, int activityId) async {
+    Dio dio = Dio(baseOps)
+      ..interceptors.add(DioCacheInterceptor(options: options));
+
+    try {
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers['Accept'] = 'application/json';
+      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
+      // dio.options.followRedirects = false;
+
+      var response = await dio.put(
+        Uri.https(currentUser.url.replaceRange(0, 8, ''),
+                'api/cases/$fileId/activities/$activityId')
+            .toString(),
+      );
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print("A Success occurred: ${response.statusCode}");
+        }
+        return response.data;
+      } else {
+        if (kDebugMode) {
+          print("An Error occurred: ${response.statusCode}");
+        }
+      }
+    } finally {
+      dio.close();
+    }
+  }
 }

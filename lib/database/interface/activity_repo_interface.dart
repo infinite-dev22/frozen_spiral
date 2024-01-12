@@ -7,5 +7,7 @@ abstract class ActivityRepoInterface {
 
   Future<dynamic> post(Map<String, dynamic> data, int fileId);
 
+  Future<dynamic> delete(int fileId, int activityId);
+
   Future<Map<String, dynamic>> filter();
 }

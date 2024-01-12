@@ -62,4 +62,13 @@ class ActivityApi {
 
     return response;
   }
+
+  static delete(int fileId, int activityId,
+      {Function()? onSuccess, Function()? onError}) async {
+    ActivityRepo activityRepo = ActivityRepo();
+    var response = await activityRepo.delete(fileId, activityId);
+    ActivityApi.fetchAll(); // TODO: Remove when bloc is successfully added.
+
+    return response;
+  }
 }
