@@ -9,7 +9,8 @@ import 'package:smart_case/util/smart_case_init.dart';
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 class FirebaseApi {
-  _getFCMToken() {
+  _getFCMToken() async {
+    currentUserFcmToken = await messaging.getToken();
     messaging.onTokenRefresh.listen((fcmToken) async {
       currentUserFcmToken = await messaging.getToken();
     }).onError((err) {
