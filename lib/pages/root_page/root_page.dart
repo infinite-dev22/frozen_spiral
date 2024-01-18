@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:list_load_more/utils/ext/iterable_ext.dart';
+import 'package:new_version_plus/new_version_plus.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/data/screen_arguments.dart';
 import 'package:smart_case/database/currency/smart_currency.dart';
@@ -35,6 +36,7 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
+  String release = "";
   int _activeTab = 0;
 
   final TextEditingController activitySearchController =
@@ -323,6 +325,32 @@ class _RootPageState extends State<RootPage> {
 
   @override
   void initState() {
+    // Instantiate NewVersion manager object (Using GCP Console app as example)
+    final newVersion = NewVersionPlus(
+      iOSId: 'com.infosec.smartCase',
+      androidId: 'com.infosec.smartCase',
+      androidPlayStoreCountry: "es_ES",
+      androidHtmlReleaseNotes: true, //support country code
+    );
+
+    // You can let the plugin handle fetching the status and showing a dialog,
+    // or you can fetch the status and display your own dialog, or no dialog.
+    final ver = VersionStatus(
+      appStoreLink: '',
+      localVersion: '',
+      storeVersion: '',
+      releaseNotes: '',
+      originalStoreVersion: '',
+    );
+    print(ver);
+    const simpleBehavior = true;
+
+    // if (simpleBehavior) {
+    basicStatusCheck(newVersion);
+    // }
+    // else {
+    // advancedStatusCheck(newVersion);
+    // }
     // currentUser.avatar = currentUserAvatar;
 
     // Run code required to handle interacted messages in an async function
@@ -344,6 +372,38 @@ class _RootPageState extends State<RootPage> {
     _loadCurrencies();
 
     super.initState();
+  }
+
+  basicStatusCheck(NewVersionPlus newVersion) async {
+    final version = await newVersion.getVersionStatus();
+    if (version != null) {
+      release = version.releaseNotes ?? "";
+      print("APP VERSION RELEASE: $release");
+      setState(() {});
+    }
+    newVersion.showAlertIfNecessary(
+      context: context,
+      launchModeVersion: LaunchModeVersion.external,
+    );
+  }
+
+  advancedStatusCheck(NewVersionPlus newVersion) async {
+    final status = await newVersion.getVersionStatus();
+    if (status != null) {
+      debugPrint(status.releaseNotes);
+      debugPrint(status.appStoreLink);
+      debugPrint(status.localVersion);
+      debugPrint(status.storeVersion);
+      debugPrint(status.canUpdate.toString());
+      newVersion.showUpdateDialog(
+        context: context,
+        versionStatus: status,
+        dialogTitle: 'Custom Title',
+        dialogText: 'Custom Text',
+        launchModeVersion: LaunchModeVersion.external,
+        allowDismissal: false,
+      );
+    }
   }
 
   _checkCanApprove() async {
