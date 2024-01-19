@@ -61,7 +61,7 @@ class AppBarContent extends StatelessWidget {
                       autoFocus: false,
                     )
                   : const CustomImage(
-                      "assets/images/title_bar.png",
+                      "assets/images/title_bar_light.png",
                       width: 35,
                       height: 35,
                       trBackground: true,

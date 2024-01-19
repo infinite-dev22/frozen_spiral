@@ -404,7 +404,7 @@ class _LoginPageState extends State<LoginPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               CustomImage(
-                                "assets/images/splash.png",
+                                "assets/images/login.png",
                                 trBackground: true,
                                 isNetwork: false,
                                 width: MediaQuery.of(context).size.width * .6,

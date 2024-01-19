@@ -515,7 +515,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               CustomImage(
-                                "assets/images/splash.png",
+                                "assets/images/login.png",
                                 trBackground: true,
                                 isNetwork: false,
                                 width: MediaQuery.of(context).size.width * .6,
