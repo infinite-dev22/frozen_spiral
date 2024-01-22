@@ -332,25 +332,8 @@ class _RootPageState extends State<RootPage> {
       androidPlayStoreCountry: "es_ES",
       androidHtmlReleaseNotes: true, //support country code
     );
+    advancedStatusCheck(newVersion);
 
-    // You can let the plugin handle fetching the status and showing a dialog,
-    // or you can fetch the status and display your own dialog, or no dialog.
-    final ver = VersionStatus(
-      appStoreLink: '',
-      localVersion: '',
-      storeVersion: '',
-      releaseNotes: '',
-      originalStoreVersion: '',
-    );
-    print(ver);
-    const simpleBehavior = true;
-
-    // if (simpleBehavior) {
-    basicStatusCheck(newVersion);
-    // }
-    // else {
-    // advancedStatusCheck(newVersion);
-    // }
     // currentUser.avatar = currentUserAvatar;
 
     // Run code required to handle interacted messages in an async function
@@ -374,19 +357,6 @@ class _RootPageState extends State<RootPage> {
     super.initState();
   }
 
-  basicStatusCheck(NewVersionPlus newVersion) async {
-    final version = await newVersion.getVersionStatus();
-    if (version != null) {
-      release = version.releaseNotes ?? "";
-      print("APP VERSION RELEASE: $release");
-      setState(() {});
-    }
-    newVersion.showAlertIfNecessary(
-      context: context,
-      launchModeVersion: LaunchModeVersion.external,
-    );
-  }
-
   advancedStatusCheck(NewVersionPlus newVersion) async {
     final status = await newVersion.getVersionStatus();
     if (status != null) {
@@ -395,14 +365,19 @@ class _RootPageState extends State<RootPage> {
       debugPrint(status.localVersion);
       debugPrint(status.storeVersion);
       debugPrint(status.canUpdate.toString());
-      newVersion.showUpdateDialog(
-        context: context,
-        versionStatus: status,
-        dialogTitle: 'Custom Title',
-        dialogText: 'Custom Text',
-        launchModeVersion: LaunchModeVersion.external,
-        allowDismissal: false,
-      );
+      if (status.localVersion != status.storeVersion) {
+        newVersion.showUpdateDialog(
+          context: context,
+          versionStatus: status,
+          dialogTitle: 'SmartCase Update Manager',
+          dialogText:
+              'Version ${status.storeVersion} is available for download from version '
+              '${status.localVersion}. Update your app to keep up with a streamlined and smooth '
+              'workflow of the app',
+          launchModeVersion: LaunchModeVersion.normal,
+          allowDismissal: false,
+        );
+      }
     }
   }
 
