@@ -365,17 +365,19 @@ class _RootPageState extends State<RootPage> {
       debugPrint(status.localVersion);
       debugPrint(status.storeVersion);
       debugPrint(status.canUpdate.toString());
-      newVersion.showUpdateDialog(
-        context: context,
-        versionStatus: status,
-        dialogTitle: 'SmartCase Update Manager',
-        dialogText:
-            'Version ${status.storeVersion} is available for download from version '
-            '${status.localVersion}. Update your app to keep up with a streamlined and smooth '
-            'workflow of the app',
-        launchModeVersion: LaunchModeVersion.normal,
-        allowDismissal: false,
-      );
+      if (status.localVersion != status.storeVersion) {
+        newVersion.showUpdateDialog(
+          context: context,
+          versionStatus: status,
+          dialogTitle: 'SmartCase Update Manager',
+          dialogText:
+              'Version ${status.storeVersion} is available for download from version '
+              '${status.localVersion}. Update your app to keep up with a streamlined and smooth '
+              'workflow of the app',
+          launchModeVersion: LaunchModeVersion.normal,
+          allowDismissal: false,
+        );
+      }
     }
   }
 
