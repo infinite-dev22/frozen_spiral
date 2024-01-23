@@ -373,7 +373,7 @@ class _RootPageState extends State<RootPage> {
           dialogText:
               'Version ${status.storeVersion} is available for download from version '
               '${status.localVersion}. Update your app to keep up with a streamlined and smooth '
-              'workflow of the app',
+              'workflow of the app(Tap any where to dismiss)',
           launchModeVersion: LaunchModeVersion.normal,
           allowDismissal: true,
         );
