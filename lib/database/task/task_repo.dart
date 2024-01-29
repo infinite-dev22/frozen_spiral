@@ -4,20 +4,21 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:smart_case/data/app_config.dart';
-import 'package:smart_case/database/interface/event_repo_interface.dart';
+import 'package:smart_case/database/interface/task_repo_interface.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
-class EventRepo extends EventRepoInterface {
-  static final EventRepo _instance = EventRepo._internal();
+class TaskRepo extends TaskRepoInterface {
+  static final TaskRepo _instance = TaskRepo._internal();
 
-  factory EventRepo() {
+  factory TaskRepo() {
     return _instance;
   }
 
-  EventRepo._internal();
+  TaskRepo._internal();
 
   @override
-  Future<Map<String, dynamic>> fetchAll(Object? body) async {
+  Future<Map<String, dynamic>> fetchAll(
+      {Map<String, dynamic>? body, int page = 1}) async {
     Dio dio = Dio(baseOps)
       ..interceptors.add(DioCacheInterceptor(options: options));
 
@@ -27,8 +28,10 @@ class EventRepo extends EventRepoInterface {
       dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
       dio.options.followRedirects = false;
 
-      var response =
-          await dio.get('${currentUser.url}api/calendar/events', data: body);
+      var response = await dio.get(
+        '${currentUser.url}/api/accounts/cases/requisitions/allapi?page=$page',
+        data: json.encode(body),
+      );
 
       if (response.statusCode == 200) {
         return response.data;
@@ -98,10 +101,6 @@ class EventRepo extends EventRepoInterface {
       );
 
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print("A Success occurred: ${response.statusCode}");
-          print(response.data);
-        }
         return response.data;
       } else {
         if (kDebugMode) {

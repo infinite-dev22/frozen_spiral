@@ -10,6 +10,7 @@ import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/reports/models/cause_list_report.dart';
 import 'package:smart_case/database/reports/models/done_activities_report.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
+import 'package:smart_case/database/task/task_model.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
 // Global options
@@ -60,6 +61,7 @@ List<SmartEmployee> preloadedApprovers = List.empty(growable: true);
 List<SmartCauseListReport> preloadedCauseList = List.empty(growable: true);
 List<SmartDoneActivityReport> preloadedDoneActivities =
     List.empty(growable: true);
+List<SmartTask> preloadedTasks = List.empty(growable: true);
 
 String? requisitionNextPage =
     "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=1";
