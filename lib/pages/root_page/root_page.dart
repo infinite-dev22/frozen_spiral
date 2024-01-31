@@ -14,6 +14,7 @@ import 'package:smart_case/pages/engagement_page/widgets/engagements_form.dart';
 import 'package:smart_case/pages/event_page/widgets/event_form.dart';
 import 'package:smart_case/pages/file_page/file_page.dart';
 import 'package:smart_case/pages/home_page/home_page.dart';
+import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
 import 'package:smart_case/pages/locator_page/locator_page.dart';
 import 'package:smart_case/pages/notification_page/notifications_page.dart';
 import 'package:smart_case/pages/requisition_page/widgets/requisition_form.dart';
@@ -162,6 +163,12 @@ class _RootPageState extends State<RootPage> {
           onPressed: _buildDairyForm,
           label: const Text("Diary"),
         ),
+        FloatingActionButton.extended(
+          heroTag: null,
+          icon: const Icon(Icons.class_rounded),
+          onPressed: _buildInvoiceDialog,
+          label: const Text("Invoice"),
+        ),
       ],
     );
   }
@@ -288,6 +295,16 @@ class _RootPageState extends State<RootPage> {
       useSafeArea: true,
       context: context,
       builder: (context) => const DiaryForm(),
+    );
+  }
+
+  _buildInvoiceDialog() {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => InvoiceForm(currencies: currencies),
     );
   }
 

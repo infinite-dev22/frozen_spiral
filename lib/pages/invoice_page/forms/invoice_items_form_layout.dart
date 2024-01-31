@@ -1,0 +1,289 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:smart_case/data/app_config.dart';
+import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/database/invoice/smart_invoice_item.dart';
+import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
+import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
+import 'package:smart_case/widgets/custom_textbox.dart';
+import 'package:smart_case/widgets/form_title.dart';
+
+class InvoiceItemsFormLayout extends StatefulWidget {
+  final SmartInvoiceItem? smartInvoiceItem;
+
+  const InvoiceItemsFormLayout({super.key, this.smartInvoiceItem});
+
+  @override
+  State<InvoiceItemsFormLayout> createState() => _InvoiceItemsFormLayoutState();
+}
+
+class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
+  SmartFile? file;
+
+  final globalKey = GlobalKey();
+  bool isTitleElevated = false;
+  bool isActivityLoading = false;
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController totalAmountController = TextEditingController();
+
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  Widget _buildBody() {
+    return Column(
+      children: [
+        FormTitle(
+          name:
+              '${(widget.smartInvoiceItem == null) ? 'New' : 'Edit'} Requisition',
+          onSave: () => _submitFormData(),
+          isElevated: isTitleElevated,
+          addButtonText: (widget.smartInvoiceItem == null) ? 'Add' : 'Update',
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollController.position.userScrollDirection ==
+                    ScrollDirection.reverse) {
+                  setState(() {
+                    isTitleElevated = true;
+                  });
+                } else if (scrollController.position.userScrollDirection ==
+                    ScrollDirection.forward) {
+                  if (scrollController.position.pixels ==
+                      scrollController.position.maxScrollExtent) {
+                    setState(() {
+                      isTitleElevated = false;
+                    });
+                  }
+                }
+                return true;
+              },
+              child: ListView(
+                controller: scrollController,
+                padding: const EdgeInsets.all(8),
+                children: [
+                  LayoutBuilder(builder: (context, constraints) {
+                    return Form(
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: _showSearchFileBottomSheet,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(5),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              alignment: Alignment.centerLeft,
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: SizedBox(
+                                      width: constraints.maxWidth - 50,
+                                      child: Text(
+                                        file?.fileName ?? 'Select item',
+                                        style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: AppColors.darker,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: AppColors.darker,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          CustomTextArea(hint: "Description"),
+                          const SizedBox(height: 8),
+                          SmartCaseNumberField(
+                            hint: 'Amount',
+                            controller: amountController,
+                            maxLength: 14,
+                          ),
+                          GestureDetector(
+                            onTap: _showSearchFileBottomSheet,
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(5),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              alignment: Alignment.centerLeft,
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: SizedBox(
+                                      width: constraints.maxWidth - 50,
+                                      child: Text(
+                                        file?.fileName ?? 'Type of tax',
+                                        style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            color: AppColors.darker,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: AppColors.darker,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SmartCaseNumberField(
+                            hint: 'Total amount',
+                            controller: totalAmountController,
+                            maxLength: 14,
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _showSearchFileBottomSheet() {
+    List<SmartFile> searchedList = List.empty(growable: true);
+    bool isLoading = false;
+    return showModalBottomSheet(
+        isScrollControlled: true,
+        constraints: BoxConstraints.expand(
+            height: MediaQuery.of(context).size.height * .8),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return AsyncSearchableBottomSheetContents(
+                hint: "Search file",
+                list: searchedList,
+                onTap: (value) {
+                  setState(() {
+                    file = null;
+                    _onTapSearchedFile(value!);
+                  });
+                  Navigator.pop(context);
+                },
+                onSearch: (value) {
+                  setState(() {
+                    searchedList.clear();
+                    if (value.length > 2) {
+                      if (preloadedFiles.isNotEmpty) {
+                        isLoading = false;
+                        searchedList.addAll(preloadedFiles.where((smartFile) =>
+                            smartFile
+                                .getName()
+                                .toLowerCase()
+                                .contains(value.toLowerCase())));
+                      } else {
+                        _reloadFiles();
+                        isLoading = true;
+                      }
+                    }
+                  });
+                },
+                isLoading: isLoading,
+              );
+            },
+          );
+        });
+  }
+
+  _onTapSearchedFile(SmartFile value) {
+    setState(() {
+      file = value;
+    });
+  }
+
+  _reloadFiles() async {
+    await FileApi.fetchAll();
+  }
+
+  _submitFormData() {
+    SmartInvoiceItem smartInvoiceItem = SmartInvoiceItem();
+
+    // (widget.invoice == null)
+    //     ? InvoiceApi.post(
+    //   smartInvoiceItem.createInvoiceToJson(),
+    //   file!.getId(),
+    //   onError: () {
+    //     Fluttertoast.showToast(
+    //         msg: "An error occurred",
+    //         toastLength: Toast.LENGTH_LONG,
+    //         gravity: ToastGravity.CENTER,
+    //         timeInSecForIosWeb: 5,
+    //         backgroundColor: AppColors.red,
+    //         textColor: AppColors.white,
+    //         fontSize: 16.0);
+    //   },
+    //   onSuccess: () {
+    //     Fluttertoast.showToast(
+    //         msg: "Invoice added successfully",
+    //         toastLength: Toast.LENGTH_LONG,
+    //         gravity: ToastGravity.CENTER,
+    //         timeInSecForIosWeb: 5,
+    //         backgroundColor: AppColors.green,
+    //         textColor: AppColors.white,
+    //         fontSize: 16.0);
+    //   },
+    // )
+    //     : SmartCaseApi.smartPut(
+    //   'api/accounts/invoices/${widget.invoice!.id}/update',
+    //   currentUser.token,
+    //   smartInvoiceItem.createInvoiceToJson(),
+    //   onError: () {
+    //     Fluttertoast.showToast(
+    //         msg: "An error occurred",
+    //         toastLength: Toast.LENGTH_LONG,
+    //         gravity: ToastGravity.CENTER,
+    //         timeInSecForIosWeb: 5,
+    //         backgroundColor: AppColors.red,
+    //         textColor: AppColors.white,
+    //         fontSize: 16.0);
+    //   },
+    //   onSuccess: () {
+    //     Fluttertoast.showToast(
+    //         msg: "Invoice updated successfully",
+    //         toastLength: Toast.LENGTH_LONG,
+    //         gravity: ToastGravity.CENTER,
+    //         timeInSecForIosWeb: 5,
+    //         backgroundColor: AppColors.green,
+    //         textColor: AppColors.white,
+    //         fontSize: 16.0);
+    //   },
+    // );
+
+    Navigator.pop(context);
+  }
+}
