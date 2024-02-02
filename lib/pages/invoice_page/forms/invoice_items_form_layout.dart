@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smart_case/data/app_config.dart';
-import 'package:smart_case/database/file/file_model.dart';
-import 'package:smart_case/database/invoice/smart_invoice_item.dart';
-import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
+import 'package:smart_case/database/invoice/invoice_item_model.dart';
+import 'package:smart_case/database/tax/tax_type_model.dart';
+import 'package:smart_case/services/apis/smartcase_apis/invoice_item_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/tax_type_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
@@ -19,7 +20,8 @@ class InvoiceItemsFormLayout extends StatefulWidget {
 }
 
 class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
-  SmartFile? file;
+  SmartInvoiceItem? invoiceItem;
+  SmartTaxType? taxType;
 
   final globalKey = GlobalKey();
   bool isTitleElevated = false;
@@ -74,7 +76,7 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
                       child: Column(
                         children: [
                           GestureDetector(
-                            onTap: _showSearchFileBottomSheet,
+                            onTap: _showSearchItemBottomSheet,
                             child: Container(
                               height: 50,
                               width: double.infinity,
@@ -94,7 +96,7 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
                                     child: SizedBox(
                                       width: constraints.maxWidth - 50,
                                       child: Text(
-                                        file?.fileName ?? 'Select item',
+                                        invoiceItem?.getName() ?? 'Select item',
                                         style: const TextStyle(
                                             overflow: TextOverflow.ellipsis,
                                             color: AppColors.darker,
@@ -119,7 +121,7 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
                             maxLength: 14,
                           ),
                           GestureDetector(
-                            onTap: _showSearchFileBottomSheet,
+                            onTap: _showSearchTaxTypeBottomSheet,
                             child: Container(
                               height: 50,
                               width: double.infinity,
@@ -139,7 +141,7 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
                                     child: SizedBox(
                                       width: constraints.maxWidth - 50,
                                       child: Text(
-                                        file?.fileName ?? 'Type of tax',
+                                        taxType?.getName() ?? 'Type of tax',
                                         style: const TextStyle(
                                             overflow: TextOverflow.ellipsis,
                                             color: AppColors.darker,
@@ -174,8 +176,8 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
     );
   }
 
-  _showSearchFileBottomSheet() {
-    List<SmartFile> searchedList = List.empty(growable: true);
+  _showSearchItemBottomSheet() {
+    List<SmartInvoiceItem> searchedList = List.empty(growable: true);
     bool isLoading = false;
     return showModalBottomSheet(
         isScrollControlled: true,
@@ -186,12 +188,12 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return AsyncSearchableBottomSheetContents(
-                hint: "Search file",
+                hint: "Search item",
                 list: searchedList,
                 onTap: (value) {
                   setState(() {
-                    file = null;
-                    _onTapSearchedFile(value!);
+                    invoiceItem = null;
+                    _onTapSearchedItem(value!);
                   });
                   Navigator.pop(context);
                 },
@@ -199,15 +201,15 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
                   setState(() {
                     searchedList.clear();
                     if (value.length > 2) {
-                      if (preloadedFiles.isNotEmpty) {
+                      if (preloadedInvoiceItems.isNotEmpty) {
                         isLoading = false;
-                        searchedList.addAll(preloadedFiles.where((smartFile) =>
-                            smartFile
+                        searchedList.addAll(preloadedInvoiceItems.where(
+                            (item) => item
                                 .getName()
                                 .toLowerCase()
                                 .contains(value.toLowerCase())));
                       } else {
-                        _reloadFiles();
+                        _reloadInvoiceItems();
                         isLoading = true;
                       }
                     }
@@ -220,14 +222,70 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
         });
   }
 
-  _onTapSearchedFile(SmartFile value) {
+  _showSearchTaxTypeBottomSheet() {
+    List<SmartTaxType> searchedList = List.empty(growable: true);
+    bool isLoading = false;
+    return showModalBottomSheet(
+        isScrollControlled: true,
+        constraints: BoxConstraints.expand(
+            height: MediaQuery.of(context).size.height * .8),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return AsyncSearchableBottomSheetContents(
+                hint: "Search type of tax",
+                list: searchedList,
+                onTap: (value) {
+                  setState(() {
+                    taxType = null;
+                    _onTapSearchedTaxType(value!);
+                  });
+                  Navigator.pop(context);
+                },
+                onSearch: (value) {
+                  setState(() {
+                    searchedList.clear();
+                    if (value.length > 2) {
+                      if (preloadedTaxTypes.isNotEmpty) {
+                        isLoading = false;
+                        searchedList.addAll(preloadedTaxTypes.where(
+                            (smartTaxType) => smartTaxType
+                                .getName()
+                                .toLowerCase()
+                                .contains(value.toLowerCase())));
+                      } else {
+                        _reloadTaxTypes();
+                        isLoading = true;
+                      }
+                    }
+                  });
+                },
+                isLoading: isLoading,
+              );
+            },
+          );
+        });
+  }
+
+  _onTapSearchedItem(SmartInvoiceItem value) {
     setState(() {
-      file = value;
+      invoiceItem = value;
     });
   }
 
-  _reloadFiles() async {
-    await FileApi.fetchAll();
+  _onTapSearchedTaxType(SmartTaxType value) {
+    setState(() {
+      taxType = value;
+    });
+  }
+
+  _reloadInvoiceItems() async {
+    await InvoiceItemApi.fetchAll();
+  }
+
+  _reloadTaxTypes() async {
+    await TaxTypeApi.fetchAll();
   }
 
   _submitFormData() {
