@@ -7,6 +7,7 @@ class SmartFile extends SmartModel {
   String? fileNumber;
   dynamic dateOpened;
   String? clientName;
+  String? address;
   String? status;
   String? courtFileNumber;
 
@@ -17,6 +18,7 @@ class SmartFile extends SmartModel {
     this.fileNumber,
     this.dateOpened,
     this.clientName,
+    this.address,
     this.status,
     this.courtFileNumber,
   });
@@ -29,6 +31,7 @@ class SmartFile extends SmartModel {
       fileNumber: json["file_number"],
       dateOpened: json["date_opened"],
       clientName: json["client_name"],
+      address: json["address"],
       status: json["Status"],
       courtFileNumber: json["court_file_number"],
     );

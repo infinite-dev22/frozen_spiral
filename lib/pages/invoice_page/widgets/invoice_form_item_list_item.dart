@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/database/invoice/invoice_form_item.dart';
 
 class InvoiceFormItemListItem extends StatelessWidget {
@@ -8,6 +9,7 @@ class InvoiceFormItemListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var thousandFormatter = NumberFormat("###,###,###,###,###.##");
     return LayoutBuilder(builder: (context, constraints) {
       return SizedBox(
         child: Column(
@@ -18,8 +20,8 @@ class InvoiceFormItemListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(child: Text(item.item!.getName())),
-                  SizedBox(child: Text(item.amount!.toString())),
-                  SizedBox(child: Text(item.totalAmount!.toString())),
+                  SizedBox(child: Text(thousandFormatter.parse(item.amount!.toString()).toStringAsFixed(2))),
+                  SizedBox(child: Text(thousandFormatter.parse(item.totalAmount!.toString()).toStringAsFixed(2))),
                 ],
               ),
             )

@@ -973,14 +973,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.11"
-  notus_format:
-    dependency: "direct main"
-    description:
-      name: notus_format
-      sha256: c3905a83a7106cc6b0986d097ca11dec71e20434d05a0e911c0ddb12baf838eb
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
   package_config:
     dependency: transitive
     description:
@@ -1197,14 +1189,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  quill_format:
-    dependency: transitive
-    description:
-      name: quill_format
-      sha256: f0b276ac31f5712b629e746186181f6a4e332c9c6f7687e57101d9cca8cab689
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
   record:
     dependency: transitive
     description:

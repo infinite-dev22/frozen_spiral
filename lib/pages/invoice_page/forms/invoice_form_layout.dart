@@ -180,9 +180,27 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                 if (file != null)
                                   Column(
                                     children: [
-                                      CustomTextArea(
-                                        hint: "Client",
-                                        value: file!.clientName!,
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Client address",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            CustomTextArea(
+                                              value: file!.address!,
+                                              minLines: 2,
+                                            )
+                                          ],
+                                        ),
                                       ),
                                       const SizedBox(height: 10),
                                     ],
@@ -217,9 +235,31 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                 if (bank != null)
                                   Column(
                                     children: [
-                                      CustomTextArea(
-                                        hint: "Bank description",
-                                        value: bank!.description!,
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Bank details",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            CustomTextArea(
+                                              value: bank!.description!
+                                                  .replaceAll("<br />", "\n")
+                                                  .replaceAll("<p>", "")
+                                                  .replaceAll("</p>", "")
+                                                  .replaceAll("&amp;", "&")
+                                                  .replaceAll("&nbsp;", " "),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                       const SizedBox(height: 10),
                                     ],

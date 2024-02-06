@@ -57,7 +57,7 @@ class ClientRepo extends ClientRepoInterface {
 
       var response = await dio.get(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
-                'api/accounts/requisitions/$id/process')
+                'api/crm/clients/$id')
             .toString(),
       );
 

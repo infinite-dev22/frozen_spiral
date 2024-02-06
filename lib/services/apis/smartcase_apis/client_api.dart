@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/client/client_model.dart';
 import 'package:smart_case/database/client/client_repo.dart';
-import 'package:smart_case/database/drawer/drawer_model.dart';
 
 class ClientApi {
   static Future<List<SmartClient>> fetchAll(
@@ -32,24 +30,9 @@ class ClientApi {
     // DrawerRepo drawerRepo = DrawerRepo();
 
     SmartClient? client;
-    List drawersList;
     await clientRepo.fetch(id).then((response) {
       client = SmartClient.fromJson(response['client']);
-
-      try {
-        drawersList = response['drawers'];
-        preloadedDrawers =
-            drawersList.map((drawer) => SmartDrawer.fromJson(drawer)).toList();
-      } catch (e) {
-        if (kDebugMode) {
-          print(e);
-        }
-      }
     });
-
-    // SmartDrawer drawer = await drawerRepo
-    //     .fetch(id)
-    //     .then((response) => SmartDrawer.fromJson(response['drawer']));
 
     return client;
   }
