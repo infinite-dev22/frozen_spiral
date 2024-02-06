@@ -109,3 +109,52 @@ class FreeTextItem extends StatelessWidget {
     );
   }
 }
+
+class SpacedTextItem extends StatelessWidget {
+  final String title;
+  final String data;
+  final Color? color;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final FontStyle? fontStyle;
+
+  const SpacedTextItem(
+      {super.key,
+      required this.title,
+      required this.data,
+      this.color,
+      this.fontSize,
+      this.fontWeight,
+      this.fontStyle});
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  Widget _buildBody() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: color,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            fontStyle: fontStyle,
+          ),
+        ),
+        Text(
+          data,
+          style: TextStyle(
+            color: color,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            fontStyle: fontStyle,
+          ),
+        ),
+      ],
+    );
+  }
+}

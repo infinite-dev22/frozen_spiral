@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_upgrade_version/flutter_upgrade_version.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -29,17 +28,12 @@ import 'package:smart_case/pages/requisition_page/requisitions_page.dart';
 import 'package:smart_case/pages/requisition_page/widgets/requisition_view_page.dart';
 import 'package:smart_case/pages/root_page/root_page.dart';
 import 'package:smart_case/pages/task_page/tasks_page.dart';
-import 'package:smart_case/pages/update_notifier.dart';
 import 'package:smart_case/services/apis/firebase_apis.dart';
 import 'package:smart_case/services/navigation/locator.dart';
 import 'package:smart_case/services/navigation/navigator_service.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
-
-Future<void> getPackageData() async {
-  PackageInfo _packageInfo = await PackageManager.getPackageInfo();
-}
 
 Future<void> main() async {
   try {
@@ -112,8 +106,6 @@ class MyApp extends StatelessWidget {
         password: 'infosec_technologies_ug_smart_case_law_manager');
     String? email = box.read('email');
     currentUsername = box.read('name');
-
-    UpdateNotifier();
 
     return SessionTimeoutManager(
       sessionConfig: sessionConfig,
