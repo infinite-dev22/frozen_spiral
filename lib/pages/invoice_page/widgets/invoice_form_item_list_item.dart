@@ -18,8 +18,8 @@ class InvoiceFormItemListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(child: Text(item.item!.getName())),
-                  SizedBox(child: Text(item.amount!)),
-                  SizedBox(child: Text(item.totalAmount!)),
+                  SizedBox(child: Text(item.amount!.toString())),
+                  SizedBox(child: Text(item.totalAmount!.toString())),
                 ],
               ),
             )

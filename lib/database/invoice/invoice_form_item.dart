@@ -6,9 +6,10 @@ class InvoiceFormItem extends SmartModel {
   final int? id;
   final SmartInvoiceItem? item;
   final String? description;
-  final String? amount;
+  final double? amount;
   final SmartTaxType? taxType;
-  final String? totalAmount;
+  final double? totalAmount;
+  final double? taxableAmount;
 
   InvoiceFormItem({
     this.id,
@@ -17,6 +18,7 @@ class InvoiceFormItem extends SmartModel {
     this.amount,
     this.taxType,
     this.totalAmount,
+    this.taxableAmount,
   });
 
   @override
