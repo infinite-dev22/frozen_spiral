@@ -2,6 +2,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/bank/bank_model.dart';
 import 'package:smart_case/database/currency/smart_currency.dart';
@@ -219,7 +220,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                     children: [
                                       CustomTextArea(
                                         hint: "Bank description",
-                                        value: bank!.description!,
+                                        value: bank!.description!.replaceAll("<br />", "\n").replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&amp;", "&").replaceAll("&nbsp;", " "),
                                       ),
                                       const SizedBox(height: 10),
                                     ],

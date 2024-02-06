@@ -52,7 +52,7 @@ class InvoiceAmountsWidget extends StatelessWidget {
   }
 
   String _totalTaxableAmount() {
-    var thousandFormatter = NumberFormat("###,###,###,###,###.##");
+    var thousandFormatter = NumberFormat("###,###,###,###,###.0#");
     double totalTaxableAmount = 0.00;
     invoiceFormItemList.forEach((invoiceFormItem) {
       totalTaxableAmount = totalTaxableAmount + invoiceFormItem.taxableAmount!;
@@ -61,7 +61,7 @@ class InvoiceAmountsWidget extends StatelessWidget {
   }
 
   String _totalAmount() {
-    var thousandFormatter = NumberFormat("###,###,###,###,###.##");
+    var thousandFormatter = NumberFormat("###,###,###,###,###.0#");
     double totalAmount = 0.00;
     invoiceFormItemList.forEach((invoiceFormItem) {
       totalAmount = totalAmount + invoiceFormItem.totalAmount!;
@@ -70,7 +70,7 @@ class InvoiceAmountsWidget extends StatelessWidget {
   }
 
   String _subTotalAmount() {
-    var thousandFormatter = NumberFormat("###,###,###,###,###.##");
+    var thousandFormatter = NumberFormat("###,###,###,###,###.0#");
     double subTotalAmount = 0.00;
     invoiceFormItemList.forEach((invoiceFormItem) {
       subTotalAmount = subTotalAmount + invoiceFormItem.amount!;
