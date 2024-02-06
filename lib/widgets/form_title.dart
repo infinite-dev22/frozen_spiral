@@ -7,6 +7,7 @@ class FormTitle extends StatelessWidget {
     super.key,
     required this.name,
     this.onSave,
+    this.onCancel,
     this.isElevated = false,
     this.addButtonText = 'Add',
   });
@@ -14,6 +15,7 @@ class FormTitle extends StatelessWidget {
   final String name;
   final String addButtonText;
   final Function()? onSave;
+  final Function()? onCancel;
   final bool isElevated;
 
   @override
@@ -42,7 +44,7 @@ class FormTitle extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: onCancel ?? () => Navigator.pop(context),
             child: const Text(
               'Cancel',
               style: TextStyle(
