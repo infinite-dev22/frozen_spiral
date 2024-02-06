@@ -20,6 +20,7 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
+import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
 
 class InvoiceFormLayout extends StatefulWidget {
@@ -48,9 +49,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
   bool isActivityLoading = false;
 
   final TextEditingController startDateController = TextEditingController();
-  final TextEditingController startTimeController = TextEditingController();
   final TextEditingController endDateController = TextEditingController();
-  final TextEditingController endTimeController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -64,11 +63,22 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
             data: approver != null
                 ? DropDownValueModel(value: approver, name: approver!.getName())
                 : null);
+    final SingleValueDropDownController invoiceTypeController =
+        SingleValueDropDownController(
+            data: invoiceType != null
+                ? DropDownValueModel(
+                    value: invoiceType, name: invoiceType!.getName())
+                : null);
+    final SingleValueDropDownController bankController =
+        SingleValueDropDownController(
+            data: bank != null
+                ? DropDownValueModel(value: bank, name: bank!.getName())
+                : null);
 
     return Column(
       children: [
         FormTitle(
-          name: '${(file == null) ? 'New' : 'Edit'} Requisition',
+          name: '${(file == null) ? 'New' : 'Edit'} Invoice',
           onSave: () => _submitFormData(),
           isElevated: isTitleElevated,
           addButtonText: (file == null) ? 'Add' : 'Update',
@@ -102,6 +112,61 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                     return Form(
                       child: Column(
                         children: [
+                          SearchableDropDown<SmartInvoiceType>(
+                            hintText: 'invoice type',
+                            menuItems: preloadedInvoiceTypes.toSet().toList(),
+                            onChanged: (value) {
+                              _onTapSearchedInvoiceType(
+                                  invoiceTypeController.dropDownValue?.value);
+                            },
+                            defaultValue: invoiceType,
+                            controller: invoiceTypeController,
+                          ),
+                          // GestureDetector(
+                          //   onTap: _showSearchInvoiceTypeBottomSheet,
+                          //   child: Container(
+                          //     height: 50,
+                          //     width: double.infinity,
+                          //     padding: const EdgeInsets.all(5),
+                          //     margin: const EdgeInsets.only(bottom: 10),
+                          //     alignment: Alignment.centerLeft,
+                          //     decoration: BoxDecoration(
+                          //       color: AppColors.white,
+                          //       borderRadius: BorderRadius.circular(10),
+                          //     ),
+                          //     child: Row(
+                          //       mainAxisAlignment:
+                          //       MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         Padding(
+                          //           padding: const EdgeInsets.all(6),
+                          //           child: SizedBox(
+                          //             width: constraints.maxWidth - 50,
+                          //             child: Text(
+                          //               invoiceType?.getName() ??
+                          //                   'Select invoice type',
+                          //               style: const TextStyle(
+                          //                   overflow: TextOverflow.ellipsis,
+                          //                   color: AppColors.darker,
+                          //                   fontSize: 15,
+                          //                   fontWeight: FontWeight.w500),
+                          //             ),
+                          //           ),
+                          //         ),
+                          //         const Icon(
+                          //           Icons.keyboard_arrow_down_rounded,
+                          //           color: AppColors.darker,
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          InvoiceDateTimeAccordion(
+                            startName: 'Date',
+                            endName: 'Due on',
+                            startDateController: startDateController,
+                            endDateController: endDateController,
+                          ),
                           GestureDetector(
                             onTap: _showSearchFileBottomSheet,
                             child: Container(
@@ -140,53 +205,16 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                               ),
                             ),
                           ),
-                          DoubleDateTimeAccordion(
-                            startName: 'Date',
-                            endName: 'Due on',
-                            startDateController: startDateController,
-                            startTimeController: startTimeController,
-                            endDateController: endDateController,
-                            endTimeController: endTimeController,
-                          ),
-                          GestureDetector(
-                            onTap: _showSearchInvoiceTypeBottomSheet,
-                            child: Container(
-                              height: 50,
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(5),
-                              margin: const EdgeInsets.only(bottom: 10),
-                              alignment: Alignment.centerLeft,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: SizedBox(
-                                      width: constraints.maxWidth - 50,
-                                      child: Text(
-                                        invoiceType?.getName() ??
-                                            'Select invoice type',
-                                        style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            color: AppColors.darker,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.darker,
-                                  ),
-                                ],
-                              ),
+                          if (file != null)
+                            Column(
+                              children: [
+                                CustomTextArea(
+                                  hint: "Client",
+                                  value: file!.clientName!,
+                                ),
+                                const SizedBox(height: 10),
+                              ],
                             ),
-                          ),
                           CustomGenericDropdown<SmartCurrency>(
                             hintText: 'currency',
                             menuItems: widget.currencies,
@@ -201,44 +229,64 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                           ),
                           InvoiceAddItemsWidget(onTap: _showItemsDialog),
                           InvoiceAmountsWidget(),
-                          GestureDetector(
-                            onTap: _showSearchBankBottomSheet,
-                            child: Container(
-                              height: 50,
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(5),
-                              margin: const EdgeInsets.only(bottom: 10),
-                              alignment: Alignment.centerLeft,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: SizedBox(
-                                      width: constraints.maxWidth - 50,
-                                      child: Text(
-                                        bank?.getName() ?? 'Select bank',
-                                        style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            color: AppColors.darker,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.darker,
-                                  ),
-                                ],
-                              ),
-                            ),
+                          SearchableDropDown<SmartBank>(
+                            hintText: 'bank',
+                            menuItems: preloadedBanks.toSet().toList(),
+                            onChanged: (value) {
+                              _onTapSearchedBank(
+                                  bankController.dropDownValue?.value);
+                            },
+                            defaultValue: bank,
+                            controller: bankController,
                           ),
+                          // GestureDetector(
+                          //   onTap: _showSearchBankBottomSheet,
+                          //   child: Container(
+                          //     height: 50,
+                          //     width: double.infinity,
+                          //     padding: const EdgeInsets.all(5),
+                          //     margin: const EdgeInsets.only(bottom: 10),
+                          //     alignment: Alignment.centerLeft,
+                          //     decoration: BoxDecoration(
+                          //       color: AppColors.white,
+                          //       borderRadius: BorderRadius.circular(10),
+                          //     ),
+                          //     child: Row(
+                          //       mainAxisAlignment:
+                          //           MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         Padding(
+                          //           padding: const EdgeInsets.all(6),
+                          //           child: SizedBox(
+                          //             width: constraints.maxWidth - 50,
+                          //             child: Text(
+                          //               bank?.getName() ?? 'Select bank',
+                          //               style: const TextStyle(
+                          //                   overflow: TextOverflow.ellipsis,
+                          //                   color: AppColors.darker,
+                          //                   fontSize: 15,
+                          //                   fontWeight: FontWeight.w500),
+                          //             ),
+                          //           ),
+                          //         ),
+                          //         const Icon(
+                          //           Icons.keyboard_arrow_down_rounded,
+                          //           color: AppColors.darker,
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          if (bank != null)
+                            Column(
+                              children: [
+                                CustomTextArea(
+                                  hint: "Bank description",
+                                  value: bank!.description!,
+                                ),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
                           // GestureDetector(
                           //   onTap: _showSearchApproverBottomSheet,
                           //   child: Container(

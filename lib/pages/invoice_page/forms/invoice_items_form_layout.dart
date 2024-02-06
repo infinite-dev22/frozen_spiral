@@ -1,11 +1,15 @@
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/data/app_config.dart';
+import 'package:smart_case/database/invoice/invoice_form_item.dart';
 import 'package:smart_case/database/invoice/invoice_item_model.dart';
 import 'package:smart_case/database/tax/tax_type_model.dart';
+import 'package:smart_case/pages/invoice_page/widgets/invoice_form_item_list_item.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_item_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/tax_type_api.dart';
-import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';
@@ -28,6 +32,8 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
   bool isActivityLoading = false;
   final TextEditingController amountController = TextEditingController();
   final TextEditingController totalAmountController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  var thousandFormatter = NumberFormat("###,###,###,###,###.##");
 
   final ScrollController scrollController = ScrollController();
 
@@ -37,6 +43,18 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
   }
 
   Widget _buildBody() {
+    final SingleValueDropDownController invoiceItemController =
+        SingleValueDropDownController(
+            data: invoiceItem != null
+                ? DropDownValueModel(
+                    value: invoiceItem, name: invoiceItem!.getName())
+                : null);
+    final SingleValueDropDownController taxTypeController =
+        SingleValueDropDownController(
+            data: taxType != null
+                ? DropDownValueModel(value: taxType, name: taxType!.getName())
+                : null);
+
     return Column(
       children: [
         FormTitle(
@@ -75,89 +93,123 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
                     return Form(
                       child: Column(
                         children: [
-                          GestureDetector(
-                            onTap: _showSearchItemBottomSheet,
-                            child: Container(
-                              height: 50,
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(5),
-                              margin: const EdgeInsets.only(bottom: 10),
-                              alignment: Alignment.centerLeft,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: SizedBox(
-                                      width: constraints.maxWidth - 50,
-                                      child: Text(
-                                        invoiceItem?.getName() ?? 'Select item',
-                                        style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            color: AppColors.darker,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.darker,
-                                  ),
-                                ],
-                              ),
-                            ),
+                          SearchableDropDown<SmartInvoiceItem>(
+                            hintText: 'item',
+                            menuItems: preloadedInvoiceItems.toSet().toList(),
+                            onChanged: (value) {
+                              _onTapSearchedItem(
+                                  invoiceItemController.dropDownValue?.value);
+                            },
+                            defaultValue: invoiceItem,
+                            controller: invoiceItemController,
                           ),
-                          CustomTextArea(hint: "Description"),
+                          // GestureDetector(
+                          //   onTap: _showSearchItemBottomSheet,
+                          //   child: Container(
+                          //     height: 50,
+                          //     width: double.infinity,
+                          //     padding: const EdgeInsets.all(5),
+                          //     margin: const EdgeInsets.only(bottom: 10),
+                          //     alignment: Alignment.centerLeft,
+                          //     decoration: BoxDecoration(
+                          //       color: AppColors.white,
+                          //       borderRadius: BorderRadius.circular(10),
+                          //     ),
+                          //     child: Row(
+                          //       mainAxisAlignment:
+                          //           MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         Padding(
+                          //           padding: const EdgeInsets.all(6),
+                          //           child: SizedBox(
+                          //             width: constraints.maxWidth - 50,
+                          //             child: Text(
+                          //               invoiceItem?.getName() ?? 'Select item',
+                          //               style: const TextStyle(
+                          //                   overflow: TextOverflow.ellipsis,
+                          //                   color: AppColors.darker,
+                          //                   fontSize: 15,
+                          //                   fontWeight: FontWeight.w500),
+                          //             ),
+                          //           ),
+                          //         ),
+                          //         const Icon(
+                          //           Icons.keyboard_arrow_down_rounded,
+                          //           color: AppColors.darker,
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          CustomTextArea(
+                            hint: "Description",
+                            controller: descriptionController,
+                          ),
                           const SizedBox(height: 8),
                           SmartCaseNumberField(
                             hint: 'Amount',
                             controller: amountController,
                             maxLength: 14,
+                            onChanged: (value) {
+                              totalAmountController.text = value;
+                            },
                           ),
-                          GestureDetector(
-                            onTap: _showSearchTaxTypeBottomSheet,
-                            child: Container(
-                              height: 50,
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(5),
-                              margin: const EdgeInsets.only(bottom: 10),
-                              alignment: Alignment.centerLeft,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: SizedBox(
-                                      width: constraints.maxWidth - 50,
-                                      child: Text(
-                                        taxType?.getName() ?? 'Type of tax',
-                                        style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            color: AppColors.darker,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.darker,
-                                  ),
-                                ],
-                              ),
-                            ),
+                          SearchableDropDown<SmartTaxType>(
+                            hintText: 'type of tax',
+                            menuItems: preloadedTaxTypes.toSet().toList(),
+                            onChanged: (value) {
+                              _onTapSearchedTaxType(
+                                  taxTypeController.dropDownValue?.value);
+                            },
+                            defaultValue: (preloadedTaxTypes.isNotEmpty)
+                                ? (taxType != null)
+                                    ? preloadedTaxTypes.firstWhere(
+                                        (tax) => tax.code == taxType!.code)
+                                    : preloadedTaxTypes.firstWhere((taxType) =>
+                                        taxType.code!
+                                            .toUpperCase()
+                                            .contains('NIL'))
+                                : null,
+                            controller: taxTypeController,
                           ),
+                          // GestureDetector(
+                          //   onTap: _showSearchTaxTypeBottomSheet,
+                          //   child: Container(
+                          //     height: 50,
+                          //     width: double.infinity,
+                          //     padding: const EdgeInsets.all(5),
+                          //     margin: const EdgeInsets.only(bottom: 10),
+                          //     alignment: Alignment.centerLeft,
+                          //     decoration: BoxDecoration(
+                          //       color: AppColors.white,
+                          //       borderRadius: BorderRadius.circular(10),
+                          //     ),
+                          //     child: Row(
+                          //       mainAxisAlignment:
+                          //           MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         Padding(
+                          //           padding: const EdgeInsets.all(6),
+                          //           child: SizedBox(
+                          //             width: constraints.maxWidth - 50,
+                          //             child: Text(
+                          //               taxType?.getName() ?? 'Type of tax',
+                          //               style: const TextStyle(
+                          //                   overflow: TextOverflow.ellipsis,
+                          //                   color: AppColors.darker,
+                          //                   fontSize: 15,
+                          //                   fontWeight: FontWeight.w500),
+                          //             ),
+                          //           ),
+                          //         ),
+                          //         const Icon(
+                          //           Icons.keyboard_arrow_down_rounded,
+                          //           color: AppColors.darker,
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           SmartCaseNumberField(
                             hint: 'Total amount',
                             controller: totalAmountController,
@@ -277,6 +329,11 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
   _onTapSearchedTaxType(SmartTaxType value) {
     setState(() {
       taxType = value;
+      totalAmountController.text = thousandFormatter
+          .format(double.parse(
+                  totalAmountController.text.replaceAll(",", "").toString()) *
+              (double.parse(value.rate!)/100))
+          .toString();
     });
   }
 
@@ -290,6 +347,16 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
 
   _submitFormData() {
     SmartInvoiceItem smartInvoiceItem = SmartInvoiceItem();
+    InvoiceFormItem invoiceFormItem = InvoiceFormItem(
+      item: invoiceItem,
+      description: descriptionController.text,
+      amount: amountController.text,
+      taxType: taxType,
+      totalAmount: totalAmountController.text,
+    );
+
+    invoiceFormItemList.add(invoiceFormItem);
+    InvoiceFormItemListItemList.add(InvoiceFormItemListItem(item: invoiceFormItem));
 
     // (widget.invoice == null)
     //     ? InvoiceApi.post(

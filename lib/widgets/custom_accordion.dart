@@ -1495,3 +1495,233 @@ class _DOBAccordionState extends State<DOBAccordion> {
         : "";
   }
 }
+
+class InvoiceDateTimeAccordion extends StatefulWidget {
+  const InvoiceDateTimeAccordion({
+    super.key,
+    required this.startName,
+    required this.endName,
+    required this.startDateController,
+    required this.endDateController,
+  });
+
+  final String startName;
+  final String endName;
+  final TextEditingController startDateController;
+  final TextEditingController endDateController;
+
+  @override
+  State<InvoiceDateTimeAccordion> createState() =>
+      _InvoiceDateTimeAccordionState();
+}
+
+class _InvoiceDateTimeAccordionState extends State<InvoiceDateTimeAccordion> {
+  bool isStartDate = false;
+  bool isEndDate = false;
+
+  late bool _showStartContent;
+  late bool _showEndContent;
+
+  late double _height = 200;
+
+  DateTime now = DateTime.now();
+
+  String selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+  String selectedDueDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Card(
+            color: AppColors.white,
+            elevation: 0,
+            child: Column(children: [
+              _buildStartTimeField(selectedDate, selectedDueDate),
+              // Show or hide the content based on the state
+              _showStartContent
+                  ? Container(
+                      height: _height,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 15),
+                      child: CalendarDatePicker(
+                        initialDate:
+                            DateFormat('dd/MM/yyyy').parse(selectedDate),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(DateTime.now().year + 99),
+                        onDateChanged: (DateTime newDate) {
+                          setState(() {
+                            selectedDate =
+                                DateFormat('dd/MM/yyyy').format(newDate);
+
+                            widget.startDateController.text = selectedDate;
+
+                            selectedDueDate = selectedDate;
+
+                            widget.endDateController.text = selectedDate;
+
+                            _showStartContent = false;
+                            _showEndContent = false;
+                          });
+                        },
+                      ))
+                  : (_showEndContent)
+                      ? Container(
+                          height: _height,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 15),
+                          child: CalendarDatePicker(
+                            initialDate:
+                                DateFormat('dd/MM/yyyy').parse(selectedDate),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(DateTime.now().year + 99),
+                            onDateChanged: (DateTime newDate) {
+                              setState(() {
+                                selectedDueDate =
+                                    DateFormat('dd/MM/yyyy').format(newDate);
+
+                                widget.endDateController.text = selectedDueDate;
+
+                                _showStartContent = false;
+                                _showEndContent = false;
+                              });
+                            },
+                          ),
+                        )
+                      : Container(),
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildStartTimeField(String startDate, String endDate) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(widget.startName),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 40,
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() {
+                          isStartDate = true;
+                          _showEndContent = false;
+                          isEndDate = false;
+
+                          if (_showStartContent) {
+                            _height = 280;
+                            _showStartContent = true;
+                            return;
+                          }
+
+                          _height = 280;
+                          _showStartContent = !_showStartContent;
+                        });
+                      },
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              side: BorderSide(
+                                  color: !isStartDate
+                                      ? AppColors.appBgColor
+                                      : AppColors.primary),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) => AppColors.appBgColor)),
+                      child: Text(
+                        startDate,
+                        style: const TextStyle(color: AppColors.darker),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(widget.endName),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 40,
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() {
+                          isEndDate = true;
+                          isStartDate = false;
+                          _showStartContent = false;
+
+                          if (_showEndContent) {
+                            _height = 280;
+                            _showEndContent = true;
+                            return;
+                          }
+
+                          _height = 280;
+                          _showEndContent = !_showEndContent;
+                        });
+                      },
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              side: BorderSide(
+                                  color: !isEndDate
+                                      ? AppColors.appBgColor
+                                      : AppColors.primary),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) => AppColors.appBgColor)),
+                      child: Text(
+                        endDate,
+                        style: const TextStyle(color: AppColors.darker),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.startDateController.text.isNotEmpty
+        ? selectedDate = widget.startDateController.text
+        : widget.startDateController.text = selectedDate;
+    widget.endDateController.text.isNotEmpty
+        ? selectedDueDate = widget.endDateController.text
+        : widget.endDateController.text = selectedDueDate;
+    _showStartContent = false;
+    _showEndContent = false;
+  }
+}

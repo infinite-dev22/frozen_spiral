@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/text_item.dart';
 
@@ -23,7 +24,7 @@ class InvoiceAmountsWidget extends StatelessWidget {
 
   Widget _buildBody() {
     return Container(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -31,14 +32,25 @@ class InvoiceAmountsWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
+          Column(
+            children: InvoiceFormItemListItemList,
+          ),
+          if (InvoiceFormItemListItemList.isNotEmpty)
+            const Divider(
+              indent: 0,
+              endIndent: 0,
+              height: 15,
+            ),
           SpacedTextItem(
             title: 'Subtotal',
             data: subTotal.toString(),
           ),
+          const SizedBox(height: 8),
           SpacedTextItem(
             title: 'Tax ($taxRate%)',
             data: tax.toString(),
           ),
+          const SizedBox(height: 8),
           SpacedTextItem(
             title: 'Total',
             data: total.toString(),

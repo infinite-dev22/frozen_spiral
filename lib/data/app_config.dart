@@ -8,12 +8,14 @@ import 'package:smart_case/database/employee/employee_model.dart';
 import 'package:smart_case/database/engagement/engagement_model.dart';
 import 'package:smart_case/database/event/event_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/database/invoice/invoice_form_item.dart';
 import 'package:smart_case/database/invoice/invoice_item_model.dart';
 import 'package:smart_case/database/invoice/invoice_type_model.dart';
 import 'package:smart_case/database/reports/models/cause_list_report.dart';
 import 'package:smart_case/database/reports/models/done_activities_report.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
 import 'package:smart_case/database/tax/tax_type_model.dart';
+import 'package:smart_case/pages/invoice_page/widgets/invoice_form_item_list_item.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
 // Global options
@@ -69,6 +71,10 @@ List<SmartTaxType> preloadedTaxTypes = List.empty(growable: true);
 List<SmartInvoiceType> preloadedInvoiceTypes = List.empty(growable: true);
 List<SmartBank> preloadedBanks = List.empty(growable: true);
 List<SmartEmployee> preloadedInvoiceApprovers = List.empty(growable: true);
+List<InvoiceFormItem> invoiceFormItemList = List.empty(growable: true);
+
+
+List<InvoiceFormItemListItem> InvoiceFormItemListItemList = List.empty(growable: true);
 
 String? requisitionNextPage =
     "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=1";
