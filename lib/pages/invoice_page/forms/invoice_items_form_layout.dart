@@ -166,15 +166,15 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
       if (!value.code!.toUpperCase().contains('NIL')) {
         totalAmountController.text = thousandFormatter
             .format(double.parse(
-                    totalAmountController.text.replaceAll(",", "").toString()) +
-                (double.parse(totalAmountController.text
+                    amountController.text.replaceAll(",", "").toString()) +
+                (double.parse(amountController.text
                         .replaceAll(",", "")
                         .toString()) *
                     (double.parse(value.rate!) / 100)))
             .toString();
       }
       taxableAmount = double.parse(
-              totalAmountController.text.replaceAll(",", "").toString()) *
+              amountController.text.replaceAll(",", "").toString()) *
           (double.parse(value.rate!) / 100);
     });
   }
