@@ -68,191 +68,193 @@ class _RequisitionFormState extends State<RequisitionForm> {
                 ? DropDownValueModel(value: approver, name: approver!.getName())
                 : null);
 
-    return Column(
-      children: [
-        FormTitle(
-          name: '${(widget.requisition == null) ? 'New' : 'Edit'} Requisition',
-          onSave: () => _submitFormData(),
-          isElevated: isTitleElevated,
-          addButtonText: (widget.requisition == null) ? 'Add' : 'Update',
-        ),
-        Expanded(
-          child: GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (scrollNotification) {
-                if (scrollController.position.userScrollDirection ==
-                    ScrollDirection.reverse) {
-                  setState(() {
-                    isTitleElevated = true;
-                  });
-                } else if (scrollController.position.userScrollDirection ==
-                    ScrollDirection.forward) {
-                  if (scrollController.position.pixels ==
-                      scrollController.position.maxScrollExtent) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20)
+          .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Column(
+        children: [
+          FormTitle(
+            name:
+                '${(widget.requisition == null) ? 'New' : 'Edit'} Requisition',
+            onSave: () => _submitFormData(),
+            isElevated: isTitleElevated,
+            addButtonText: (widget.requisition == null) ? 'Add' : 'Update',
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (scrollNotification) {
+                  if (scrollController.position.userScrollDirection ==
+                      ScrollDirection.reverse) {
                     setState(() {
-                      isTitleElevated = false;
+                      isTitleElevated = true;
                     });
+                  } else if (scrollController.position.userScrollDirection ==
+                      ScrollDirection.forward) {
+                    if (scrollController.position.pixels ==
+                        scrollController.position.maxScrollExtent) {
+                      setState(() {
+                        isTitleElevated = false;
+                      });
+                    }
                   }
-                }
-                return true;
-              },
-              // child: SingleChildScrollView()
-              child: ListView(
-                controller: scrollController,
-                padding: const EdgeInsets.all(8),
-                children: [
-                  LayoutBuilder(builder: (context, constraints) {
-                    return Form(
-                      child: Column(
-                        children: [
-                          DateAccordion(
-                            dateController: dateController,
-                          ),
-                          CustomGenericDropdown<SmartCurrency>(
-                              hintText: 'currency',
-                              menuItems: widget.currencies,
-                              defaultValue: (widget.currencies.isNotEmpty)
-                                  ? (currency != null)
-                                      ? widget.currencies.firstWhere(
-                                          (cur) => cur.code == currency!.code)
-                                      : widget.currencies.firstWhere(
-                                          (currency) => currency.code == 'UGX')
-                                  : null,
-                              onChanged: _onTapSearchedCurrency),
-                          GestureDetector(
-                            onTap: _showSearchFileBottomSheet,
-                            child: Container(
-                              height: 50,
-                              width: double.infinity,
-                              padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-                              margin: const EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: SizedBox(
-                                      width: constraints.maxWidth - 51,
-                                      child: Text(
-                                        file?.getName() ?? 'Select file',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: AppColors.darker,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500),
+                  return true;
+                },
+                // child: SingleChildScrollView()
+                child: ListView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(8),
+                  children: [
+                    LayoutBuilder(builder: (context, constraints) {
+                      return Form(
+                        child: Column(
+                          children: [
+                            DateAccordion(
+                              dateController: dateController,
+                            ),
+                            CustomGenericDropdown<SmartCurrency>(
+                                hintText: 'currency',
+                                menuItems: widget.currencies,
+                                defaultValue: (widget.currencies.isNotEmpty)
+                                    ? (currency != null)
+                                        ? widget.currencies.firstWhere(
+                                            (cur) => cur.code == currency!.code)
+                                        : widget.currencies.firstWhere(
+                                            (currency) =>
+                                                currency.code == 'UGX')
+                                    : null,
+                                onChanged: _onTapSearchedCurrency),
+                            GestureDetector(
+                              onTap: _showSearchFileBottomSheet,
+                              child: Container(
+                                height: 50,
+                                width: double.infinity,
+                                padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                                margin: const EdgeInsets.only(bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(6),
+                                      child: SizedBox(
+                                        width: constraints.maxWidth - 51,
+                                        child: Text(
+                                          file?.getName() ?? 'Select file',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: AppColors.darker,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.darker,
-                                  ),
-                                ],
+                                    const Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: AppColors.darker,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          if (file != null)
-                            SmartText(
-                                value: formatter
-                                    .format(financialStatus)
-                                    .toString(),
-                                icon: (financialStatus > 0)
-                                    ? Icons.arrow_upward_rounded
-                                    : (financialStatus < 0)
-                                        ? Icons.arrow_downward_rounded
-                                        : Icons.circle_outlined,
-                                color: (financialStatus > 0)
-                                    ? AppColors.green
-                                    : (financialStatus < 0)
-                                        ? AppColors.red
-                                        : AppColors.blue),
-                          if (preloadedApprovers.isNotEmpty)
-                            SearchableDropDown<SmartEmployee>(
-                              hintText: 'approver',
-                              menuItems: preloadedApprovers.toSet().toList(),
-                              onChanged: (value) {
-                                _onTapSearchedApprover(
-                                    approversController.dropDownValue?.value);
+                            if (file != null)
+                              SmartText(
+                                  value: formatter
+                                      .format(financialStatus)
+                                      .toString(),
+                                  icon: (financialStatus > 0)
+                                      ? Icons.arrow_upward_rounded
+                                      : (financialStatus < 0)
+                                          ? Icons.arrow_downward_rounded
+                                          : Icons.circle_outlined,
+                                  color: (financialStatus > 0)
+                                      ? AppColors.green
+                                      : (financialStatus < 0)
+                                          ? AppColors.red
+                                          : AppColors.blue),
+                            if (preloadedApprovers.isNotEmpty)
+                              SearchableDropDown<SmartEmployee>(
+                                hintText: 'approver',
+                                menuItems: preloadedApprovers.toSet().toList(),
+                                onChanged: (value) {
+                                  _onTapSearchedApprover(
+                                      approversController.dropDownValue?.value);
+                                },
+                                defaultValue: approver,
+                                controller: approversController,
+                              ),
+                            GestureDetector(
+                              onTap: _showSearchCategoryBottomSheet,
+                              child: Container(
+                                height: 50,
+                                width: double.infinity,
+                                padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
+                                margin: const EdgeInsets.only(bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(6),
+                                      child: SizedBox(
+                                        width: constraints.maxWidth - 51,
+                                        child: Text(
+                                          category?.getName() ??
+                                              'Select requisition category',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: AppColors.darker,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: AppColors.darker,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SmartCaseNumberField(
+                              hint: 'Amount',
+                              controller: amountController,
+                              maxLength: 14,
+                            ),
+                            CustomTextArea(
+                              key: globalKey,
+                              hint: 'Description',
+                              controller: descriptionController,
+                              onTap: () {
+                                Scrollable.ensureVisible(
+                                    globalKey.currentContext!);
                               },
-                              defaultValue: approver,
-                              controller: approversController,
                             ),
-                          GestureDetector(
-                            onTap: _showSearchCategoryBottomSheet,
-                            child: Container(
-                              height: 50,
-                              width: double.infinity,
-                              padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
-                              margin: const EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(6),
-                                    child: SizedBox(
-                                      width: constraints.maxWidth - 51,
-                                      child: Text(
-                                        category?.getName() ??
-                                            'Select requisition category',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: AppColors.darker,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.darker,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SmartCaseNumberField(
-                            hint: 'Amount',
-                            controller: amountController,
-                            maxLength: 14,
-                          ),
-                          CustomTextArea(
-                            key: globalKey,
-                            hint: 'Description',
-                            controller: descriptionController,
-                            onTap: () {
-                              Scrollable.ensureVisible(
-                                  globalKey.currentContext!);
-                            },
-                          ),
-                          SizedBox(
-                              height: /*300*/
-                                  MediaQuery.of(context).viewInsets.bottom +
-                                      20),
-                        ],
-                      ),
-                    );
-                  }),
-                ],
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

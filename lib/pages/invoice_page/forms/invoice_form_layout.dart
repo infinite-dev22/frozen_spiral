@@ -78,170 +78,176 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
 
     return BlocBuilder<InvoiceFormBloc, InvoiceFormState>(
       builder: (cntxt, state) {
-        return Column(
-          children: [
-            FormTitle(
-              name: '${(file == null) ? 'New' : 'Edit'} Invoice',
-              onSave: () => _submitFormData(),
-              onCancel: () => _cancelFormData(),
-              isElevated: isTitleElevated,
-              addButtonText: (file == null) ? 'Add' : 'Update',
-            ),
-            Expanded(
-              child: GestureDetector(
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (scrollNotification) {
-                    if (scrollController.position.userScrollDirection ==
-                        ScrollDirection.reverse) {
-                      setState(() {
-                        isTitleElevated = true;
-                      });
-                    } else if (scrollController.position.userScrollDirection ==
-                        ScrollDirection.forward) {
-                      if (scrollController.position.pixels ==
-                          scrollController.position.maxScrollExtent) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 20)
+              .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            children: [
+              FormTitle(
+                name: '${(file == null) ? 'New' : 'Edit'} Invoice',
+                onSave: () => _submitFormData(),
+                onCancel: () => _cancelFormData(),
+                isElevated: isTitleElevated,
+                addButtonText: (file == null) ? 'Add' : 'Update',
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (scrollNotification) {
+                      if (scrollController.position.userScrollDirection ==
+                          ScrollDirection.reverse) {
                         setState(() {
-                          isTitleElevated = false;
+                          isTitleElevated = true;
                         });
+                      } else if (scrollController
+                              .position.userScrollDirection ==
+                          ScrollDirection.forward) {
+                        if (scrollController.position.pixels ==
+                            scrollController.position.maxScrollExtent) {
+                          setState(() {
+                            isTitleElevated = false;
+                          });
+                        }
                       }
-                    }
-                    return true;
-                  },
-                  child: ListView(
-                    controller: scrollController,
-                    padding: const EdgeInsets.all(8),
-                    children: [
-                      LayoutBuilder(builder: (context, constraints) {
-                        return Form(
-                          child: Column(
-                            children: [
-                              SearchableDropDown<SmartInvoiceType>(
-                                hintText: 'invoice type',
-                                menuItems:
-                                    preloadedInvoiceTypes.toSet().toList(),
-                                onChanged: (value) {
-                                  _onTapSearchedInvoiceType(
-                                      invoiceTypeController
-                                          .dropDownValue?.value);
-                                },
-                                defaultValue: invoiceType,
-                                controller: invoiceTypeController,
-                              ),
-                              InvoiceDateTimeAccordion(
-                                startName: 'Date',
-                                endName: 'Due on',
-                                startDateController: startDateController,
-                                endDateController: endDateController,
-                              ),
-                              GestureDetector(
-                                onTap: _showSearchFileBottomSheet,
-                                child: Container(
-                                  height: 50,
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(5),
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  alignment: Alignment.centerLeft,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(6),
-                                        child: SizedBox(
-                                          width: constraints.maxWidth - 50,
-                                          child: Text(
-                                            file?.fileName ?? 'Select file',
-                                            style: const TextStyle(
-                                                overflow: TextOverflow.ellipsis,
-                                                color: AppColors.darker,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w500),
+                      return true;
+                    },
+                    child: ListView(
+                      controller: scrollController,
+                      padding: const EdgeInsets.all(8),
+                      children: [
+                        LayoutBuilder(builder: (context, constraints) {
+                          return Form(
+                            child: Column(
+                              children: [
+                                SearchableDropDown<SmartInvoiceType>(
+                                  hintText: 'invoice type',
+                                  menuItems:
+                                      preloadedInvoiceTypes.toSet().toList(),
+                                  onChanged: (value) {
+                                    _onTapSearchedInvoiceType(
+                                        invoiceTypeController
+                                            .dropDownValue?.value);
+                                  },
+                                  defaultValue: invoiceType,
+                                  controller: invoiceTypeController,
+                                ),
+                                InvoiceDateTimeAccordion(
+                                  startName: 'Date',
+                                  endName: 'Due on',
+                                  startDateController: startDateController,
+                                  endDateController: endDateController,
+                                ),
+                                GestureDetector(
+                                  onTap: _showSearchFileBottomSheet,
+                                  child: Container(
+                                    height: 50,
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(5),
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    alignment: Alignment.centerLeft,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(6),
+                                          child: SizedBox(
+                                            width: constraints.maxWidth - 50,
+                                            child: Text(
+                                              file?.fileName ?? 'Select file',
+                                              style: const TextStyle(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  color: AppColors.darker,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        color: AppColors.darker,
-                                      ),
-                                    ],
+                                        const Icon(
+                                          Icons.keyboard_arrow_down_rounded,
+                                          color: AppColors.darker,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              if (file != null)
-                                Column(
-                                  children: [
-                                    CustomTextArea(
-                                      hint: "Client",
-                                      value: file!.clientName!,
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
+                                if (file != null)
+                                  Column(
+                                    children: [
+                                      CustomTextArea(
+                                        hint: "Client",
+                                        value: file!.clientName!,
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  ),
+                                CustomGenericDropdown<SmartCurrency>(
+                                  hintText: 'currency',
+                                  menuItems: widget.currencies,
+                                  defaultValue: (widget.currencies.isNotEmpty)
+                                      ? (currency != null)
+                                          ? widget.currencies.firstWhere(
+                                              (cur) =>
+                                                  cur.code == currency!.code)
+                                          : widget.currencies.firstWhere(
+                                              (currency) =>
+                                                  currency.code == 'UGX')
+                                      : null,
+                                  onChanged: _onTapSearchedCurrency,
                                 ),
-                              CustomGenericDropdown<SmartCurrency>(
-                                hintText: 'currency',
-                                menuItems: widget.currencies,
-                                defaultValue: (widget.currencies.isNotEmpty)
-                                    ? (currency != null)
-                                        ? widget.currencies.firstWhere(
-                                            (cur) => cur.code == currency!.code)
-                                        : widget.currencies.firstWhere(
-                                            (currency) =>
-                                                currency.code == 'UGX')
-                                    : null,
-                                onChanged: _onTapSearchedCurrency,
-                              ),
-                              InvoiceAddItemsWidget(
-                                  onTap: () => _showItemsDialog(cntxt)),
-                              InvoiceAmountsWidget(),
-                              SearchableDropDown<SmartBank>(
-                                hintText: 'bank',
-                                menuItems: preloadedBanks.toSet().toList(),
-                                onChanged: (value) {
-                                  _onTapSearchedBank(
-                                      bankController.dropDownValue?.value);
-                                },
-                                defaultValue: bank,
-                                controller: bankController,
-                              ),
-                              if (bank != null)
-                                Column(
-                                  children: [
-                                    CustomTextArea(
-                                      hint: "Bank description",
-                                      value: bank!.description!,
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                ),
-                              if (preloadedApprovers.isNotEmpty)
-                                SearchableDropDown<SmartEmployee>(
-                                  hintText: 'approver',
-                                  menuItems:
-                                      preloadedApprovers.toSet().toList(),
+                                InvoiceAddItemsWidget(
+                                    onTap: () => _showItemsDialog(cntxt)),
+                                InvoiceAmountsWidget(),
+                                SearchableDropDown<SmartBank>(
+                                  hintText: 'bank',
+                                  menuItems: preloadedBanks.toSet().toList(),
                                   onChanged: (value) {
-                                    _onTapSearchedApprover(approversController
-                                        .dropDownValue?.value);
+                                    _onTapSearchedBank(
+                                        bankController.dropDownValue?.value);
                                   },
-                                  defaultValue: approver,
-                                  controller: approversController,
+                                  defaultValue: bank,
+                                  controller: bankController,
                                 ),
-                              InvoiceTermsWidget(),
-                              const SizedBox(height: 300),
-                            ],
-                          ),
-                        );
-                      }),
-                    ],
+                                if (bank != null)
+                                  Column(
+                                    children: [
+                                      CustomTextArea(
+                                        hint: "Bank description",
+                                        value: bank!.description!,
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  ),
+                                if (preloadedApprovers.isNotEmpty)
+                                  SearchableDropDown<SmartEmployee>(
+                                    hintText: 'approver',
+                                    menuItems:
+                                        preloadedApprovers.toSet().toList(),
+                                    onChanged: (value) {
+                                      _onTapSearchedApprover(approversController
+                                          .dropDownValue?.value);
+                                    },
+                                    defaultValue: approver,
+                                    controller: approversController,
+                                  ),
+                                InvoiceTermsWidget(),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

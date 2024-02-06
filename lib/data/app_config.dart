@@ -73,8 +73,8 @@ List<SmartBank> preloadedBanks = List.empty(growable: true);
 List<SmartEmployee> preloadedInvoiceApprovers = List.empty(growable: true);
 List<InvoiceFormItem> invoiceFormItemList = List.empty(growable: true);
 
-
-List<InvoiceFormItemListItem> invoiceFormItemListItemList = List.empty(growable: true);
+List<InvoiceFormItemListItem> invoiceFormItemListItemList =
+    List.empty(growable: true);
 
 String? requisitionNextPage =
     "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=1";
