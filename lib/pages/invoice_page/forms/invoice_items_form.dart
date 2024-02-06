@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_items_form_layout.dart';
 
-class InvoiceItemsForm extends StatefulWidget {
-  const InvoiceItemsForm({super.key});
+class InvoiceItemsForm extends StatelessWidget {
+  final BuildContext parentContext;
 
-  @override
-  State<InvoiceItemsForm> createState() => _InvoiceItemsFormState();
-}
+  const InvoiceItemsForm({super.key, required this.parentContext});
 
-class _InvoiceItemsFormState extends State<InvoiceItemsForm> {
   @override
   Widget build(BuildContext context) {
-    return const InvoiceItemsFormLayout();
+    return InvoiceItemsFormLayout(grandParentContext: parentContext);
   }
 }

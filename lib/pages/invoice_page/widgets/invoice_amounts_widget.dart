@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/text_item.dart';
 
 class InvoiceAmountsWidget extends StatelessWidget {
-  final double subTotal;
-  final double taxRate;
-  final double tax;
-  final double total;
-
-  const InvoiceAmountsWidget({
-    super.key,
-    this.taxRate = 0,
-    this.subTotal = 0,
-    this.tax = 0,
-    this.total = 0,
-  });
+  const InvoiceAmountsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +23,9 @@ class InvoiceAmountsWidget extends StatelessWidget {
       child: Column(
         children: [
           Column(
-            children: InvoiceFormItemListItemList,
+            children: invoiceFormItemListItemList,
           ),
-          if (InvoiceFormItemListItemList.isNotEmpty)
+          if (invoiceFormItemListItemList.isNotEmpty)
             const Divider(
               indent: 0,
               endIndent: 0,
@@ -43,21 +33,48 @@ class InvoiceAmountsWidget extends StatelessWidget {
             ),
           SpacedTextItem(
             title: 'Subtotal',
-            data: subTotal.toString(),
+            data: _subTotalAmount(),
           ),
           const SizedBox(height: 8),
           SpacedTextItem(
-            title: 'Tax ($taxRate%)',
-            data: tax.toString(),
+            title: 'Taxable Amount',
+            data: _totalTaxableAmount(),
           ),
           const SizedBox(height: 8),
           SpacedTextItem(
-            title: 'Total',
-            data: total.toString(),
+            title: 'Total Amount',
+            data: _totalAmount(),
             fontWeight: FontWeight.bold,
           ),
         ],
       ),
     );
+  }
+
+  String _totalTaxableAmount() {
+    var thousandFormatter = NumberFormat("###,###,###,###,###.##");
+    double totalTaxableAmount = 0.00;
+    invoiceFormItemList.forEach((invoiceFormItem) {
+      totalTaxableAmount = totalTaxableAmount + invoiceFormItem.taxableAmount!;
+    });
+    return thousandFormatter.format(totalTaxableAmount);
+  }
+
+  String _totalAmount() {
+    var thousandFormatter = NumberFormat("###,###,###,###,###.##");
+    double totalAmount = 0.00;
+    invoiceFormItemList.forEach((invoiceFormItem) {
+      totalAmount = totalAmount + invoiceFormItem.totalAmount!;
+    });
+    return thousandFormatter.format(totalAmount);
+  }
+
+  String _subTotalAmount() {
+    var thousandFormatter = NumberFormat("###,###,###,###,###.##");
+    double subTotalAmount = 0.00;
+    invoiceFormItemList.forEach((invoiceFormItem) {
+      subTotalAmount = subTotalAmount + invoiceFormItem.amount!;
+    });
+    return thousandFormatter.format(subTotalAmount);
   }
 }
