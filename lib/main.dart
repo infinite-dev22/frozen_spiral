@@ -34,7 +34,6 @@ import 'package:smart_case/services/navigation/navigator_service.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
-import 'package:new_version_plus/new_version_plus.dart';
 
 Future<void> main() async {
   try {

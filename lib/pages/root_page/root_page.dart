@@ -14,15 +14,21 @@ import 'package:smart_case/pages/engagement_page/widgets/engagements_form.dart';
 import 'package:smart_case/pages/event_page/widgets/event_form.dart';
 import 'package:smart_case/pages/file_page/file_page.dart';
 import 'package:smart_case/pages/home_page/home_page.dart';
+import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
 import 'package:smart_case/pages/locator_page/locator_page.dart';
 import 'package:smart_case/pages/notification_page/notifications_page.dart';
 import 'package:smart_case/pages/requisition_page/widgets/requisition_form.dart';
 import 'package:smart_case/pages/root_page/widgets/bottom_bar_item.dart';
 import 'package:smart_case/pages/task_page/widgets/task_form.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/bank_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/client_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/engagement_type_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/invoice_item_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/invoice_type_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/tax_type_api.dart';
 import 'package:smart_case/services/navigation/locator.dart';
 import 'package:smart_case/services/navigation/navigator_service.dart';
 import 'package:smart_case/theme/color.dart';
@@ -149,6 +155,12 @@ class _RootPageState extends State<RootPage> {
           icon: const Icon(Icons.local_activity_outlined),
           onPressed: _buildActivityForm,
           label: const Text("Activity"),
+        ),
+        FloatingActionButton.extended(
+          heroTag: null,
+          icon: const Icon(Icons.class_outlined),
+          onPressed: _buildInvoiceDialog,
+          label: const Text("Invoice"),
         ),
         FloatingActionButton.extended(
           heroTag: null,
@@ -291,6 +303,16 @@ class _RootPageState extends State<RootPage> {
     );
   }
 
+  _buildInvoiceDialog() {
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => InvoiceForm(currencies: currencies),
+    );
+  }
+
   _buildEngagementForm() {
     return showModalBottomSheet(
       enableDrag: true,
@@ -345,6 +367,12 @@ class _RootPageState extends State<RootPage> {
     RequisitionApi.fetchAll();
     ClientApi.fetchAll();
     EngagementTypeApi.fetchAll();
+    InvoiceItemApi.fetchAll();
+    TaxTypeApi.fetchAll();
+    FileApi.fetchAll();
+    BankApi.fetchAll();
+    InvoiceItemApi.fetchAll();
+    InvoiceTypeApi.fetchAll();
     _loadApprovers;
 
     if (preloadedRequisitions.isNotEmpty) {

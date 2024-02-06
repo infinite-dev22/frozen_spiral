@@ -78,7 +78,8 @@ class CustomTextBox extends StatelessWidget {
 class CustomTextArea extends StatelessWidget {
   const CustomTextArea(
       {super.key,
-      this.hint = '',
+      this.hint,
+      this.value,
       this.readOnly = false,
       this.autoFocus = false,
       this.controller,
@@ -88,7 +89,8 @@ class CustomTextArea extends StatelessWidget {
       this.maxLength,
       this.onTap});
 
-  final String hint;
+  final String? hint;
+  final String? value;
   final bool readOnly;
   final bool autoFocus;
   final TextEditingController? controller;
@@ -107,6 +109,7 @@ class CustomTextArea extends StatelessWidget {
     return TextFormField(
       controller: controller,
       readOnly: readOnly,
+      initialValue: value,
       autofocus: autoFocus,
       onChanged: onChanged,
       minLines: minLines,
@@ -187,15 +190,18 @@ class SmartCaseTextField extends StatelessWidget {
 }
 
 class SmartCaseNumberField extends StatelessWidget {
-  const SmartCaseNumberField(
-      {super.key,
-      required this.hint,
-      required this.controller,
-      this.maxLength});
+  const SmartCaseNumberField({
+    super.key,
+    required this.hint,
+    required this.controller,
+    this.maxLength,
+    this.onChanged,
+  });
 
   final String hint;
   final TextEditingController controller;
   final int? maxLength;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -228,6 +234,7 @@ class SmartCaseNumberField extends StatelessWidget {
             ),
             keyboardType: TextInputType.number,
             inputFormatters: [CurrencyInputFormatter()],
+            onChanged: onChanged,
           ),
         ),
         const SizedBox(

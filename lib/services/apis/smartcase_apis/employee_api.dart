@@ -78,8 +78,7 @@ class EmployeeApi {
   static Future<File> getUserAvatar() async {
     EmployeeRepo employeeRepo = EmployeeRepo();
 
-    var response = await employeeRepo
-        .getAvatar();
+    var response = await employeeRepo.getAvatar();
     return response;
   }
 }
