@@ -25,12 +25,6 @@ class InvoiceAmountsWidget extends StatelessWidget {
           Column(
             children: invoiceFormItemListItemList,
           ),
-          if (invoiceFormItemListItemList.isNotEmpty)
-            const Divider(
-              indent: 0,
-              endIndent: 0,
-              height: 15,
-            ),
           SpacedTextItem(
             title: 'Subtotal',
             data: _subTotalAmount(),
@@ -52,29 +46,36 @@ class InvoiceAmountsWidget extends StatelessWidget {
   }
 
   String _totalTaxableAmount() {
-    var thousandFormatter = NumberFormat("###,###,###,###,###.0#");
+    var thousandFormatter = NumberFormat("###,###,###,###,##0.00");
     double totalTaxableAmount = 0.00;
-    invoiceFormItemList.forEach((invoiceFormItem) {
-      totalTaxableAmount = totalTaxableAmount + invoiceFormItem.taxableAmount!;
-    });
+    if (invoiceFormItemList.isNotEmpty) {
+      invoiceFormItemList.forEach((invoiceFormItem) {
+        totalTaxableAmount =
+            totalTaxableAmount + invoiceFormItem.taxableAmount!;
+      });
+    }
     return thousandFormatter.format(totalTaxableAmount);
   }
 
   String _totalAmount() {
-    var thousandFormatter = NumberFormat("###,###,###,###,###.0#");
+    var thousandFormatter = NumberFormat("###,###,###,###,##0.00");
     double totalAmount = 0.00;
-    invoiceFormItemList.forEach((invoiceFormItem) {
-      totalAmount = totalAmount + invoiceFormItem.totalAmount!;
-    });
+    if (invoiceFormItemList.isNotEmpty) {
+      invoiceFormItemList.forEach((invoiceFormItem) {
+        totalAmount = totalAmount + invoiceFormItem.totalAmount!;
+      });
+    }
     return thousandFormatter.format(totalAmount);
   }
 
   String _subTotalAmount() {
-    var thousandFormatter = NumberFormat("###,###,###,###,###.0#");
+    var thousandFormatter = NumberFormat("###,###,###,###,##0.00");
     double subTotalAmount = 0.00;
-    invoiceFormItemList.forEach((invoiceFormItem) {
-      subTotalAmount = subTotalAmount + invoiceFormItem.amount!;
-    });
+    if (invoiceFormItemList.isNotEmpty) {
+      invoiceFormItemList.forEach((invoiceFormItem) {
+        subTotalAmount = subTotalAmount + invoiceFormItem.amount!;
+      });
+    }
     return thousandFormatter.format(subTotalAmount);
   }
 }
