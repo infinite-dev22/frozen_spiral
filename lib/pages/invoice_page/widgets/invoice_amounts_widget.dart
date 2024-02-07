@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/data/app_config.dart';
+import 'package:smart_case/pages/invoice_page/widgets/invoice_form_item_list_item.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/text_item.dart';
 
 class InvoiceAmountsWidget extends StatelessWidget {
-  const InvoiceAmountsWidget({super.key});
+  final BuildContext parentContext;
+
+  const InvoiceAmountsWidget({super.key, required this.parentContext});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +25,18 @@ class InvoiceAmountsWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Column(
-            children: invoiceFormItemListItemList,
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: invoiceFormItemList.length,
+            itemBuilder: (context, index) => InvoiceFormItemListItem(
+              grandParentContext: parentContext,
+              index: index,
+              item: invoiceFormItemList[index],
+            ),
           ),
+          // Column(
+          //   children: invoiceFormItemListItemList,
+          // ),
           SpacedTextItem(
             title: 'Subtotal',
             data: _subTotalAmount(),

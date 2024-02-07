@@ -25,6 +25,7 @@ import 'package:smart_case/services/apis/smartcase_apis/bank_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/client_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/engagement_type_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/invoice_approver_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_item_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_type_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
@@ -338,8 +339,8 @@ class _RootPageState extends State<RootPage> {
 
     List users = usersMap['search']['employees'];
 
-    preloadedApprovers =
-        users.map((doc) => SmartEmployee.fromJson(doc)).toList();
+    preloadedApprovers
+        .addAll(users.map((doc) => SmartEmployee.fromJson(doc)).toList());
     if (mounted) {
       setState(() {});
     }
@@ -373,6 +374,7 @@ class _RootPageState extends State<RootPage> {
     BankApi.fetchAll();
     InvoiceItemApi.fetchAll();
     InvoiceTypeApi.fetchAll();
+    InvoiceApproverApi.fetchAll();
     _loadApprovers;
 
     if (preloadedRequisitions.isNotEmpty) {

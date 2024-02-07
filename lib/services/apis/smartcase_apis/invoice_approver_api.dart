@@ -6,11 +6,11 @@ import 'package:smart_case/database/invoice/invoice_approvers_repo.dart';
 
 class InvoiceApproverApi {
   static Future<List<SmartEmployee>> fetchAll(
-      {int page = 1, Function()? onSuccess, Function? onError}) async {
+      {Function()? onSuccess, Function? onError}) async {
     InvoiceApproverRepo requisitionRepo = InvoiceApproverRepo();
     List<SmartEmployee> requisitions = List.empty(growable: true);
 
-    var response = await requisitionRepo.fetchAll(page: page);
+    var response = await requisitionRepo.fetchAll();
     List requisitionsMap = response['employees'];
 
     if (requisitionsMap.isNotEmpty) {
@@ -21,9 +21,7 @@ class InvoiceApproverApi {
           .toList();
     }
 
-    if (page == 1) {
-      preloadedInvoiceApprovers.clear();
-    }
+    preloadedInvoiceApprovers.clear();
     preloadedInvoiceApprovers.addAll(requisitions);
     return requisitions;
   }

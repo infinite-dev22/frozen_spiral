@@ -126,6 +126,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                       preloadedInvoiceTypes.toSet().toList(),
                                   onChanged: (value) {
                                     _onTapSearchedInvoiceType(
+                                        cntxt,
                                         invoiceTypeController
                                             .dropDownValue?.value);
                                   },
@@ -139,7 +140,8 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                   endDateController: endDateController,
                                 ),
                                 GestureDetector(
-                                  onTap: _showSearchFileBottomSheet,
+                                  onTap: () =>
+                                      _showSearchFileBottomSheet(cntxt),
                                   child: Container(
                                     height: 50,
                                     width: double.infinity,
@@ -217,22 +219,24 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                               (currency) =>
                                                   currency.code == 'UGX')
                                       : null,
-                                  onChanged: _onTapSearchedCurrency,
+                                  onChanged: (value) =>
+                                      _onTapSearchedCurrency(cntxt, value),
                                 ),
                                 InvoiceAddItemsWidget(
                                     onTap: () => _showItemsDialog(cntxt)),
-                                InvoiceAmountsWidget(),
+                                InvoiceAmountsWidget(parentContext: cntxt),
                                 SearchableDropDown<SmartBank>(
                                   hintText: 'bank',
                                   menuItems: preloadedBanks.toSet().toList(),
                                   onChanged: (value) {
-                                    _onTapSearchedBank(
+                                    _onTapSearchedBank(cntxt,
                                         bankController.dropDownValue?.value);
                                   },
                                   defaultValue: bank,
                                   controller: bankController,
+                                  clear: false,
                                 ),
-                                if (bank != null)
+                                if (bankController.dropDownValue != null)
                                   Column(
                                     children: [
                                       Container(
@@ -264,14 +268,17 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                       const SizedBox(height: 10),
                                     ],
                                   ),
-                                if (preloadedApprovers.isNotEmpty)
+                                if (preloadedInvoiceApprovers.isNotEmpty)
                                   SearchableDropDown<SmartEmployee>(
                                     hintText: 'approver',
-                                    menuItems:
-                                        preloadedApprovers.toSet().toList(),
+                                    menuItems: preloadedInvoiceApprovers
+                                        .toSet()
+                                        .toList(),
                                     onChanged: (value) {
-                                      _onTapSearchedApprover(approversController
-                                          .dropDownValue?.value);
+                                      _onTapSearchedApprover(
+                                          cntxt,
+                                          approversController
+                                              .dropDownValue?.value);
                                     },
                                     defaultValue: approver,
                                     controller: approversController,
@@ -293,7 +300,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
     );
   }
 
-  _showSearchFileBottomSheet() {
+  _showSearchFileBottomSheet(BuildContext cntxt) {
     List<SmartFile> searchedList = List.empty(growable: true);
     bool isLoading = false;
     return showModalBottomSheet(
@@ -310,7 +317,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                 onTap: (value) {
                   setState(() {
                     file = null;
-                    _onTapSearchedFile(value!);
+                    _onTapSearchedFile(cntxt, value!);
                   });
                   Navigator.pop(context);
                 },
@@ -351,28 +358,32 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
     await FileApi.fetchAll();
   }
 
-  _onTapSearchedApprover(SmartEmployee value) {
-    setState(() {
-      approver = value;
-    });
+  _onTapSearchedApprover(BuildContext cntxt, SmartEmployee value) {
+    approver = value;
+    cntxt
+        .read<InvoiceFormBloc>()
+        .add(RefreshInvoiceForm(invoiceFormItemListItemList));
   }
 
-  _onTapSearchedBank(SmartBank value) {
-    setState(() {
-      bank = value;
-    });
+  _onTapSearchedBank(BuildContext cntxt, SmartBank value) {
+    bank = value;
+    cntxt
+        .read<InvoiceFormBloc>()
+        .add(RefreshInvoiceForm(invoiceFormItemListItemList));
   }
 
-  _onTapSearchedInvoiceType(SmartInvoiceType value) {
-    setState(() {
-      invoiceType = value;
-    });
+  _onTapSearchedInvoiceType(BuildContext context, SmartInvoiceType value) {
+    invoiceType = value;
+    context
+        .read<InvoiceFormBloc>()
+        .add(RefreshInvoiceForm(invoiceFormItemListItemList));
   }
 
-  _onTapSearchedFile(SmartFile value) {
-    setState(() {
-      file = value;
-    });
+  _onTapSearchedFile(BuildContext cntxt, SmartFile value) {
+    file = value;
+    cntxt
+        .read<InvoiceFormBloc>()
+        .add(RefreshInvoiceForm(invoiceFormItemListItemList));
   }
 
   _fillDataForUpdate() {
@@ -381,9 +392,12 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
     }
   }
 
-  _onTapSearchedCurrency(SmartCurrency? value) {
+  _onTapSearchedCurrency(BuildContext cntxt, SmartCurrency? value) {
     setState(() {
       currency = value;
+      cntxt
+          .read<InvoiceFormBloc>()
+          .add(RefreshInvoiceForm(invoiceFormItemListItemList));
     });
   }
 

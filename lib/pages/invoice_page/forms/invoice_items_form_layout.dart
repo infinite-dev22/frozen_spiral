@@ -195,8 +195,6 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
     );
 
     invoiceFormItemList.add(invoiceFormItem);
-    invoiceFormItemListItemList
-        .add(InvoiceFormItemListItem(item: invoiceFormItem));
 
     widget.grandParentContext
         .read<InvoiceFormBloc>()

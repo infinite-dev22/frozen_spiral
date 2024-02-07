@@ -18,8 +18,7 @@ class InvoiceApproverRepo extends InvoiceApproverRepoInterface {
   InvoiceApproverRepo._internal();
 
   @override
-  Future<Map<String, dynamic>> fetchAll(
-      {Map<String, dynamic>? body, int page = 1}) async {
+  Future<Map<String, dynamic>> fetchAll({Map<String, dynamic>? body}) async {
     Dio dio = Dio(baseOps)
       ..interceptors.add(DioCacheInterceptor(options: options));
 
