@@ -56,6 +56,6 @@ class SmartBank extends SmartModel {
 
   @override
   String getName() {
-    return accountName!;
+    return name!;
   }
 }

@@ -64,7 +64,7 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
         children: [
           FormTitle(
             name:
-                '${(widget.smartInvoiceItem == null) ? 'New' : 'Edit'} Requisition',
+                '${(widget.smartInvoiceItem == null) ? 'New' : 'Edit'} Invoice Item',
             onSave: () => _submitFormData(),
             isElevated: isTitleElevated,
             addButtonText: (widget.smartInvoiceItem == null) ? 'Add' : 'Update',
