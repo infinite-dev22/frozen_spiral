@@ -2,6 +2,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/bank/bank_model.dart';
 import 'package:smart_case/database/currency/smart_currency.dart';
@@ -16,6 +17,7 @@ import 'package:smart_case/pages/invoice_page/widgets/invoice_amounts_widget.dar
 import 'package:smart_case/pages/invoice_page/widgets/invoice_terms_widget.dart';
 import 'package:smart_case/services/apis/smartcase_apis/bank_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_approver_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
@@ -49,8 +51,11 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
   bool isTitleElevated = false;
   bool isActivityLoading = false;
 
-  final TextEditingController startDateController = TextEditingController();
-  final TextEditingController endDateController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController dueDateController = TextEditingController();
+  final TextEditingController clientAddressController = TextEditingController();
+  final TextEditingController bankDetailsController = TextEditingController();
+  final TextEditingController invoiceTermsController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -136,8 +141,8 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                 InvoiceDateTimeAccordion(
                                   startName: 'Date',
                                   endName: 'Due on',
-                                  startDateController: startDateController,
-                                  endDateController: endDateController,
+                                  startDateController: dateController,
+                                  endDateController: dueDateController,
                                 ),
                                 GestureDetector(
                                   onTap: () =>
@@ -198,8 +203,9 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                                     fontWeight:
                                                         FontWeight.bold)),
                                             CustomTextArea(
-                                              value: file!.address!,
                                               minLines: 2,
+                                              controller:
+                                                  clientAddressController,
                                             )
                                           ],
                                         ),
@@ -255,12 +261,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                                     fontWeight:
                                                         FontWeight.bold)),
                                             CustomTextArea(
-                                              value: bank!.description!
-                                                  .replaceAll("<br />", "\n")
-                                                  .replaceAll("<p>", "")
-                                                  .replaceAll("</p>", "")
-                                                  .replaceAll("&amp;", "&")
-                                                  .replaceAll("&nbsp;", " "),
+                                              controller: bankDetailsController,
                                             )
                                           ],
                                         ),
@@ -283,7 +284,8 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                     defaultValue: approver,
                                     controller: approversController,
                                   ),
-                                InvoiceTermsWidget(),
+                                InvoiceTermsWidget(
+                                    controller: invoiceTermsController),
                               ],
                             ),
                           );
@@ -367,6 +369,12 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
 
   _onTapSearchedBank(BuildContext cntxt, SmartBank value) {
     bank = value;
+    bankDetailsController.text = bank!.description!
+        .replaceAll("<br />", "\n")
+        .replaceAll("<p>", "")
+        .replaceAll("</p>", "")
+        .replaceAll("&amp;", "&")
+        .replaceAll("&nbsp;", " ");
     cntxt
         .read<InvoiceFormBloc>()
         .add(RefreshInvoiceForm(invoiceFormItemListItemList));
@@ -381,6 +389,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
 
   _onTapSearchedFile(BuildContext cntxt, SmartFile value) {
     file = value;
+    clientAddressController.text = file!.address!;
     cntxt
         .read<InvoiceFormBloc>()
         .add(RefreshInvoiceForm(invoiceFormItemListItemList));
@@ -402,17 +411,50 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
   }
 
   _submitFormData() {
-    invoiceFormItemList.clear();
-    invoiceFormItemListItemList.clear();
+    var invoice = SmartInvoice(
+      invoiceTypeId: invoiceType!.id,
+      date: dateController.text,
+      dueOn: dueDateController.text,
+      fileId: file!.id,
+      clientAddress: clientAddressController.text,
+      currencyId: currency!.id,
+      invoiceTerms: invoiceTermsController.text,
+      totalSubAmount: ttlSubAmount,
+      totalAmount: ttlAmount,
+      totalTaxableAmount: ttlTaxableAmount,
+      bankId: bank!.id,
+      bankDetails: bankDetailsController.text,
+      approverId: approver!.id,
+      invoiceItems: invoiceFormItemList,
+    );
+    InvoiceApi.post(
+      invoice.toJson(),
+      onError: () {
+        Fluttertoast.showToast(
+            msg: "An error occurred",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 5,
+            backgroundColor: AppColors.red,
+            textColor: AppColors.white,
+            fontSize: 16.0);
+      },
+      onSuccess: () {
+        Fluttertoast.showToast(
+            msg: "Invoice added successfully",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 5,
+            backgroundColor: AppColors.green,
+            textColor: AppColors.white,
+            fontSize: 16.0);
+      },
+    );
+
     Navigator.pop(context);
   }
 
   _cancelFormData() {
-    invoiceFormItemList.clear();
-    invoiceFormItemListItemList.clear();
-    scrollController.dispose();
-    startDateController.dispose();
-    endDateController.dispose();
     Navigator.pop(context);
   }
 
@@ -429,8 +471,32 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
   @override
   void initState() {
     super.initState();
+    invoiceTermsController.text =
+        "1. Accounts carry interest at 6% effective one month form"
+        " the date of receipt hereof R:6.\n2. Under VAT Statute"
+        " 1996, 18% is payable on all fees.\n3. Accounts carry"
+        " interest at 6% effective one month from the date date"
+        " of receipt hereof R:6.";
+    currency = widget.currencies.firstWhere(
+            (currency) =>
+        currency.code == 'UGX');
+
     _reloadBanks();
     _reloadApprovers();
     _fillDataForUpdate();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    ttlSubAmount = null;
+    ttlAmount = null;
+    ttlTaxableAmount = null;
+    invoiceFormItemList.clear();
+    invoiceFormItemListItemList.clear();
+    scrollController.dispose();
+    dateController.dispose();
+    dueDateController.dispose();
+    invoiceTermsController.dispose();
   }
 }

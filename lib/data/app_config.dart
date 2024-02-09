@@ -10,6 +10,7 @@ import 'package:smart_case/database/event/event_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/invoice/invoice_form_item.dart';
 import 'package:smart_case/database/invoice/invoice_item_model.dart';
+import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/database/invoice/invoice_type_model.dart';
 import 'package:smart_case/database/reports/models/cause_list_report.dart';
 import 'package:smart_case/database/reports/models/done_activities_report.dart';
@@ -72,6 +73,10 @@ List<SmartInvoiceType> preloadedInvoiceTypes = List.empty(growable: true);
 List<SmartBank> preloadedBanks = List.empty(growable: true);
 List<SmartEmployee> preloadedInvoiceApprovers = List.empty(growable: true);
 List<InvoiceFormItem> invoiceFormItemList = List.empty(growable: true);
+List<SmartInvoice> preloadedInvoices = List.empty(growable: true);
+String? ttlSubAmount;
+String? ttlAmount;
+String? ttlTaxableAmount;
 
 List<InvoiceFormItemListItem> invoiceFormItemListItemList =
     List.empty(growable: true);

@@ -21,6 +21,31 @@ class InvoiceFormItem extends SmartModel {
     this.taxableAmount,
   });
 
+  factory InvoiceFormItem.fromJson(Map<String, dynamic> json) =>
+      InvoiceFormItem(
+        id: json['id'] as int?,
+        item: json['item'] == null
+            ? null
+            : SmartInvoiceItem.fromJson(json['item'] as Map<String, dynamic>),
+        description: json['description'] as String?,
+        amount: (json['amount'] as num?)?.toDouble(),
+        taxType: json['taxType'] == null
+            ? null
+            : SmartTaxType.fromJson(json['taxType'] as Map<String, dynamic>),
+        totalAmount: (json['totalAmount'] as num?)?.toDouble(),
+        taxableAmount: (json['taxableAmount'] as num?)?.toDouble(),
+      );
+
+  Map<String, dynamic> toJson(InvoiceFormItem instance) => <String, dynamic>{
+        'id': instance.id,
+        'item': instance.item,
+        'description': instance.description,
+        'amount': instance.amount,
+        'taxType': instance.taxType,
+        'totalAmount': instance.totalAmount,
+        'taxableAmount': instance.taxableAmount,
+      };
+
   @override
   int getId() {
     return this.id!;

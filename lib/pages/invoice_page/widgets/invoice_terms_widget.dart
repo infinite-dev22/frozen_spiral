@@ -3,7 +3,12 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 
 class InvoiceTermsWidget extends StatelessWidget {
-  const InvoiceTermsWidget({super.key});
+  final TextEditingController? controller;
+
+  const InvoiceTermsWidget({
+    super.key,
+    this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +27,9 @@ class InvoiceTermsWidget extends StatelessWidget {
         children: [
           Text("Invoice Terms", style: TextStyle(fontWeight: FontWeight.bold)),
           CustomTextArea(
-              hint: "Invoice Terms",
-              value:
-                  "1. Accounts carry interest at 6% effective one month form the date of receipt hereof R:6.\n2. Under VAT Statute 1996, 18% is payable on all fees.\n3. Accounts carry interest at 6% effective one month from the date date of receipt hereof R:6."),
-          // Text(
-          //   "1. Accounts carry interest at 6% effective one month form the date of receipt hereof R:6.",
-          //   softWrap: true,
-          // ),
-          // Text(
-          //   "2. Under VAT Statute 1996, 18% is payable on all fees.",
-          //   softWrap: true,
-          // ),
-          // Text(
-          //   "3. Accounts carry interest at 6% effective one month from the date date of receipt hereof R:6.",
-          //   softWrap: true,
-          // ),
+            hint: "Invoice Terms",
+            controller: controller,
+          ),
         ],
       ),
     );
