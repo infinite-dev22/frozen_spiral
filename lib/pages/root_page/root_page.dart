@@ -2,12 +2,14 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:list_load_more/utils/ext/iterable_ext.dart';
 import 'package:new_version_plus/new_version_plus.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/data/screen_arguments.dart';
 import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/employee/employee_model.dart';
+import 'package:smart_case/database/local/notifications.dart';
 import 'package:smart_case/pages/activity_page/activities_page.dart';
 import 'package:smart_case/pages/activity_page/widgets/activity_form.dart';
 import 'package:smart_case/pages/engagement_page/widgets/engagements_form.dart';
@@ -214,36 +216,43 @@ class _RootPageState extends State<RootPage> {
         children: List.generate(
           _barItems().length,
           (index) {
-            // if (index == 2) {
-            //   return BottomBarItem(
-            //     _activeTab == index
-            //         ? _barItems()[index]["active_icon"]
-            //         : _barItems()[index]["icon"],
-            //     _barItems()[index]["name"],
-            //     isActive: _activeTab == index,
-            //     activeColor: AppColors.primary,
-            //     onTap: () {
-            //       setState(() {
-            //         _activeTab = index;
-            //       });
-            //     },
-            //   );
-            // } else {
-            //   return BottomBarItem(
-            //     _activeTab == index
-            //         ? _barItems()[index]["active_icon"]
-            //         : _barItems()[index]["icon"],
-            //     _barItems()[index]["name"],
-            //     isActive: _activeTab == index,
-            //     activeColor: AppColors.primary,
-            //     onTap: () {
-            //       setState(() {
-            //         _activeTab = index;
-            //       });
-            //     },
-            //   );
-            // }
-
+            if (index == 3) {
+              return ValueListenableBuilder(
+                  valueListenable:
+                      Hive.box<Notifications>('notifications').listenable(),
+                  builder: (context, Box<Notifications> box, _) {
+                    if (box.length > 0) {
+                      return BottomBarItem(
+                        showBadge: true,
+                        badge: Text(box.length.toString()),
+                        _activeTab == index
+                            ? _barItems()[index]["active_icon"]
+                            : _barItems()[index]["icon"],
+                        _barItems()[index]["name"],
+                        isActive: _activeTab == index,
+                        activeColor: AppColors.primary,
+                        onTap: () {
+                          setState(() {
+                            _activeTab = index;
+                          });
+                        },
+                      );
+                    }
+                    return BottomBarItem(
+                      _activeTab == index
+                          ? _barItems()[index]["active_icon"]
+                          : _barItems()[index]["icon"],
+                      _barItems()[index]["name"],
+                      isActive: _activeTab == index,
+                      activeColor: AppColors.primary,
+                      onTap: () {
+                        setState(() {
+                          _activeTab = index;
+                        });
+                      },
+                    );
+                  });
+            }
             return BottomBarItem(
               _activeTab == index
                   ? _barItems()[index]["active_icon"]

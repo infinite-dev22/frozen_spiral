@@ -66,7 +66,8 @@ class InvoiceAmountsWidget extends StatelessWidget {
             totalTaxableAmount + invoiceFormItem.taxableAmount!;
       });
     }
-    return thousandFormatter.format(totalTaxableAmount);
+    ttlTaxableAmount = thousandFormatter.format(totalTaxableAmount);
+    return ttlTaxableAmount!;
   }
 
   String _totalAmount() {
@@ -77,7 +78,8 @@ class InvoiceAmountsWidget extends StatelessWidget {
         totalAmount = totalAmount + invoiceFormItem.totalAmount!;
       });
     }
-    return thousandFormatter.format(totalAmount);
+    ttlAmount = thousandFormatter.format(totalAmount);
+    return ttlAmount!;
   }
 
   String _subTotalAmount() {
@@ -88,6 +90,7 @@ class InvoiceAmountsWidget extends StatelessWidget {
         subTotalAmount = subTotalAmount + invoiceFormItem.amount!;
       });
     }
-    return thousandFormatter.format(subTotalAmount);
+    ttlSubAmount = thousandFormatter.format(subTotalAmount);
+    return ttlSubAmount!;
   }
 }

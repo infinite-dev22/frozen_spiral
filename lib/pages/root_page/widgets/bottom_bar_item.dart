@@ -7,18 +7,22 @@ class BottomBarItem extends StatelessWidget {
     this.name, {
     super.key,
     this.onTap,
+    this.badge,
     this.color = AppColors.inActiveColor,
     this.activeColor = AppColors.primary,
     this.isActive = false,
+    this.showBadge = false,
     this.isNotified = false,
   });
 
   final IconData icon;
   final String name;
+  final Text? badge;
   final Color color;
   final Color activeColor;
   final bool isNotified;
   final bool isActive;
+  final bool showBadge;
   final GestureTapCallback? onTap;
 
   @override
@@ -36,11 +40,20 @@ class BottomBarItem extends StatelessWidget {
               color: Colors.transparent,
             ),
             alignment: Alignment.center,
-            child: Icon(
-              icon,
-              size: 30,
-              color: isActive ? activeColor : color,
-            ),
+            child: (showBadge)
+                ? Badge(
+                    label: badge,
+                    child: Icon(
+                      icon,
+                      size: 30,
+                      color: isActive ? activeColor : color,
+                    ),
+                  )
+                : Icon(
+                    icon,
+                    size: 30,
+                    color: isActive ? activeColor : color,
+                  ),
           ),
           Text(
             name,
