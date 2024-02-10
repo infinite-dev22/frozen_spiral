@@ -6,15 +6,19 @@ import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/employee/employee_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/invoice/invoice_form_item.dart';
+import 'package:smart_case/database/invoice/invoice_type_model.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 
 @JsonSerializable()
 class SmartInvoice {
   final int? id;
   final dynamic invoiceTypeId;
+  final SmartInvoiceType? invoiceType;
   final dynamic date;
   final dynamic dueOn;
   final SmartFile? file;
   final dynamic fileId;
+  final dynamic clientId;
   final dynamic clientAddress;
   final SmartCurrency? currency;
   final dynamic currencyId;
@@ -32,10 +36,12 @@ class SmartInvoice {
   SmartInvoice({
     this.id,
     this.invoiceTypeId,
+    this.invoiceType,
     this.date,
     this.dueOn,
     this.file,
     this.fileId,
+    this.clientId,
     this.clientAddress,
     this.currency,
     this.currencyId,
@@ -50,11 +56,6 @@ class SmartInvoice {
     this.approverId,
     this.invoiceTerms,
   });
-
-  // factory SmartInvoice.fromJson(Map<String, dynamic> json) =>
-  //     _$SmartInvoiceFromJson(json);
-  //
-  // Map<String, dynamic> toJson() => _$SmartInvoiceToJson(this);
 
   factory SmartInvoice.fromJson(Map<String, dynamic> json) => SmartInvoice(
         id: json['id'] as int?,
@@ -93,22 +94,34 @@ class SmartInvoice {
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'invoiceTypeId': this.invoiceTypeId,
         'date': this.date,
-        'dueOn': this.dueOn,
-        'fileId': this.fileId,
-        'clientAddress': this.clientAddress,
-        'currencyId': this.currencyId,
-        'invoiceItems': this
+        'due_on': this.dueOn,
+        'bill_to': this.clientAddress,
+        'currency_id': this.currencyId,
+        'client_id': this.clientId,
+        'done_by': currentUser.id,
+        'employee_id': currentUser.id,
+        'case_file_id': this.fileId,
+        'supervisor_id': this.approverId,
+        'invoice_type_id': this.invoiceTypeId,
+        'bank_id': this.bankId,
+        'payment_terms': this.invoiceTerms,
+        'case_payment_type_id': this
             .invoiceItems
-            ?.map((object) => json.encode(object.toJson()))
+            ?.map((invoiceItem) => invoiceItem.taxType!.id)
             .toList(growable: true),
-        'totalSubAmount': this.totalSubAmount,
-        'totalAmount': this.totalAmount,
-        'totalTaxableAmount': this.totalTaxableAmount,
-        'bankId': this.bankId,
-        'bankDetails': this.bankDetails,
-        'approverId': this.approverId,
-        'invoiceTerms': this.invoiceTerms,
+        'amounts': this
+            .invoiceItems
+            ?.map((invoiceItem) => invoiceItem.amount)
+            .toList(growable: true),
+        'invoice_details_title': this.invoiceType!.name,
+        'tax_ids': this
+            .invoiceItems
+            ?.map((invoiceItem) => json.encode(invoiceItem.taxType!.code))
+            .toList(growable: true),
+        'descriptions': this
+            .invoiceItems
+            ?.map((invoiceItem) => json.encode(invoiceItem.description))
+            .toList(growable: true),
       };
 }

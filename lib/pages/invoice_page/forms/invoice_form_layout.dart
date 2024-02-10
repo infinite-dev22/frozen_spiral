@@ -89,11 +89,11 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
           child: Column(
             children: [
               FormTitle(
-                name: '${(file == null) ? 'New' : 'Edit'} Invoice',
+                name: '${(widget.invoice == null) ? 'New' : 'Edit'} Invoice',
                 onSave: () => _submitFormData(),
                 onCancel: () => _cancelFormData(),
                 isElevated: isTitleElevated,
-                addButtonText: (file == null) ? 'Add' : 'Update',
+                addButtonText: (widget.invoice == null) ? 'Add' : 'Update',
               ),
               Expanded(
                 child: GestureDetector(
@@ -261,6 +261,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                                     fontWeight:
                                                         FontWeight.bold)),
                                             CustomTextArea(
+                                              readOnly: true,
                                               controller: bankDetailsController,
                                             )
                                           ],
@@ -413,9 +414,11 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
   _submitFormData() {
     var invoice = SmartInvoice(
       invoiceTypeId: invoiceType!.id,
+      invoiceType: invoiceType,
       date: dateController.text,
       dueOn: dueDateController.text,
       fileId: file!.id,
+      clientId: file!.clientId,
       clientAddress: clientAddressController.text,
       currencyId: currency!.id,
       invoiceTerms: invoiceTermsController.text,
@@ -477,9 +480,8 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
         " 1996, 18% is payable on all fees.\n3. Accounts carry"
         " interest at 6% effective one month from the date date"
         " of receipt hereof R:6.";
-    currency = widget.currencies.firstWhere(
-            (currency) =>
-        currency.code == 'UGX');
+    currency =
+        widget.currencies.firstWhere((currency) => currency.code == 'UGX');
 
     _reloadBanks();
     _reloadApprovers();
