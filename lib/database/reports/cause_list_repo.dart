@@ -1,10 +1,11 @@
-import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:flutter/foundation.dart';
-import 'package:smart_case/data/app_config.dart';
-import 'package:smart_case/util/smart_case_init.dart';
+import 'dart:convert';
+import 'dart:io';
 
-import '../interface/cause_list_repo_interface.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
+import 'package:smart_case/database/interface/cause_list_repo_interface.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 
 class CauseListRepo extends CauseListRepoInterface {
   static final CauseListRepo _instance = CauseListRepo._internal();
@@ -16,30 +17,31 @@ class CauseListRepo extends CauseListRepoInterface {
   CauseListRepo._internal();
 
   @override
-  Future<Map<String, dynamic>> fetchAll() async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
+  Future<dynamic> fetchAll() async {
+    var client = RetryClient(http.Client());
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      dio.options.followRedirects = false;
-
-      var response = await dio.get(Uri.https(
-              currentUser.url.replaceRange(0, 8, ''),
-              'api/reports/nextActivityapi')
-          .toString());
+      final headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+      };
+      var response = await client.get(
+        Uri.https(
+          currentUser.url.replaceRange(0, 8, ''),
+          'api/reports/nextActivityapi',
+        ),
+        headers: headers,
+      );
 
       if (response.statusCode == 200) {
-        return response.data;
+        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
       }
     } finally {
-      dio.close();
+      client.close();
     }
     return {};
   }

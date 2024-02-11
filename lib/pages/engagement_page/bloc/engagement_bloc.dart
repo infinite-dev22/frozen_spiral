@@ -14,8 +14,6 @@ class EngagementBloc extends Bloc<EngagementEvent, EngagementState> {
     on<GetActivitiesEvent>(_mapGetActivitiesEventToState);
     on<GetEngagementEvent>(_mapGetEngagementEventToState);
     on<PostEngagementEvent>(_mapPostEngagementEventToState);
-    on<PutEngagementEvent>(_mapPutEngagementEventToState);
-    on<DeleteEngagementEvent>(_mapDeleteEngagementEventToState);
   }
 
   Future<FutureOr<void>> _mapGetActivitiesEventToState(
@@ -56,36 +54,6 @@ class EngagementBloc extends Bloc<EngagementEvent, EngagementState> {
         .then((engagement) {
       emit(state.copyWith(
           status: EngagementStatus.engagementSuccess, engagement: engagement));
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print(error);
-        print(stackTrace);
-      }
-      emit(state.copyWith(status: EngagementStatus.engagementSuccess));
-    });
-  }
-
-  Future<FutureOr<void>> _mapPutEngagementEventToState(
-      PutEngagementEvent event, Emitter<EngagementState> emit) async {
-    emit(state.copyWith(status: EngagementStatus.engagementsLoading));
-    await EngagementApi.put(event.engagement, event.engagementId)
-        .then((engagement) {
-      emit(state.copyWith(
-          status: EngagementStatus.engagementSuccess, engagement: engagement));
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print(error);
-        print(stackTrace);
-      }
-      emit(state.copyWith(status: EngagementStatus.engagementSuccess));
-    });
-  }
-
-  Future<FutureOr<void>> _mapDeleteEngagementEventToState(
-      DeleteEngagementEvent event, Emitter<EngagementState> emit) async {
-    emit(state.copyWith(status: EngagementStatus.engagementsLoading));
-    await EngagementApi.delete(event.engagementId).whenComplete(() {
-      emit(state.copyWith(status: EngagementStatus.engagementSuccess));
     }).onError((error, stackTrace) {
       if (kDebugMode) {
         print(error);

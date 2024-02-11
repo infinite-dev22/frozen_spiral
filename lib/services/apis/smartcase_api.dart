@@ -24,12 +24,16 @@ class SmartCaseApi {
     var client = RetryClient(http.Client());
 
     try {
+      final headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+      };
+
       var response = await client.get(
           Uri.parse(
               '${currentUser.url}/api/accounts/cases/requisitions/allapi'),
-          headers: {
-            HttpHeaders.authorizationHeader: "Bearer $token",
-          });
+          headers: headers);
 
       if (response.statusCode == 200) {
         var decodedResponse =
@@ -157,13 +161,14 @@ class SmartCaseApi {
     var client = RetryClient(http.Client());
 
     try {
+      var headers = {
+        HttpHeaders.authorizationHeader: "Bearer $token",
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json'
+      };
       var response = await client.get(
           Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint, body),
-          headers: {
-            HttpHeaders.authorizationHeader: "Bearer $token",
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.acceptHeader: 'application/json'
-          });
+          headers: headers);
 
       if (response.statusCode == 200) {
         var decodedResponse =

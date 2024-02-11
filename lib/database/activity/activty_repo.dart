@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
-import 'package:smart_case/data/app_config.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
 import 'package:smart_case/database/interface/activity_repo_interface.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
@@ -17,171 +17,149 @@ class ActivityRepo extends ActivityRepoInterface {
   ActivityRepo._internal();
 
   @override
-  Future<Map<String, dynamic>> fetchAll({Map<String, dynamic>? body}) async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
+  Future<dynamic> fetchAll({Map<String, dynamic>? body}) async {
+    var client = RetryClient(http.Client());
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      dio.options.followRedirects = false;
-
-      var response = await dio.get(
-        Uri.https(currentUser.url.replaceRange(0, 8, ''), 'api/activitiesindex')
-            .toString(),
-        data: json.encode(body),
+      final headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+      };
+      var response = await client.get(
+        Uri.https(
+          currentUser.url.replaceRange(0, 8, ''),
+          'api/activitiesindex',
+          body,
+        ),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
-        return response.data;
+        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
       }
     } finally {
-      dio.close();
+      client.close();
     }
     return {};
   }
 
   @override
-  Future<Map<String, dynamic>> fetch(int fileId, int activityId) async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
+  Future<dynamic> fetch(int fileId, int activityId) async {
+    var client = RetryClient(http.Client());
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      dio.options.followRedirects = false;
+      final headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+      };
 
-      var response = await dio.get(
+      var response = await client.post(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
-                'api/cases/$fileId/activities/$activityId')
-            .toString(),
+            'api/cases/$fileId/activities/$activityId'),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
-        return response.data;
+        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print("An Error occurred: $e");
-      }
     } finally {
-      dio.close();
+      client.close();
     }
     return {};
-  }
-
-  @override
-  Future<Map<String, dynamic>> filter() {
-    // TODO: implement filter
-    throw UnimplementedError();
   }
 
   @override
   Future<dynamic> post(Map<String, dynamic> data, int fileId) async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
+    var client = RetryClient(http.Client());
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['Accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      dio.options.followRedirects = false;
+      final headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+      };
 
-      var response = await dio.post(
+      var response = await client.post(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
-                'api/cases/$fileId/activities')
-            .toString(),
-        data: json.encode(data),
+            'api/cases/$fileId/activities'),
+        body: json.encode(data),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print("A Success occurred: ${response.statusCode}");
-        }
-        return response.data;
+        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
       }
     } finally {
-      dio.close();
+      client.close();
     }
   }
 
   @override
   Future<dynamic> put(
       Map<String, dynamic> data, int fileId, int activityId) async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
+    var client = RetryClient(http.Client());
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['Accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      // dio.options.followRedirects = false;
+      final headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+      };
 
-      var response = await dio.put(
+      var response = await client.put(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
-                'api/cases/$fileId/activities/$activityId')
-            .toString(),
-        data: json.encode(data),
+            'api/cases/$fileId/activities/$activityId'),
+        body: json.encode(data),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print("A Success occurred: ${response.statusCode}");
-        }
-        return response.data;
+        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
       }
     } finally {
-      dio.close();
+      client.close();
     }
   }
 
   @override
   Future<dynamic> delete(int fileId, int activityId) async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
+    var client = RetryClient(http.Client());
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['Accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      // dio.options.followRedirects = false;
+      final headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+      };
 
-      var response = await dio.put(
+      var response = await client.delete(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
-                'api/cases/$fileId/activities/$activityId')
-            .toString(),
+            'api/cases/$fileId/activities/$activityId'),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print("A Success occurred: ${response.statusCode}");
-        }
-        return response.data;
+        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
       }
     } finally {
-      dio.close();
+      client.close();
     }
   }
 }

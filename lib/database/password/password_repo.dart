@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
-import 'package:smart_case/data/app_config.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
 import 'package:smart_case/database/interface/password_repo_interface.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
@@ -18,34 +18,30 @@ class PasswordRepo extends PasswordRepoInterface {
 
   @override
   Future<dynamic> post(Object data) async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
+    var client = RetryClient(http.Client());
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['Accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      dio.options.followRedirects = false;
+      final headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+      };
 
-      var response = await dio.post(
+      var response = await client.post(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
-                'api/hr/employees/changePasswordSubmit')
-            .toString(),
-        data: json.encode(data),
+            'api/hr/employees/changePasswordSubmit'),
+        body: json.encode(data),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print("A Success occurred: ${response.statusCode}");
-        }
-        return response.data;
+        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
       }
     } finally {
-      dio.close();
+      client.close();
     }
   }
 }

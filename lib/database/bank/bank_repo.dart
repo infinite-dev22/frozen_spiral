@@ -1,11 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart';
-import 'package:smart_case/data/app_config.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
 import 'package:smart_case/database/interface/bank_repo_interface.dart';
-import 'package:smart_case/services/apis/smartcase_apis/bank_api.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
 class BankRepo extends BankRepoInterface {
@@ -18,131 +17,33 @@ class BankRepo extends BankRepoInterface {
   BankRepo._internal();
 
   @override
-  Future<Map<String, dynamic>> fetchAll({Map<String, dynamic>? body}) async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
+  Future<dynamic> fetchAll({Map<String, dynamic>? body}) async {
+    var client = RetryClient(http.Client());
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      dio.options.followRedirects = false;
-
-      var response = await dio.get(
-        '${currentUser.url}/api/admin/bank',
-        data: json.encode(body),
-      );
-
-      if (response.statusCode == 200) {
-        return response.data;
-      } else {
-        if (kDebugMode) {
-          print("An Error occurred: ${response.statusCode}");
-        }
-      }
-    } finally {
-      dio.close();
-    }
-    return {};
-  }
-
-  @override
-  Future<Map<String, dynamic>> fetch(int id) async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
-    try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      dio.options.followRedirects = false;
-
-      var response = await dio.get(
-        Uri.https(currentUser.url.replaceRange(0, 8, ''), 'api/admin/bank/$id')
-            .toString(),
-      );
-
-      if (response.statusCode == 200) {
-        return response.data;
-      } else {
-        if (kDebugMode) {
-          print("An Error occurred: ${response.statusCode}");
-        }
-      }
-    } finally {
-      dio.close();
-    }
-    return {};
-  }
-
-  @override
-  Future<Map<String, dynamic>> filter() {
-    // TODO: implement filter
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<dynamic> post(Map<String, dynamic> data, int id) async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
-    try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['Accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      dio.options.followRedirects = false;
-
-      var response = await dio.post(
+      final headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+      };
+      var response = await client.get(
         Uri.https(
-                currentUser.url.replaceRange(0, 8, ''), 'api/admin/bank/create')
-            .toString(),
-        data: json.encode(data),
+          currentUser.url.replaceRange(0, 8, ''),
+          'api/admin/bank',
+          body,
+        ),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
-        return response.data;
+        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
       }
     } finally {
-      dio.close();
+      client.close();
     }
-  }
-
-  @override
-  Future<dynamic> put(Map<String, dynamic> data, int id) async {
-    Dio dio = Dio(baseOps)
-      ..interceptors.add(DioCacheInterceptor(options: options));
-
-    try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['Accept'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
-      // dio.options.followRedirects = false;
-
-      var response = await dio.put(
-        Uri.https(currentUser.url.replaceRange(0, 8, ''),
-                'api/admin/bank/update/$id')
-            .toString(),
-        data: json.encode(data),
-      );
-
-      if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print("A Success occurred: ${response.statusCode}");
-        }
-        await BankApi
-            .fetchAll(); // TODO: Remove when bloc is successfully added.
-        return response.data;
-      } else {
-        if (kDebugMode) {
-          print("An Error occurred: ${response.statusCode}");
-        }
-      }
-    } finally {
-      dio.close();
-    }
+    return {};
   }
 }
