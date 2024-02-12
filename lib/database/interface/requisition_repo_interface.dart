@@ -1,5 +1,5 @@
 abstract class RequisitionRepoInterface {
-  Future<Map<String, dynamic>> fetch(int id);
+  Future<dynamic> fetch(int id);
 
   Future<dynamic> fetchAll();
 

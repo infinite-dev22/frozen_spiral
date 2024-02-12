@@ -10,8 +10,8 @@ import 'package:smart_case/util/smart_case_init.dart';
 class AuthApis {
   static Future uploadFCMToken(String email) async {
     Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
-    dio.options.headers['content-Type'] = 'application/json';
-    dio.options.headers['Accept'] = 'application/json';
+    dio.options.headers['content-Type'] = "application/json";
+    dio.options.headers['Accept'] = "application/json";
     dio.options.headers["authorization"] = "Bearer ${currentUser.token}";
     dio.options.followRedirects = false;
 
@@ -32,8 +32,8 @@ class AuthApis {
     Function()? onError,
   }) async {
     Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
-    dio.options.headers['content-Type'] = 'application/json';
-    dio.options.headers['Accept'] = 'application/json';
+    dio.options.headers['content-Type'] = "application/json";
+    dio.options.headers['Accept'] = "application/json";
     dio.options.followRedirects = false;
 
     try {
@@ -83,8 +83,8 @@ class AuthApis {
   }) async {
     Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
 
-    dio.options.headers['content-Type'] = 'application/json';
-    dio.options.headers['Accept'] = 'application/json';
+    dio.options.headers['content-Type'] = "application/json";
+    dio.options.headers['Accept'] = "application/json";
     dio.options.followRedirects = false;
 
     try {
@@ -138,8 +138,8 @@ class AuthApis {
       Function(dynamic e)? onErrors}) async {
     Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
 
-    dio.options.headers['content-Type'] = 'application/json';
-    dio.options.headers['Accept'] = 'application/json';
+    dio.options.headers['content-Type'] = "application/json";
+    dio.options.headers['Accept'] = "application/json";
     dio.options.followRedirects = false;
 
     try {

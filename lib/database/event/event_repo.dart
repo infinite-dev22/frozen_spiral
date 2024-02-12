@@ -25,9 +25,9 @@ class EventRepo extends EventRepoInterface {
 
     try {
       var headers = {
-        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptHeader: 'application/json'
+        "Authorization": 'Bearer ${currentUser.token}',
+        "Content-Type": "application/json",
+        "Accept": "application/json"
       };
       var response = await client.get(
           Uri.https(currentUser.url.replaceRange(0, 8, ''),

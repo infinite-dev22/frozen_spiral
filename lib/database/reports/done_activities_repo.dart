@@ -21,9 +21,9 @@ class DoneActivitiesRepo extends DoneActivitiesRepoInterface {
     var client = RetryClient(http.Client());
     try {
       final headers = {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${currentUser.token}',
       };
       var response = await client.get(
         Uri.https(
@@ -39,6 +39,8 @@ class DoneActivitiesRepo extends DoneActivitiesRepoInterface {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
+        throw ErrorHint(
+            "Action failed with status code: ${response.statusCode}");
       }
     } catch (e) {
       print("DNACTI: $e");

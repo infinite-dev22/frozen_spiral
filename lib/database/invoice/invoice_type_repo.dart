@@ -21,9 +21,9 @@ class InvoiceTypeRepo extends InvoiceTypeRepoInterface {
     var client = RetryClient(http.Client());
     try {
       final headers = {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${currentUser.token}',
       };
       var response = await client.get(
         Uri.https(

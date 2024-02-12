@@ -45,12 +45,14 @@ class RequisitionApi {
         drawersList = response['drawers'];
         preloadedDrawers =
             drawersList.map((drawer) => SmartDrawer.fromJson(drawer)).toList();
+        if (onSuccess != null) onSuccess;
       } catch (e) {
         if (kDebugMode) {
           print(e);
         }
+        if (onError != null) onError();
       }
-    });
+    }).onError((error, stackTrace) => (onError != null) ? onError() : null);
 
     // SmartDrawer drawer = await drawerRepo
     //     .fetch(id)

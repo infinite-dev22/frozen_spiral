@@ -21,9 +21,9 @@ class InvoiceRepo extends InvoiceRepoInterface {
     var client = RetryClient(http.Client());
     try {
       final headers = {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${currentUser.token}',
       };
       var response = await client.get(
         Uri.https(
@@ -40,6 +40,8 @@ class InvoiceRepo extends InvoiceRepoInterface {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
+        throw ErrorHint(
+            "Action failed with status code: ${response.statusCode}");
       }
     } finally {
       client.close();
@@ -52,9 +54,9 @@ class InvoiceRepo extends InvoiceRepoInterface {
     var client = RetryClient(http.Client());
     try {
       final headers = {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${currentUser.token}',
       };
 
       var response = await client.post(
@@ -69,6 +71,8 @@ class InvoiceRepo extends InvoiceRepoInterface {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
+        throw ErrorHint(
+            "Action failed with status code: ${response.statusCode}");
       }
     } finally {
       client.close();
@@ -81,9 +85,9 @@ class InvoiceRepo extends InvoiceRepoInterface {
     var client = RetryClient(http.Client());
     try {
       final headers = {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${currentUser.token}',
       };
 
       print("JSON DATA SENT 1: ${data}");
@@ -116,9 +120,9 @@ class InvoiceRepo extends InvoiceRepoInterface {
     var client = RetryClient(http.Client());
     try {
       final headers = {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${currentUser.token}',
       };
 
       var response = await client.put(
@@ -134,6 +138,8 @@ class InvoiceRepo extends InvoiceRepoInterface {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
+        throw ErrorHint(
+            "Action failed with status code: ${response.statusCode}");
       }
     } finally {
       client.close();

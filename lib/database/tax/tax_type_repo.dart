@@ -21,9 +21,9 @@ class TaxTypeRepo extends TaxTypeRepoInterface {
     var client = RetryClient(http.Client());
     try {
       final headers = {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${currentUser.token}',
       };
       var response = await client.get(
         Uri.https(
@@ -39,6 +39,8 @@ class TaxTypeRepo extends TaxTypeRepoInterface {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
         }
+        throw ErrorHint(
+            "Action failed with status code: ${response.statusCode}");
       }
     } finally {
       client.close();

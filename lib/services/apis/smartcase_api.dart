@@ -25,9 +25,9 @@ class SmartCaseApi {
 
     try {
       final headers = {
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptHeader: 'application/json',
-        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${currentUser.token}',
       };
 
       var response = await client.get(
@@ -69,8 +69,8 @@ class SmartCaseApi {
     Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['Accept'] = 'application/json';
+      dio.options.headers['content-Type'] = "application/json";
+      dio.options.headers['Accept'] = "application/json";
       dio.options.headers["authorization"] = "Bearer $token";
       // dio.options.followRedirects = false;
 
@@ -125,7 +125,7 @@ class SmartCaseApi {
           body: jsonEncode(data),
           encoding: encoding,
           headers: {
-            HttpHeaders.authorizationHeader: "Bearer $token",
+            "Authorization": "Bearer $token",
             "content-Type": "application/json",
             "Accept": "application/json",
           });
@@ -162,9 +162,9 @@ class SmartCaseApi {
 
     try {
       var headers = {
-        HttpHeaders.authorizationHeader: "Bearer $token",
-        HttpHeaders.contentTypeHeader: 'application/json',
-        HttpHeaders.acceptHeader: 'application/json'
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+        "Accept": "application/json"
       };
       var response = await client.get(
           Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint, body),
@@ -198,8 +198,8 @@ class SmartCaseApi {
     Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['accept'] = 'application/json';
+      dio.options.headers['content-Type'] = "application/json";
+      dio.options.headers['accept'] = "application/json";
       dio.options.headers["authorization"] = "Bearer $token";
       dio.options.followRedirects = false;
 
