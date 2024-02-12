@@ -77,7 +77,7 @@ class InvoiceRepo extends InvoiceRepoInterface {
   }
 
   @override
-  Future<dynamic> post(Map<String, dynamic> data) async {
+  Future<dynamic> post(Object data) async {
     var client = RetryClient(http.Client());
     try {
       final headers = {
@@ -86,18 +86,24 @@ class InvoiceRepo extends InvoiceRepoInterface {
         HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
       };
 
+      print("JSON DATA SENT 1: ${data}");
+      print("JSON DATA SENT 2: ${json.encode(data)}");
+
       var response = await client.post(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
-            'api/account/invoice/create'),
+            'api/accounts/invoice/create'),
         body: json.encode(data),
         headers: headers,
       );
 
       if (response.statusCode == 200) {
+        print(
+            "RESULT AFTER POST: ${jsonDecode(utf8.decode(response.bodyBytes)) as Map}");
         return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
+          print("An Error occurred: ${response.body}");
         }
       }
     } finally {

@@ -8,7 +8,6 @@ import 'package:smart_case/database/invoice/invoice_form_item.dart';
 import 'package:smart_case/database/invoice/invoice_item_model.dart';
 import 'package:smart_case/database/tax/tax_type_model.dart';
 import 'package:smart_case/pages/invoice_page/bloc/forms/invoice/invoice_form_bloc.dart';
-import 'package:smart_case/pages/invoice_page/widgets/invoice_form_item_list_item.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_textbox.dart';
 import 'package:smart_case/widgets/form_title.dart';

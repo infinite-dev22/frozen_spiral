@@ -184,7 +184,8 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                     ),
                                   ),
                                 ),
-                                if (file != null)
+                                if (file != null &&
+                                    clientAddressController.text.isNotEmpty)
                                   Column(
                                     children: [
                                       Container(
@@ -242,7 +243,8 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                   controller: bankController,
                                   clear: false,
                                 ),
-                                if (bankController.dropDownValue != null)
+                                if (bankController.dropDownValue != null &&
+                                    bankDetailsController.text.isNotEmpty)
                                   Column(
                                     children: [
                                       Container(
@@ -390,7 +392,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
 
   _onTapSearchedFile(BuildContext cntxt, SmartFile value) {
     file = value;
-    clientAddressController.text = file!.address!;
+    clientAddressController.text = file!.address ?? "";
     cntxt
         .read<InvoiceFormBloc>()
         .add(RefreshInvoiceForm(invoiceFormItemListItemList));
@@ -416,7 +418,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
       invoiceTypeId: invoiceType!.id,
       invoiceType: invoiceType,
       date: dateController.text,
-      dueOn: dueDateController.text,
+      dueDate: dueDateController.text,
       fileId: file!.id,
       clientId: file!.clientId,
       clientAddress: clientAddressController.text,
@@ -431,7 +433,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
       invoiceItems: invoiceFormItemList,
     );
     InvoiceApi.post(
-      invoice.toJson(),
+      invoice,
       onError: () {
         Fluttertoast.showToast(
             msg: "An error occurred",

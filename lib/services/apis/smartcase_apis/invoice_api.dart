@@ -39,7 +39,7 @@ class InvoiceApi {
     return invoice;
   }
 
-  static Future post(Map<String, dynamic> data,
+  static Future post(Object data,
       {Function()? onSuccess, Function()? onError}) async {
     InvoiceRepo invoiceRepo = InvoiceRepo();
     var response = await invoiceRepo

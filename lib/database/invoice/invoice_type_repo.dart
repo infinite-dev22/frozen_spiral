@@ -25,7 +25,7 @@ class InvoiceTypeRepo extends InvoiceTypeRepoInterface {
         HttpHeaders.acceptHeader: 'application/json',
         HttpHeaders.authorizationHeader: 'Bearer ${currentUser.token}',
       };
-      var response = client.get(
+      var response = await client.get(
         Uri.https(
           currentUser.url.replaceRange(0, 8, ''),
           'api/admin/invoiceTypes',
@@ -34,14 +34,13 @@ class InvoiceTypeRepo extends InvoiceTypeRepoInterface {
         headers: headers,
       );
 
-      response.then((data) {
-        return jsonDecode(utf8.decode(data.bodyBytes)) as List;
-      }).onError((error, stackTrace) {
+      if (response.statusCode == 200) {
+        return jsonDecode(utf8.decode(response.bodyBytes)) as List;
+      } else {
         if (kDebugMode) {
-          print("An Error occurred: $error \nStackTrace: $stackTrace");
+          print("An Error occurred: ${response.statusCode}");
         }
-        throw error!;
-      });
+      }
     } finally {
       client.close();
     }
