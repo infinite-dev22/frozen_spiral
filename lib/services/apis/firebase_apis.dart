@@ -79,7 +79,8 @@ _storeForegroundNotification(RemoteMessage message) async {
   await localStorage?.add(Notifications(
       title: message.notification?.title,
       body: message.notification?.body,
-      time: time));
+      time: time,
+      read: false));
 }
 
 @pragma("vm:entry-point")

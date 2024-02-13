@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -193,8 +195,7 @@ class _RootPageState extends State<RootPage> {
 
   Widget _buildBottomBar() {
     return Container(
-      height: 80,
-      // (Platform.isIOS) ? 80 : screenHeight * .087,
+      height: (Platform.isIOS) ? 80 : 60,
       // formerly 80.
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -221,14 +222,17 @@ class _RootPageState extends State<RootPage> {
                   valueListenable:
                       Hive.box<Notifications>('notifications').listenable(),
                   builder: (context, Box<Notifications> box, _) {
-                    if (box.length > 0) {
+                    var unreadNotificationsLength = box.values
+                        .where((element) => element.read == false)
+                        .length;
+                    if (unreadNotificationsLength > 0) {
                       return BottomBarItem(
-                        showBadge: true,
-                        badge: Text(box.length.toString()),
                         _activeTab == index
                             ? _barItems()[index]["active_icon"]
                             : _barItems()[index]["icon"],
                         _barItems()[index]["name"],
+                        showBadge: true,
+                        badge: Text(unreadNotificationsLength.toString()),
                         isActive: _activeTab == index,
                         activeColor: AppColors.primary,
                         onTap: () {
