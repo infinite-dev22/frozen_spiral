@@ -153,10 +153,9 @@ class _EventViewState extends State<EventView> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      event!.title!,
-                                      style: const TextStyle(
-                                          overflow: TextOverflow.ellipsis,
-                                          fontSize: 18),
+                                      event!.description!,
+                                      softWrap: true,
+                                      style: const TextStyle(fontSize: 18),
                                     ),
                                   ],
                                 ),
