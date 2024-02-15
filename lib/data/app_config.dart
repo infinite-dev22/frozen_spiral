@@ -53,6 +53,7 @@ final options = CacheOptions(
 );
 
 bool refreshRequisitions = false;
+bool refreshInvoices = false;
 
 Map<DateTime, List<SmartEvent>> preloadedEvents =
     <DateTime, List<SmartEvent>>{};

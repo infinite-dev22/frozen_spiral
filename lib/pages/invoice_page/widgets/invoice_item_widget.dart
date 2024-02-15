@@ -28,7 +28,10 @@ class InvoiceItemWidget extends StatelessWidget {
         padding,
         padding,
       ),
-      margin: EdgeInsets.only(bottom: padding),
+      margin: EdgeInsets.symmetric(
+        horizontal: padding * .5,
+        vertical: padding * .5,
+      ),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
           Radius.circular(8),
@@ -44,11 +47,18 @@ class InvoiceItemWidget extends StatelessWidget {
         color: color,
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildStringItem('Client', "Juliet Justin Ohio"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildStringItem('Client', "Juliet Justin Ohio"),
+              _buildStringItem('Approver', "Willian Oslo Rhydington"),
+            ],
+          ),
           _buildStringItem('File', "Stabex Oil Vs Lands Ministry"),
-          _buildStringItem('Total Amount', "100,424,000"),
-          _buildStringItem('Approver', "Willian Oslo Rhydington"),
+          _buildStringItem('Total Amount(UGX)', "100,424,000"),
         ],
       ),
     );

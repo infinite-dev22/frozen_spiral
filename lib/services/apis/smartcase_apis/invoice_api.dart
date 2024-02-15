@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:smart_case/data/app_config.dart';
-import 'package:smart_case/database/drawer/drawer_model.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/database/invoice/invoice_repo.dart';
 
@@ -11,7 +9,7 @@ class InvoiceApi {
     List<SmartInvoice> invoices = List.empty(growable: true);
 
     var response = await invoiceRepo.fetchAll();
-    List invoicesMap = response['invoices'];
+    List invoicesMap = response['search']['invoices'];
 
     if (invoicesMap.isNotEmpty) {
       invoices = invoicesMap
@@ -31,7 +29,6 @@ class InvoiceApi {
     // DrawerRepo drawerRepo = DrawerRepo();
 
     SmartInvoice? invoice;
-    List drawersList;
     await invoiceRepo.fetch(id).then((response) {
       invoice = SmartInvoice.fromJson(response['invoice']);
     });
@@ -44,6 +41,17 @@ class InvoiceApi {
     InvoiceRepo invoiceRepo = InvoiceRepo();
     var response = await invoiceRepo
         .post(data)
+        .then((value) => onSuccess!())
+        .onError((error, stackTrace) => onError!());
+    return response;
+  }
+
+  static process(Map<String, dynamic> data, int id,
+      {Function()? onSuccess, Function()? onError}) async {
+    InvoiceRepo invoiceRepo = InvoiceRepo();
+
+    var response = await invoiceRepo
+        .process(data, id)
         .then((value) => onSuccess!())
         .onError((error, stackTrace) => onError!());
     return response;

@@ -20,7 +20,6 @@ import 'package:smart_case/pages/file_page/file_page.dart';
 import 'package:smart_case/pages/home_page/home_page.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
 import 'package:smart_case/pages/invoice_page/invoice_page.dart';
-import 'package:smart_case/pages/locator_page/locator_page.dart';
 import 'package:smart_case/pages/notification_page/notifications_page.dart';
 import 'package:smart_case/pages/requisition_page/widgets/requisition_form.dart';
 import 'package:smart_case/pages/root_page/widgets/bottom_bar_item.dart';
@@ -30,6 +29,7 @@ import 'package:smart_case/services/apis/smartcase_apis/bank_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/client_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/engagement_type_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
+import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_approver_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_item_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_type_api.dart';
@@ -389,6 +389,7 @@ class _RootPageState extends State<RootPage> {
     InvoiceItemApi.fetchAll();
     InvoiceTypeApi.fetchAll();
     InvoiceApproverApi.fetchAll();
+    InvoiceApi.fetchAll();
     _loadApprovers;
 
     if (preloadedRequisitions.isNotEmpty) {
