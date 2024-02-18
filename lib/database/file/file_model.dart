@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:smart_case/database/smart_model.dart';
 
 class SmartFile extends SmartModel {
@@ -48,6 +50,17 @@ class SmartFile extends SmartModel {
       "court_file_number": file.courtFileNumber,
     };
   }
+
+  factory SmartFile.fromRawJson(String str) => SmartFile.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toInvoiceJson());
+
+  Map<String, dynamic> toInvoiceJson() => {
+    "id": id,
+    "file_name": fileName,
+    "file_number": fileNumber,
+    "court_file_number": courtFileNumber,
+  };
 
   @override
   int getId() {

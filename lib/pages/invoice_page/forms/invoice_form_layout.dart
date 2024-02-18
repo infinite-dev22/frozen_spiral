@@ -423,13 +423,9 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
       clientId: file!.clientId,
       clientAddress: clientAddressController.text,
       currencyId: currency!.id,
-      invoiceTerms: invoiceTermsController.text,
-      totalSubAmount: ttlSubAmount,
-      totalAmount: ttlAmount,
-      totalTaxableAmount: ttlTaxableAmount,
+      paymentTerms: invoiceTermsController.text,
       bankId: bank!.id,
-      bankDetails: bankDetailsController.text,
-      approverId: approver!.id,
+      supervisorId: approver!.id,
       invoiceItems: invoiceFormItemList,
     );
     InvoiceApi.post(

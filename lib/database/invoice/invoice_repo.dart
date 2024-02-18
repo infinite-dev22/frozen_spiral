@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -28,14 +27,15 @@ class InvoiceRepo extends InvoiceRepoInterface {
       var response = await client.get(
         Uri.https(
           currentUser.url.replaceRange(0, 8, ''),
-          'api/account/invoices',
+          /*'api/accounts/invoices',*/
+          'api/accounts/invoice/indexapi',
           body,
         ),
         headers: headers,
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+        return jsonDecode(utf8.decode(response.bodyBytes)) as List;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
@@ -60,8 +60,8 @@ class InvoiceRepo extends InvoiceRepoInterface {
       };
 
       var response = await client.post(
-        Uri.https(
-            currentUser.url.replaceRange(0, 8, ''), 'api/account/invoices/$id'),
+        Uri.https(currentUser.url.replaceRange(0, 8, ''),
+              'api/accounts/invoices/$id'),
         headers: headers,
       );
 
@@ -128,6 +128,37 @@ class InvoiceRepo extends InvoiceRepoInterface {
       var response = await client.put(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
             'api/account/invoice/update/$id'),
+        body: json.encode(data),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+      } else {
+        if (kDebugMode) {
+          print("An Error occurred: ${response.statusCode}");
+        }
+        throw ErrorHint(
+            "Action failed with status code: ${response.statusCode}");
+      }
+    } finally {
+      client.close();
+    }
+  }
+
+  @override
+  Future<dynamic> process(Map<String, dynamic> data, int id) async {
+    var client = RetryClient(http.Client());
+    try {
+      final headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${currentUser.token}',
+      };
+
+      var response = await client.put(
+        Uri.https(currentUser.url.replaceRange(0, 8, ''),
+            'api/accounts/invoices/$id/approve'),
         body: json.encode(data),
         headers: headers,
       );

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:smart_case/database/smart_model.dart';
 
 class SmartBank extends SmartModel {
@@ -36,6 +38,19 @@ class SmartBank extends SmartModel {
       description: json['description'],
     );
   }
+
+  factory SmartBank.fromRawJson(String str) =>
+      SmartBank.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "code": code,
+        "account_number": accountNumber,
+        "account_name": accountName,
+        "branch": branch,
+      };
 
   @override
   int getId() {

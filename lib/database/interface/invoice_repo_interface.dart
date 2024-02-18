@@ -6,4 +6,6 @@ abstract class InvoiceRepoInterface {
   Future<dynamic> put(Map<String, dynamic> data, int id);
 
   Future<dynamic> post(Object data);
+
+  Future<dynamic> process(Map<String, dynamic> data, int id);
 }
