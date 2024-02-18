@@ -35,17 +35,17 @@ extension EventStatusX on EventStatus {
 
 @immutable
 class EventState extends Equatable {
-  final List<SmartEvent>? events;
+  final Map<DateTime, List<SmartEvent>>? events;
   final SmartEvent? event;
   final EventStatus? status;
   final int? idSelected;
 
   const EventState({
-    List<SmartEvent>? events,
+    Map<DateTime, List<SmartEvent>>? events,
     this.event,
     this.status = EventStatus.initial,
     this.idSelected = 0,
-  }) : events = events ?? const [];
+  }) : events = events ?? const {};
 
   @override
   List<Object?> get props => [
@@ -56,7 +56,7 @@ class EventState extends Equatable {
       ];
 
   EventState copyWith({
-    List<SmartEvent>? events,
+    Map<DateTime, List<SmartEvent>>? events,
     SmartEvent? event,
     EventStatus? status,
     int? idSelected,

@@ -12,9 +12,6 @@ part 'file_state.dart';
 class FileBloc extends Bloc<FileEvent, FileState> {
   FileBloc() : super(const FileState()) {
     on<GetFilesEvent>(_mapGetFilesEventToState);
-    on<GetFileEvent>(_mapGetFileEventToState);
-    on<PostFileEvent>(_mapPostFileEventToState);
-    on<PutFileEvent>(_mapPutFileEventToState);
   }
 
   Future<FutureOr<void>> _mapGetFilesEventToState(
@@ -28,48 +25,6 @@ class FileBloc extends Bloc<FileEvent, FileState> {
         print(stackTrace);
       }
       emit(state.copyWith(status: FileStatus.filesSuccess));
-    });
-  }
-
-  Future<FutureOr<void>> _mapGetFileEventToState(
-      GetFileEvent event, Emitter<FileState> emit) async {
-    emit(state.copyWith(status: FileStatus.filesLoading));
-    await FileApi.fetch(event.fileId).then((file) {
-      emit(state.copyWith(status: FileStatus.fileSuccess, file: file));
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print(error);
-        print(stackTrace);
-      }
-      emit(state.copyWith(status: FileStatus.fileSuccess));
-    });
-  }
-
-  Future<FutureOr<void>> _mapPostFileEventToState(
-      PostFileEvent event, Emitter<FileState> emit) async {
-    emit(state.copyWith(status: FileStatus.filesLoading));
-    await FileApi.post(event.file, event.fileId).then((file) {
-      emit(state.copyWith(status: FileStatus.fileSuccess, file: file));
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print(error);
-        print(stackTrace);
-      }
-      emit(state.copyWith(status: FileStatus.fileSuccess));
-    });
-  }
-
-  Future<FutureOr<void>> _mapPutFileEventToState(
-      PutFileEvent event, Emitter<FileState> emit) async {
-    emit(state.copyWith(status: FileStatus.filesLoading));
-    await FileApi.put(event.file, event.fileId).then((file) {
-      emit(state.copyWith(status: FileStatus.fileSuccess, file: file));
-    }).onError((error, stackTrace) {
-      if (kDebugMode) {
-        print(error);
-        print(stackTrace);
-      }
-      emit(state.copyWith(status: FileStatus.fileSuccess));
     });
   }
 }
