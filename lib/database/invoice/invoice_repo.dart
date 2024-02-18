@@ -27,14 +27,15 @@ class InvoiceRepo extends InvoiceRepoInterface {
       var response = await client.get(
         Uri.https(
           currentUser.url.replaceRange(0, 8, ''),
-          'api/accounts/invoices',
+          /*'api/accounts/invoices',*/
+          'api/accounts/invoice/indexapi',
           body,
         ),
         headers: headers,
       );
 
       if (response.statusCode == 200) {
-        return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+        return jsonDecode(utf8.decode(response.bodyBytes)) as List;
       } else {
         if (kDebugMode) {
           print("An Error occurred: ${response.statusCode}");
@@ -60,7 +61,7 @@ class InvoiceRepo extends InvoiceRepoInterface {
 
       var response = await client.post(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
-            'api/accounts/invoices/$id'),
+              'api/accounts/invoices/$id'),
         headers: headers,
       );
 

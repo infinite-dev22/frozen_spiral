@@ -28,7 +28,7 @@ class SmartInvoice {
   final int? invoiceTypeId;
   final int? bankId;
   final int? clientId;
-  final String? canApprove;
+  final bool? canApprove;
   final dynamic secondApprover;
   final bool? canEdit;
   final bool? isMine;
@@ -41,6 +41,8 @@ class SmartInvoice {
   final SmartEmployee? approver;
   final List<String>? casePaymentTypeIds;
   final String? amount;
+  final String? balance;
+  final String? totalPaid;
   final List<String>? amounts;
   final List<String>? taxIds;
   final List<String>? descriptions;
@@ -85,6 +87,8 @@ class SmartInvoice {
     this.approver,
     this.casePaymentTypeIds,
     this.amount,
+    this.balance,
+    this.totalPaid,
     this.amounts,
     this.taxIds,
     this.descriptions,
@@ -127,9 +131,9 @@ class SmartInvoice {
         employee: json["done_by"] == null
             ? null
             : SmartEmployee.fromJson(json["done_by"] as Map<String, dynamic>),
-        // approver: json["approver"] == null
-        //     ? null
-        //     : SmartEmployee.fromJson(json["approver"] as Map<String, dynamic>),
+        approver: json["supervisor"] == null
+            ? null
+            : SmartEmployee.fromJson(json["supervisor"] as Map<String, dynamic>),
         canEdit: json['canEdit'],
         isMine: json['isMine'],
         canPay: json['canPay'],
@@ -148,6 +152,8 @@ class SmartInvoice {
             ? []
             : List<String>.from(json["case_payment_type_ids"]!.map((x) => x)),
         amount: json["amount"],
+        balance: json["balance"],
+        totalPaid: json["totalPaid"],
         amounts: json["amounts"] == null
             ? []
             : List<String>.from(json["amounts"]!.map((x) => x)),

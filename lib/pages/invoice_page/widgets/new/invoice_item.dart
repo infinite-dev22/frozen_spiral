@@ -7,10 +7,8 @@ import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
-import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_item_status.dart';
-import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
@@ -88,11 +86,9 @@ class _InvoiceItemState extends State<InvoiceItem> {
                                       widget.invoice.canPay == null) &&
                                   (!widget.invoice.isMine! &&
                                           !widget.invoice.canEdit! &&
-                                          widget.invoice.invoiceStatus!
-                                                  .code !=
+                                          widget.invoice.invoiceStatus!.code !=
                                               'SUBMITTED' ||
-                                      widget.invoice.invoiceStatus!
-                                              .code !=
+                                      widget.invoice.invoiceStatus!.code !=
                                           'EDITED'))
                               ? Container()
                               : SizedBox(
@@ -133,8 +129,8 @@ class _InvoiceItemState extends State<InvoiceItem> {
                                                   : () => Navigator.pushNamed(
                                                         context,
                                                         '/invoice',
-                                                        arguments: widget
-                                                            .invoice.id!,
+                                                        arguments:
+                                                            widget.invoice.id!,
                                                       ).then((_) =>
                                                           setState(() {})),
                                               child: const Row(
@@ -177,13 +173,10 @@ class _InvoiceItemState extends State<InvoiceItem> {
                                         ),
                                       if (widget.invoice.isMine! &&
                                               widget.invoice.canEdit! &&
-                                              widget
-                                                      .invoice
-                                                      .invoiceStatus!
+                                              widget.invoice.invoiceStatus!
                                                       .code ==
                                                   'SUBMITTED' ||
-                                          widget.invoice.invoiceStatus!
-                                                  .code ==
+                                          widget.invoice.invoiceStatus!.code ==
                                               'EDITED')
                                         TextButton(
                                           onPressed: () =>
@@ -211,8 +204,38 @@ class _InvoiceItemState extends State<InvoiceItem> {
                           ),
                         ],
                       ),
-                    _buildStringItem(
-                        'File Name', widget.invoice.caseFile!.fileName),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildStringItem(
+                            'Date',
+                            DateFormat('dd/MM/yyyy')
+                                .format(widget.invoice.date!)),
+                        _buildStringItem('Amount', '100,000'),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildStringItem(
+                            'File Name', widget.invoice.caseFile!.fileName),
+                        _buildStringItem('Paid', '35,000'),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildStringItem(
+                            'File Number', widget.invoice.caseFile!.fileNumber),
+                        _buildStringItem('Balance', '65,000'),
+                      ],
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -230,19 +253,6 @@ class _InvoiceItemState extends State<InvoiceItem> {
                             ),
                           ],
                         ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildStringItem(
-                            'Invoice Number', widget.invoice.number),
-                        _buildStringItem('Category',
-                            widget.invoice.invoiceType!.name),
-                      ],
-                    ),
-                    Text(
-                      DateFormat('dd/MM/yyyy').format(widget.invoice.date!),
-                      style: const TextStyle(color: AppColors.inActiveColor),
-                    ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -251,7 +261,7 @@ class _InvoiceItemState extends State<InvoiceItem> {
                       children: [
                         _buildStringItem('Requestioner',
                             "${widget.invoice.employee!.firstName} ${widget.invoice.employee!.lastName}"),
-                        _buildStringItem('Supervisor',
+                        _buildStringItem('Approver',
                             "${widget.invoice.approver!.firstName} ${widget.invoice.approver!.lastName}"),
                       ],
                     ),
@@ -263,8 +273,8 @@ class _InvoiceItemState extends State<InvoiceItem> {
                       children: [
                         _buildStringItem(
                             'Amount (UGX)',
-                            formatter.format(
-                                double.parse(widget.invoice.amount!))),
+                            formatter
+                                .format(double.parse(widget.invoice.amount!))),
                         InvoiceItemStatus(
                             name: widget.invoice.invoiceStatus!.name ==
                                     'SECONDARY_APPROVED'
@@ -272,12 +282,10 @@ class _InvoiceItemState extends State<InvoiceItem> {
                                 : widget.invoice.invoiceStatus!.name ==
                                         'SECONDARY_REJECTED'
                                     ? 'Rejected'
-                                    : widget.invoice.invoiceStatus!
-                                                .name ==
+                                    : widget.invoice.invoiceStatus!.name ==
                                             'SECONDARY_RETURNED'
                                         ? 'Returned'
-                                        : widget.invoice.invoiceStatus!
-                                            .name,
+                                        : widget.invoice.invoiceStatus!.name,
                             bgColor: widget.invoice.invoiceStatus!.name
                                     .toLowerCase()
                                     .contains('approved')
@@ -290,8 +298,7 @@ class _InvoiceItemState extends State<InvoiceItem> {
                                             .toLowerCase()
                                             .contains('returned')
                                         ? AppColors.orange
-                                        : widget.invoice.invoiceStatus!
-                                                .name
+                                        : widget.invoice.invoiceStatus!.name
                                                 .toLowerCase()
                                                 .contains('paid')
                                             ? AppColors.purple
@@ -318,28 +325,21 @@ class _InvoiceItemState extends State<InvoiceItem> {
                   Column(
                     children: [
                       (widget.invoice.canApprove == null &&
-                              (widget.invoice.canPay == false ||
-                                  widget.invoice.canPay == null) &&
-                              ((!widget.invoice.isMine! ||
-                                      widget.invoice.isMine!) &&
-                                  (widget.invoice.canEdit! &&
+                              (((widget.invoice.canEdit ?? false) &&
                                       widget.invoice.employee!.id !=
                                           currentUser.id) &&
                                   (!widget.invoice.invoiceStatus!.code
                                           .toLowerCase()
                                           .contains('submit') ||
-                                      (!widget.invoice.invoiceStatus!
-                                              .code
+                                      (!widget.invoice.invoiceStatus!.code
                                               .toLowerCase()
                                               .contains('edit') &&
                                           widget.invoice.employee!.id !=
                                               currentUser.id) ||
-                                      !widget
-                                          .invoice.invoiceStatus!.code
+                                      !widget.invoice.invoiceStatus!.code
                                           .toLowerCase()
                                           .contains("returned") ||
-                                      (widget.invoice.invoiceStatus!
-                                              .code
+                                      (widget.invoice.invoiceStatus!.code
                                               .toLowerCase()
                                               .contains("returned") &&
                                           widget.invoice.employee!.id !=
@@ -417,16 +417,14 @@ class _InvoiceItemState extends State<InvoiceItem> {
                                         ],
                                       ),
                                     ),
-                                  if ((widget.invoice.invoiceStatus!
-                                              .code
+                                  if ((widget.invoice.invoiceStatus != null) &&
+                                      (widget.invoice.invoiceStatus!.code
                                               .toLowerCase()
                                               .contains('submit') ||
-                                          widget.invoice.invoiceStatus!
-                                              .code
+                                          widget.invoice.invoiceStatus!.code
                                               .toLowerCase()
                                               .contains('edit') ||
-                                          widget.invoice.invoiceStatus!
-                                              .code
+                                          widget.invoice.invoiceStatus!.code
                                               .toLowerCase()
                                               .contains("returned")) &&
                                       widget.invoice.employee!.id ==
@@ -457,48 +455,12 @@ class _InvoiceItemState extends State<InvoiceItem> {
                       ),
                     ],
                   ),
-                _buildStringItem(
-                    'File Name', widget.invoice.caseFile!.fileName),
-                const SizedBox(
-                  height: 10,
-                ),
-                if (widget.showFinancialStatus)
-                  if (widget.invoice.amount != null)
-                    Column(
-                      children: [
-                        _buildFinancialStatusStringItem(
-                            'Financial Status (UGX)',
-                            formatter.format(double.parse(widget
-                                .invoice.amount!
-                                .replaceAll(",", '')))),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildStringItem(
-                        'Invoice Number', widget.invoice.number),
-                    _buildStringItem('Category',
-                        widget.invoice.invoiceType!.name),
-                  ],
-                ),
-                Text(
-                  DateFormat('dd/MM/yyyy').format(widget.invoice.date!),
-                  style: const TextStyle(color: AppColors.inActiveColor),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildStringItem('Requestioner',
-                        "${widget.invoice.employee!.firstName} ${widget.invoice.employee!.lastName}"),
-                    _buildStringItem('Supervisor',
-                        "${widget.invoice.approver!.firstName} ${widget.invoice.approver!.lastName}"),
+                    _buildStringItem('Date',
+                        DateFormat('dd/MM/yyyy').format(widget.invoice.date!)),
+                    _buildStringItem('Amount', widget.invoice.amount),
                   ],
                 ),
                 const SizedBox(
@@ -508,11 +470,36 @@ class _InvoiceItemState extends State<InvoiceItem> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildStringItem(
-                        'Amount (${widget.invoice.currency!.code})',
-                        formatter
-                            .format(double.parse(widget.invoice.amount!))),
+                        'File Name', widget.invoice.caseFile!.fileName),
+                    _buildStringItem('Paid', widget.invoice.totalPaid),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildStringItem(
+                        'File Number', widget.invoice.caseFile!.fileNumber),
+                    _buildStringItem('Balance', widget.invoice.balance),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                _buildStringItem('Client', widget.invoice.client!.name),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildStringItem(
+                        'Approver', widget.invoice.approver!.getName()),
                     InvoiceItemStatus(
-                        name: widget.invoice.invoiceStatus!.name,
+                        name:
+                            "Status here" /*widget.invoice.invoiceStatus!.name*/,
                         // ==
                         //     'SECONDARY_APPROVED'
                         // ? 'Approved'
@@ -528,7 +515,7 @@ class _InvoiceItemState extends State<InvoiceItem> {
                         //             ? 'Primarily Approved'
                         //             : widget.invoice.invoiceStatus!
                         //                 .name,
-                        bgColor: widget.invoice.invoiceStatus!.name
+                        bgColor: /*widget.invoice.invoiceStatus!.name
                                 .toLowerCase()
                                 .contains('approved')
                             ? AppColors.green
@@ -544,7 +531,8 @@ class _InvoiceItemState extends State<InvoiceItem> {
                                             .toLowerCase()
                                             .contains('paid')
                                         ? AppColors.purple
-                                        : AppColors.blue,
+                                        :*/
+                            AppColors.blue,
                         horizontalPadding: 20,
                         verticalPadding: 5),
                   ],
@@ -555,29 +543,32 @@ class _InvoiceItemState extends State<InvoiceItem> {
   }
 
   _buildStringItem(String title, String? data) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: AppColors.inActiveColor,
+    return SizedBox(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: AppColors.inActiveColor,
+            ),
           ),
-        ),
-        SearchHighlightText(
-          data ?? 'Null',
-          style: const TextStyle(
-            // fontWeight: FontWeight.bold,
-            color: AppColors.darker,
+          SearchHighlightText(
+            data ?? 'Null',
+            style: const TextStyle(
+              // fontWeight: FontWeight.bold,
+              color: AppColors.darker,
+            ),
+            softWrap: true,
+            highlightStyle: const TextStyle(
+              // fontSize: 14,
+              // fontWeight: FontWeight.bold,
+              color: AppColors.darker,
+              backgroundColor: AppColors.searchText,
+            ),
           ),
-          highlightStyle: const TextStyle(
-            // fontSize: 14,
-            // fontWeight: FontWeight.bold,
-            color: AppColors.darker,
-            backgroundColor: AppColors.searchText,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -595,12 +586,10 @@ class _InvoiceItemState extends State<InvoiceItem> {
           data ?? 'Null',
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: (double.parse(widget.invoice.amount!
-                          .replaceAll(",", '')) >
+              color: (double.parse(widget.invoice.amount!.replaceAll(",", '')) >
                       0)
                   ? AppColors.green
-                  : (double.parse(widget.invoice.amount!
-                              .replaceAll(",", '')) ==
+                  : (double.parse(widget.invoice.amount!.replaceAll(",", '')) ==
                           0)
                       ? AppColors.blue
                       : AppColors.red),
@@ -615,8 +604,7 @@ class _InvoiceItemState extends State<InvoiceItem> {
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
-      builder: (context) => InvoiceForm(
-          currencies: widget.currencies!),
+      builder: (context) => InvoiceForm(currencies: widget.currencies!),
     );
   }
 
@@ -638,8 +626,7 @@ class _InvoiceItemState extends State<InvoiceItem> {
           _submitData("PRIMARY_APPROVED", 'Invoice primarily approved');
         }
       }
-    } else if (widget.invoice.invoiceStatus!.code ==
-        "PRIMARY_APPROVED") {
+    } else if (widget.invoice.invoiceStatus!.code == "PRIMARY_APPROVED") {
       _submitData("SECONDARY_APPROVED", 'Invoice approved');
     }
   }

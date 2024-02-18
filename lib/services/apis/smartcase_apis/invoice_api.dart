@@ -9,7 +9,7 @@ class InvoiceApi {
     List<SmartInvoice> invoices = List.empty(growable: true);
 
     var response = await invoiceRepo.fetchAll();
-    List invoicesMap = response['search']['invoices'];
+    List invoicesMap = response;
 
     if (invoicesMap.isNotEmpty) {
       invoices = invoicesMap

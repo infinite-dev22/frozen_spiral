@@ -29,7 +29,7 @@ class BottomBarItem extends StatelessWidget {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
-    double fontSize = 16;
+    double fontSize = 14;
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -45,13 +45,13 @@ class BottomBarItem extends StatelessWidget {
                     label: badge,
                     child: Icon(
                       icon,
-                      size: 30,
+                      size: 25,
                       color: isActive ? activeColor : color,
                     ),
                   )
                 : Icon(
                     icon,
-                    size: 30,
+                    size: 25,
                     color: isActive ? activeColor : color,
                   ),
           ),
