@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hive/hive.dart';
+import 'package:smart_case/database/local/notifications.dart';
 import 'package:smart_case/theme/color.dart';
 
 class NotificationItem extends StatefulWidget {
@@ -8,12 +10,18 @@ class NotificationItem extends StatefulWidget {
     required this.title,
     required this.time,
     required this.body,
+    required this.read,
+    required this.box,
+    required this.index,
     required this.onDismissed,
   });
 
   final String title;
   final String time;
   final String body;
+  final bool read;
+  final Box<Notifications> box;
+  final int index;
   final Function() onDismissed;
 
   @override
@@ -31,6 +39,7 @@ class _NotificationItemState extends State<NotificationItem> {
       behavior: HitTestBehavior.translucent,
       onTap: () => setState(() {
         _showContent = !_showContent;
+        widget.box.getAt(widget.index)!.read = true;
       }),
       child: Slidable(
         // Specify a key if the Slidable is dismissible.
@@ -74,8 +83,9 @@ class _NotificationItemState extends State<NotificationItem> {
                   children: [
                     Text(
                       widget.title,
-                      style: const TextStyle(
-                          color: AppColors.darker,
+                      style: TextStyle(
+                          color:
+                              widget.read ? AppColors.darker : AppColors.gray,
                           fontSize: 18,
                           fontWeight: FontWeight.bold),
                     ),
@@ -94,16 +104,19 @@ class _NotificationItemState extends State<NotificationItem> {
                         height: _height,
                         child: Text(
                           widget.body,
-                          style: const TextStyle(
-                              color: AppColors.darker,
+                          style: TextStyle(
+                              color: widget.read
+                                  ? AppColors.darker
+                                  : AppColors.gray,
                               fontSize: 18,
                               fontWeight: FontWeight.w400),
                         ),
                       )
                     : Text(
                         widget.body,
-                        style: const TextStyle(
-                            color: AppColors.darker,
+                        style: TextStyle(
+                            color:
+                                widget.read ? AppColors.darker : AppColors.gray,
                             fontSize: 18,
                             fontWeight: FontWeight.w400),
                         maxLines: 1,

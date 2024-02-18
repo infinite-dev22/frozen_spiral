@@ -56,107 +56,111 @@ class _TaskFormState extends State<TaskForm> {
   _buildBody() {
     final ScrollController scrollController = ScrollController();
 
-    return Column(
-      children: [
-        FormTitle(
-          name: '${(widget.task == null) ? "New" : "Edit"} Task',
-          addButtonText: (widget.task == null) ? 'Add' : 'Update',
-          onSave: () => _submitForm(),
-          isElevated: isTitleElevated,
-        ),
-        Expanded(
-          child: GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (scrollNotification) {
-                if (scrollController.position.userScrollDirection ==
-                    ScrollDirection.reverse) {
-                  setState(() {
-                    isTitleElevated = true;
-                  });
-                } else if (scrollController.position.userScrollDirection ==
-                    ScrollDirection.forward) {
-                  if (scrollController.position.pixels ==
-                      scrollController.position.maxScrollExtent) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20)
+          .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Column(
+        children: [
+          FormTitle(
+            name: '${(widget.task == null) ? "New" : "Edit"} Task',
+            addButtonText: (widget.task == null) ? 'Add' : 'Update',
+            onSave: () => _submitForm(),
+            isElevated: isTitleElevated,
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (scrollNotification) {
+                  if (scrollController.position.userScrollDirection ==
+                      ScrollDirection.reverse) {
                     setState(() {
-                      isTitleElevated = false;
+                      isTitleElevated = true;
                     });
+                  } else if (scrollController.position.userScrollDirection ==
+                      ScrollDirection.forward) {
+                    if (scrollController.position.pixels ==
+                        scrollController.position.maxScrollExtent) {
+                      setState(() {
+                        isTitleElevated = false;
+                      });
+                    }
                   }
-                }
-                return true;
-              },
-              child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(8),
-                  children: [
-                    LayoutBuilder(builder: (context, constraints) {
-                      return Form(
-                        key: formKey,
-                        child: Column(
-                          children: [
-                            SmartCaseTextField(
-                              hint: 'Name',
-                              controller: nameController,
-                              maxLength: 50,
-                              minLines: 1,
-                              maxLines: 1,
-                            ),
-                            GestureDetector(
-                              onTap: _showSearchFileBottomSheet,
-                              child: Container(
-                                height: 50,
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(5),
-                                margin: const EdgeInsets.only(bottom: 10),
-                                decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(6),
-                                      child: SizedBox(
-                                        width: constraints.maxWidth - 50,
-                                        child: Text(
-                                          file?.fileName ?? 'Select file',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                              color: AppColors.darker,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500),
+                  return true;
+                },
+                child: ListView(
+                    controller: scrollController,
+                    padding: const EdgeInsets.all(8),
+                    children: [
+                      LayoutBuilder(builder: (context, constraints) {
+                        return Form(
+                          key: formKey,
+                          child: Column(
+                            children: [
+                              SmartCaseTextField(
+                                hint: 'Name',
+                                controller: nameController,
+                                maxLength: 50,
+                                minLines: 1,
+                                maxLines: 1,
+                              ),
+                              GestureDetector(
+                                onTap: _showSearchFileBottomSheet,
+                                child: Container(
+                                  height: 50,
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(5),
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(6),
+                                        child: SizedBox(
+                                          width: constraints.maxWidth - 50,
+                                          child: Text(
+                                            file?.fileName ?? 'Select file',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: AppColors.darker,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const Icon(
-                                      Icons.keyboard_arrow_down_rounded,
-                                      color: AppColors.darker,
-                                    ),
-                                  ],
+                                      const Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: AppColors.darker,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            _chipDisplay(constraints),
-                            TaskDateTimeAccordion(
-                                dateController: dueDateController,
-                                startTimeController: startTimeController,
-                                endTimeController: endTimeController),
-                            CustomTextArea(
-                                hint: 'Description',
-                                controller: descriptionController),
-                          ],
-                        ),
-                      );
-                    }),
-                  ]),
+                              _chipDisplay(constraints),
+                              TaskDateTimeAccordion(
+                                  dateController: dueDateController,
+                                  startTimeController: startTimeController,
+                                  endTimeController: endTimeController),
+                              CustomTextArea(
+                                  hint: 'Description',
+                                  controller: descriptionController),
+                            ],
+                          ),
+                        );
+                      }),
+                    ]),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

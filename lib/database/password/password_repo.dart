@@ -16,6 +16,37 @@ class PasswordRepo extends PasswordRepoInterface {
 
   PasswordRepo._internal();
 
+  // @override
+  // Future<dynamic> post(Object data) async {
+  //   var client = RetryClient(http.Client());
+  //   try {
+  //     final headers = {
+  //       "Content-Type": "application/json",
+  //       "Accept": "application/json",
+  //       "Authorization": 'Bearer ${currentUser.token}',
+  //     };
+  //
+  //     var response = await client.post(
+  //       Uri.https(currentUser.url.replaceRange(0, 8, ''),
+  //           'api/hr/employees/changePasswordSubmit'),
+  //       body: json.encode(data),
+  //       headers: headers,
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+  //     } else {
+  //       if (kDebugMode) {
+  //         print("An Error occurred: ${response.statusCode}");
+  //       }
+  //       throw ErrorHint(
+  //           "Action failed with status code: ${response.statusCode}");
+  //     }
+  //   } finally {
+  //     client.close();
+  //   }
+  // }
+
   @override
   Future<dynamic> post(Object data) async {
     Dio dio = Dio(baseOps)

@@ -1,76 +1,46 @@
-import 'package:flutter/foundation.dart';
 import 'package:smart_case/data/app_config.dart';
-import 'package:smart_case/database/drawer/drawer_model.dart';
 import 'package:smart_case/database/employee/employee_model.dart';
 import 'package:smart_case/database/invoice/invoice_approvers_repo.dart';
 
 class InvoiceApproverApi {
   static Future<List<SmartEmployee>> fetchAll(
-      {int page = 1, Function()? onSuccess, Function? onError}) async {
-    InvoiceApproverRepo requisitionRepo = InvoiceApproverRepo();
-    List<SmartEmployee> requisitions = List.empty(growable: true);
+      {Function()? onSuccess, Function? onError}) async {
+    InvoiceApproverRepo invoiceApproverRepo = InvoiceApproverRepo();
+    List<SmartEmployee> invoiceApprovers = List.empty(growable: true);
 
-    var response = await requisitionRepo.fetchAll(page: page);
-    List requisitionsMap = response['employees'];
+    var response = await invoiceApproverRepo.fetchAll();
+    List invoiceApproversMap = response['employees'];
 
-    if (requisitionsMap.isNotEmpty) {
-      requisitions = requisitionsMap
+    if (invoiceApproversMap.isNotEmpty) {
+      invoiceApprovers = invoiceApproversMap
           .map(
-            (requisition) => SmartEmployee.fromJson(requisition),
+            (invoiceApprover) => SmartEmployee.fromJson(invoiceApprover),
           )
           .toList();
     }
 
-    if (page == 1) {
-      preloadedInvoiceApprovers.clear();
-    }
-    preloadedInvoiceApprovers.addAll(requisitions);
-    return requisitions;
+    preloadedInvoiceApprovers.clear();
+    preloadedInvoiceApprovers.addAll(invoiceApprovers);
+    return invoiceApprovers;
   }
 
   static Future<SmartEmployee?> fetch(int id,
       {Function()? onSuccess, Function()? onError}) async {
-    InvoiceApproverRepo requisitionRepo = InvoiceApproverRepo();
-    // DrawerRepo drawerRepo = DrawerRepo();
+    InvoiceApproverRepo invoiceApproverRepo = InvoiceApproverRepo();
 
-    SmartEmployee? requisition;
-    List drawersList;
-    await requisitionRepo.fetch(id).then((response) {
-      requisition = SmartEmployee.fromJson(response['requisition']);
-
-      try {
-        drawersList = response['drawers'];
-        preloadedDrawers =
-            drawersList.map((drawer) => SmartDrawer.fromJson(drawer)).toList();
-      } catch (e) {
-        if (kDebugMode) {
-          print(e);
-        }
-      }
+    SmartEmployee? invoiceApprover;
+    await invoiceApproverRepo.fetch(id).then((response) {
+      invoiceApprover = SmartEmployee.fromJson(response['invoiceApprover']);
     });
 
-    // SmartDrawer drawer = await drawerRepo
-    //     .fetch(id)
-    //     .then((response) => SmartDrawer.fromJson(response['drawer']));
-
-    return requisition;
-  }
-
-  static Future post(Map<String, dynamic> data, int id,
-      {Function()? onSuccess, Function()? onError}) async {
-    InvoiceApproverRepo requisitionRepo = InvoiceApproverRepo();
-    var response = await requisitionRepo
-        .post(data, id)
-        .then((value) => onSuccess!())
-        .onError((error, stackTrace) => onError!());
-    return response;
+    return invoiceApprover;
   }
 
   static put(Map<String, dynamic> data, int id,
       {Function()? onSuccess, Function()? onError}) async {
-    InvoiceApproverRepo requisitionRepo = InvoiceApproverRepo();
+    InvoiceApproverRepo invoiceApproverRepo = InvoiceApproverRepo();
 
-    var response = await requisitionRepo
+    var response = await invoiceApproverRepo
         .put(data, id)
         .then((value) => onSuccess!())
         .onError((error, stackTrace) => onError!());

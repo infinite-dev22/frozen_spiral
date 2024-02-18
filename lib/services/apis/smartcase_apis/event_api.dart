@@ -1,86 +1,70 @@
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
+
 import 'package:smart_case/data/app_config.dart';
-import 'package:smart_case/database/drawer/drawer_model.dart';
 import 'package:smart_case/database/event/event_model.dart';
 import 'package:smart_case/database/event/event_repo.dart';
 
 class EventApi {
-  static Future<List<SmartEvent>> fetchAll(Map<String, dynamic> body,
-      {Function()? onSuccess, Function? onError}) async {
+  static Future<Map<DateTime, List<SmartEvent>>> fetchAll(
+      {Map<String, dynamic>? body,
+      Function()? onSuccess,
+      Function()? onError}) async {
+    List<SmartEvent> _events = List.empty(growable: true);
     EventRepo eventRepo = EventRepo();
-    List<SmartEvent> events = List.empty(growable: true);
+    Map<DateTime, List<SmartEvent>> events = Map<DateTime, List<SmartEvent>>();
 
-    var response = await eventRepo.fetchAll(body);
-    List eventsMap = response['data'];
+    var response = await eventRepo.fetchAll(
+      body: body,
+      onSuccess: onSuccess,
+      onError: onError,
+    ); // Returns map instead of intended list
+
+    print(response);
+
+    List eventsMap = response;
 
     if (eventsMap.isNotEmpty) {
-      events = eventsMap
-          .map(
-            (event) => SmartEvent.fromJson(event),
-          )
-          .toList();
-    }
+      List eventsList = json.decode(json.encode(eventsMap));
+      _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
 
-    preloadedEvents.clear();
-    return events;
-  }
+      var dataCollection = <DateTime, List<SmartEvent>>{};
+      final DateTime today = DateTime.now();
+      final DateTime rangeStartDate =
+          DateTime(today.year, today.month, today.day)
+              .add(const Duration(days: -1000));
+      final DateTime rangeEndDate = DateTime(today.year, today.month, today.day)
+          .add(const Duration(days: 1000));
+      for (DateTime i = rangeStartDate;
+          i.isBefore(rangeEndDate);
+          i = i.add(const Duration(days: 1))) {
+        final DateTime date = i;
+        for (int j = 0; j < _events.length; j++) {
+          final SmartEvent event = SmartEvent(
+            title: _events[j].title,
+            startDate: _events[j].startDate,
+            endDate: _events[j].endDate,
+            backgroundColor: _events[j].backgroundColor,
+            notifyOnDate: _events[j].notifyOnDate,
+            toBeNotified: _events[j].toBeNotified,
+            fullName: _events[j].fullName,
+            isAllDay: false,
+            description: _events[j].description,
+            url: _events[j].url,
+          );
 
-  static Future<SmartEvent?> fetch(int id,
-      {Function()? onSuccess, Function()? onError}) async {
-    EventRepo eventRepo = EventRepo();
-    // DrawerRepo drawerRepo = DrawerRepo();
-
-    SmartEvent? event;
-    List drawersList;
-    await eventRepo.fetch(id).then((response) {
-      event = SmartEvent.fromJson(response['event']);
-
-      try {
-        drawersList = response['drawers'];
-        preloadedDrawers =
-            drawersList.map((drawer) => SmartDrawer.fromJson(drawer)).toList();
-      } catch (e) {
-        if (kDebugMode) {
-          print(e);
+          if (dataCollection.containsKey(date)) {
+            final List<SmartEvent> eventsList = dataCollection[date]!;
+            eventsList.add(event);
+            dataCollection[date] = eventsList;
+          } else {
+            dataCollection[date] = [event];
+          }
         }
       }
-    });
 
-    // SmartDrawer drawer = await drawerRepo
-    //     .fetch(id)
-    //     .then((response) => SmartDrawer.fromJson(response['drawer']));
-
-    return event;
-  }
-
-  static Future post(Map<String, dynamic> data, int id,
-      {Function()? onSuccess, Function()? onError}) async {
-    EventRepo eventRepo = EventRepo();
-    var response = await eventRepo
-        .post(data, id)
-        .then((value) => onSuccess!())
-        .onError((error, stackTrace) => onError!());
-    return response;
-  }
-
-  static Future process(Map<String, dynamic> data, int id,
-      {Function()? onSuccess, Function()? onError}) async {
-    EventRepo eventRepo = EventRepo();
-    var response = await eventRepo
-        .process(data, id)
-        .then((value) => onSuccess!())
-        .onError((error, stackTrace) => onError!());
-    return response;
-  }
-
-  static put(Map<String, dynamic> data, int id,
-      {Function()? onSuccess, Function()? onError}) async {
-    EventRepo eventRepo = EventRepo();
-
-    var response = await eventRepo
-        .put(data, id)
-        .then((value) => onSuccess!())
-        .onError((error, stackTrace) => onError!());
-    return response;
+      events.addAll(dataCollection);
+      preloadedEvents.addAll(dataCollection);
+    }
+    return events;
   }
 }

@@ -1,3 +1,3 @@
 abstract class DoneActivitiesRepoInterface {
-  Future<Map<String, dynamic>> fetchAll();
+  Future<dynamic> fetchAll();
 }

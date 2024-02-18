@@ -47,6 +47,9 @@ class _AlertsPageState extends State {
                   title: result!.title!,
                   time: result.time ?? "",
                   body: result.body!,
+                  read: result.read!,
+                  box: box,
+                  index: index,
                   onDismissed: () {
                     _deleteItem(index);
                   },

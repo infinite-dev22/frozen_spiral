@@ -24,12 +24,16 @@ class SmartCaseApi {
     var client = RetryClient(http.Client());
 
     try {
+      final headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": 'Bearer ${currentUser.token}',
+      };
+
       var response = await client.get(
           Uri.parse(
               '${currentUser.url}/api/accounts/cases/requisitions/allapi'),
-          headers: {
-            HttpHeaders.authorizationHeader: "Bearer $token",
-          });
+          headers: headers);
 
       if (response.statusCode == 200) {
         var decodedResponse =
@@ -65,8 +69,8 @@ class SmartCaseApi {
     Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['Accept'] = 'application/json';
+      dio.options.headers['content-Type'] = "application/json";
+      dio.options.headers['Accept'] = "application/json";
       dio.options.headers["authorization"] = "Bearer $token";
       // dio.options.followRedirects = false;
 
@@ -121,7 +125,7 @@ class SmartCaseApi {
           body: jsonEncode(data),
           encoding: encoding,
           headers: {
-            HttpHeaders.authorizationHeader: "Bearer $token",
+            "Authorization": "Bearer $token",
             "content-Type": "application/json",
             "Accept": "application/json",
           });
@@ -157,13 +161,14 @@ class SmartCaseApi {
     var client = RetryClient(http.Client());
 
     try {
+      var headers = {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      };
       var response = await client.get(
           Uri.https(currentUser.url.replaceRange(0, 8, ''), endPoint, body),
-          headers: {
-            HttpHeaders.authorizationHeader: "Bearer $token",
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.acceptHeader: 'application/json'
-          });
+          headers: headers);
 
       if (response.statusCode == 200) {
         var decodedResponse =
@@ -193,8 +198,8 @@ class SmartCaseApi {
     Dio dio = Dio()..interceptors.add(DioCacheInterceptor(options: options));
 
     try {
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers['accept'] = 'application/json';
+      dio.options.headers['content-Type'] = "application/json";
+      dio.options.headers['accept'] = "application/json";
       dio.options.headers["authorization"] = "Bearer $token";
       dio.options.followRedirects = false;
 

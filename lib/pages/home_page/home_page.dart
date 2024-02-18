@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:smart_case/database/local/notifications.dart';
 import 'package:smart_case/pages/home_page/widgets/module/module_item.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
@@ -21,9 +23,28 @@ class _HomePageState extends State<HomePage> {
         title:
             AppBarContent(isNetwork: currentUser.avatar != null ? true : false),
       ),
-      body: ListView(children: [_buildGridColumns()]),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: _buildGridColumns(),
+          ),
+        ],
+      ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   setState(() {});
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       backgroundColor: AppColors.primary,
+  //       title:
+  //           AppBarContent(isNetwork: currentUser.avatar != null ? true : false),
+  //     ),
+  //     body: ListView(children: [_buildGridColumns()]),
+  //   );
+  // }
 
   // _buildBody() {
   //   return GridView.count(
@@ -53,7 +74,7 @@ class _HomePageState extends State<HomePage> {
   //   );
   // }
 
-  _buildGridColumns() {
+  Widget _buildGridColumns() {
     double cardPadding = MediaQuery.of(context).size.height * .038;
     return Padding(
       padding: const EdgeInsets.all(10),
@@ -143,5 +164,29 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  Widget _buildNotification() {
+    return ValueListenableBuilder(
+        valueListenable: Hive.box<Notifications>('notifications').listenable(),
+        builder: (context, Box<Notifications> box, _) {
+          var unreadNotificationsLength =
+              box.values.where((element) => element.read == false).length;
+          return IconButton(
+            onPressed: () {},
+            icon: (unreadNotificationsLength > 0)
+                ? Badge(
+                    label: Text(unreadNotificationsLength.toString()),
+                    child: Icon(
+                      Icons.notifications_none_rounded,
+                      color: AppColors.white,
+                    ),
+                  )
+                : Icon(
+                    Icons.notifications_none_rounded,
+                    color: AppColors.white,
+                  ),
+          );
+        });
   }
 }

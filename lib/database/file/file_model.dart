@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:smart_case/database/smart_model.dart';
 
 class SmartFile extends SmartModel {
@@ -7,6 +9,7 @@ class SmartFile extends SmartModel {
   String? fileNumber;
   dynamic dateOpened;
   String? clientName;
+  String? address;
   String? status;
   String? courtFileNumber;
 
@@ -17,6 +20,7 @@ class SmartFile extends SmartModel {
     this.fileNumber,
     this.dateOpened,
     this.clientName,
+    this.address,
     this.status,
     this.courtFileNumber,
   });
@@ -29,6 +33,7 @@ class SmartFile extends SmartModel {
       fileNumber: json["file_number"],
       dateOpened: json["date_opened"],
       clientName: json["client_name"],
+      address: json["address"],
       status: json["Status"],
       courtFileNumber: json["court_file_number"],
     );
@@ -45,6 +50,17 @@ class SmartFile extends SmartModel {
       "court_file_number": file.courtFileNumber,
     };
   }
+
+  factory SmartFile.fromRawJson(String str) => SmartFile.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toInvoiceJson());
+
+  Map<String, dynamic> toInvoiceJson() => {
+    "id": id,
+    "file_name": fileName,
+    "file_number": fileNumber,
+    "court_file_number": courtFileNumber,
+  };
 
   @override
   int getId() {
