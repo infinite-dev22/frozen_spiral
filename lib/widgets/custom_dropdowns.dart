@@ -132,19 +132,22 @@ class CustomDropdownAction extends StatelessWidget {
 }
 
 class SearchableDropDown<T extends SmartModel> extends StatelessWidget {
-  const SearchableDropDown(
-      {super.key,
-      required this.hintText,
-      required this.menuItems,
-      this.onChanged,
-      this.defaultValue,
-      required this.controller});
+  const SearchableDropDown({
+    super.key,
+    required this.hintText,
+    required this.menuItems,
+    this.onChanged,
+    this.defaultValue,
+    required this.controller,
+    this.clear = true,
+  });
 
   final String hintText;
   final List<T> menuItems;
   final T? defaultValue;
   final Function(dynamic)? onChanged;
   final SingleValueDropDownController controller;
+  final bool clear;
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +184,7 @@ class SearchableDropDown<T extends SmartModel> extends StatelessWidget {
           icon: Icons.keyboard_arrow_down_rounded,
           color: AppColors.darker,
         ),
+        clearOption: clear,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         dropDownList: menuItems
             .map(

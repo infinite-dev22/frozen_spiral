@@ -41,10 +41,16 @@ class SmartEngagement {
   });
 
   SmartEngagement.fromJson(Map<String, dynamic> json) {
+    List<int> timeFromList =
+        json['from'].toString().split(":").toList().map(int.parse).toList();
+    List<int> timeToList =
+        json['to'].toString().split(":").toList().map(int.parse).toList();
+
     id = json['id'];
     date = DateTime.parse(json['date']);
-    from = DateTime.parse(json['from']);
-    to = DateTime.parse(json['to']);
+    from = DateTime(
+        1970, 01, 10, timeFromList[0], timeFromList[1], timeFromList[2]);
+    to = DateTime(1970, 01, 10, timeToList[0], timeToList[1], timeToList[2]);
     description = json['description'];
     cost = json['cost'];
     costDescription = json['cost_description'];

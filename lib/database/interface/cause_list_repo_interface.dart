@@ -1,3 +1,3 @@
 abstract class CauseListRepoInterface {
-  Future<Map<String, dynamic>> fetchAll();
+  Future<dynamic> fetchAll();
 }
