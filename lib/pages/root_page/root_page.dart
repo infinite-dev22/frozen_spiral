@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:list_load_more/utils/ext/iterable_ext.dart';
 import 'package:new_version_plus/new_version_plus.dart';
 import 'package:smart_case/data/app_config.dart';
@@ -19,7 +20,6 @@ import 'package:smart_case/pages/event_page/widgets/event_form.dart';
 import 'package:smart_case/pages/file_page/file_page.dart';
 import 'package:smart_case/pages/home_page/home_page.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
-import 'package:smart_case/pages/invoice_page/invoice_page.dart';
 import 'package:smart_case/pages/locator_page/locator_page.dart';
 import 'package:smart_case/pages/notification_page/notifications_page.dart';
 import 'package:smart_case/pages/requisition_page/widgets/requisition_form.dart';
@@ -75,32 +75,32 @@ class _RootPageState extends State<RootPage> {
   _barItems() {
     return [
       {
-        "icon": Icons.home_outlined,
-        "active_icon": Icons.home_rounded,
+        "icon": TeenyIcons.home,
+        "active_icon": FontAwesome.house_solid,
         "name": "Home",
         "page": const HomePage(),
       },
       {
-        "icon": Icons.file_copy_outlined,
-        "active_icon": Icons.file_copy_rounded,
+        "icon": FontAwesome.file_lines,
+        "active_icon": FontAwesome.file_lines_solid,
         "name": "Files",
         "page": const FilesPage(),
       },
       {
-        "icon": Icons.local_activity_outlined,
-        "active_icon": Icons.local_activity_rounded,
+        "icon": FontAwesome.hourglass,
+        "active_icon": FontAwesome.hourglass_end_solid,
         "name": "Activities",
         "page": const ActivitiesPage(),
       },
       {
-        "icon": Icons.notifications_none_rounded,
-        "active_icon": Icons.notifications_rounded,
+        "icon": FontAwesome.bell,
+        "active_icon": FontAwesome.bell_solid,
         "name": "Alerts",
         "page": const AlertsPage(),
       },
       {
-        "icon": Icons.location_on_outlined,
-        "active_icon": Icons.location_on_rounded,
+        "icon": FontAwesome.location_dot_solid,
+        "active_icon": FontAwesome.location_pin_solid,
         "name": "Locator",
         "page": const LocatorPage(),
       },
@@ -162,12 +162,6 @@ class _RootPageState extends State<RootPage> {
           icon: const Icon(Icons.local_activity_outlined),
           onPressed: _buildActivityForm,
           label: const Text("Activity"),
-        ),
-        FloatingActionButton.extended(
-          heroTag: "Invoice",
-          icon: const Icon(Icons.class_outlined),
-          onPressed: _buildInvoiceDialog,
-          label: const Text("Invoice"),
         ),
         FloatingActionButton.extended(
           heroTag: "Task",
