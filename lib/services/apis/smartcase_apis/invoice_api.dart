@@ -30,6 +30,7 @@ class InvoiceApi {
 
     SmartInvoice? invoice;
     await invoiceRepo.fetch(id).then((response) {
+      print("INVOICE: ${response['invoice']}");
       invoice = SmartInvoice.fromJson(response['invoice']);
     });
 

@@ -7,7 +7,7 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/reports/models/done_activities_report.dart';
-import 'package:smart_case/pages/activity_page/widgets/activity_form.dart';
+import 'package:smart_case/pages/activity_page/forms/activity_form.dart';
 import 'package:smart_case/pages/report_page/widgets/reports/widgets/done_activity_report_item.dart';
 import 'package:smart_case/services/apis/smartcase_apis/activity_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/done_activities_api.dart';

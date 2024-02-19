@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:smart_case/data/app_config.dart';
@@ -195,7 +196,7 @@ class _DiaryFormState extends State<DiaryForm> {
                               Column(
                                 children: [
                                   MultiSelectDropDown(
-                                    showClearIcon: true,
+                                    clearIcon: Icon(FontAwesome.xmark_solid),
                                     hint: 'Select contact to notify',
                                     onOptionSelected: (options) {
                                       for (var element in options) {
@@ -233,7 +234,7 @@ class _DiaryFormState extends State<DiaryForm> {
                                   MultiSelectDropDown(
                                     hint: 'Remind me with',
                                     searchEnabled: true,
-                                    showClearIcon: true,
+                                    clearIcon: Icon(FontAwesome.xmark_solid),
                                     dropdownHeight: 300,
                                     onOptionSelected: (options) {
                                       for (var element in options) {

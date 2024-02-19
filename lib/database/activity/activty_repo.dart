@@ -46,7 +46,6 @@ class ActivityRepo extends ActivityRepoInterface {
     } finally {
       client.close();
     }
-    return {};
   }
 
   @override
@@ -77,7 +76,6 @@ class ActivityRepo extends ActivityRepoInterface {
     } finally {
       client.close();
     }
-    return {};
   }
 
   @override

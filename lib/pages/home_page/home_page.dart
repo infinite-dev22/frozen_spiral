@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:smart_case/database/local/notifications.dart';
 import 'package:smart_case/pages/home_page/widgets/module/module_item.dart';
 import 'package:smart_case/theme/color.dart';
@@ -140,11 +141,11 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(
                 child: ModuleItem(
-                  name: 'Engagements',
+                  name: 'Invoices',
                   color: Colors.white,
                   padding: cardPadding,
-                  icon: Icons.handshake_outlined,
-                  onTap: () => Navigator.pushNamed(context, '/engagements'),
+                  icon: FontAwesome.file_invoice_dollar_solid,
+                  onTap: () => Navigator.pushNamed(context, '/invoices'),
                 ),
               ),
               const SizedBox(

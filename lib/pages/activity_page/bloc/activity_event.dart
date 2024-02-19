@@ -53,3 +53,12 @@ class DeleteActivityEvent extends ActivityEvent {
   @override
   List<Object?> get props => [fileId, activityId];
 }
+
+class SearchActivityEvent extends ActivityEvent {
+  final String search;
+
+  SearchActivityEvent(this.search);
+
+  @override
+  List<Object?> get props => [search];
+}

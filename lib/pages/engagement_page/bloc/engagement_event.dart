@@ -7,7 +7,7 @@ abstract class EngagementEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class GetActivitiesEvent extends EngagementEvent {}
+class GetEngagementsEvent extends EngagementEvent {}
 
 class GetEngagementEvent extends EngagementEvent {
   final int engagementId;
@@ -48,4 +48,13 @@ class DeleteEngagementEvent extends EngagementEvent {
 
   @override
   List<Object?> get props => [engagementId];
+}
+
+class SearchEngagementEvent extends EngagementEvent {
+  final String search;
+
+  SearchEngagementEvent(this.search);
+
+  @override
+  List<Object?> get props => [search];
 }

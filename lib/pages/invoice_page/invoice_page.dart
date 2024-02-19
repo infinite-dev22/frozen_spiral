@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:html/parser.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/app_config.dart';
@@ -351,53 +352,85 @@ class _InvoicePageState extends State<InvoicePage> {
 
   _buildFilteredList() {
     _filteredInvoice.clear();
-    _filteredInvoice.addAll(preloadedInvoices.where((invoice) => (!_allFilter &&
-            !_submittedFilter &&
-            !_approvedFilter &&
-            !_preApprovedFilter &&
-            !_rejectedFilter &&
-            !_returnedFilter)
-        ? (/*((invoice.invoiceStatus!.code.toLowerCase().contains("submit") || invoice.invoiceStatus!.name.toLowerCase().contains("submit")) &&
+    _filteredInvoice.addAll(preloadedInvoices.where((invoice) =>
+    (!_allFilter &&
+        !_submittedFilter &&
+        !_approvedFilter &&
+        !_preApprovedFilter &&
+        !_rejectedFilter &&
+        !_returnedFilter)
+        ? (/*((removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains("submit") || removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains("submit")) &&
                 invoice.approver!.id == currentUser.id) ||*/
-            (invoice.employee!.id == currentUser.id) ||
+        (invoice.employee!.id == currentUser.id) ||
             (invoice.canPay == true) ||
             ((invoice.secondApprover != null &&
-                    invoice.secondApprover == true) &&
-                (((invoice.invoiceStatus!.code.toLowerCase().contains("submit") || invoice.invoiceStatus!.name.toLowerCase().contains("submit")) &&
-                        (invoice.approver!.id == currentUser.id)) ||
-                    (invoice.invoiceStatus!.code.toLowerCase().contains("primary_approved") ||
-                        invoice.invoiceStatus!.name
+                invoice.secondApprover == true) &&
+                (((removeHtmlTags(invoice.invoiceStatus!)
+                    .toLowerCase()
+                    .contains("submit") ||
+                    removeHtmlTags(invoice.invoiceStatus!)
+                        .toLowerCase()
+                        .contains("submit")) &&
+                    (invoice.approver!.id == currentUser.id)) ||
+                    (removeHtmlTags(invoice.invoiceStatus!)
+                        .toLowerCase()
+                        .contains("primary_approved") ||
+                        removeHtmlTags(invoice.invoiceStatus!)
                             .toLowerCase()
                             .contains("primary approved"))
-                //     && ((invoice.approver!.id == currentUser.id) ||
-                // (invoice.employee!.id == currentUser.id))
+                    //     && ((invoice.approver!.id == currentUser.id) ||
+                    // (invoice.employee!.id == currentUser.id))
                 )))
         : (_allFilter &&
-                !_submittedFilter &&
-                !_approvedFilter &&
-                !_preApprovedFilter &&
-                !_rejectedFilter &&
-                !_returnedFilter)
-            ? ((canApprove) ? (true) : invoice.employee!.id == currentUser.id)
-            : ((_submittedFilter)
-                ? ((invoice.invoiceStatus!.code.toLowerCase().contains("submit") ||
-                        invoice.invoiceStatus!.name
-                            .toLowerCase()
-                            .contains("submit")) &&
-                    (_allFilter
-                        ? (true)
-                        : ((canApprove)
-                            ? (invoice.employee!.id == currentUser.id || invoice.approver!.id == currentUser.id)
-                            : invoice.employee!.id == currentUser.id)))
-                : (_approvedFilter)
-                    ? (((invoice.invoiceStatus!.code.toLowerCase() == "approved" || invoice.invoiceStatus!.name.toLowerCase() == "approved") && (_allFilter ? (true) : ((canApprove) ? (invoice.employee!.id == currentUser.id || invoice.approver!.id == currentUser.id) : invoice.employee!.id == currentUser.id))))
-                    : (_preApprovedFilter)
-                        ? ((invoice.invoiceStatus!.code.toLowerCase().contains("primary_approved") || invoice.invoiceStatus!.name.toLowerCase().contains("primary approved")))
-                        : (_rejectedFilter)
-                            ? (((invoice.invoiceStatus!.code.toLowerCase().contains("rejected") || invoice.invoiceStatus!.name.toLowerCase().contains("rejected")) && (_allFilter ? (true) : ((canApprove) ? (invoice.employee!.id == currentUser.id || invoice.approver!.id == currentUser.id) : invoice.employee!.id == currentUser.id))))
-                            : (_returnedFilter)
-                                ? (((invoice.invoiceStatus!.code.toLowerCase().contains("returned") || invoice.invoiceStatus!.name.toLowerCase().contains("returned")) && (_allFilter ? (true) : ((canApprove) ? (invoice.employee!.id == currentUser.id || invoice.approver!.id == currentUser.id) : invoice.employee!.id == currentUser.id))))
-                                : false)));
+        !_submittedFilter &&
+        !_approvedFilter &&
+        !_preApprovedFilter &&
+        !_rejectedFilter &&
+        !_returnedFilter)
+        ? ((canApprove) ? (true) : invoice.employee!.id == currentUser.id)
+        : ((_submittedFilter)
+        ? ((removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
+        "submit") ||
+        removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
+            "submit")) &&
+        (_allFilter
+            ? (true)
+            : ((canApprove)
+            ? (invoice.employee!.id == currentUser.id ||
+            invoice.approver!.id == currentUser.id)
+            : invoice.employee!.id == currentUser.id)))
+        : (_approvedFilter)
+        ? (((removeHtmlTags(invoice.invoiceStatus!).toLowerCase() ==
+        "approved" ||
+        removeHtmlTags(invoice.invoiceStatus!).toLowerCase() == "approved") &&
+        (_allFilter
+            ? (true)
+            : ((canApprove)
+            ? (invoice.employee!.id == currentUser.id ||
+            invoice.approver!.id == currentUser.id)
+            : invoice.employee!.id == currentUser.id))))
+        : (_preApprovedFilter)
+        ? ((removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
+        "primary_approved") ||
+        removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
+            "primary approved")))
+        : (_rejectedFilter)
+        ? (((removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
+        "rejected") ||
+        removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
+            "rejected")) &&
+        (_allFilter ? (true) : ((canApprove) ? (invoice.employee!.id ==
+            currentUser.id || invoice.approver!.id == currentUser.id) : invoice
+            .employee!.id == currentUser.id))))
+        : (_returnedFilter)
+        ? (((removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
+        "returned") ||
+        removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
+            "returned")) &&
+        (_allFilter ? (true) : ((canApprove) ? (invoice.employee!.id ==
+            currentUser.id || invoice.approver!.id == currentUser.id) : invoice
+            .employee!.id == currentUser.id))))
+        : false)));
   }
 
   _buildNonSearchedBody() {
@@ -407,14 +440,25 @@ class _InvoicePageState extends State<InvoicePage> {
           controller: _scrollController,
           itemCount: _filteredInvoice.length,
           padding: const EdgeInsets.all(8),
-          itemBuilder: (context, index) => InvoiceItem(
-            color: AppColors.white,
-            padding: 10,
-            invoice: _filteredInvoice.elementAt(index),
-            currencies: _currencies,
-            showActions: true,
-            showFinancialStatus: true,
-          ),
+          itemBuilder: (context, index) =>
+              GestureDetector(
+                child: InvoiceItem(
+                  color: AppColors.white,
+                  padding: 10,
+                  invoice: _filteredInvoice.elementAt(index),
+                  currencies: _currencies,
+                  showActions: true,
+                  showFinancialStatus: true,
+                ),
+                onTap: () =>
+                    Navigator.pushNamed(
+                      context,
+                      '/invoice',
+                      arguments: _filteredInvoice
+                          .elementAt(index)
+                          .id,
+                    ).then((_) => setState(() {})),
+              ),
         ),
       );
     } else if (_doneLoading && _filteredInvoice.isEmpty) {
@@ -436,29 +480,27 @@ class _InvoicePageState extends State<InvoicePage> {
   _buildSearchedBody() {
     List<SmartInvoice> invoices = _searchedInvoice
         .where((invoice) =>
-            ((invoice.invoiceStatus!.code.toLowerCase().contains("submit") ||
-                    invoice.invoiceStatus!.name
+    ((removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains("submit") ||
+        removeHtmlTags(invoice.invoiceStatus!)
+            .toLowerCase()
+            .contains("submit")) &&
+        invoice.approver!.id == currentUser.id) ||
+        (invoice.employee!.id == currentUser.id) ||
+        (invoice.canPay == true) ||
+        ((invoice.secondApprover != null &&
+            invoice.secondApprover == true) &&
+            ((removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
+                "submit") ||
+                removeHtmlTags(invoice.invoiceStatus!)
+                    .toLowerCase()
+                    .contains("submit")) ||
+                (removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
+                    "primar") ||
+                    removeHtmlTags(invoice.invoiceStatus!)
                         .toLowerCase()
-                        .contains("submit")) &&
-                invoice.approver!.id == currentUser.id) ||
-            (invoice.employee!.id == currentUser.id) ||
-            (invoice.canPay == true) ||
-            ((invoice.secondApprover != null &&
-                    invoice.secondApprover == true) &&
-                ((invoice.invoiceStatus!.code
-                            .toLowerCase()
-                            .contains("submit") ||
-                        invoice.invoiceStatus!.name
-                            .toLowerCase()
-                            .contains("submit")) ||
-                    (invoice.invoiceStatus!.code
-                                .toLowerCase()
-                                .contains("primar") ||
-                            invoice.invoiceStatus!.name
-                                .toLowerCase()
-                                .contains("primar")) &&
-                        (invoice.approver!.id == currentUser.id) ||
-                    (invoice.employee!.id == currentUser.id))))
+                        .contains("primar")) &&
+                    (invoice.approver!.id == currentUser.id) ||
+                (invoice.employee!.id == currentUser.id))))
         .toList(growable: true);
 
     if ((invoices.isNotEmpty)) {
@@ -468,13 +510,23 @@ class _InvoicePageState extends State<InvoicePage> {
           itemCount: invoices.length,
           padding: const EdgeInsets.all(8),
           itemBuilder: (context, index) {
-            return InvoiceItem(
-              color: AppColors.white,
-              padding: 10,
-              invoice: invoices.elementAt(index),
-              currencies: _currencies,
-              showActions: true,
-              showFinancialStatus: true,
+            return GestureDetector(
+              child: InvoiceItem(
+                color: AppColors.white,
+                padding: 10,
+                invoice: invoices.elementAt(index),
+                currencies: _currencies,
+                showActions: true,
+                showFinancialStatus: true,
+              ),
+              onTap: () =>
+                  Navigator.pushNamed(
+                    context,
+                    '/invoice',
+                    arguments: _filteredInvoice
+                        .elementAt(index)
+                        .id,
+                  ).then((_) => setState(() {})),
             );
           },
         ),
@@ -490,7 +542,8 @@ class _InvoicePageState extends State<InvoicePage> {
   void initState() {
     super.initState();
 
-    _scrollController = ScrollController()..addListener(_scrollListener);
+    _scrollController = ScrollController()
+      ..addListener(_scrollListener);
     InvoiceApi.fetchAll().then((value) {
       _doneLoading = true;
       setState(() {});
@@ -518,7 +571,7 @@ class _InvoicePageState extends State<InvoicePage> {
     _buildFilteredList();
 
     if (mounted) {
-      _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+      _timer = Timer.periodic(const Duration(seconds: 45), (timer) async {
         InvoiceApi.fetchAll();
         _buildFilteredList();
         setState(() {});
@@ -530,17 +583,17 @@ class _InvoicePageState extends State<InvoicePage> {
     _buildFilteredList();
     _searchedInvoice.clear();
     _searchedInvoice.addAll(_filteredInvoice.where((smartInvoice) =>
-        smartInvoice.number!.toLowerCase().contains(value.toLowerCase()) ||
+    smartInvoice.number!.toLowerCase().contains(value.toLowerCase()) ||
         smartInvoice.caseFile!.fileName!
             .toLowerCase()
             .contains(value.toLowerCase()) ||
         smartInvoice.caseFile!.fileNumber!
             .toLowerCase()
             .contains(value.toLowerCase()) ||
-        smartInvoice.invoiceStatus!.name
+        removeHtmlTags(smartInvoice.invoiceStatus!)
             .toLowerCase()
             .contains(value.toLowerCase()) ||
-        smartInvoice.invoiceStatus!.code
+        removeHtmlTags(smartInvoice.invoiceStatus!)
             .toLowerCase()
             .contains(value.toLowerCase()) ||
         smartInvoice.approver!
@@ -627,6 +680,22 @@ class _InvoicePageState extends State<InvoicePage> {
         });
       });
     }
+  }
+
+  String removeHtmlTags(String htmlString) {
+    // Parse the HTML string into a Document object.
+    var document = parse(htmlString);
+
+    // Find all the elements in the document.
+    var elements = document.getElementsByTagName('*');
+
+    // Iterate through the elements and remove their tags.
+    for (var element in elements) {
+      element.remove();
+    }
+
+    // Return the text content of the document.
+    return document.text!;
   }
 
   @override

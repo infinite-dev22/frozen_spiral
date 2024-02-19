@@ -2,47 +2,26 @@ part of 'engagement_bloc.dart';
 
 enum EngagementStatus {
   initial,
-  engagementSuccess,
-  engagementsSuccess,
-  engagementError,
-  engagementsError,
-  engagementLoading,
-  engagementsLoading,
+  success,
+  error,
+  loading,
   selected,
-  engagementNoData,
-  engagementsNoData,
-}
-
-extension EngagementStatusX on EngagementStatus {
-  bool get isInitial => this == EngagementStatus.initial;
-
-  bool get engagementIsSuccess => this == EngagementStatus.engagementSuccess;
-
-  bool get engagementsIsSuccess => this == EngagementStatus.engagementsSuccess;
-
-  bool get engagementIsError => this == EngagementStatus.engagementError;
-
-  bool get engagementsIsError => this == EngagementStatus.engagementsError;
-
-  bool get engagementIsLoading => this == EngagementStatus.engagementLoading;
-
-  bool get engagementsIsLoading => this == EngagementStatus.engagementsLoading;
-
-  bool get engagementIsNoData => this == EngagementStatus.engagementNoData;
-
-  bool get engagementsIsNoData => this == EngagementStatus.engagementsNoData;
+  noData,
+  notFound,
 }
 
 @immutable
 class EngagementState extends Equatable {
   final List<SmartEngagement>? engagements;
   final SmartEngagement? engagement;
+  final String? searchString;
   final EngagementStatus? status;
   final int? idSelected;
 
   const EngagementState({
     List<SmartEngagement>? engagements,
     this.engagement,
+    this.searchString,
     this.status = EngagementStatus.initial,
     this.idSelected = 0,
   }) : engagements = engagements ?? const [];
@@ -51,6 +30,7 @@ class EngagementState extends Equatable {
   List<Object?> get props => [
         engagements,
         engagement,
+        searchString,
         status,
         idSelected,
       ];
@@ -58,46 +38,16 @@ class EngagementState extends Equatable {
   EngagementState copyWith({
     List<SmartEngagement>? engagements,
     SmartEngagement? engagement,
+    String? searchString,
     EngagementStatus? status,
     int? idSelected,
   }) {
     return EngagementState(
       engagements: engagements,
       engagement: engagement,
+      searchString: searchString,
       status: status,
       idSelected: idSelected,
     );
   }
 }
-
-class EngagementInitial extends EngagementState {
-  @override
-  List<Object> get props => [];
-}
-
-class ActivitiesInitial extends EngagementState {
-  @override
-  List<Object> get props => [];
-}
-
-class EngagementLoading extends EngagementState {}
-
-class ActivitiesLoading extends EngagementState {}
-
-class EngagementSuccessful extends EngagementState {
-  @override
-  List<Object?> get props => [];
-}
-
-class ActivitiesSuccessful extends EngagementState {
-  @override
-  List<Object?> get props => [];
-}
-
-class EngagementError extends EngagementState {}
-
-class ActivitiesError extends EngagementState {}
-
-class EngagementNoData extends EngagementState {}
-
-class ActivitiesNoData extends EngagementState {}

@@ -9,14 +9,14 @@ import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_appbar.dart';
 import 'package:smart_case/widgets/text_item.dart';
 
-class ActivityViewPage extends StatefulWidget {
-  const ActivityViewPage({super.key});
+class ViewWidget extends StatefulWidget {
+  const ViewWidget({super.key});
 
   @override
-  State<ActivityViewPage> createState() => _ActivityViewPageState();
+  State<ViewWidget> createState() => _ViewWidgetState();
 }
 
-class _ActivityViewPageState extends State<ActivityViewPage> {
+class _ViewWidgetState extends State<ViewWidget> {
   SmartActivity? activity;
   late int fileId;
   late int activityId;

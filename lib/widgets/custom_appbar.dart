@@ -12,21 +12,25 @@ class AppBarContent extends StatelessWidget {
       this.searchable = false,
       this.canNavigate = false,
       this.filterable = false,
+      this.readOnly = false,
       this.search = '',
       this.signOut,
       this.isNetwork = false,
       this.onChanged,
       this.filterController,
+      this.searchController,
       this.filters});
 
   final bool searchable;
   final bool canNavigate;
   final bool filterable;
   final bool isNetwork;
+  final bool readOnly;
   final String search;
   final Function()? signOut;
   final Function(String)? onChanged;
   final TextEditingController? filterController;
+  final TextEditingController? searchController;
   final List<String>? filters;
 
   final List<String> profileActions = [
@@ -59,6 +63,8 @@ class AppBarContent extends StatelessWidget {
                       prefix: const Icon(Icons.search, color: Colors.grey),
                       onChanged: onChanged,
                       autoFocus: false,
+                      controller: searchController,
+                      readOnly: readOnly,
                     )
                   : const CustomImage(
                       "assets/images/title_bar_light.png",

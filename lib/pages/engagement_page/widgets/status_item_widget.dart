@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class EngagementItemStatus extends StatelessWidget {
-  const EngagementItemStatus(
+class ItemStatusWidget extends StatelessWidget {
+  const ItemStatusWidget(
       {super.key,
       required this.name,
       required this.bgColor,

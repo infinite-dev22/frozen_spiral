@@ -2,14 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/engagement/engagement_model.dart';
-import 'package:smart_case/pages/engagement_page/widgets/engagement_status_item.dart';
+import 'package:smart_case/pages/engagement_page/widgets/status_item_widget.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/widgets/text_item.dart';
 
-class EngagementItem extends StatelessWidget {
+class ItemWidget extends StatelessWidget {
   final SmartEngagement engagement;
 
-  const EngagementItem({super.key, required this.engagement});
+  const ItemWidget({super.key, required this.engagement});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class EngagementItem extends StatelessWidget {
             color: AppColors.inActiveColor,
           ),
         ),
-        const EngagementItemStatus(
+        const ItemStatusWidget(
             name: 'Coming soon...',
             bgColor: AppColors.inActiveColor,
             horizontalPadding: 20,

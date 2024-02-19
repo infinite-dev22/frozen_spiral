@@ -46,7 +46,8 @@ class SmartInvoice {
   final List<String>? amounts;
   final List<String>? taxIds;
   final List<String>? descriptions;
-  final SmartInvoiceStatus? invoiceStatus;
+  final String? invoiceStatus;
+  final SmartInvoiceStatus? invoiceStatus2;
   final SmartFile? caseFile;
   final SmartClient? client;
   final SmartCurrency? currency;
@@ -94,6 +95,7 @@ class SmartInvoice {
     this.descriptions,
     this.caseFile,
     this.invoiceStatus,
+    this.invoiceStatus2,
     this.client,
     this.currency,
     this.casePayments,
@@ -133,14 +135,16 @@ class SmartInvoice {
             : SmartEmployee.fromJson(json["done_by"] as Map<String, dynamic>),
         approver: json["supervisor"] == null
             ? null
-            : SmartEmployee.fromJson(json["supervisor"] as Map<String, dynamic>),
+            : SmartEmployee.fromJson(
+                json["supervisor"] as Map<String, dynamic>),
         canEdit: json['canEdit'],
         isMine: json['isMine'],
         canPay: json['canPay'],
         clientId: json["client_id"],
         clientAddress: json["clientAddress"],
         fileId: json["file_id"],
-        invoiceStatus: json["invoice_status"] == null
+        invoiceStatus: json["invoiceStatus"],
+        invoiceStatus2: json["invoice_status"] == null
             ? null
             : SmartInvoiceStatus.fromJson(
                 json["invoice_status"] as Map<String, dynamic>),

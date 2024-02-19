@@ -13,13 +13,14 @@ import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/employee/employee_model.dart';
 import 'package:smart_case/database/local/notifications.dart';
 import 'package:smart_case/pages/activity_page/activities_page.dart';
-import 'package:smart_case/pages/activity_page/widgets/activity_form.dart';
-import 'package:smart_case/pages/engagement_page/widgets/engagements_form.dart';
+import 'package:smart_case/pages/activity_page/forms/activity_form.dart';
+import 'package:smart_case/pages/engagement_page/forms/engagements_form.dart';
 import 'package:smart_case/pages/event_page/widgets/event_form.dart';
 import 'package:smart_case/pages/file_page/file_page.dart';
 import 'package:smart_case/pages/home_page/home_page.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
 import 'package:smart_case/pages/invoice_page/invoice_page.dart';
+import 'package:smart_case/pages/locator_page/locator_page.dart';
 import 'package:smart_case/pages/notification_page/notifications_page.dart';
 import 'package:smart_case/pages/requisition_page/widgets/requisition_form.dart';
 import 'package:smart_case/pages/root_page/widgets/bottom_bar_item.dart';
@@ -101,7 +102,7 @@ class _RootPageState extends State<RootPage> {
         "icon": Icons.location_on_outlined,
         "active_icon": Icons.location_on_rounded,
         "name": "Locator",
-        "page": const InvoicePage() /*LocatorPage()*/,
+        "page": const LocatorPage(),
       },
     ];
   }

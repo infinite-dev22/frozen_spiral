@@ -28,7 +28,7 @@ class EngagementRepo extends EngagementRepoInterface {
       var response = await client.get(
         Uri.https(
           currentUser.url.replaceRange(0, 8, ''),
-          'api/admin/engagementypes',
+          'api/crm/engagementsgetall',
           body,
         ),
         headers: headers,
