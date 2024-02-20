@@ -16,7 +16,7 @@ class NotFoundWidget extends StatelessWidget {
     TextEditingController searchController = TextEditingController(
         text: context.read<EngagementBloc>().state.searchString ?? "");
 
-    final List<String>? filters = [
+    final List<String> filters = [
       "Client",
       "Type",
       "Cost",
@@ -51,8 +51,8 @@ class NotFoundWidget extends StatelessWidget {
   _buildBody() {
     return Center(
       child: Text(
-        "No activity with $searchString",
-        style: TextStyle(color: AppColors.inActiveColor),
+        "No engagement found for search \"$searchString\"",
+        style: const TextStyle(color: AppColors.inActiveColor),
       ),
     );
   }

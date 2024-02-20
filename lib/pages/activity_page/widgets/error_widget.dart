@@ -10,6 +10,15 @@ class ActivityErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> filters = [
+      "Client",
+      "Type",
+      "Cost",
+      "Done By",
+      "Description (Cost)",
+      "Date",
+    ];
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -18,8 +27,11 @@ class ActivityErrorWidget extends StatelessWidget {
         backgroundColor: AppColors.primary,
         title: AppBarContent(
           isNetwork: currentUser.avatar != null ? true : false,
-          searchable: false,
-          filterable: false,
+          searchable: true,
+          filterable: true,
+          readOnly: true,
+          search: 'activities',
+          filters: filters,
         ),
       ),
       body: _buildBody(context),
@@ -34,17 +46,17 @@ class ActivityErrorWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               "An error occurred whilst loading your activities",
               style: TextStyle(color: AppColors.red),
             ),
             const SizedBox(height: 36),
             FilledButton(
               onPressed: () => _onRefresh(context),
-              child: Text("Try Again"),
-              style: ButtonStyle(
+              style: const ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(AppColors.primary),
               ),
+              child: const Text("Try Again"),
             ),
           ],
         ),

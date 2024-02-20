@@ -31,10 +31,6 @@ class _ProfilePicLayoutState extends State<ProfilePicLayout> {
     return BlocBuilder<ProfilePicBloc, ProfilePicState>(
       bloc: _profilePicBloc,
       builder: (BuildContext context, ProfilePicState state) {
-        print("State is Initial: ${state.status == ProfilePicStatus.initial}");
-        print("State is Success: ${state.status == ProfilePicStatus.success}");
-        print("State is Loading: ${state.status == ProfilePicStatus.loading}");
-        print("State is Error: ${state.status == ProfilePicStatus.error}");
         if (state.status == ProfilePicStatus.initial) {
           _profilePicBloc.add(GetProfilePic());
         }

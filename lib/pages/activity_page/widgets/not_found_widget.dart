@@ -16,7 +16,7 @@ class NotFoundWidget extends StatelessWidget {
     TextEditingController searchController = TextEditingController(
         text: context.read<ActivityBloc>().state.searchString ?? "");
 
-    final List<String>? filters = [
+    final List<String> filters = [
       "Name",
       "File Name",
       "File Number",
@@ -50,7 +50,7 @@ class NotFoundWidget extends StatelessWidget {
     return Center(
       child: Text(
         "No activity found for search \"$searchString\"",
-        style: TextStyle(color: AppColors.inActiveColor),
+        style: const TextStyle(color: AppColors.inActiveColor),
       ),
     );
   }

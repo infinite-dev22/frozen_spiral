@@ -45,11 +45,11 @@ class SmartTaxType extends SmartModel {
 
   @override
   int getId() {
-    return this.id!;
+    return id!;
   }
 
   @override
   String getName() {
-    return this.name!;
+    return name!;
   }
 }

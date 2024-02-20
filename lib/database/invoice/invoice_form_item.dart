@@ -39,16 +39,16 @@ class InvoiceFormItem extends SmartModel {
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': this.id,
-        'case_payment_type_id': this.item?.id,
-        'description': this.description,
-        'amount': this.amount,
-        'tax_code': this.taxType!.code,
+        'id': id,
+        'case_payment_type_id': item?.id,
+        'description': description,
+        'amount': amount,
+        'tax_code': taxType!.code,
       };
 
   @override
   int getId() {
-    return this.id!;
+    return id!;
   }
 
   @override

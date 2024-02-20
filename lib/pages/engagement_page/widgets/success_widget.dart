@@ -16,7 +16,7 @@ class SuccessWidget extends StatelessWidget {
     TextEditingController searchController = TextEditingController(
         text: context.read<EngagementBloc>().state.searchString ?? "");
 
-    final List<String>? filters = [
+    final List<String> filters = [
       "Client",
       "Type",
       "Cost",
@@ -45,7 +45,7 @@ class SuccessWidget extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: "engagements_success${this.key}",
+        heroTag: "engagements_success$key",
         onPressed: () => _buildEngagementsForm(context),
         foregroundColor: AppColors.white,
         backgroundColor: AppColors.primary,

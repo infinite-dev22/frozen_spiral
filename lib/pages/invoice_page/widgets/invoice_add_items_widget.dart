@@ -13,6 +13,7 @@ class InvoiceAddItemsWidget extends StatelessWidget {
 
   Widget _buildBody() {
     return GestureDetector(
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         margin: const EdgeInsets.only(bottom: 10),
@@ -20,7 +21,7 @@ class InvoiceAddItemsWidget extends StatelessWidget {
           color: AppColors.white,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: SizedBox(
+        child: const SizedBox(
           height: 50,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -31,7 +32,6 @@ class InvoiceAddItemsWidget extends StatelessWidget {
           ),
         ),
       ),
-      onTap: onTap,
     );
   }
 }

@@ -46,7 +46,6 @@ class InvoiceRepo extends InvoiceRepoInterface {
     } finally {
       client.close();
     }
-    return {};
   }
 
   @override
@@ -77,7 +76,6 @@ class InvoiceRepo extends InvoiceRepoInterface {
     } finally {
       client.close();
     }
-    return {};
   }
 
   @override
@@ -90,9 +88,6 @@ class InvoiceRepo extends InvoiceRepoInterface {
         "Authorization": 'Bearer ${currentUser.token}',
       };
 
-      print("JSON DATA SENT 1: ${data}");
-      print("JSON DATA SENT 2: ${json.encode(data)}");
-
       var response = await client.post(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
             'api/accounts/invoice/create'),
@@ -101,8 +96,6 @@ class InvoiceRepo extends InvoiceRepoInterface {
       );
 
       if (response.statusCode == 200) {
-        print(
-            "RESULT AFTER POST: ${jsonDecode(utf8.decode(response.bodyBytes)) as Map}");
         return jsonDecode(utf8.decode(response.bodyBytes)) as Map;
       } else {
         if (kDebugMode) {

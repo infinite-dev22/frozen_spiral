@@ -196,7 +196,7 @@ class _DiaryFormState extends State<DiaryForm> {
                               Column(
                                 children: [
                                   MultiSelectDropDown(
-                                    clearIcon: Icon(FontAwesome.xmark_solid),
+                                    clearIcon: const Icon(FontAwesome.xmark_solid),
                                     hint: 'Select contact to notify',
                                     onOptionSelected: (options) {
                                       for (var element in options) {
@@ -234,7 +234,7 @@ class _DiaryFormState extends State<DiaryForm> {
                                   MultiSelectDropDown(
                                     hint: 'Remind me with',
                                     searchEnabled: true,
-                                    clearIcon: Icon(FontAwesome.xmark_solid),
+                                    clearIcon: const Icon(FontAwesome.xmark_solid),
                                     dropdownHeight: 300,
                                     onOptionSelected: (options) {
                                       for (var element in options) {

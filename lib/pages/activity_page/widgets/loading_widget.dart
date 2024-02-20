@@ -9,7 +9,7 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String>? filters = [
+    final List<String> filters = [
       "Name",
       "File Name",
       "File Number",

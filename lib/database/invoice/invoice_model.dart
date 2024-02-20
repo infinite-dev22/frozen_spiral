@@ -191,7 +191,7 @@ class SmartInvoice {
         "date": date?.toIso8601String(),
         "due_date": dueDate?.toIso8601String(),
         "bill_to": billTo,
-        "invoice_details_title": this.invoiceType!.name,
+        "invoice_details_title": invoiceType!.name,
         "payment_terms": paymentTerms,
         "print_case_file": printCaseFile,
         "supervisor_id": supervisorId,
@@ -211,24 +211,20 @@ class SmartInvoice {
         "clientAddress": clientAddress,
         "file_id": fileId,
         "employee_id": currentUser.id,
-        "case_payment_type_ids": this
-            .invoiceItems
+        "case_payment_type_ids": invoiceItems
             ?.map((invoiceItem) => invoiceItem.taxType!.id)
             .toList(growable: true),
         "amount": amount,
-        "amounts": this
-            .invoiceItems
+        "amounts": invoiceItems
             ?.map((invoiceItem) => invoiceItem.amount)
             .toList(growable: true),
-        "tax_ids": this.invoiceItems == null
+        "tax_ids": invoiceItems == null
             ? []
-            : List<dynamic>.from(this
-                .invoiceItems!
+            : List<dynamic>.from(invoiceItems!
                 .map((invoiceItem) => invoiceItem.taxType!.code)),
-        "descriptions": this.invoiceItems == null
+        "descriptions": invoiceItems == null
             ? []
-            : List<dynamic>.from(this
-                .invoiceItems!
+            : List<dynamic>.from(invoiceItems!
                 .map((invoiceItem) => invoiceItem.description)),
         "case_file": caseFile?.toInvoiceJson(),
         "client": client?.toJson(),

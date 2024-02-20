@@ -63,11 +63,10 @@ class _InvoiceViewPageState extends State<InvoiceViewPage> {
   }
 
   Widget _buildBody() {
-    final ScrollController scrollController = ScrollController();
     return (invoice != null)
         ? Container(
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(
                 Radius.circular(8),
@@ -84,7 +83,7 @@ class _InvoiceViewPageState extends State<InvoiceViewPage> {
             ),
             child: Column(
               children: [
-                Text("DISBURSEMENT NOTE"),
+                const Text("DISBURSEMENT NOTE"),
                 _textItem("Name", "MISS MARISOL PFANNERSTILL"),
                 _textItem("Currency", "Euro (EUR)"),
                 _textItem("Amount /Tax Inc", "709,298.00 (EUR)"),
@@ -228,9 +227,9 @@ class _InvoiceViewPageState extends State<InvoiceViewPage> {
   _approveInvoice() {
     if (invoice!.invoiceStatus2!.code == 'EDITED' ||
         invoice!.invoiceStatus2!.code == "SUBMITTED") {
-      if (invoice!.canApprove == 'LV1') {
+      if (invoice!.canApprove ?? false) {
         _submitData("APPROVED", 'Invoice approved');
-      } else if (invoice!.canApprove == 'LV2') {
+      } else if (invoice!.canApprove ?? false) {
         if (invoice!.secondApprover != null && invoice!.secondApprover) {
           _submitData("SECONDARY_APPROVED", 'Invoice approved');
         } else {
@@ -247,9 +246,9 @@ class _InvoiceViewPageState extends State<InvoiceViewPage> {
   _returnInvoice() {
     if (invoice!.invoiceStatus2!.code == 'EDITED' ||
         invoice!.invoiceStatus2!.code == "SUBMITTED") {
-      if (invoice!.canApprove == 'LV1') {
+      if (invoice!.canApprove ?? false) {
         _submitData("RETURNED", 'Action successful');
-      } else if (invoice!.canApprove == 'LV2') {
+      } else if (invoice!.canApprove ?? false) {
         _submitData("PRIMARY_RETURNED", 'Action successful');
       }
     } else if (invoice!.invoiceStatus2!.code == "PRIMARY_RETURNED") {
@@ -262,9 +261,9 @@ class _InvoiceViewPageState extends State<InvoiceViewPage> {
   _rejectInvoice() {
     if (invoice!.invoiceStatus2!.code == 'EDITED' ||
         invoice!.invoiceStatus2!.code == "SUBMITTED") {
-      if (invoice!.canApprove == 'LV1') {
+      if (invoice!.canApprove ?? false) {
         _submitData("REJECTED", 'Action successful');
-      } else if (invoice!.canApprove == 'LV2') {
+      } else if (invoice!.canApprove ?? false) {
         _submitData("PRIMARY_REJECTED", 'Action successful');
       }
     } else if (invoice!.invoiceStatus2!.code == "PRIMARY_REJECTED") {

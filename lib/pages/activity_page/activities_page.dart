@@ -10,7 +10,7 @@ class ActivitiesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ActivityBloc>(
       create: (context) => ActivityBloc(),
-      child: LayoutWidget(),
+      child: const LayoutWidget(),
     );
   }
 }

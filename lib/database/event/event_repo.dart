@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -37,7 +36,6 @@ class EventRepo extends EventRepoInterface {
       if (response.statusCode == 200) {
         if (onSuccess != null) onSuccess();
         return jsonDecode(utf8.decode(response.bodyBytes)) as List;
-        ;
       } else {
         if (onError != null) onError();
         if (kDebugMode) {

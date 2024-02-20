@@ -55,12 +55,12 @@ class TaskItem extends StatelessWidget {
                 ],
               ),
               TextItem(title: 'Task', data: task.getName()),
-              TextItem(title: 'Task description', data: task.description!),
+              if(task.description != null) TextItem(title: 'Task description', data: task.description!),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextItem(title: 'Assigner', data: task.assigner!.getName()),
-                  Column(
+                  if(task.assignees != null && task.assignees!.isNotEmpty) Column(
                     children: [
                       const Text(
                         "Assignees",

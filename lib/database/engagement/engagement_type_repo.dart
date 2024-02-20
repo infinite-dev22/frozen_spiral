@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
-import 'package:smart_case/database/interface/engagement_repo_interface.dart';
+import 'package:smart_case/database/interface/engagement_type_repo_interface.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
-class EngagementRepo extends EngagementRepoInterface {
-  static final EngagementRepo _instance = EngagementRepo._internal();
+class EngagementTypeRepo extends EngagementTypeRepoInterface {
+  static final EngagementTypeRepo _instance = EngagementTypeRepo._internal();
 
-  factory EngagementRepo() {
+  factory EngagementTypeRepo() {
     return _instance;
   }
 
-  EngagementRepo._internal();
+  EngagementTypeRepo._internal();
 
   @override
   Future<dynamic> fetchAll({Map<String, dynamic>? body}) async {
@@ -27,7 +27,7 @@ class EngagementRepo extends EngagementRepoInterface {
       var response = await client.get(
         Uri.https(
           currentUser.url.replaceRange(0, 8, ''),
-          'api/crm/engagementsgetall',
+          'api/admin/engagementypes',
           body,
         ),
         headers: headers,

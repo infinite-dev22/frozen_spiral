@@ -29,7 +29,7 @@ class TextItem extends StatelessWidget {
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
-          overflow: TextOverflow.ellipsis,
+          softWrap: true,
         ),
         const SizedBox(height: 5),
       ],

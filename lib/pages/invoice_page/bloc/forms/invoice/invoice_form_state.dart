@@ -51,7 +51,7 @@ class InvoiceFormInitial extends InvoiceFormState {}
 class InvoiceFormSuccess extends InvoiceFormState {}
 
 class InvoiceFormRefresh extends InvoiceFormState {
-  InvoiceFormRefresh(items);
+  const InvoiceFormRefresh(items);
 
   @override
   List<Object?> get props => [items];

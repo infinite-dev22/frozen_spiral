@@ -11,7 +11,7 @@ class EngagementsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<EngagementBloc>(
       create: (context) => EngagementBloc(),
-      child: LayoutWidget(),
+      child: const LayoutWidget(),
     );
   }
 }

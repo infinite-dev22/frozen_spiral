@@ -536,9 +536,9 @@ class _InvoiceItemState extends State<InvoiceItem> {
     });
 
     if (status == 'EDITED' || status == "SUBMITTED") {
-      if (widget.invoice.canApprove == 'LV1') {
+      if (widget.invoice.canApprove ?? false) {
         _submitData("APPROVED", 'Invoice approved');
-      } else if (widget.invoice.canApprove == 'LV2') {
+      } else if (widget.invoice.canApprove ?? false) {
         if (widget.invoice.secondApprover != null &&
             widget.invoice.secondApprover) {
           _submitData("SECONDARY_APPROVED", 'Invoice approved');
