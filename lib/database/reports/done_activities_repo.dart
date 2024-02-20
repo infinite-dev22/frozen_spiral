@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -42,8 +41,6 @@ class DoneActivitiesRepo extends DoneActivitiesRepoInterface {
         throw ErrorHint(
             "Action failed with status code: ${response.statusCode}");
       }
-    } catch (e) {
-      print("DNACTI: $e");
     } finally {
       client.close();
     }

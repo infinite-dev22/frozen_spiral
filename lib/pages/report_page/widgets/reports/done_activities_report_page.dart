@@ -7,7 +7,7 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/reports/models/done_activities_report.dart';
-import 'package:smart_case/pages/activity_page/widgets/activity_form.dart';
+import 'package:smart_case/pages/activity_page/forms/activity_form.dart';
 import 'package:smart_case/pages/report_page/widgets/reports/widgets/done_activity_report_item.dart';
 import 'package:smart_case/services/apis/smartcase_apis/activity_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/done_activities_api.dart';
@@ -170,7 +170,7 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
   Future<void> _setUpData() async {
     await DoneActivitiesApi.fetchAll().then((value) {
       _doneLoading = true;
-      setState(() {});
+      if (mounted) setState(() {});
     }).onError((error, stackTrace) {
       _doneLoading = true;
       Fluttertoast.showToast(
@@ -192,13 +192,13 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
     filteredDoneActivities.clear();
     filteredDoneActivities.addAll(preloadedDoneActivities.where(
         (doneActivity) =>
-            doneActivity.lockedBy!
+            (doneActivity.lockedBy ?? "")
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
-            doneActivity.notifyClient!
+            (doneActivity.notifyClient ?? "")
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
-            doneActivity.date
+            (doneActivity.date ?? "")
                 .toString()
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
@@ -215,13 +215,13 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
                 .toLowerCase()
                 .contains(value.toLowerCase()) ||
             doneActivity.date.toString().contains(value.toLowerCase())));
-    setState(() {});
+    if(mounted) setState(() {});
   }
 
   Future<void> _onRefresh() async {
     await ActivityApi.fetchAll().then((value) {
       _doneLoading = true;
-      setState(() {});
+      if(mounted) setState(() {});
     }).onError((error, stackTrace) {
       _doneLoading = true;
       Fluttertoast.showToast(
@@ -232,7 +232,7 @@ class _DoneActivitiesReportPageState extends State<DoneActivitiesReportPage> {
           backgroundColor: AppColors.red,
           textColor: AppColors.white,
           fontSize: 16.0);
-      setState(() {});
+      if(mounted) setState(() {});
     });
   }
 

@@ -28,7 +28,7 @@ class SmartInvoice {
   final int? invoiceTypeId;
   final int? bankId;
   final int? clientId;
-  final bool? canApprove;
+  final dynamic canApprove;
   final dynamic secondApprover;
   final bool? canEdit;
   final bool? isMine;
@@ -46,7 +46,8 @@ class SmartInvoice {
   final List<String>? amounts;
   final List<String>? taxIds;
   final List<String>? descriptions;
-  final SmartInvoiceStatus? invoiceStatus;
+  final String? invoiceStatus;
+  final SmartInvoiceStatus? invoiceStatus2;
   final SmartFile? caseFile;
   final SmartClient? client;
   final SmartCurrency? currency;
@@ -94,6 +95,7 @@ class SmartInvoice {
     this.descriptions,
     this.caseFile,
     this.invoiceStatus,
+    this.invoiceStatus2,
     this.client,
     this.currency,
     this.casePayments,
@@ -107,79 +109,88 @@ class SmartInvoice {
 
   String toRawJson() => json.encode(toJson());
 
-  factory SmartInvoice.fromJson(Map<String, dynamic> json) => SmartInvoice(
-        id: json["id"],
-        number: json["number"],
-        date: json["date"] == null ? null : DateTime.parse(json["date"]),
-        dueDate:
-            json["due_date"] == null ? null : DateTime.parse(json["due_date"]),
-        billTo: json["bill_to"],
-        invoiceDetailsTitle: json["invoice_details_title"],
-        paymentTerms: json["payment_terms"],
-        printCaseFile: json["print_case_file"],
-        supervisorId: json["supervisor_id"],
-        currencyId: json["currency_id"],
-        letterheadId: json["letterhead_id"],
-        signatureId: json["signature_id"],
-        doneBy: json["done_by"]["id"],
-        practiceAreasId: json["practice_areas_id"],
-        invoiceStatusId: json["invoice_status_id"],
-        invoiceTypeId: json["invoice_type_id"],
-        bankId: json["bank_id"],
-        canApprove: json['canApprove'],
-        secondApprover: json['secondApprover'],
-        employee: json["done_by"] == null
-            ? null
-            : SmartEmployee.fromJson(json["done_by"] as Map<String, dynamic>),
-        approver: json["supervisor"] == null
-            ? null
-            : SmartEmployee.fromJson(json["supervisor"] as Map<String, dynamic>),
-        canEdit: json['canEdit'],
-        isMine: json['isMine'],
-        canPay: json['canPay'],
-        clientId: json["client_id"],
-        clientAddress: json["clientAddress"],
-        fileId: json["file_id"],
-        invoiceStatus: json["invoice_status"] == null
-            ? null
-            : SmartInvoiceStatus.fromJson(
-                json["invoice_status"] as Map<String, dynamic>),
-        file: json["file"] == null
-            ? null
-            : SmartFile.fromJson(json["file"] as Map<String, dynamic>),
-        employeeId: json["employee_id"],
-        casePaymentTypeIds: json["case_payment_type_ids"] == null
-            ? []
-            : List<String>.from(json["case_payment_type_ids"]!.map((x) => x)),
-        amount: json["amount"],
-        balance: json["balance"],
-        totalPaid: json["totalPaid"],
-        amounts: json["amounts"] == null
-            ? []
-            : List<String>.from(json["amounts"]!.map((x) => x)),
-        taxIds: json["tax_ids"] == null
-            ? []
-            : List<String>.from(json["tax_ids"]!.map((x) => x)),
-        descriptions: json["descriptions"] == null
-            ? []
-            : List<String>.from(json["descriptions"]!.map((x) => x)),
-        caseFile: json["case_file"] == null
-            ? null
-            : SmartFile.fromJson(json["case_file"]),
-        client: json["client"] == null
-            ? null
-            : SmartClient.fromJson(json["client"]),
-        currency: json["currency"] == null
-            ? null
-            : SmartCurrency.fromJson(json["currency"]),
-        casePayments: json["case_payments"] == null
-            ? []
-            : List<dynamic>.from(json["case_payments"]!.map((x) => x)),
-        bank: json["bank"] == null ? null : SmartBank.fromJson(json["bank"]),
-        invoiceType: json["invoice_type"] == null
-            ? null
-            : SmartInvoiceType.fromJson(json["invoice_type"]),
-      );
+  factory SmartInvoice.fromJson(Map<String, dynamic> json) {
+    print(json["invoice_actions"]);
+    print(json["invoice_actions"].first["invoice_status"]);
+    return SmartInvoice(
+      id: json["id"],
+      number: json["number"],
+      date: json["date"] == null ? null : DateTime.parse(json["date"]),
+      dueDate:
+          json["due_date"] == null ? null : DateTime.parse(json["due_date"]),
+      billTo: json["bill_to"],
+      invoiceDetailsTitle: json["invoice_details_title"],
+      paymentTerms: json["payment_terms"],
+      printCaseFile: json["print_case_file"],
+      supervisorId: json["supervisor_id"],
+      currencyId: json["currency_id"],
+      letterheadId: json["letterhead_id"],
+      signatureId: json["signature_id"],
+      doneBy: json["done_by"]["id"],
+      practiceAreasId: json["practice_areas_id"],
+      invoiceStatusId: json["invoice_status_id"],
+      invoiceTypeId: json["invoice_type_id"],
+      bankId: json["bank_id"],
+      canApprove: json['canApprove'],
+      secondApprover: json['secondApprover'],
+      employee: json["done_by"] == null
+          ? null
+          : SmartEmployee.fromJson(json["done_by"] as Map<String, dynamic>),
+      approver: json["supervisor"] == null
+          ? null
+          : SmartEmployee.fromJson(json["supervisor"] as Map<String, dynamic>),
+      canEdit: json['canEdit'],
+      isMine: json['isMine'],
+      canPay: json['canPay'],
+      clientId: json["client_id"],
+      clientAddress: json["clientAddress"],
+      fileId: json["file_id"],
+      invoiceStatus: json["invoiceStatus"],
+      invoiceStatus2: json["invoice_actions"].first["invoice_status"] == null
+          ? SmartInvoiceStatus.fromJson(
+              json["invoice_status"] as Map<String, dynamic>)
+          : SmartInvoiceStatus.fromJson(json["invoice_actions"]
+              .first["invoice_status"] as Map<String, dynamic>),
+      file: json["case_file"] == null
+          ? null
+          : SmartFile.fromJson(json["case_file"] as Map<String, dynamic>),
+      employeeId: json["employee_id"],
+      casePaymentTypeIds: json["case_payment_type_ids"] == null
+          ? []
+          : List<String>.from(json["case_payment_type_ids"]!.map((x) => x)),
+      amount: json["invoiceAmount"],
+      balance: json["invoiceBalance"],
+      totalPaid: json["invoicePayment"],
+      amounts: json["amounts"] == null
+          ? []
+          : List<String>.from(json["amounts"]!.map((x) => x)),
+      taxIds: json["tax_ids"] == null
+          ? []
+          : List<String>.from(json["tax_ids"]!.map((x) => x)),
+      descriptions: json["descriptions"] == null
+          ? []
+          : List<String>.from(json["descriptions"]!.map((x) => x)),
+      caseFile: json["case_file"] == null
+          ? null
+          : SmartFile.fromJson(json["case_file"]),
+      client:
+          json["client"] == null ? null : SmartClient.fromJson(json["client"]),
+      currency: json["currency"] == null
+          ? null
+          : SmartCurrency.fromJson(json["currency"]),
+      casePayments: json["case_payments"] == null
+          ? []
+          : List<dynamic>.from(json["case_payments"]!.map((x) => x)),
+      invoiceItems: json["items"] == null
+          ? []
+          : List<InvoiceFormItem>.from(
+              json["items"]!.map((x) => InvoiceFormItem.fromJson(x))),
+      bank: json["bank"] == null ? null : SmartBank.fromJson(json["bank"]),
+      invoiceType: json["invoice_type"] == null
+          ? null
+          : SmartInvoiceType.fromJson(json["invoice_type"]),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -187,7 +198,7 @@ class SmartInvoice {
         "date": date?.toIso8601String(),
         "due_date": dueDate?.toIso8601String(),
         "bill_to": billTo,
-        "invoice_details_title": this.invoiceType!.name,
+        "invoice_details_title": invoiceType!.name,
         "payment_terms": paymentTerms,
         "print_case_file": printCaseFile,
         "supervisor_id": supervisorId,
@@ -207,25 +218,21 @@ class SmartInvoice {
         "clientAddress": clientAddress,
         "file_id": fileId,
         "employee_id": currentUser.id,
-        "case_payment_type_ids": this
-            .invoiceItems
+        "case_payment_type_ids": invoiceItems
             ?.map((invoiceItem) => invoiceItem.taxType!.id)
             .toList(growable: true),
         "amount": amount,
-        "amounts": this
-            .invoiceItems
+        "amounts": invoiceItems
             ?.map((invoiceItem) => invoiceItem.amount)
             .toList(growable: true),
-        "tax_ids": this.invoiceItems == null
+        "tax_ids": invoiceItems == null
             ? []
-            : List<dynamic>.from(this
-                .invoiceItems!
-                .map((invoiceItem) => invoiceItem.taxType!.code)),
-        "descriptions": this.invoiceItems == null
+            : List<dynamic>.from(
+                invoiceItems!.map((invoiceItem) => invoiceItem.taxType!.code)),
+        "descriptions": invoiceItems == null
             ? []
-            : List<dynamic>.from(this
-                .invoiceItems!
-                .map((invoiceItem) => invoiceItem.description)),
+            : List<dynamic>.from(
+                invoiceItems!.map((invoiceItem) => invoiceItem.description)),
         "case_file": caseFile?.toInvoiceJson(),
         "client": client?.toJson(),
         "currency": currency?.toJson(),

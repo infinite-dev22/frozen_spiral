@@ -165,7 +165,7 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
   Future<void> _setUpData() async {
     CauseListApi.fetchAll().then((value) {
       _doneLoading = true;
-      setState(() {});
+      if(mounted) setState(() {});
     }).onError((error, stackTrace) {
       debugPrintStack(stackTrace: stackTrace);
       _doneLoading = true;
@@ -206,13 +206,13 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
                 .getName()
                 .toString()
                 .contains(value.toLowerCase())));
-    setState(() {});
+    if(mounted) setState(() {});
   }
 
   Future<void> _onRefresh() async {
     CauseListApi.fetchAll().then((value) {
       _doneLoading = true;
-      setState(() {});
+      if(mounted) setState(() {});
     }).onError((error, stackTrace) {
       _doneLoading = true;
       Fluttertoast.showToast(
@@ -223,7 +223,7 @@ class _CauseListReportPageState extends State<CauseListReportPage> {
           backgroundColor: AppColors.red,
           textColor: AppColors.white,
           fontSize: 16.0);
-      setState(() {});
+      if(mounted) setState(() {});
     });
   }
 }

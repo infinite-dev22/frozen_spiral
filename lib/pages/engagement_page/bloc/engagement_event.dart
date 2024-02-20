@@ -7,12 +7,12 @@ abstract class EngagementEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class GetActivitiesEvent extends EngagementEvent {}
+class GetEngagementsEvent extends EngagementEvent {}
 
 class GetEngagementEvent extends EngagementEvent {
   final int engagementId;
 
-  GetEngagementEvent(this.engagementId);
+  const GetEngagementEvent(this.engagementId);
 
   @override
   List<Object?> get props => [engagementId];
@@ -22,7 +22,7 @@ class PostEngagementEvent extends EngagementEvent {
   final Map<String, dynamic> engagement;
   final int engagementId;
 
-  PostEngagementEvent(this.engagement, this.engagementId);
+  const PostEngagementEvent(this.engagement, this.engagementId);
 
   @override
   List<Object?> get props => [engagementId, engagement];
@@ -32,7 +32,7 @@ class PutEngagementEvent extends EngagementEvent {
   final int engagementId;
   final Map<String, dynamic> engagement;
 
-  PutEngagementEvent(
+  const PutEngagementEvent(
     this.engagementId,
     this.engagement,
   );
@@ -44,8 +44,17 @@ class PutEngagementEvent extends EngagementEvent {
 class DeleteEngagementEvent extends EngagementEvent {
   final int engagementId;
 
-  DeleteEngagementEvent(this.engagementId);
+  const DeleteEngagementEvent(this.engagementId);
 
   @override
   List<Object?> get props => [engagementId];
+}
+
+class SearchEngagementEvent extends EngagementEvent {
+  final String search;
+
+  const SearchEngagementEvent(this.search);
+
+  @override
+  List<Object?> get props => [search];
 }

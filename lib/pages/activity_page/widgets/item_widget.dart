@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/database/activity/activity_model.dart';
-import 'package:smart_case/pages/activity_page/widgets/activity_form.dart';
+import 'package:smart_case/pages/activity_page/forms/activity_form.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 import 'package:smart_case/widgets/custom_icon_button.dart';
 
-class ActivityItem extends StatelessWidget {
-  const ActivityItem({
+class ItemWidget extends StatelessWidget {
+  const ItemWidget({
     super.key,
     required this.activity,
     required this.color,

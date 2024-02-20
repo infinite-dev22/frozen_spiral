@@ -11,6 +11,7 @@ class SmartBank extends SmartModel {
   int? isPayroll;
   int? isActive;
   String? name;
+  String? swiftCode;
   String? description;
 
   SmartBank({
@@ -22,6 +23,7 @@ class SmartBank extends SmartModel {
     this.isPayroll,
     this.isActive,
     this.name,
+    this.swiftCode,
     this.description,
   });
 
@@ -35,6 +37,7 @@ class SmartBank extends SmartModel {
       isPayroll: json['is_payroll'],
       isActive: json['is_active'],
       name: json['name'],
+      swiftCode: json['swift_code'],
       description: json['description'],
     );
   }
@@ -49,6 +52,7 @@ class SmartBank extends SmartModel {
         "code": code,
         "account_number": accountNumber,
         "account_name": accountName,
+        "swift_code": swiftCode,
         "branch": branch,
       };
 

@@ -61,10 +61,10 @@ class InvoiceAmountsWidget extends StatelessWidget {
     var thousandFormatter = NumberFormat("###,###,###,###,##0.00");
     double totalTaxableAmount = 0.00;
     if (invoiceFormItemList.isNotEmpty) {
-      invoiceFormItemList.forEach((invoiceFormItem) {
+      for (var invoiceFormItem in invoiceFormItemList) {
         totalTaxableAmount =
             totalTaxableAmount + invoiceFormItem.taxableAmount!;
-      });
+      }
     }
     ttlTaxableAmount = thousandFormatter.format(totalTaxableAmount);
     return ttlTaxableAmount!;
@@ -74,9 +74,9 @@ class InvoiceAmountsWidget extends StatelessWidget {
     var thousandFormatter = NumberFormat("###,###,###,###,##0.00");
     double totalAmount = 0.00;
     if (invoiceFormItemList.isNotEmpty) {
-      invoiceFormItemList.forEach((invoiceFormItem) {
+      for (var invoiceFormItem in invoiceFormItemList) {
         totalAmount = totalAmount + invoiceFormItem.totalAmount!;
-      });
+      }
     }
     ttlAmount = thousandFormatter.format(totalAmount);
     return ttlAmount!;
@@ -86,9 +86,9 @@ class InvoiceAmountsWidget extends StatelessWidget {
     var thousandFormatter = NumberFormat("###,###,###,###,##0.00");
     double subTotalAmount = 0.00;
     if (invoiceFormItemList.isNotEmpty) {
-      invoiceFormItemList.forEach((invoiceFormItem) {
+      for (var invoiceFormItem in invoiceFormItemList) {
         subTotalAmount = subTotalAmount + invoiceFormItem.amount!;
-      });
+      }
     }
     ttlSubAmount = thousandFormatter.format(subTotalAmount);
     return ttlSubAmount!;

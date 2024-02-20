@@ -2,6 +2,7 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:smart_case/data/app_config.dart';
@@ -193,7 +194,7 @@ class _ActivityFormState extends State<ActivityForm> {
                             const SizedBox(height: 10),
                             if (file != null && contacts.isNotEmpty)
                               MultiSelectDropDown(
-                                showClearIcon: true,
+                                clearIcon: const Icon(FontAwesome.xmark_solid),
                                 hint: 'Client to notify',
                                 onOptionSelected: (options) {
                                   for (var element in options) {
