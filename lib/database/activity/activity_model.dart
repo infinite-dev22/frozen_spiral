@@ -47,8 +47,6 @@ class SmartActivity extends SmartModel {
   });
 
   factory SmartActivity.fromJson(Map json) {
-    print(json['from']);
-
     return SmartActivity(
       id: json['id'],
       name: json['case_activity_status']['name'],
