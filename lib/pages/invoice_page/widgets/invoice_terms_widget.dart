@@ -25,7 +25,7 @@ class InvoiceTermsWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Invoice Terms", style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text("Invoice Terms", style: TextStyle(fontWeight: FontWeight.bold)),
           CustomTextArea(
             hint: "Invoice Terms",
             controller: controller,

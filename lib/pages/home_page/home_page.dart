@@ -178,12 +178,12 @@ class _HomePageState extends State<HomePage> {
             icon: (unreadNotificationsLength > 0)
                 ? Badge(
                     label: Text(unreadNotificationsLength.toString()),
-                    child: Icon(
+                    child: const Icon(
                       Icons.notifications_none_rounded,
                       color: AppColors.white,
                     ),
                   )
-                : Icon(
+                : const Icon(
                     Icons.notifications_none_rounded,
                     color: AppColors.white,
                   ),

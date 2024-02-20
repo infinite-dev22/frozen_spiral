@@ -27,8 +27,6 @@ class BottomBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    double screenWidth = screenSize.width;
     double fontSize = 14;
     return GestureDetector(
       onTap: onTap,

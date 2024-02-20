@@ -17,7 +17,7 @@ class SuccessWidget extends StatelessWidget {
     TextEditingController searchController = TextEditingController(
         text: context.read<ActivityBloc>().state.searchString ?? "");
 
-    final List<String>? filters = [
+    final List<String> filters = [
       "Name",
       "File Name",
       "File Number",
@@ -44,7 +44,7 @@ class SuccessWidget extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: "activity_success${this.key}",
+        heroTag: "activity_success$key",
         onPressed: () => _buildActivitiesForm(context),
         foregroundColor: AppColors.white,
         backgroundColor: AppColors.primary,

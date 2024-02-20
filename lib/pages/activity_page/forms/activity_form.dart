@@ -194,7 +194,7 @@ class _ActivityFormState extends State<ActivityForm> {
                             const SizedBox(height: 10),
                             if (file != null && contacts.isNotEmpty)
                               MultiSelectDropDown(
-                                clearIcon: Icon(FontAwesome.xmark_solid),
+                                clearIcon: const Icon(FontAwesome.xmark_solid),
                                 hint: 'Client to notify',
                                 onOptionSelected: (options) {
                                   for (var element in options) {

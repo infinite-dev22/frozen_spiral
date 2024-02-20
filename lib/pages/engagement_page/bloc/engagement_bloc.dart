@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -74,13 +75,15 @@ class EngagementBloc extends Bloc<EngagementEvent, EngagementState> {
                 .getName()
                 .toLowerCase()
                 .contains(event.search.toLowerCase()) ||
-            smartEngagement.cost!
+            (smartEngagement.cost ?? "")
                 .toLowerCase()
                 .contains(event.search.toLowerCase()) ||
-            smartEngagement.doneBy!.last
-                .getName()
-                .contains(event.search.toLowerCase()) ||
-            smartEngagement.costDescription!
+            ((smartEngagement.doneBy!.isNotEmpty)
+                ? smartEngagement.doneBy!.last
+                    .getName()
+                    .contains(event.search.toLowerCase())
+                : false) ||
+            (smartEngagement.costDescription ?? "")
                 .toLowerCase()
                 .contains(event.search.toLowerCase()) ||
             smartEngagement.date!
@@ -94,10 +97,43 @@ class EngagementBloc extends Bloc<EngagementEvent, EngagementState> {
         .toList();
     if (engagements.isNotEmpty) {
       emit(state.copyWith(
-          status: EngagementStatus.success, engagements: engagements));
-    } else if (engagements.isNotEmpty) {
+          status: EngagementStatus.success, engagements: engagements, searchString: event.search));
+    } else if (engagements.isEmpty) {
       emit(state.copyWith(
           status: EngagementStatus.notFound, searchString: event.search));
+    }
+  }
+
+  @override
+  void onChange(Change<EngagementState> change) {
+    super.onChange(change);
+    if (kDebugMode) {
+      log("Change: $change");
+    }
+  }
+
+  @override
+  void onEvent(EngagementEvent event) {
+    super.onEvent(event);
+    if (kDebugMode) {
+      log("Event: $event");
+    }
+  }
+
+  @override
+  void onTransition(Transition<EngagementEvent, EngagementState> transition) {
+    super.onTransition(transition);
+    if (kDebugMode) {
+      log("Transition: $transition");
+    }
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    super.onError(error, stackTrace);
+    if (kDebugMode) {
+      log("Error: $error");
+      log("StackTrace: $stackTrace");
     }
   }
 }

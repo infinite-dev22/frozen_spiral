@@ -42,7 +42,7 @@ class InvoiceFormItemListItem extends StatelessWidget {
                           .parse(item.totalAmount!.toString())
                           .toStringAsFixed(2))),
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.delete_forever_rounded,
                       color: AppColors.red,
                     ),

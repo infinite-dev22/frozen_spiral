@@ -13,7 +13,7 @@ class GetActivityEvent extends ActivityEvent {
   final int fileId;
   final int activityId;
 
-  GetActivityEvent(this.fileId, this.activityId);
+  const GetActivityEvent(this.fileId, this.activityId);
 
   @override
   List<Object?> get props => [fileId, activityId];
@@ -23,7 +23,7 @@ class PostActivityEvent extends ActivityEvent {
   final Map<String, dynamic> activity;
   final int fileId;
 
-  PostActivityEvent(this.activity, this.fileId);
+  const PostActivityEvent(this.activity, this.fileId);
 
   @override
   List<Object?> get props => [fileId, activity];
@@ -34,7 +34,7 @@ class PutActivityEvent extends ActivityEvent {
   final int activityId;
   final Map<String, dynamic> activity;
 
-  PutActivityEvent(
+  const PutActivityEvent(
     this.fileId,
     this.activityId,
     this.activity,
@@ -48,7 +48,7 @@ class DeleteActivityEvent extends ActivityEvent {
   final int fileId;
   final int activityId;
 
-  DeleteActivityEvent(this.fileId, this.activityId);
+  const DeleteActivityEvent(this.fileId, this.activityId);
 
   @override
   List<Object?> get props => [fileId, activityId];
@@ -57,7 +57,7 @@ class DeleteActivityEvent extends ActivityEvent {
 class SearchActivityEvent extends ActivityEvent {
   final String search;
 
-  SearchActivityEvent(this.search);
+  const SearchActivityEvent(this.search);
 
   @override
   List<Object?> get props => [search];

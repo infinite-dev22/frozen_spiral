@@ -199,7 +199,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("Client address",
+                                            const Text("Client address",
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold)),
@@ -258,7 +258,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("Bank details",
+                                            const Text("Bank details",
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold)),

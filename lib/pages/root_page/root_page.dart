@@ -400,11 +400,6 @@ class _RootPageState extends State<RootPage> {
   advancedStatusCheck(NewVersionPlus newVersion) async {
     final status = await newVersion.getVersionStatus();
     if (status != null) {
-      debugPrint(status.releaseNotes);
-      debugPrint(status.appStoreLink);
-      debugPrint(status.localVersion);
-      debugPrint(status.storeVersion);
-      debugPrint(status.canUpdate.toString());
       if (status.localVersion != status.storeVersion) {
         newVersion.showUpdateDialog(
           context: context,

@@ -22,7 +22,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # Style: year.quarter.version_number+build_version_number
 # Update version_number whenever the build_version_number reaches 100.
 # Android OS
-version: 2024.1.20+36
+version: 2024.1.21+37
 # iOS
 # version: 2024.1.7+1
 
@@ -97,12 +97,14 @@ dependencies:
   json_annotation: ^4.8.1
   json_serializable: ^6.7.1
   icons_plus: ^5.0.0
+  html: ^0.15.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   hive_generator: ^2.0.1
   build_runner: ^2.4.7
+  flutter_lints:
 
 flutter_launcher_icons:
   android: "launcher_icon"

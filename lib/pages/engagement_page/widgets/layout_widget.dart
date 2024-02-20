@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/pages/engagement_page/bloc/engagement_bloc.dart';
 import 'package:smart_case/pages/engagement_page/widgets/engagement_barrel.dart';
 
@@ -18,29 +17,32 @@ class LayoutWidget extends StatelessWidget {
   }
 
   _buildBody() {
-    print(preloadedEngagements.length);
     return BlocBuilder<EngagementBloc, EngagementState>(
       builder: (context, state) {
         if (state.status == EngagementStatus.initial) {
-          if (preloadedEngagements.isEmpty) {
+          if (context.read<EngagementBloc>().state.engagements!.isEmpty) {
             context.read<EngagementBloc>().add(GetEngagementsEvent());
-          } else if (preloadedEngagements.isNotEmpty) {
-            return SuccessWidget();
+          } else if (context
+              .read<EngagementBloc>()
+              .state
+              .engagements!
+              .isNotEmpty) {
+            return const SuccessWidget();
           }
         }
         if (state.status == EngagementStatus.loading) {
-          return LoadingWidget();
+          return const LoadingWidget();
         }
         if (state.status == EngagementStatus.noData) {
-          return NoDataWidget();
+          return const NoDataWidget();
         }
         if (state.status == EngagementStatus.success) {
-          return SuccessWidget();
+          return const SuccessWidget();
         }
         if (state.status == EngagementStatus.notFound) {
           return NotFoundWidget(searchString: state.searchString!);
         }
-        return EngagementErrorWidget();
+        return const EngagementErrorWidget();
       },
     );
   }

@@ -23,19 +23,19 @@ class SmartInvoiceItem extends SmartModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': this.id,
-        'name': this.name,
-        'description': this.description,
-        'code': this.code,
+        'id': id,
+        'name': name,
+        'description': description,
+        'code': code,
       };
 
   @override
   int getId() {
-    return this.id!;
+    return id!;
   }
 
   @override
   String getName() {
-    return this.name!;
+    return name!;
   }
 }
