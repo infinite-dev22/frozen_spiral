@@ -61,7 +61,7 @@ class SmartActivity extends SmartModel {
       date: DateTime.parse(json['date']),
       billable: json['is_billable'],
       startTime: json['from'] == null ? null : DateFormat('HH:mm:ss').parse(json['from']),
-      endTime: json['from'] == null ? null : DateFormat('HH:mm:ss').parse(json['to']),
+      endTime: json['to'] == null ? null : DateFormat('HH:mm:ss').parse(json['to']),
       emails: json['to_be_notified'],
       employee: SmartEmployee.fromJson(json['employee']),
       file: SmartFile.fromJson(json['case_file']),

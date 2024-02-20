@@ -263,45 +263,53 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(
           height: 30,
         ),
-        Focus(
-          child: AuthTextField(
-            hintText: 'email',
-            enabled: !isAuthingUser,
-            controller: emailController,
-            obscureText: false,
-            isEmail: true,
-            style: const TextStyle(color: AppColors.gray45),
-            borderSide: const BorderSide(color: AppColors.gray45),
-            fillColor: Colors.transparent,
+        AutofillGroup(
+          child: Column(
+            children: [
+              Focus(
+                child: AuthTextField(
+                  autofillHints: [AutofillHints.email],
+                  hintText: 'email',
+                  enabled: !isAuthingUser,
+                  controller: emailController,
+                  obscureText: false,
+                  isEmail: true,
+                  style: const TextStyle(color: AppColors.gray45),
+                  borderSide: const BorderSide(color: AppColors.gray45),
+                  fillColor: Colors.transparent,
+                ),
+                onFocusChange: (hasFocus) {
+                  if (hasFocus2) {
+                    hasFocus2 = false;
+                  }
+                  hasFocus1 = true;
+                  (hasFocus1) ? _height = 0 : _height = 40;
+                  setState(() {});
+                },
+              ),
+              const SizedBox(height: 10),
+              Focus(
+                child: AuthPasswordTextField(
+                  autofillHints: [AutofillHints.password],
+                  controller: passwordController,
+                  hintText: 'password',
+                  enabled: !isAuthingUser,
+                  borderSide: const BorderSide(color: AppColors.gray45),
+                  style: const TextStyle(color: AppColors.gray45),
+                  fillColor: Colors.transparent,
+                  iconColor: AppColors.gray45,
+                ),
+                onFocusChange: (hasFocus) {
+                  if (hasFocus1) {
+                    hasFocus1 = false;
+                  }
+                  hasFocus2 = true;
+                  (hasFocus2) ? _height = 0 : _height = 40;
+                  setState(() {});
+                },
+              ),
+            ],
           ),
-          onFocusChange: (hasFocus) {
-            if (hasFocus2) {
-              hasFocus2 = false;
-            }
-            hasFocus1 = true;
-            (hasFocus1) ? _height = 0 : _height = 40;
-            setState(() {});
-          },
-        ),
-        const SizedBox(height: 10),
-        Focus(
-          child: AuthPasswordTextField(
-            controller: passwordController,
-            hintText: 'password',
-            enabled: !isAuthingUser,
-            borderSide: const BorderSide(color: AppColors.gray45),
-            style: const TextStyle(color: AppColors.gray45),
-            fillColor: Colors.transparent,
-            iconColor: AppColors.gray45,
-          ),
-          onFocusChange: (hasFocus) {
-            if (hasFocus1) {
-              hasFocus1 = false;
-            }
-            hasFocus2 = true;
-            (hasFocus2) ? _height = 0 : _height = 40;
-            setState(() {});
-          },
         ),
         const SizedBox(
           height: 10,
