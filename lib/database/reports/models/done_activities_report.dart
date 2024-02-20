@@ -7,9 +7,9 @@ class SmartDoneActivityReport {
   int id;
   String description;
   int state;
-  DateTime date;
-  DateTime from;
-  DateTime to;
+  DateTime? date;
+  DateTime? from;
+  DateTime? to;
   int isBillable;
   int isLocked;
   String? lockedBy;
@@ -47,8 +47,10 @@ class SmartDoneActivityReport {
       description: json['description'],
       state: json['state'],
       date: DateTime.parse(json['date']),
-      from: DateTime.parse("$now ${json['from']}.000"),
-      to: DateTime.parse("$now ${json['to']}.000"),
+      from: json['from'] == null ? null : DateFormat('HH:mm:ss')
+          .parse(json['from']) /*DateTime.parse("$now ${json['from']}.000")*/,
+      to: json['to'] == null ? null : DateFormat('HH:mm:ss')
+          .parse(json['to']) /*DateTime.parse("$now ${json['to']}.000")*/,
       isBillable: json['is_billable'],
       isLocked: json['is_locked'],
       lockedBy: json['locked_by'],
