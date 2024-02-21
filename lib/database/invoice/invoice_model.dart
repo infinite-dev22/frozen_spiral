@@ -28,7 +28,7 @@ class SmartInvoice {
   final int? invoiceTypeId;
   final int? bankId;
   final int? clientId;
-  final bool? canApprove;
+  final dynamic canApprove;
   final dynamic secondApprover;
   final bool? canEdit;
   final bool? isMine;

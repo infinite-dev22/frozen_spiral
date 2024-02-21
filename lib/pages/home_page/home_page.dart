@@ -141,11 +141,11 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(
                 child: ModuleItem(
-                  name: 'Engagements',
+                  name: 'Invoices',
                   color: Colors.white,
                   padding: cardPadding,
-                  icon: FontAwesome.handshake,
-                  onTap: () => Navigator.pushNamed(context, '/engagements'),
+                  icon: FontAwesome.file_invoice_dollar_solid,
+                  onTap: () => Navigator.pushNamed(context, '/invoices'),
                 ),
               ),
               const SizedBox(
