@@ -19,7 +19,7 @@ import 'package:smart_case/pages/event_page/widgets/event_view.dart';
 import 'package:smart_case/pages/file_page/file_page.dart';
 import 'package:smart_case/pages/home_page/home_page.dart';
 import 'package:smart_case/pages/invoice_page/invoice_page.dart';
-import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view_page.dart';
+import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/invoice_view_page.dart';
 import 'package:smart_case/pages/locator_page/locator_page.dart';
 import 'package:smart_case/pages/notification_page/notifications_page.dart';
 import 'package:smart_case/pages/profile_page/profile_page.dart';

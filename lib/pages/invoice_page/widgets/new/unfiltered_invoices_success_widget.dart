@@ -25,7 +25,7 @@ class UnfilteredInvoicesWidget extends StatelessWidget {
           itemCount: state.invoices.length,
           padding: const EdgeInsets.all(10),
           itemBuilder: (context, index) {
-            return InvoiceItem(
+            return InvoiceItemWidget(
               color: AppColors.white,
               padding: 10,
               invoice: state.invoices.elementAt(index),

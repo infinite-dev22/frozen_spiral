@@ -13,6 +13,7 @@ import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_appbar.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_item.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_shimmer.dart';
+import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/invoice_view_layout.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/theme/color.dart';
@@ -391,8 +392,9 @@ class _InvoicePageState extends State<InvoicePage> {
         : ((_submittedFilter)
         ? ((removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
         "submit") ||
-        removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
-            "submit")) &&
+        removeHtmlTags(invoice.invoiceStatus!)
+            .toLowerCase()
+            .contains("submit")) &&
         (_allFilter
             ? (true)
             : ((canApprove)
@@ -403,12 +405,9 @@ class _InvoicePageState extends State<InvoicePage> {
         ? (((removeHtmlTags(invoice.invoiceStatus!).toLowerCase() ==
         "approved" ||
         removeHtmlTags(invoice.invoiceStatus!).toLowerCase() == "approved") &&
-        (_allFilter
-            ? (true)
-            : ((canApprove)
-            ? (invoice.employee!.id == currentUser.id ||
-            invoice.approver!.id == currentUser.id)
-            : invoice.employee!.id == currentUser.id))))
+        (_allFilter ? (true) : ((canApprove) ? (invoice.employee!.id ==
+            currentUser.id || invoice.approver!.id == currentUser.id) : invoice
+            .employee!.id == currentUser.id))))
         : (_preApprovedFilter)
         ? ((removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
         "primary_approved") ||
@@ -442,7 +441,7 @@ class _InvoicePageState extends State<InvoicePage> {
           padding: const EdgeInsets.all(8),
           itemBuilder: (context, index) =>
               GestureDetector(
-                child: InvoiceItem(
+                child: InvoiceItemWidget(
                   color: AppColors.white,
                   padding: 10,
                   invoice: _filteredInvoice.elementAt(index),
@@ -451,13 +450,18 @@ class _InvoicePageState extends State<InvoicePage> {
                   showFinancialStatus: true,
                 ),
                 onTap: () =>
-                    Navigator.pushNamed(
-                      context,
-                      '/invoice',
-                      arguments: _filteredInvoice
-                          .elementAt(index)
-                          .id,
-                    ).then((_) => setState(() {})),
+                    showModalBottomSheet(
+                      enableDrag: true,
+                      isScrollControlled: true,
+                      useSafeArea: true,
+                      context: context,
+                      builder: (context) => InvoiceViewLayout(),
+                    ),
+                /*Navigator.pushNamed(
+                context,
+                '/invoice',
+                arguments: _filteredInvoice.elementAt(index).id,
+              ).then((_) => setState(() {}))*/
               ),
         ),
       );
@@ -487,15 +491,16 @@ class _InvoicePageState extends State<InvoicePage> {
         invoice.approver!.id == currentUser.id) ||
         (invoice.employee!.id == currentUser.id) ||
         (invoice.canPay == true) ||
-        ((invoice.secondApprover != null &&
-            invoice.secondApprover == true) &&
-            ((removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
-                "submit") ||
+        ((invoice.secondApprover != null && invoice.secondApprover == true) &&
+            ((removeHtmlTags(invoice.invoiceStatus!)
+                .toLowerCase()
+                .contains("submit") ||
                 removeHtmlTags(invoice.invoiceStatus!)
                     .toLowerCase()
                     .contains("submit")) ||
-                (removeHtmlTags(invoice.invoiceStatus!).toLowerCase().contains(
-                    "primar") ||
+                (removeHtmlTags(invoice.invoiceStatus!)
+                    .toLowerCase()
+                    .contains("primar") ||
                     removeHtmlTags(invoice.invoiceStatus!)
                         .toLowerCase()
                         .contains("primar")) &&
@@ -511,23 +516,22 @@ class _InvoicePageState extends State<InvoicePage> {
           padding: const EdgeInsets.all(8),
           itemBuilder: (context, index) {
             return GestureDetector(
-              child: InvoiceItem(
-                color: AppColors.white,
-                padding: 10,
-                invoice: invoices.elementAt(index),
-                currencies: _currencies,
-                showActions: true,
-                showFinancialStatus: true,
-              ),
-              onTap: () =>
-                  Navigator.pushNamed(
-                    context,
-                    '/invoice',
-                    arguments: _filteredInvoice
-                        .elementAt(index)
-                        .id,
-                  ).then((_) => setState(() {})),
-            );
+                child: InvoiceItemWidget(
+                  color: AppColors.white,
+                  padding: 10,
+                  invoice: invoices.elementAt(index),
+                  currencies: _currencies,
+                  showActions: true,
+                  showFinancialStatus: true,
+                ),
+                onTap: () =>
+                    showModalBottomSheet(
+                      enableDrag: true,
+                      isScrollControlled: true,
+                      useSafeArea: true,
+                      context: context,
+                      builder: (context) => InvoiceViewLayout(),
+                    ));
           },
         ),
       );

@@ -123,6 +123,67 @@ class _InvoiceViewPageState extends State<InvoiceViewPage> {
           );
   }
 
+  Widget _buildBody1() {
+    return (invoice != null)
+        ? Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(8),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0, 1), // changes position of shadow
+                ),
+              ],
+              color: AppColors.white,
+            ),
+            child: Column(
+              children: [
+                const Text("DISBURSEMENT NOTE"),
+                _textItem("Name", "MISS MARISOL PFANNERSTILL"),
+                _textItem("Currency", "Euro (EUR)"),
+                _textItem("Amount /Tax Inc", "709,298.00 (EUR)"),
+                _textItem("Paid", "0.00 (EUR)"),
+                _textItem("Balance", "709,298.00 (EUR)"),
+                _textItem("Done by", "Mr Mark Jonathan"),
+                _textItem("Supervisor", "Anna Sthesia."),
+                _textItem("Case file", "Darrion Mitchell VS Brannon Roob"),
+                _textItem("Practice Area", "Employment"),
+                _textItem("Date", "19/02/2024"),
+                _textItem("Due Date", " 21/02/2024"),
+                _textItem("Status", "Submitted"),
+                _textItem("Invoice Number", "DN/2/024"),
+                _textItem(
+                    "Billing Address",
+                    "MISS MARISOL PFANNERSTILL\n"
+                        "7273 PRUDENCE FORKS NEW KEYONVILLE, UT 37693"),
+                _textItem(
+                    "BANK",
+                    "Account Name: Training & Co. Advocates\n"
+                        "Account No.: 01234567890\n"
+                        "Bank: STANBIC\n"
+                        "Currency:UGX\n"
+                        "Swift Code: UGX0034EDX"),
+                _textItem(
+                    "AYMENT TERMS",
+                    "1. Accounts carry interest at 6% effective one month from the date of receipt hereof R:6)\n"
+                        "2. Under the VAT Statute 1996, 18% is payable on all fees."),
+              ],
+            ),
+          )
+        : const Center(
+            child: CupertinoActivityIndicator(
+              color: AppColors.gray45,
+              radius: 20,
+            ),
+          );
+  }
+
   Widget _textItem(String title, String data) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

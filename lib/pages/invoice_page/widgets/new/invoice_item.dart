@@ -14,8 +14,8 @@ import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
-class InvoiceItem extends StatefulWidget {
-  const InvoiceItem({
+class InvoiceItemWidget extends StatefulWidget {
+  const InvoiceItemWidget({
     super.key,
     required this.invoice,
     required this.color,
@@ -34,10 +34,10 @@ class InvoiceItem extends StatefulWidget {
   final bool showFinancialStatus;
 
   @override
-  State<InvoiceItem> createState() => _InvoiceItemState();
+  State<InvoiceItemWidget> createState() => _InvoiceItemWidgetState();
 }
 
-class _InvoiceItemState extends State<InvoiceItem> {
+class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
   bool isProcessing = false;
   bool isLoading = false;
   var status;
