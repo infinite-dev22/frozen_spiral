@@ -3,6 +3,7 @@ import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/employee/employee_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/smart_model.dart';
+import 'package:smart_case/util/utilities.dart';
 
 class SmartRequisitionCategory extends SmartModel {
   final int id;
@@ -159,7 +160,7 @@ class SmartRequisition {
   factory SmartRequisition.fromJson(Map<String, dynamic> json) {
     return SmartRequisition(
       id: json['id'] as int,
-      date: DateTime.parse(json['date']),
+      date: formatDateTimeString(json['date']),
       flowType: json["flowtypetwo"],
       amount: json['payout_amount'],
       description: json['description'],
