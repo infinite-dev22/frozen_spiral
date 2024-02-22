@@ -164,6 +164,12 @@ class _RootPageState extends State<RootPage> {
           label: const Text("Activity"),
         ),
         FloatingActionButton.extended(
+          heroTag: null,
+          icon: const Icon(Icons.class_outlined),
+          onPressed: _buildInvoiceDialog,
+          label: const Text("Invoice"),
+        ),
+        FloatingActionButton.extended(
           heroTag: "Task",
           icon: const Icon(Icons.task_outlined),
           onPressed: _buildTaskForm,

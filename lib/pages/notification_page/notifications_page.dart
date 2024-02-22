@@ -47,7 +47,7 @@ class _AlertsPageState extends State {
                   title: result!.title!,
                   time: result.time ?? "",
                   body: result.body!,
-                  read: result.read!,
+                  read: result.read ?? true,
                   box: box,
                   index: index,
                   onDismissed: () {

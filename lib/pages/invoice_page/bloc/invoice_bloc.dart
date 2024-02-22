@@ -11,7 +11,10 @@ part 'invoice_state.dart';
 class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
   InvoiceBloc() : super(const InvoiceState()) {
     on<GetInvoices>(_mapGetInvoicesEventToState);
-    on<GetInvoice>(_mapGetInvoiceEventToState);
+    on<FormGetInvoice>(_mapFormGetInvoiceEventToState);
+    on<ViewGetInvoice>(_mapViewGetInvoiceEventToState);
+    on<UpdateInvoice>(_mapUpdateInvoiceEventToState);
+    on<ProcessInvoice>(_mapProcessInvoiceEventToState);
     on<DeleteInvoice>(_mapDeleteInvoiceEventToState);
     on<SelectInvoice>(_mapSelectInvoiceEventToState);
   }
@@ -30,17 +33,59 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
     });
   }
 
-  _mapGetInvoiceEventToState(
-      GetInvoice event, Emitter<InvoiceState> emit) async {
-    emit(state.copyWith(status: InvoiceStatus.loading));
+  _mapFormGetInvoiceEventToState(
+      FormGetInvoice event, Emitter<InvoiceState> emit) async {
+    emit(state.copyWith(status: InvoiceStatus.formLoading));
     await InvoiceApi.fetch(event.invoiceId).then((invoice) {
-      emit(state.copyWith(status: InvoiceStatus.success, invoice: invoice));
+      emit(state.copyWith(status: InvoiceStatus.formSuccess, invoice: invoice));
     }).onError((error, stackTrace) {
       if (kDebugMode) {
         print(error);
         print(stackTrace);
       }
-      emit(state.copyWith(status: InvoiceStatus.error));
+      emit(state.copyWith(status: InvoiceStatus.formError));
+    });
+  }
+
+  _mapViewGetInvoiceEventToState(
+      ViewGetInvoice event, Emitter<InvoiceState> emit) async {
+    emit(state.copyWith(status: InvoiceStatus.viewLoading));
+    await InvoiceApi.fetch(event.invoiceId).then((invoice) {
+      emit(state.copyWith(status: InvoiceStatus.viewSuccess, invoice: invoice));
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+        print(stackTrace);
+      }
+      emit(state.copyWith(status: InvoiceStatus.viewError));
+    });
+  }
+
+  _mapUpdateInvoiceEventToState(
+      UpdateInvoice event, Emitter<InvoiceState> emit) async {
+    emit(state.copyWith(status: InvoiceStatus.formLoading));
+    await InvoiceApi.put(event.invoice, event.invoiceId).then((invoice) {
+      emit(state.copyWith(status: InvoiceStatus.formSuccess, invoice: invoice));
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+        print(stackTrace);
+      }
+      emit(state.copyWith(status: InvoiceStatus.formError));
+    });
+  }
+
+  _mapProcessInvoiceEventToState(
+      ProcessInvoice event, Emitter<InvoiceState> emit) async {
+    emit(state.copyWith(status: InvoiceStatus.viewLoading));
+    await InvoiceApi.process(event.invoice, event.invoiceId).then((invoice) {
+      emit(state.copyWith(status: InvoiceStatus.viewSuccess, invoice: invoice));
+    }).onError((error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+        print(stackTrace);
+      }
+      emit(state.copyWith(status: InvoiceStatus.viewError));
     });
   }
 

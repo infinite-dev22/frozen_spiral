@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/theme/color.dart';
 
 class ItemsWidget extends StatelessWidget {
-  const ItemsWidget({super.key});
+  final SmartInvoice invoice;
+
+  const ItemsWidget({super.key, required this.invoice});
 
   @override
   Widget build(BuildContext context) {
@@ -10,10 +14,15 @@ class ItemsWidget extends StatelessWidget {
   }
 
   Widget _buildBody() {
+    var numberFormat = NumberFormat("###,###,###,###,##0.00");
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
-        padding: EdgeInsets.all(8),
-        margin: EdgeInsets.only(top: 8,bottom: 120,left: 8,right: 8,),
+        margin: EdgeInsets.only(
+          top: 8,
+          bottom: 8,
+          left: 8,
+          right: 8,
+        ),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
             Radius.circular(15),
@@ -24,144 +33,124 @@ class ItemsWidget extends StatelessWidget {
           width: double.infinity,
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: constraints.maxWidth * .3,
-                    child: Text(
-                      "DESCRIPTION",
-                      style: TextStyle(
-                          color: AppColors.inActiveColor,
-                          fontWeight: FontWeight.bold),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: constraints.maxWidth * .3,
+                      child: Text(
+                        "Description",
+                        style: TextStyle(
+                            color: AppColors.inActiveColor,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: constraints.maxWidth * .25,
-                    child: Text(
-                      "RATE",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                          color: AppColors.inActiveColor,
-                          fontWeight: FontWeight.bold),
+                    SizedBox(
+                      width: constraints.maxWidth * .25,
+                      child: Text(
+                        "Amount(${invoice.currency!.code})",
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                            color: AppColors.inActiveColor,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: constraints.maxWidth * .1,
-                    child: Text(
-                      "QTY",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                          color: AppColors.inActiveColor,
-                          fontWeight: FontWeight.bold),
+                    SizedBox(
+                      width: constraints.maxWidth * .3,
+                      child: Text(
+                        "SUBTOTAL(${invoice.currency!.code})",
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                            color: AppColors.inActiveColor,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: constraints.maxWidth * .25,
-                    child: Text(
-                      "SUBTOTAL",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                          color: AppColors.inActiveColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Divider(),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: constraints.maxWidth * .3,
-                    child: Text(
-                      "RPA Services 1x3 months",
-                      style: TextStyle(
-                          color: AppColors.darker, fontWeight: FontWeight.bold),
-                      softWrap: true,
+              if (invoice.invoiceItems != null)
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: invoice.invoiceItems!.length,
+                  itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: constraints.maxWidth * .3,
+                              child: SingleChildScrollView(
+                                child: Text(
+                                  invoice.invoiceItems![index].description!,
+                                  style: TextStyle(
+                                      color: AppColors.darker,
+                                      fontWeight: FontWeight.bold),
+                                  softWrap: true,
+                                ),
+                                scrollDirection: Axis.horizontal,
+                                physics: BouncingScrollPhysics(),
+                              ),
+                            ),
+                            SizedBox(
+                              width: constraints.maxWidth * .25,
+                              child: Text(
+                                numberFormat.format(
+                                    invoice.invoiceItems![index].amount),
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: AppColors.darker,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(
+                              width: constraints.maxWidth * .3,
+                              child: Text(
+                                numberFormat.format(
+                                    invoice.invoiceItems![index].totalAmount),
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: AppColors.darker,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (index != invoice.invoiceItems!.length - 1)
+                          Divider(
+                            color: AppColors.inActiveColor.shade200,
+                          ),
+                      ],
                     ),
                   ),
-                  SizedBox(
-                    width: constraints.maxWidth * .25,
-                    child: Text(
-                      "\$3,000",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                          color: AppColors.darker, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    width: constraints.maxWidth * .1,
-                    child: Text(
-                      "3",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                          color: AppColors.darker, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    width: constraints.maxWidth * .25,
-                    child: Text(
-                      "\$9,000",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                          color: AppColors.darker, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: constraints.maxWidth * .3,
-                    child: Text(
-                      "Server Costs",
-                      style: TextStyle(
-                          color: AppColors.darker, fontWeight: FontWeight.bold),
-                      softWrap: true,
-                    ),
-                  ),
-                  SizedBox(
-                    width: constraints.maxWidth * .25,
-                    child: Text(
-                      "\$18,000",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                          color: AppColors.darker, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    width: constraints.maxWidth * .1,
-                    child: Text(
-                      "2",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                          color: AppColors.darker, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    width: constraints.maxWidth * .25,
-                    child: Text(
-                      "\$36,000",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                          color: AppColors.darker, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
+                ),
               Divider(),
-              const SizedBox(height: 10),
-              _buildAmountsItem(constraints),
-              const SizedBox(height: 10),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                child: _buildItemsTableAmounts(constraints),
+              ),
               Divider(),
-              const SizedBox(height: 10),
-              _buildGrandTotalItem(constraints),
-              const SizedBox(height: 10),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                child: _buildGrandTotalItem(constraints),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                child: _buildAmountsItem("Paid Total", invoice.totalPaid ?? "0.00", constraints),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                child: _buildAmountsItem("Balance", invoice.balance ?? "0.00", constraints),
+              ),
             ],
           ),
         ),
@@ -169,7 +158,7 @@ class ItemsWidget extends StatelessWidget {
     });
   }
 
-  Widget _buildAmountsItem(BoxConstraints constraints) {
+  Widget _buildItemsTableAmounts(BoxConstraints constraints) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -178,7 +167,7 @@ class ItemsWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Subtotal",
+                "Net Total",
                 textAlign: TextAlign.right,
                 style: TextStyle(
                     color: AppColors.inActiveColor,
@@ -186,15 +175,7 @@ class ItemsWidget extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                "Discount",
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    color: AppColors.inActiveColor,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "TAX",
+                "Gross Total",
                 textAlign: TextAlign.right,
                 style: TextStyle(
                     color: AppColors.inActiveColor,
@@ -209,11 +190,9 @@ class ItemsWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text("\$45,000"),
+              Text(_subTotalAmount()),
               const SizedBox(height: 10),
-              Text("\$1,323"),
-              const SizedBox(height: 10),
-              Text("\$300"),
+              Text(_totalAmount()),
               const SizedBox(height: 10),
             ],
           ),
@@ -235,7 +214,7 @@ class ItemsWidget extends StatelessWidget {
         SizedBox(
           width: constraints.maxWidth * .35,
           child: Text(
-            "\$44,000/-",
+            invoice.amount ?? "0.00",
             textAlign: TextAlign.right,
             style:
                 TextStyle(color: AppColors.darker, fontWeight: FontWeight.bold),
@@ -243,5 +222,52 @@ class ItemsWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _buildAmountsItem(
+      String title, String data, BoxConstraints constraints) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+          child: Text(
+            title,
+            style: TextStyle(
+                color: AppColors.inActiveColor, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(
+          width: constraints.maxWidth * .35,
+          child: Text(
+            data,
+            textAlign: TextAlign.right,
+            style:
+                TextStyle(color: AppColors.darker, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _totalAmount() {
+    var thousandFormatter = NumberFormat("###,###,###,###,##0.00");
+    double totalAmount = 0.00;
+    if (invoice.invoiceItems!.isNotEmpty) {
+      for (var invoiceFormItem in invoice.invoiceItems!) {
+        totalAmount = totalAmount + invoiceFormItem.totalAmount!;
+      }
+    }
+    return thousandFormatter.format(totalAmount);
+  }
+
+  String _subTotalAmount() {
+    var thousandFormatter = NumberFormat("###,###,###,###,##0.00");
+    double subTotalAmount = 0.00;
+    if (invoice.invoiceItems!.isNotEmpty) {
+      for (var invoiceFormItem in invoice.invoiceItems!) {
+        subTotalAmount = subTotalAmount + invoiceFormItem.amount!;
+      }
+    }
+    return thousandFormatter.format(subTotalAmount);
   }
 }

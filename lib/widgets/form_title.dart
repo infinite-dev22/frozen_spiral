@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 import '../theme/color.dart';
 
@@ -150,6 +151,85 @@ class CalendarViewTitle extends StatelessWidget {
               Icons.edit_outlined,
               color: AppColors.primary,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class InvoiceViewTitle extends StatelessWidget {
+  const InvoiceViewTitle({
+    super.key,
+    this.onEdit,
+    this.onPrint,
+    this.onSave,
+    this.onCancel,
+    this.isElevated = false,
+  });
+
+  final Function()? onEdit;
+  final Function()? onPrint;
+  final Function()? onSave;
+  final Function()? onCancel;
+  final bool isElevated;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody(context);
+  }
+
+  _buildBody(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        color: isElevated ? Colors.white : AppColors.appBgColor,
+        boxShadow: (isElevated)
+            ? [
+                BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0.0, 2), // changes position of shadow
+                ),
+              ]
+            : null,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: onCancel ?? () => Navigator.pop(context),
+            icon: const Icon(
+              FontAwesome.xmark_solid,
+              color: AppColors.red,
+            ),
+          ),
+          Text(
+            "Invoice Preview",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+          Row(
+            children: [
+              IconButton(
+                onPressed: onEdit,
+                icon: Icon(FontAwesome.pen_to_square),
+              ),
+              const SizedBox(height: 5),
+              IconButton(
+                onPressed: onPrint,
+                icon: Icon(FontAwesome.print_solid),
+              ),
+              const SizedBox(height: 5),
+              IconButton(
+                onPressed: onSave,
+                icon: Icon(FontAwesome.floppy_disk),
+              ),
+            ],
           ),
         ],
       ),

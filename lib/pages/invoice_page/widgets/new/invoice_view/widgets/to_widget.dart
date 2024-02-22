@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/theme/color.dart';
 
 class ToWidget extends StatelessWidget {
-  const ToWidget({super.key});
+  final SmartInvoice invoice;
+
+  const ToWidget({super.key, required this.invoice});
 
   @override
   Widget build(BuildContext context) {
@@ -31,25 +34,31 @@ class ToWidget extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              "banana Inc.",
+              invoice.client == null ? "N/A" : invoice.client!.getName(),
               style: TextStyle(
                   color: AppColors.darker, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             Text(
-              "134, High street, New Jersey, NYC, 1123233",
+              invoice.client == null && invoice.client!.address == null
+                  ? "N/A"
+                  : invoice.client!.address!,
               style: TextStyle(
                   color: AppColors.darker, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             Text(
-              "finance@banana.com",
+              invoice.client == null && invoice.client!.email == null
+                  ? "N/A"
+                  : invoice.client!.email!,
               style: TextStyle(
                   color: AppColors.inActiveColor, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             Text(
-              "+1(233)3423-2323",
+              invoice.client == null && invoice.client!.telephone == null
+                  ? "N/A"
+                  : invoice.client!.telephone!,
               style: TextStyle(
                   color: AppColors.inActiveColor, fontWeight: FontWeight.bold),
             ),

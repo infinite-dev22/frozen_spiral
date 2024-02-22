@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-DateTime formatDateTimeString(String dateTimeString) {
+DateTime formatStringDateTime(String dateTimeString) {
   // Parse the date and time string into a DateTime object.
   DateTime dateTime =
   DateFormat('yyyy-MM-dd hh:mm:ss a').parse(dateTimeString);
@@ -11,6 +11,25 @@ DateTime formatDateTimeString(String dateTimeString) {
   // Format the DateTime object using the desired format.
   DateTime formattedDate =
   DateFormat('dd/MM/yyyy').parse(formattedDateString);
+
+  // Return the formatted date string.
+  return formattedDate;
+}
+
+String formatStringDateTimeString(String dateTimeString) {
+  // Parse the date and time string into a DateTime object.
+  DateTime dateTime = DateFormat('yyyy-MM-dd hh:mm:ss a').parse(dateTimeString);
+
+  // Format the DateTime object using the desired format.
+  String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
+
+  // Return the formatted date string.
+  return formattedDate;
+}
+
+String formatDateTimeToString(DateTime dateTime) {
+  // Format the DateTime object using the desired format.
+  String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
 
   // Return the formatted date string.
   return formattedDate;

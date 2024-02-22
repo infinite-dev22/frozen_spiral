@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/data/app_config.dart';
+import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
-import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/invoice_view_barrel.dart';
+import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/actions_widget.dart';
+import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/bank_widget.dart';
+import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/info_widget.dart';
+import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/items_widget.dart';
+import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/terms_widget.dart';
+import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/to_widget.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/widgets/form_title.dart';
 
-class InvoiceViewLayout extends StatelessWidget {
-  final int invoiceId;
-
-  const InvoiceViewLayout({super.key, required this.invoiceId});
+class ViewSuccessLayout extends StatelessWidget {
+  const ViewSuccessLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,26 +27,37 @@ class InvoiceViewLayout extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    return BlocListener<InvoiceBloc, InvoiceState>(
-      listener: (context, state) {
-        if (state.status == InvoiceStatus.viewError) {
-          Navigator.pop(context);
-          _onError();
-        }
-      },
-      child: BlocBuilder<InvoiceBloc, InvoiceState>(
-        builder: (context, state) {
-          if (state.status == InvoiceStatus.initial) {
-            context.read<InvoiceBloc>().add(ViewGetInvoice(invoiceId));
-          }
-          if (state.status == InvoiceStatus.viewLoading) {
-            return ViewLoadingWidget();
-          }
-          if (state.status == InvoiceStatus.viewSuccess) {
-            return ViewSuccessLayout();
-          }
-          return Container();
-        },
+    bool isHeadElevated = false;
+    NumberFormat formatter =
+        NumberFormat('###,###,###,###,###,###,###,###,###.##');
+    SmartInvoice invoice = context.read<InvoiceBloc>().state.invoice!;
+
+    return Scaffold(
+      floatingActionButton:
+          SizedBox(height: 110, child: ActionsWidget(invoice: invoice)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      backgroundColor: AppColors.transparent,
+      body: Column(
+        children: [
+          InvoiceViewTitle(
+            onEdit: () {},
+            onPrint: () {},
+            onSave: () {},
+            isElevated: true,
+          ),
+          Expanded(
+            child: ListView(
+              children: [
+                InfoWidget(invoice: invoice),
+                ToWidget(invoice: invoice),
+                BankWidget(invoice: invoice),
+                ItemsWidget(invoice: invoice),
+                TermsWidget(invoice: invoice),
+                const SizedBox(height: 120),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -54,15 +71,13 @@ class InvoiceViewLayout extends StatelessWidget {
         backgroundColor: AppColors.green,
         textColor: Colors.white,
         fontSize: 16.0);
-    // preloadedInvoices.remove(invoice);
-    preloadedInvoices.removeWhere((element) => element.id == invoiceId);
   }
 
   _onError() async {
     refreshInvoices = true;
 
     Fluttertoast.showToast(
-        msg: "An error occurred whilst fetching an Invoice",
+        msg: "An error occurred",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 5,
@@ -71,7 +86,7 @@ class InvoiceViewLayout extends StatelessWidget {
         fontSize: 16.0);
   }
 
-  _submitData(String value, String toastText) {
+  _submitData(String value, String toastText, int invoiceId) {
     SmartCaseApi.smartPost(
       'api/accounts/invoices/${invoiceId}/process',
       currentUser.token,

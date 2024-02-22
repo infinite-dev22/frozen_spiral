@@ -1,6 +1,21 @@
 part of 'invoice_bloc.dart';
 
-enum InvoiceStatus { initial, success, error, loading, selected, noData }
+enum InvoiceStatus {
+  initial,
+  success,
+  error,
+  loading,
+  selected,
+  noData,
+  formSuccess,
+  formError,
+  formLoading,
+  formInitial,
+  viewSuccess,
+  viewError,
+  viewLoading,
+  viewInitial,
+}
 
 extension InvoiceStatusX on InvoiceStatus {
   bool get isInitial => this == InvoiceStatus.initial;
@@ -49,5 +64,3 @@ class InvoiceState extends Equatable {
     );
   }
 }
-
-class InvoiceInitial extends InvoiceState {}

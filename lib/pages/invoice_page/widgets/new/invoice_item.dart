@@ -111,7 +111,7 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
                                               child: FilledButton(
                                                 onPressed: (isProcessing)
                                                     ? null
-                                                    : _approveInvoice,
+                                                    : (){}/*_approveInvoice*/,
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty
@@ -318,7 +318,7 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
                                           child: FilledButton(
                                             onPressed: (isProcessing)
                                                 ? null
-                                                : _approveInvoice,
+                                                : () {}/*_approveInvoice*/,
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty
@@ -529,39 +529,39 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
     );
   }
 
-  _approveInvoice() {
-    setState(() {
-      isProcessing = true;
-      isLoading = true;
-    });
+  // _approveInvoice() {
+  //   setState(() {
+  //     isProcessing = true;
+  //     isLoading = true;
+  //   });
+  //
+  //   if (status == 'EDITED' || status == "SUBMITTED") {
+  //     if (widget.invoice.canApprove ?? false) {
+  //       _submitData("APPROVED", 'Invoice approved');
+  //     } else if (widget.invoice.canApprove ?? false) {
+  //       if (widget.invoice.secondApprover != null &&
+  //           widget.invoice.secondApprover) {
+  //         _submitData("SECONDARY_APPROVED", 'Invoice approved');
+  //       } else {
+  //         _submitData("PRIMARY_APPROVED", 'Invoice primarily approved');
+  //       }
+  //     }
+  //   } else if (status == "PRIMARY_APPROVED") {
+  //     _submitData("SECONDARY_APPROVED", 'Invoice approved');
+  //   }
+  // }
 
-    if (status == 'EDITED' || status == "SUBMITTED") {
-      if (widget.invoice.canApprove ?? false) {
-        _submitData("APPROVED", 'Invoice approved');
-      } else if (widget.invoice.canApprove ?? false) {
-        if (widget.invoice.secondApprover != null &&
-            widget.invoice.secondApprover) {
-          _submitData("SECONDARY_APPROVED", 'Invoice approved');
-        } else {
-          _submitData("PRIMARY_APPROVED", 'Invoice primarily approved');
-        }
-      }
-    } else if (status == "PRIMARY_APPROVED") {
-      _submitData("SECONDARY_APPROVED", 'Invoice approved');
-    }
-  }
-
-  _submitData(String value, String toastText) {
-    InvoiceApi.process({
-      "forms": 1,
-      "payout_amount": widget.invoice.amount!,
-      "action_comment": "",
-      "submit": value,
-    }, widget.invoice.id!,
-            onError: _onError, onSuccess: () => _onSuccess(toastText))
-        .then((value) => _onSuccess(toastText))
-        .onError((error, stackTrace) => _onError());
-  }
+  // _submitData(String value, String toastText) {
+  //   InvoiceApi.process({
+  //     "forms": 1,
+  //     "payout_amount": widget.invoice.amount!,
+  //     "action_comment": "",
+  //     "submit": value,
+  //   }, widget.invoice.id!,
+  //           onError: _onError, onSuccess: () => _onSuccess(toastText))
+  //       .then((value) => _onSuccess(toastText))
+  //       .onError((error, stackTrace) => _onError());
+  // }
 
   _onSuccess(String text) async {
     InvoiceApi.fetchAll().then((value) {
