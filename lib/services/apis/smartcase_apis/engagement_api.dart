@@ -11,7 +11,7 @@ class EngagementApi {
     List<SmartEngagement> engagements = List.empty(growable: true);
 
     var response = await engagementRepo.fetchAll();
-    List engagementsMap = response['engagementypes'];
+    List engagementsMap = response['engagements'];
 
     if (engagementsMap.isNotEmpty) {
       engagements = engagementsMap

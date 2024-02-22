@@ -46,23 +46,23 @@ class InvoiceApi {
     return response;
   }
 
-  static process(Map<String, dynamic> data, int id,
+  static process(SmartInvoice data, int id,
       {Function()? onSuccess, Function()? onError}) async {
     InvoiceRepo invoiceRepo = InvoiceRepo();
 
     var response = await invoiceRepo
-        .process(data, id)
+        .process(data.toJson(), id)
         .then((value) => onSuccess!())
         .onError((error, stackTrace) => onError!());
     return response;
   }
 
-  static put(Map<String, dynamic> data, int id,
+  static put(SmartInvoice data, int id,
       {Function()? onSuccess, Function()? onError}) async {
     InvoiceRepo invoiceRepo = InvoiceRepo();
 
     var response = await invoiceRepo
-        .put(data, id)
+        .put(data.toJson(), id)
         .then((value) => onSuccess!())
         .onError((error, stackTrace) => onError!());
     return response;

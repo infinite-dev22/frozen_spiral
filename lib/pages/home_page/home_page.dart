@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:smart_case/database/local/notifications.dart';
 import 'package:smart_case/pages/home_page/widgets/module/module_item.dart';
 import 'package:smart_case/theme/color.dart';
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                   name: 'Activities',
                   color: Colors.white,
                   padding: cardPadding,
-                  icon: Icons.local_activity_outlined,
+                  icon: FontAwesome.hourglass,
                   onTap: () => Navigator.pushNamed(context, '/activities'),
                 ),
               ),
@@ -99,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                   name: 'Requisitions',
                   color: Colors.white,
                   padding: cardPadding,
-                  icon: Icons.list_rounded,
+                  icon: FontAwesome.list_solid,
                   onTap: () => Navigator.pushNamed(context, '/requisitions'),
                 ),
               ),
@@ -115,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                   name: 'Diary',
                   color: Colors.white,
                   padding: cardPadding,
-                  icon: Icons.calendar_month_rounded,
+                  icon: FontAwesome.calendar_days,
                   onTap: () => Navigator.pushNamed(context, '/events'),
                 ),
               ),
@@ -127,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                   name: 'Tasks',
                   color: Colors.white,
                   padding: cardPadding,
-                  icon: Icons.task_outlined,
+                  icon: FontAwesome.file,
                   onTap: () => Navigator.pushNamed(context, '/tasks'),
                 ),
               ),
@@ -140,11 +141,11 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(
                 child: ModuleItem(
-                  name: 'Engagements',
+                  name: 'Invoices',
                   color: Colors.white,
                   padding: cardPadding,
-                  icon: Icons.handshake_outlined,
-                  onTap: () => Navigator.pushNamed(context, '/engagements'),
+                  icon: FontAwesome.file_invoice_dollar_solid,
+                  onTap: () => Navigator.pushNamed(context, '/invoices'),
                 ),
               ),
               const SizedBox(
@@ -155,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                   name: 'Reports',
                   color: Colors.white,
                   padding: cardPadding,
-                  icon: Icons.bar_chart_rounded,
+                  icon: FontAwesome.chart_pie_solid,
                   onTap: () => Navigator.pushNamed(context, '/reports'),
                 ),
               ),
@@ -177,12 +178,12 @@ class _HomePageState extends State<HomePage> {
             icon: (unreadNotificationsLength > 0)
                 ? Badge(
                     label: Text(unreadNotificationsLength.toString()),
-                    child: Icon(
+                    child: const Icon(
                       Icons.notifications_none_rounded,
                       color: AppColors.white,
                     ),
                   )
-                : Icon(
+                : const Icon(
                     Icons.notifications_none_rounded,
                     color: AppColors.white,
                   ),

@@ -326,15 +326,18 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
         ),
         const SizedBox(height: 20),
-        AuthTextField(
-          controller: emailController,
-          hintText: 'email',
-          enabled: !isAuthingUser,
-          obscureText: false,
-          isEmail: true,
-          style: const TextStyle(color: AppColors.white),
-          borderSide: const BorderSide(color: AppColors.white),
-          fillColor: AppColors.primary,
+        AutofillGroup(
+          child: AuthTextField(
+            autofillHints: [AutofillHints.email],
+            controller: emailController,
+            hintText: 'email',
+            enabled: !isAuthingUser,
+            obscureText: false,
+            isEmail: true,
+            style: const TextStyle(color: AppColors.white),
+            borderSide: const BorderSide(color: AppColors.white),
+            fillColor: AppColors.primary,
+          ),
         ),
         const SizedBox(height: 10),
         _buildButtons(),
@@ -414,24 +417,27 @@ class _WelcomePageState extends State<WelcomePage> {
         const SizedBox(
           height: 10,
         ),
-        Focus(
-          child: AuthPasswordTextField(
-            controller: passwordController,
-            hintText: 'password',
-            enabled: !isAuthingUser,
-            borderSide: const BorderSide(color: AppColors.gray45),
-            style: const TextStyle(color: AppColors.gray45),
-            fillColor: AppColors.transparent,
-            iconColor: AppColors.gray45,
+        AutofillGroup(
+          child: Focus(
+            child: AuthPasswordTextField(
+              autofillHints: [AutofillHints.password],
+              controller: passwordController,
+              hintText: 'password',
+              enabled: !isAuthingUser,
+              borderSide: const BorderSide(color: AppColors.gray45),
+              style: const TextStyle(color: AppColors.gray45),
+              fillColor: AppColors.transparent,
+              iconColor: AppColors.gray45,
+            ),
+            onFocusChange: (hasFocus) {
+              if (hasFocus1) {
+                hasFocus1 = false;
+              }
+              hasFocus2 = true;
+              (hasFocus2) ? _height = 0 : _height = 40;
+              setState(() {});
+            },
           ),
-          onFocusChange: (hasFocus) {
-            if (hasFocus1) {
-              hasFocus1 = false;
-            }
-            hasFocus2 = true;
-            (hasFocus2) ? _height = 0 : _height = 40;
-            setState(() {});
-          },
         ),
         const SizedBox(
           height: 10,

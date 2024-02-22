@@ -43,17 +43,20 @@ class DoneActivityReportItem extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if(doneActivity.date != null)
                     FreeTextItem(
                       title: "Activity Date",
-                      data: DateFormat('dd/MM/yyyy').format(doneActivity.date),
+                      data: DateFormat('dd/MM/yyyy').format(doneActivity.date!),
                     ),
-                    FreeTextItem(
+                    if(doneActivity.from != null)
+                      FreeTextItem(
                       title: "From",
-                      data: DateFormat('h:mm a').format(doneActivity.from),
+                      data: DateFormat.jm().format(doneActivity.from!),
                     ),
+                    if(doneActivity.to != null)
                     FreeTextItem(
                       title: "To",
-                      data: DateFormat('h:mm a').format(doneActivity.to),
+                      data: DateFormat.jm().format(doneActivity.to!),
                     ),
                   ],
                 ),

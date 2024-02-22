@@ -9,9 +9,9 @@ class EventApi {
       {Map<String, dynamic>? body,
       Function()? onSuccess,
       Function()? onError}) async {
-    List<SmartEvent> _events = List.empty(growable: true);
+    List<SmartEvent> events0 = List.empty(growable: true);
     EventRepo eventRepo = EventRepo();
-    Map<DateTime, List<SmartEvent>> events = Map<DateTime, List<SmartEvent>>();
+    Map<DateTime, List<SmartEvent>> events = <DateTime, List<SmartEvent>>{};
 
     var response = await eventRepo.fetchAll(
       body: body,
@@ -19,13 +19,11 @@ class EventApi {
       onError: onError,
     ); // Returns map instead of intended list
 
-    print(response);
-
     List eventsMap = response;
 
     if (eventsMap.isNotEmpty) {
       List eventsList = json.decode(json.encode(eventsMap));
-      _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
+      events0 = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
 
       var dataCollection = <DateTime, List<SmartEvent>>{};
       final DateTime today = DateTime.now();
@@ -38,18 +36,18 @@ class EventApi {
           i.isBefore(rangeEndDate);
           i = i.add(const Duration(days: 1))) {
         final DateTime date = i;
-        for (int j = 0; j < _events.length; j++) {
+        for (int j = 0; j < events0.length; j++) {
           final SmartEvent event = SmartEvent(
-            title: _events[j].title,
-            startDate: _events[j].startDate,
-            endDate: _events[j].endDate,
-            backgroundColor: _events[j].backgroundColor,
-            notifyOnDate: _events[j].notifyOnDate,
-            toBeNotified: _events[j].toBeNotified,
-            fullName: _events[j].fullName,
+            title: events0[j].title,
+            startDate: events0[j].startDate,
+            endDate: events0[j].endDate,
+            backgroundColor: events0[j].backgroundColor,
+            notifyOnDate: events0[j].notifyOnDate,
+            toBeNotified: events0[j].toBeNotified,
+            fullName: events0[j].fullName,
             isAllDay: false,
-            description: _events[j].description,
-            url: _events[j].url,
+            description: events0[j].description,
+            url: events0[j].url,
           );
 
           if (dataCollection.containsKey(date)) {

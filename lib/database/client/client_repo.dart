@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -45,7 +44,6 @@ class ClientRepo extends ClientRepoInterface {
     } finally {
       client.close();
     }
-    return {};
   }
 
   @override
@@ -76,7 +74,6 @@ class ClientRepo extends ClientRepoInterface {
     } finally {
       client.close();
     }
-    return {};
   }
 
   @override

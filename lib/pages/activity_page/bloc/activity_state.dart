@@ -2,47 +2,26 @@ part of 'activity_bloc.dart';
 
 enum ActivityStatus {
   initial,
-  activitySuccess,
-  activitiesSuccess,
-  activityError,
-  activitiesError,
-  activityLoading,
-  activitiesLoading,
+  success,
+  error,
+  loading,
   selected,
-  activityNoData,
-  activitiesNoData,
-}
-
-extension ActivityStatusX on ActivityStatus {
-  bool get isInitial => this == ActivityStatus.initial;
-
-  bool get activityIsSuccess => this == ActivityStatus.activitySuccess;
-
-  bool get activitiesIsSuccess => this == ActivityStatus.activitiesSuccess;
-
-  bool get activityIsError => this == ActivityStatus.activityError;
-
-  bool get activitiesIsError => this == ActivityStatus.activitiesError;
-
-  bool get activityIsLoading => this == ActivityStatus.activityLoading;
-
-  bool get activitiesIsLoading => this == ActivityStatus.activitiesLoading;
-
-  bool get activityIsNoData => this == ActivityStatus.activityNoData;
-
-  bool get activitiesIsNoData => this == ActivityStatus.activitiesNoData;
+  noData,
+  notFound,
 }
 
 @immutable
 class ActivityState extends Equatable {
   final List<SmartActivity>? activities;
   final SmartActivity? activity;
+  final String? searchString;
   final ActivityStatus? status;
   final int? idSelected;
 
   const ActivityState({
     List<SmartActivity>? activities,
     this.activity,
+    this.searchString,
     this.status = ActivityStatus.initial,
     this.idSelected = 0,
   }) : activities = activities ?? const [];
@@ -51,6 +30,7 @@ class ActivityState extends Equatable {
   List<Object?> get props => [
         activities,
         activity,
+        searchString,
         status,
         idSelected,
       ];
@@ -58,46 +38,16 @@ class ActivityState extends Equatable {
   ActivityState copyWith({
     List<SmartActivity>? activities,
     SmartActivity? activity,
+    String? searchString,
     ActivityStatus? status,
     int? idSelected,
   }) {
     return ActivityState(
       activities: activities,
       activity: activity,
+      searchString: searchString,
       status: status,
       idSelected: idSelected,
     );
   }
 }
-
-class ActivityInitial extends ActivityState {
-  @override
-  List<Object> get props => [];
-}
-
-class ActivitiesInitial extends ActivityState {
-  @override
-  List<Object> get props => [];
-}
-
-class ActivityLoading extends ActivityState {}
-
-class ActivitiesLoading extends ActivityState {}
-
-class ActivitySuccessful extends ActivityState {
-  @override
-  List<Object?> get props => [];
-}
-
-class ActivitiesSuccessful extends ActivityState {
-  @override
-  List<Object?> get props => [];
-}
-
-class ActivityError extends ActivityState {}
-
-class ActivitiesError extends ActivityState {}
-
-class ActivityNoData extends ActivityState {}
-
-class ActivitiesNoData extends ActivityState {}

@@ -27,7 +27,7 @@ class RequisitionRepo extends RequisitionRepoInterface {
         "Accept": "application/json",
         "Authorization": 'Bearer ${currentUser.token}',
       };
-      var response = await await client.get(
+      var response = await client.get(
         Uri.parse(
             "${currentUser.url}/api/accounts/cases/requisitions/allapi?page=$page"),
         headers: headers,
