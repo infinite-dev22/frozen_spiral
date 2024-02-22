@@ -12,6 +12,7 @@ class AuthTextField extends StatelessWidget {
   final bool enabled;
   final Function(String)? onChanged;
   final Function()? onTap;
+  final List<String>? autofillHints;
 
   const AuthTextField({
     super.key,
@@ -25,6 +26,7 @@ class AuthTextField extends StatelessWidget {
     this.enabled = true,
     this.onChanged,
     this.onTap,
+    this.autofillHints,
   });
 
   @override
@@ -32,6 +34,7 @@ class AuthTextField extends StatelessWidget {
     return SizedBox(
       height: 50,
       child: TextFormField(
+        autofillHints: autofillHints,
         cursorColor: AppColors.gray45,
         validator: (val) =>
             val!.isEmpty ? 'Required field, Please fill in.' : null,
@@ -86,6 +89,7 @@ class AuthPasswordTextField extends StatefulWidget {
   final bool enabled;
   final TextStyle? style;
   final Function()? onTap;
+  final List<String>? autofillHints;
 
   const AuthPasswordTextField({
     super.key,
@@ -97,6 +101,7 @@ class AuthPasswordTextField extends StatefulWidget {
     this.style,
     this.enabled = true,
     this.onTap,
+    this.autofillHints,
   });
 
   @override
@@ -111,6 +116,7 @@ class _AuthPasswordTextField extends State<AuthPasswordTextField> {
     return SizedBox(
       height: 50,
       child: TextFormField(
+        autofillHints: widget.autofillHints,
         cursorColor: AppColors.gray45,
         validator: (val) =>
             val!.isEmpty ? 'Required field, Please fill in.' : null,
