@@ -5,6 +5,7 @@ import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/util/utilities.dart';
 
 class ActionsWidget extends StatelessWidget {
   final SmartInvoice invoice;
@@ -44,7 +45,7 @@ class ActionsWidget extends StatelessWidget {
               children: [
                 const SizedBox(height: 10),
                 Text(
-                  "\$44,000",
+                  "${invoice.currency!.code}-${invoice.amount ?? "0.00"}",
                   style: TextStyle(
                     color: AppColors.darker,
                     fontWeight: FontWeight.bold,
@@ -53,7 +54,7 @@ class ActionsWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  "Due on 21/02/2024",
+                  "Due on ${formatDateTimeToString(invoice.date)}",
                   style: TextStyle(
                     color: AppColors.inActiveColor,
                     fontWeight: FontWeight.bold,
@@ -65,12 +66,18 @@ class ActionsWidget extends StatelessWidget {
             ),
             FilledButton(
               onPressed: () {},
-              child: Text("APPROVE NOW"),
+              child: Text(_checkInvoiceStatus()/*"APPROVE NOW"*/),
             ),
           ],
         ),
       ),
     );
+  }
+  String _checkInvoiceStatus() {
+    if(invoice.invoiceStatus2!.name.toLowerCase().contains("submitted for approval".toLowerCase())){
+      return "Approve Now";
+    }
+    return "No Action";
   }
 
   // Widget _buildButtons() {

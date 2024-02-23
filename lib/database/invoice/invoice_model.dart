@@ -147,8 +147,10 @@ class SmartInvoice {
       fileId: json["file_id"],
       invoiceStatus: json["invoiceStatus"],
       invoiceStatus2: json["invoice_actions"].first["invoice_status"] == null
-          ? SmartInvoiceStatus.fromJson(
-              json["invoice_status"] as Map<String, dynamic>)
+          ? (json["invoice_status"] == null
+              ? null
+              : SmartInvoiceStatus.fromJson(
+                  json["invoice_status"] as Map<String, dynamic>))
           : SmartInvoiceStatus.fromJson(json["invoice_actions"]
               .first["invoice_status"] as Map<String, dynamic>),
       file: json["case_file"] == null

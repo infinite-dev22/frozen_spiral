@@ -44,6 +44,7 @@ class ViewSuccessLayout extends StatelessWidget {
             onPrint: () {},
             onSave: () {},
             isElevated: true,
+            invoice: invoice,
           ),
           Expanded(
             child: ListView(
