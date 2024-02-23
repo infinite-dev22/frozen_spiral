@@ -46,6 +46,15 @@ class ProcessInvoice extends InvoiceEvent {
   List<Object?> get props => [invoiceId, invoice];
 }
 
+class SetInvoice extends InvoiceEvent {
+  SetInvoice(this.invoice);
+
+  final SmartInvoice invoice;
+
+  @override
+  List<Object?> get props => [invoice];
+}
+
 class DeleteInvoice extends InvoiceEvent {
   DeleteInvoice(this.invoiceId);
 

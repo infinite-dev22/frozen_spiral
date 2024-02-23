@@ -11,15 +11,18 @@ import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/database/invoice/invoice_type_model.dart';
 import 'package:smart_case/pages/invoice_page/bloc/forms/invoice/invoice_form_bloc.dart';
+import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_items_form.dart';
 import 'package:smart_case/pages/invoice_page/widgets/invoice_add_items_widget.dart';
 import 'package:smart_case/pages/invoice_page/widgets/invoice_amounts_widget.dart';
 import 'package:smart_case/pages/invoice_page/widgets/invoice_terms_widget.dart';
+import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/invoice_view_layout.dart';
 import 'package:smart_case/services/apis/smartcase_apis/bank_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_approver_api.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/util/utilities.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
@@ -289,6 +292,50 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                   ),
                                 InvoiceTermsWidget(
                                     controller: invoiceTermsController),
+                                const SizedBox(height: 20),
+                                FilledButton(
+                                    onPressed: () {
+                                      var status = SmartInvoiceStatus(
+                                          name: "Previewing invoice",
+                                          code: "Previewing");
+                                      var invoice = SmartInvoice(
+                                        invoiceTypeId: invoiceType!.id,
+                                        invoiceType: invoiceType,
+                                        date: formatStringDMY(
+                                            dateController.text),
+                                        dueDate: dueDateController.text,
+                                        invoiceStatus2: status,
+                                        fileId: file!.id,
+                                        file: file,
+                                        clientId: file!.clientId,
+                                        bank: bank,
+                                        clientAddress:
+                                            clientAddressController.text,
+                                        currencyId: currency!.id,
+                                        currency: currency,
+                                        paymentTerms:
+                                            invoiceTermsController.text,
+                                        bankId: bank!.id,
+                                        supervisorId: approver!.id,
+                                        approver: approver,
+                                        practiceAreasId: 1,
+                                        invoiceItems: invoiceFormItemList,
+                                      );
+
+                                      showModalBottomSheet(
+                                        enableDrag: true,
+                                        isScrollControlled: true,
+                                        useSafeArea: true,
+                                        context: context,
+                                        builder: (context) =>
+                                            BlocProvider<InvoiceBloc>(
+                                          create: (context) => InvoiceBloc(),
+                                          child: InvoiceViewLayout(
+                                              invoice: invoice),
+                                        ),
+                                      );
+                                    },
+                                    child: Text("Preview Invoice"))
                               ],
                             ),
                           );

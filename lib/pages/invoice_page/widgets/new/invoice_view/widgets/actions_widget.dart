@@ -73,6 +73,7 @@ class ActionsWidget extends StatelessWidget {
       ),
     );
   }
+
   String _checkInvoiceStatus() {
     if(invoice.invoiceStatus2!.name.toLowerCase().contains("submitted for approval".toLowerCase())){
       return "Approve Now";
