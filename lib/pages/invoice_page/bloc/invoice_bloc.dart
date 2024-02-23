@@ -10,6 +10,7 @@ part 'invoice_state.dart';
 
 class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
   InvoiceBloc() : super(const InvoiceState()) {
+    on<SetInvoice>(_mapSetInvoiceEventToState);
     on<GetInvoices>(_mapGetInvoicesEventToState);
     on<FormGetInvoice>(_mapFormGetInvoiceEventToState);
     on<ViewGetInvoice>(_mapViewGetInvoiceEventToState);
@@ -17,6 +18,21 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
     on<ProcessInvoice>(_mapProcessInvoiceEventToState);
     on<DeleteInvoice>(_mapDeleteInvoiceEventToState);
     on<SelectInvoice>(_mapSelectInvoiceEventToState);
+  }
+
+  _mapSetInvoiceEventToState(
+      SetInvoice event, Emitter<InvoiceState> emit) async {
+    emit(state.copyWith(status: InvoiceStatus.viewLoading));
+    try {
+      emit(state.copyWith(
+          status: InvoiceStatus.viewSuccess, invoice: event.invoice));
+    } catch (error, stackTrace) {
+      if (kDebugMode) {
+        print(error);
+        print(stackTrace);
+      }
+      emit(state.copyWith(status: InvoiceStatus.viewError));
+    }
   }
 
   _mapGetInvoicesEventToState(

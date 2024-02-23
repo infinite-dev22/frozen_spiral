@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart';
 import 'package:smart_case/data/app_config.dart';
+import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/invoice_view_barrel.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
@@ -11,9 +12,14 @@ import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
 class InvoiceViewLayout extends StatelessWidget {
-  final int invoiceId;
+  final int? invoiceId;
+  final SmartInvoice? invoice;
 
-  const InvoiceViewLayout({super.key, required this.invoiceId});
+  const InvoiceViewLayout({
+    super.key,
+    this.invoiceId,
+    this.invoice,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +36,14 @@ class InvoiceViewLayout extends StatelessWidget {
       },
       child: BlocBuilder<InvoiceBloc, InvoiceState>(
         builder: (context, state) {
-          if (state.status == InvoiceStatus.initial) {
-            context.read<InvoiceBloc>().add(ViewGetInvoice(invoiceId));
+          if (invoice != null && state.status == InvoiceStatus.initial) {
+            print("Has invoice");
+            context.read<InvoiceBloc>().add(SetInvoice(invoice!));
+          }
+          if (invoice == null &&
+              invoiceId != null &&
+              state.status == InvoiceStatus.initial) {
+            context.read<InvoiceBloc>().add(ViewGetInvoice(invoiceId!));
           }
           if (state.status == InvoiceStatus.viewLoading) {
             return ViewLoadingWidget();
@@ -39,7 +51,11 @@ class InvoiceViewLayout extends StatelessWidget {
           if (state.status == InvoiceStatus.viewSuccess) {
             return ViewSuccessLayout();
           }
-          return Container();
+          return Container(
+            child: Center(
+              child: Text("Default Widget Showing"),
+            ),
+          );
         },
       ),
     );
