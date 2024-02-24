@@ -52,110 +52,116 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
   Widget _buildBody(BuildContext context) {
     status = removeHtmlTags(widget.invoice.invoiceStatus!);
 
-    return Container(
-      padding: EdgeInsets.all(widget.padding),
-      margin: EdgeInsets.only(bottom: widget.padding),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(8),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withOpacity(.1),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: const Offset(0, 1), // changes position of shadow
+    return LayoutBuilder(builder: (context, constraints) {
+      return Container(
+        padding: EdgeInsets.all(widget.padding),
+        margin: EdgeInsets.only(bottom: widget.padding),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(8),
           ),
-        ],
-        color: widget.color,
-      ),
-      child: isProcessing
-          ? Stack(
-              fit: StackFit.passthrough,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildStringItem('Client', widget.invoice.client!.name),
-                        const SizedBox(height: 5),
-                        _buildStringItem(
-                            'File Name', widget.invoice.caseFile!.fileName),
-                        const SizedBox(height: 5),
-                        _buildStringItem('Amount', widget.invoice.amount),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.shadowColor.withOpacity(.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 1), // changes position of shadow
+            ),
+          ],
+          color: widget.color,
+        ),
+        child: isProcessing
+            ? Stack(
+                fit: StackFit.passthrough,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildStringItem(
+                              'Client', widget.invoice.client!.name),
+                          const SizedBox(height: 5),
+                          _buildStringItem(
+                              'File Name', widget.invoice.caseFile!.fileName),
+                          const SizedBox(height: 5),
+                          _buildStringItem('Amount', widget.invoice.amount),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildStringItem(
+                              'Date',
+                              DateFormat('dd/MM/yyyy')
+                                  .format(widget.invoice.date!)),
+                          const SizedBox(height: 5),
+                          _buildStringItem('File Number',
+                              widget.invoice.caseFile!.fileNumber),
+                          const SizedBox(height: 5),
+                          if (widget.invoice.invoiceStatus2 != null)
+                            InvoiceItemStatus(
+                                name: _checkInvoiceStatus(),
+                                bgColor: _getInvoiceStatusColor(),
+                                horizontalPadding: 20,
+                                verticalPadding: 5),
+                        ],
+                      ),
+                    ],
+                  ).blur(blur: 3),
+                  if (isLoading)
+                    const Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: CupertinoActivityIndicator(radius: 18),
+                      ),
+                    )
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildStringItem('Client', widget.invoice.client!.name),
+                      const SizedBox(height: 5),
+                      _buildStringItem(
+                          'File Name', widget.invoice.caseFile!.fileName, width: constraints.maxWidth * .6),
+                      const SizedBox(height: 5),
+                      _buildStringItem('Amount',
+                          "${widget.invoice.currency!.code} - ${widget.invoice.amount ?? "0.00"}"),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (widget.invoice.date != null)
                         _buildStringItem(
                             'Date',
                             DateFormat('dd/MM/yyyy')
                                 .format(widget.invoice.date!)),
-                        const SizedBox(height: 5),
-                        _buildStringItem(
-                            'File Number', widget.invoice.caseFile!.fileNumber),
-                        const SizedBox(height: 5),
-                        if (widget.invoice.invoiceStatus2 != null)
-                          InvoiceItemStatus(
-                              name: _checkInvoiceStatus(),
-                              bgColor: _getInvoiceStatusColor(),
-                              horizontalPadding: 20,
-                              verticalPadding: 5),
-                      ],
-                    ),
-                  ],
-                ).blur(blur: 3),
-                if (isLoading)
-                  const Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: CupertinoActivityIndicator(radius: 18),
-                    ),
-                  )
-              ],
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildStringItem('Client', widget.invoice.client!.name),
-                    const SizedBox(height: 5),
-                    _buildStringItem(
-                        'File Name', widget.invoice.caseFile!.fileName),
-                    const SizedBox(height: 5),
-                    _buildStringItem('Amount',
-                        "${widget.invoice.currency!.code} - ${widget.invoice.amount ?? "0.00"}"),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildStringItem('Date',
-                        DateFormat('dd/MM/yyyy').format(widget.invoice.date!)),
-                    const SizedBox(height: 5),
-                    _buildStringItem(
-                        'File Number', widget.invoice.caseFile!.fileNumber),
-                    const SizedBox(height: 5),
-                    if (widget.invoice.invoiceStatus2 != null)
-                      InvoiceItemStatus(
-                          name: _checkInvoiceStatus(),
-                          bgColor: _getInvoiceStatusColor(),
-                          horizontalPadding: 20,
-                          verticalPadding: 5),
-                  ],
-                ),
-              ],
-            ),
-    );
+                      const SizedBox(height: 5),
+                      _buildStringItem(
+                          'File Number', widget.invoice.caseFile!.fileNumber),
+                      const SizedBox(height: 5),
+                      if (widget.invoice.invoiceStatus2 != null)
+                        InvoiceItemStatus(
+                            name: _checkInvoiceStatus(),
+                            bgColor: _getInvoiceStatusColor(),
+                            horizontalPadding: 20,
+                            verticalPadding: 5),
+                    ],
+                  ),
+                ],
+              ),
+      );
+    });
   }
 
   String _checkInvoiceStatus() {
@@ -216,8 +222,9 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
     return AppColors.transparent;
   }
 
-  _buildStringItem(String title, String? data) {
+  _buildStringItem(String title, String? data, {double? width}) {
     return SizedBox(
+      width: width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -53,20 +53,21 @@ class ActionsWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  "Due on ${formatDateTimeToString(invoice.date)}",
-                  style: TextStyle(
-                    color: AppColors.inActiveColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                if (invoice.date != null)
+                  Text(
+                    "Due on ${formatDateTimeToString(invoice.date)}",
+                    style: TextStyle(
+                      color: AppColors.inActiveColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
                 const SizedBox(height: 10),
               ],
             ),
             FilledButton(
               onPressed: () {},
-              child: Text(_checkInvoiceStatus()/*"APPROVE NOW"*/),
+              child: Text(_checkInvoiceStatus() /*"APPROVE NOW"*/),
             ),
           ],
         ),
@@ -75,7 +76,9 @@ class ActionsWidget extends StatelessWidget {
   }
 
   String _checkInvoiceStatus() {
-    if(invoice.invoiceStatus2!.name.toLowerCase().contains("submitted for approval".toLowerCase())){
+    if (invoice.invoiceStatus2!.name
+        .toLowerCase()
+        .contains("submitted for approval".toLowerCase())) {
       return "Approve Now";
     }
     return "No Action";
@@ -175,47 +178,47 @@ class ActionsWidget extends StatelessWidget {
         invoice.invoiceStatus2!.code == "SUBMITTED") {
       if (invoice.canApprove ?? false) {
         _submitData("APPROVED", 'Invoice approved');
-      } else if (invoice!.canApprove ?? false) {
-        if (invoice!.secondApprover != null && invoice!.secondApprover) {
+      } else if (invoice.canApprove ?? false) {
+        if (invoice.secondApprover != null && invoice.secondApprover) {
           _submitData("SECONDARY_APPROVED", 'Invoice approved');
         } else {
           _submitData("PRIMARY_APPROVED", 'Invoice primarily approved');
         }
       }
-    } else if (invoice!.invoiceStatus2!.code == "PRIMARY_APPROVED") {
+    } else if (invoice.invoiceStatus2!.code == "PRIMARY_APPROVED") {
       _submitData("SECONDARY_APPROVED", 'Invoice approved');
     }
   }
 
   _returnInvoice() {
-    if (invoice!.invoiceStatus2!.code == 'EDITED' ||
-        invoice!.invoiceStatus2!.code == "SUBMITTED") {
-      if (invoice!.canApprove ?? false) {
+    if (invoice.invoiceStatus2!.code == 'EDITED' ||
+        invoice.invoiceStatus2!.code == "SUBMITTED") {
+      if (invoice.canApprove ?? false) {
         _submitData("RETURNED", 'Action successful');
-      } else if (invoice!.canApprove ?? false) {
+      } else if (invoice.canApprove ?? false) {
         _submitData("PRIMARY_RETURNED", 'Action successful');
       }
-    } else if (invoice!.invoiceStatus2!.code == "PRIMARY_RETURNED") {
+    } else if (invoice.invoiceStatus2!.code == "PRIMARY_RETURNED") {
       _submitData("SECONDARY_RETURNED", 'Action successful');
     }
   }
 
   _rejectInvoice() {
-    if (invoice!.invoiceStatus2!.code == 'EDITED' ||
-        invoice!.invoiceStatus2!.code == "SUBMITTED") {
-      if (invoice!.canApprove ?? false) {
+    if (invoice.invoiceStatus2!.code == 'EDITED' ||
+        invoice.invoiceStatus2!.code == "SUBMITTED") {
+      if (invoice.canApprove ?? false) {
         _submitData("REJECTED", 'Action successful');
-      } else if (invoice!.canApprove ?? false) {
+      } else if (invoice.canApprove ?? false) {
         _submitData("PRIMARY_REJECTED", 'Action successful');
       }
-    } else if (invoice!.invoiceStatus2!.code == "PRIMARY_REJECTED") {
+    } else if (invoice.invoiceStatus2!.code == "PRIMARY_REJECTED") {
       _submitData("SECONDARY_REJECTED", 'Action successful');
     }
   }
 
   _submitData(String value, String toastText) {
     SmartCaseApi.smartPost(
-      'api/accounts/invoices/${invoice!.id}/process',
+      'api/accounts/invoices/${invoice.id}/process',
       currentUser.token,
       {
         // "payout_amount": amountController.text.trim(),
@@ -237,7 +240,7 @@ class ActionsWidget extends StatelessWidget {
         textColor: Colors.white,
         fontSize: 16.0);
     // preloadedInvoices.remove(invoice);
-    preloadedInvoices.removeWhere((element) => element.id == invoice!.id);
+    preloadedInvoices.removeWhere((element) => element.id == invoice.id);
   }
 
   _onError() async {

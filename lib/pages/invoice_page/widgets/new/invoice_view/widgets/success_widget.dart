@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart';
-import 'package:intl/intl.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
@@ -27,9 +26,6 @@ class ViewSuccessLayout extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    bool isHeadElevated = false;
-    NumberFormat formatter =
-        NumberFormat('###,###,###,###,###,###,###,###,###.##');
     SmartInvoice invoice = context.read<InvoiceBloc>().state.invoice!;
 
     return Scaffold(

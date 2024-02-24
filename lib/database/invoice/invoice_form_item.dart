@@ -28,7 +28,7 @@ class InvoiceFormItem extends SmartModel {
     var tax = json['tax'] == null
         ? null
         : SmartTaxType.fromJson(json['tax'] as Map<String, dynamic>);
-    var subAmount = (tax == null) ? amnt : amnt * double.parse(tax!.rate!) * 100;
+    var subAmount = (tax == null) ? amnt : amnt * double.parse(tax.rate!) * 100;
 
     return InvoiceFormItem(
       id: json['id'] as int?,
