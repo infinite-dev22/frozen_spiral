@@ -41,7 +41,6 @@ class SmartDoneActivityReport {
   });
 
   factory SmartDoneActivityReport.fromJson(Map<String, dynamic> json) {
-    var now = DateFormat("yyyy-MM-dd").format(DateTime.now());
     return SmartDoneActivityReport(
       id: json['id'],
       description: json['description'],
