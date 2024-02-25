@@ -22,7 +22,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # Style: year.quarter.version_number+build_version_number
 # Update version_number whenever the build_version_number reaches 100.
 # Android OS
-version: 2024.1.27+45
+# version: 2024.1.27+45
 # iOS
 version: 2024.1.13+1
 
