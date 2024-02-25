@@ -30,7 +30,9 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.infosec.smartCase"
-    compileSdkVersion 34
+//    compileSdkVersion 34
+//    ndkVersion "25.1.8937393"
+    compileSdk 34
     ndkVersion "25.1.8937393"
 
     compileOptions {

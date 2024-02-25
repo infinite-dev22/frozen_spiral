@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart';
-import 'package:intl/intl.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
@@ -27,9 +26,6 @@ class ViewSuccessLayout extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    bool isHeadElevated = false;
-    NumberFormat formatter =
-        NumberFormat('###,###,###,###,###,###,###,###,###.##');
     SmartInvoice invoice = context.read<InvoiceBloc>().state.invoice!;
 
     return Scaffold(
@@ -42,8 +38,9 @@ class ViewSuccessLayout extends StatelessWidget {
           InvoiceViewTitle(
             onEdit: () {},
             onPrint: () {},
-            onSave: () {},
+            onSave: () => _submitFormData(context, invoice),
             isElevated: true,
+            invoice: invoice,
           ),
           Expanded(
             child: ListView(
@@ -120,5 +117,33 @@ class ViewSuccessLayout extends StatelessWidget {
 
     // Return the text content of the document.
     return document.text!;
+  }
+
+  _submitFormData(BuildContext context, SmartInvoice invoice) {
+    InvoiceApi.post(
+      invoice,
+      onError: () {
+        Fluttertoast.showToast(
+            msg: "An error occurred",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 5,
+            backgroundColor: AppColors.red,
+            textColor: AppColors.white,
+            fontSize: 16.0);
+      },
+      onSuccess: () {
+        Fluttertoast.showToast(
+            msg: "Invoice added successfully",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 5,
+            backgroundColor: AppColors.green,
+            textColor: AppColors.white,
+            fontSize: 16.0);
+      },
+    );
+
+    Navigator.pop(context);
   }
 }

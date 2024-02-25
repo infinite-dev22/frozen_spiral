@@ -158,6 +158,7 @@ class SmartRequisition {
   }
 
   factory SmartRequisition.fromJson(Map<String, dynamic> json) {
+    print("Date" + json['date']);
     return SmartRequisition(
       id: json['id'] as int,
       date: formatStringDateTime(json['date']),

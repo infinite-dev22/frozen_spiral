@@ -40,7 +40,9 @@ class ToWidget extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              invoice.client == null && invoice.client!.address == null
+              invoice.client == null ||
+                      (invoice.client != null &&
+                          invoice.client!.address == null)
                   ? "N/A"
                   : invoice.client!.address!,
               style: TextStyle(
@@ -48,7 +50,8 @@ class ToWidget extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              invoice.client == null && invoice.client!.email == null
+              invoice.client == null ||
+                      (invoice.client != null && invoice.client!.email == null)
                   ? "N/A"
                   : invoice.client!.email!,
               style: TextStyle(
@@ -56,7 +59,9 @@ class ToWidget extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              invoice.client == null && invoice.client!.telephone == null
+              invoice.client == null ||
+                      (invoice.client != null &&
+                          invoice.client!.telephone == null)
                   ? "N/A"
                   : invoice.client!.telephone!,
               style: TextStyle(

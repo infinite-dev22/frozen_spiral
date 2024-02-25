@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:smart_case/database/invoice/invoice_model.dart';
+import 'package:smart_case/util/smart_case_init.dart';
 
 import '../theme/color.dart';
 
@@ -159,6 +161,8 @@ class CalendarViewTitle extends StatelessWidget {
 }
 
 class InvoiceViewTitle extends StatelessWidget {
+  final SmartInvoice invoice;
+
   const InvoiceViewTitle({
     super.key,
     this.onEdit,
@@ -166,6 +170,7 @@ class InvoiceViewTitle extends StatelessWidget {
     this.onSave,
     this.onCancel,
     this.isElevated = false,
+    required this.invoice,
   });
 
   final Function()? onEdit;
@@ -215,20 +220,43 @@ class InvoiceViewTitle extends StatelessWidget {
           ),
           Row(
             children: [
-              IconButton(
-                onPressed: onEdit,
-                icon: Icon(FontAwesome.pen_to_square),
-              ),
+              if (invoice.doneBy == currentUser.id ||
+                  invoice.invoiceStatus2!.code
+                      .toLowerCase()
+                      .contains("submitted".toLowerCase()) ||
+                  invoice.invoiceStatus2!.code
+                      .toLowerCase()
+                      .contains("returned".toLowerCase()) ||
+                  invoice.invoiceStatus2!.code
+                      .toLowerCase()
+                      .contains("edited".toLowerCase()))
+                IconButton(
+                  onPressed: onEdit,
+                  icon: Icon(FontAwesome.pen_to_square),
+                ),
               const SizedBox(height: 5),
               IconButton(
                 onPressed: onPrint,
                 icon: Icon(FontAwesome.print_solid),
               ),
               const SizedBox(height: 5),
-              IconButton(
-                onPressed: onSave,
-                icon: Icon(FontAwesome.floppy_disk),
-              ),
+              if (invoice.doneBy == currentUser.id ||
+                  invoice.invoiceStatus2!.code
+                      .toLowerCase()
+                      .contains("edited".toLowerCase()) ||
+                  !invoice.invoiceStatus2!.code
+                      .toLowerCase()
+                      .contains("rejected".toLowerCase()) ||
+                  !invoice.invoiceStatus2!.code
+                      .toLowerCase()
+                      .contains("returned".toLowerCase()) ||
+                  !invoice.invoiceStatus2!.code
+                      .toLowerCase()
+                      .contains("approved".toLowerCase()))
+                IconButton(
+                  onPressed: onSave,
+                  icon: Icon(FontAwesome.floppy_disk),
+                ),
             ],
           ),
         ],

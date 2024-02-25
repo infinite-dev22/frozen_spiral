@@ -44,6 +44,5 @@ class DoneActivitiesRepo extends DoneActivitiesRepoInterface {
     } finally {
       client.close();
     }
-    return {};
   }
 }

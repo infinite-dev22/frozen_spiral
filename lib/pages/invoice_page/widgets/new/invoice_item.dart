@@ -12,7 +12,6 @@ import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_item_status.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/util/smart_case_init.dart';
 
 class InvoiceItemWidget extends StatefulWidget {
   const InvoiceItemWidget({
@@ -53,418 +52,179 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
   Widget _buildBody(BuildContext context) {
     status = removeHtmlTags(widget.invoice.invoiceStatus!);
 
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        widget.padding,
-        (widget.showActions) ? 0 : widget.padding,
-        widget.padding,
-        widget.padding,
-      ),
-      margin: EdgeInsets.only(bottom: widget.padding),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(8),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withOpacity(.1),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: const Offset(0, 1), // changes position of shadow
+    return LayoutBuilder(builder: (context, constraints) {
+      return Container(
+        padding: EdgeInsets.all(widget.padding),
+        margin: EdgeInsets.only(bottom: widget.padding),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(8),
           ),
-        ],
-        color: widget.color,
-      ),
-      child: isProcessing
-          ? Stack(
-              fit: StackFit.passthrough,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (widget.showActions)
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.shadowColor.withOpacity(.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 1), // changes position of shadow
+            ),
+          ],
+          color: widget.color,
+        ),
+        child: isProcessing
+            ? Stack(
+                fit: StackFit.passthrough,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          (widget.invoice.canApprove == null &&
-                                  (widget.invoice.canPay == false ||
-                                      widget.invoice.canPay == null) &&
-                                  (!widget.invoice.isMine! &&
-                                          !widget.invoice.canEdit! &&
-                                          status != 'SUBMITTED' ||
-                                      status != 'EDITED'))
-                              ? Container()
-                              : SizedBox(
-                                  height: 33,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      if (widget.invoice.canApprove != null)
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: FilledButton(
-                                                onPressed: (isProcessing)
-                                                    ? null
-                                                    : (){}/*_approveInvoice*/,
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty
-                                                          .resolveWith(
-                                                              (states) =>
-                                                                  AppColors
-                                                                      .green),
-                                                ),
-                                                child: const Text(
-                                                  'Approve',
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      if (widget.invoice.canPay == true)
-                                        TextButton(
-                                          onPressed: () => Navigator.pushNamed(
-                                            context,
-                                            '/invoice',
-                                            arguments: widget.invoice.id,
-                                          ).then((_) => setState(() {})),
-                                          child: const Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(Icons.money_rounded),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text('Pay out')
-                                            ],
-                                          ),
-                                        ),
-                                      if (status == 'SUBMITTED' ||
-                                          status == 'EDITED')
-                                        TextButton(
-                                          onPressed: () =>
-                                              _buildInvoiceForm(context),
-                                          child: const Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(CupertinoIcons
-                                                  .pencil_ellipsis_rectangle),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text('Edit')
-                                            ],
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          _buildStringItem(
+                              'Client', widget.invoice.client!.name),
+                          const SizedBox(height: 5),
+                          _buildStringItem(
+                              'File Name', widget.invoice.caseFile!.fileName),
+                          const SizedBox(height: 5),
+                          _buildStringItem('Amount', widget.invoice.amount),
                         ],
                       ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildStringItem(
+                              'Date',
+                              DateFormat('dd/MM/yyyy')
+                                  .format(widget.invoice.date!)),
+                          const SizedBox(height: 5),
+                          _buildStringItem('File Number',
+                              widget.invoice.caseFile!.fileNumber),
+                          const SizedBox(height: 5),
+                          if (widget.invoice.invoiceStatus2 != null)
+                            InvoiceItemStatus(
+                                name: _checkInvoiceStatus(),
+                                bgColor: _getInvoiceStatusColor(),
+                                horizontalPadding: 20,
+                                verticalPadding: 5),
+                        ],
+                      ),
+                    ],
+                  ).blur(blur: 3),
+                  if (isLoading)
+                    const Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: CupertinoActivityIndicator(radius: 18),
+                      ),
+                    )
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildStringItem('Client', widget.invoice.client!.name),
+                      const SizedBox(height: 5),
+                      _buildStringItem(
+                          'File Name', widget.invoice.caseFile!.fileName, width: constraints.maxWidth * .6),
+                      const SizedBox(height: 5),
+                      _buildStringItem('Amount',
+                          "${widget.invoice.currency!.code} - ${widget.invoice.amount ?? "0.00"}"),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (widget.invoice.date != null)
                         _buildStringItem(
                             'Date',
                             DateFormat('dd/MM/yyyy')
                                 .format(widget.invoice.date!)),
-                        _buildStringItem('Amount', '100,000'),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildStringItem(
-                            'File Name', widget.invoice.caseFile!.fileName),
-                        _buildStringItem('Paid', '35,000'),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildStringItem(
-                            'File Number', widget.invoice.caseFile!.fileNumber),
-                        _buildStringItem('Balance', '65,000'),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    if (widget.showFinancialStatus)
-                      if (widget.invoice.amount != null)
-                        Column(
-                          children: [
-                            _buildFinancialStatusStringItem(
-                                'Financial Status (UGX)',
-                                formatter.format(double.parse(widget
-                                    .invoice.amount!
-                                    .replaceAll(",", '')))),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildStringItem('Requestioner',
-                            "${widget.invoice.employee!.firstName} ${widget.invoice.employee!.lastName}"),
-                        _buildStringItem('Approver',
-                            "${widget.invoice.approver!.firstName} ${widget.invoice.approver!.lastName}"),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildStringItem(
-                            'Amount (UGX)',
-                            formatter.format(double.parse(
-                                widget.invoice.amount!.replaceAll(",", "")))),
+                      const SizedBox(height: 5),
+                      _buildStringItem(
+                          'File Number', widget.invoice.caseFile!.fileNumber),
+                      const SizedBox(height: 5),
+                      if (widget.invoice.invoiceStatus2 != null)
                         InvoiceItemStatus(
-                            name: status == 'SECONDARY_APPROVED'
-                                ? 'Approved'
-                                : status == 'SECONDARY_REJECTED'
-                                    ? 'Rejected'
-                                    : status == 'SECONDARY_RETURNED'
-                                        ? 'Returned'
-                                        : status,
-                            bgColor: status.toLowerCase().contains('approved')
-                                ? AppColors.green
-                                : status.toLowerCase().contains('rejected')
-                                    ? AppColors.red
-                                    : status.toLowerCase().contains('returned')
-                                        ? AppColors.orange
-                                        : status.toLowerCase().contains('paid')
-                                            ? AppColors.purple
-                                            : AppColors.blue,
+                            name: _checkInvoiceStatus(),
+                            bgColor: _getInvoiceStatusColor(),
                             horizontalPadding: 20,
                             verticalPadding: 5),
-                      ],
-                    ),
-                  ],
-                ).blur(blur: 3),
-                if (isLoading)
-                  const Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: CupertinoActivityIndicator(radius: 18),
-                    ),
-                  )
-              ],
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (widget.showActions)
-                  Column(
-                    children: [
-                      (widget.invoice.canApprove == null &&
-                              (((widget.invoice.canEdit ?? false) &&
-                                      widget.invoice.employee!.id !=
-                                          currentUser.id) &&
-                                  (!status.toLowerCase().contains('submit') ||
-                                      (!status.toLowerCase().contains('edit') &&
-                                          widget.invoice.employee!.id !=
-                                              currentUser.id) ||
-                                      !status
-                                          .toLowerCase()
-                                          .contains("returned") ||
-                                      (status
-                                              .toLowerCase()
-                                              .contains("returned") &&
-                                          widget.invoice.employee!.id !=
-                                              currentUser.id))))
-                          ? Container()
-                          : SizedBox(
-                              height: 33,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  if (widget.invoice.canApprove != null)
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: FilledButton(
-                                            onPressed: (isProcessing)
-                                                ? null
-                                                : () {}/*_approveInvoice*/,
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty
-                                                      .resolveWith((states) =>
-                                                          AppColors.green),
-                                            ),
-                                            child: const Text(
-                                              'Approve',
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  if (widget.invoice.canPay == true)
-                                    TextButton(
-                                      onPressed: () => Navigator.pushNamed(
-                                        context,
-                                        '/invoice',
-                                        arguments: widget.invoice.id,
-                                      ).then((_) => setState(() {})),
-                                      child: const Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.money_rounded),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text('Pay out')
-                                        ],
-                                      ),
-                                    ),
-                                  if ((widget.invoice.invoiceStatus != null) &&
-                                      (status
-                                              .toLowerCase()
-                                              .contains('submit') ||
-                                          status
-                                              .toLowerCase()
-                                              .contains('edit') ||
-                                          status
-                                              .toLowerCase()
-                                              .contains("returned")) &&
-                                      widget.invoice.employee!.id ==
-                                          currentUser.id)
-                                    TextButton(
-                                      onPressed: () =>
-                                          _buildInvoiceForm(context),
-                                      child: const Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(CupertinoIcons
-                                              .pencil_ellipsis_rectangle),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text('Edit')
-                                        ],
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                      const SizedBox(
-                        height: 10,
-                      ),
                     ],
                   ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildStringItem('Date',
-                        DateFormat('dd/MM/yyyy').format(widget.invoice.date!)),
-                    _buildStringItem('Amount', widget.invoice.amount),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildStringItem(
-                        'File Name', widget.invoice.caseFile!.fileName),
-                    _buildStringItem('Paid', widget.invoice.totalPaid),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildStringItem(
-                        'File Number', widget.invoice.caseFile!.fileNumber),
-                    _buildStringItem('Balance', widget.invoice.balance),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                _buildStringItem('Client', widget.invoice.client!.name),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildStringItem(
-                        'Approver', widget.invoice.approver!.getName()),
-                    InvoiceItemStatus(
-                        name: status == 'SECONDARY_APPROVED'
-                            ? 'Approved'
-                            : status == 'SECONDARY_REJECTED'
-                                ? 'Rejected'
-                                : status == 'SECONDARY_RETURNED'
-                                    ? 'Returned'
-                                    : status
-                                            .toLowerCase()
-                                            .contains("primary approved")
-                                        ? 'Primarily Approved'
-                                        : status,
-                        bgColor: status.toLowerCase().contains('approved')
-                            ? AppColors.green
-                            : status.toLowerCase().contains('rejected')
-                                ? AppColors.red
-                                : status.toLowerCase().contains('returned')
-                                    ? AppColors.orange
-                                    : status.toLowerCase().contains('paid')
-                                        ? AppColors.purple
-                                        : AppColors.blue,
-                        horizontalPadding: 20,
-                        verticalPadding: 5),
-                  ],
-                ),
-              ],
-            ),
-    );
+                ],
+              ),
+      );
+    });
   }
 
-  _buildStringItem(String title, String? data) {
+  String _checkInvoiceStatus() {
+    if (widget.invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("submitted".toLowerCase())) {
+      return "Submitted";
+    }
+    if (widget.invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("edited".toLowerCase())) {
+      return "Edited";
+    }
+    if (widget.invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("rejected".toLowerCase())) {
+      return "Rejected";
+    }
+    if (widget.invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("returned".toLowerCase())) {
+      return "Returned";
+    }
+    if (widget.invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("approved".toLowerCase())) {
+      return "Approved";
+    }
+    return "No Action";
+  }
+
+  Color _getInvoiceStatusColor() {
+    if (widget.invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("submitted".toLowerCase())) {
+      return AppColors.blue;
+    }
+    if (widget.invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("edited".toLowerCase())) {
+      return AppColors.purple;
+    }
+    if (widget.invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("rejected".toLowerCase())) {
+      return AppColors.red;
+    }
+    if (widget.invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("returned".toLowerCase())) {
+      return AppColors.orange;
+    }
+    if (widget.invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("approved".toLowerCase())) {
+      return AppColors.green;
+    }
+    return AppColors.transparent;
+  }
+
+  _buildStringItem(String title, String? data, {double? width}) {
     return SizedBox(
+      width: width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
