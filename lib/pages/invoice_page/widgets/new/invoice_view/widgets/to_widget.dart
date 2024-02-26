@@ -28,15 +28,9 @@ class ToWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "To",
+              "Billing Address",
               style: TextStyle(
                   color: AppColors.inActiveColor, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              invoice.client == null ? "N/A" : invoice.client!.getName(),
-              style: TextStyle(
-                  color: AppColors.darker, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             Text(

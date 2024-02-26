@@ -235,24 +235,30 @@ class InvoiceViewTitle extends StatelessWidget {
                   icon: Icon(FontAwesome.pen_to_square),
                 ),
               const SizedBox(height: 5),
-              IconButton(
-                onPressed: onPrint,
-                icon: Icon(FontAwesome.print_solid),
-              ),
+              if (!invoice.invoiceStatus2!.code
+                  .toLowerCase()
+                  .contains("preview".toLowerCase()))
+                IconButton(
+                  onPressed: onPrint,
+                  icon: Icon(FontAwesome.print_solid),
+                ),
               const SizedBox(height: 5),
-              if (invoice.doneBy == currentUser.id ||
-                  invoice.invoiceStatus2!.code
-                      .toLowerCase()
-                      .contains("edited".toLowerCase()) ||
-                  !invoice.invoiceStatus2!.code
-                      .toLowerCase()
-                      .contains("rejected".toLowerCase()) ||
-                  !invoice.invoiceStatus2!.code
-                      .toLowerCase()
-                      .contains("returned".toLowerCase()) ||
-                  !invoice.invoiceStatus2!.code
-                      .toLowerCase()
-                      .contains("approved".toLowerCase()))
+              if ((invoice.doneBy == currentUser.id &&
+                      invoice.invoiceStatus2!.code
+                          .toLowerCase()
+                          .contains("preview".toLowerCase())) ||
+                  (!invoice.invoiceStatus2!.code
+                          .toLowerCase()
+                          .contains("rejected".toLowerCase()) &&
+                      !invoice.invoiceStatus2!.code
+                          .toLowerCase()
+                          .contains("returned".toLowerCase()) &&
+                      !invoice.invoiceStatus2!.code
+                          .toLowerCase()
+                          .contains("approved".toLowerCase()) &&
+                      !invoice.invoiceStatus2!.code
+                          .toLowerCase()
+                          .contains("submitted".toLowerCase())))
                 IconButton(
                   onPressed: onSave,
                   icon: Icon(FontAwesome.floppy_disk),

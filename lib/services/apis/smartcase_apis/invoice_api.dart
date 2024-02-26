@@ -26,23 +26,22 @@ class InvoiceApi {
   static Future<SmartInvoice?> fetch(int id,
       {Function()? onSuccess, Function()? onError}) async {
     InvoiceRepo invoiceRepo = InvoiceRepo();
-    // DrawerRepo drawerRepo = DrawerRepo();
 
     SmartInvoice? invoice;
     await invoiceRepo.fetch(id).then((response) {
-      invoice = SmartInvoice.fromJson(response['invoice']);
+      invoice = SmartInvoice.fromJsonToShow(response);
     });
 
     return invoice;
   }
 
-  static Future post(Object data,
+  static Future post(SmartInvoice data,
       {Function()? onSuccess, Function()? onError}) async {
     InvoiceRepo invoiceRepo = InvoiceRepo();
     var response = await invoiceRepo
         .post(data)
         .then((value) => onSuccess!())
-        .onError((error, stackTrace) => onError!());
+        .onError((error, stackTrace) => {onError!(), print(error), print(stackTrace),});
     return response;
   }
 

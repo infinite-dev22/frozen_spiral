@@ -130,8 +130,10 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
                     children: [
                       _buildStringItem('Client', widget.invoice.client!.name),
                       const SizedBox(height: 5),
-                      _buildStringItem(
-                          'File Name', widget.invoice.caseFile!.fileName, width: constraints.maxWidth * .6),
+                      if (widget.invoice.caseFile != null)
+                        _buildStringItem(
+                            'File Name', widget.invoice.caseFile!.fileName,
+                            width: constraints.maxWidth * .6),
                       const SizedBox(height: 5),
                       _buildStringItem('Amount',
                           "${widget.invoice.currency!.code} - ${widget.invoice.amount ?? "0.00"}"),
@@ -147,8 +149,9 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
                             DateFormat('dd/MM/yyyy')
                                 .format(widget.invoice.date!)),
                       const SizedBox(height: 5),
-                      _buildStringItem(
-                          'File Number', widget.invoice.caseFile!.fileNumber),
+                      if (widget.invoice.caseFile != null)
+                        _buildStringItem(
+                            'File Number', widget.invoice.caseFile!.fileNumber),
                       const SizedBox(height: 5),
                       if (widget.invoice.invoiceStatus2 != null)
                         InvoiceItemStatus(

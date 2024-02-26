@@ -101,8 +101,12 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
                               hintText: 'item',
                               menuItems: preloadedInvoiceItems.toSet().toList(),
                               onChanged: (value) {
-                                _onTapSearchedItem(
-                                    invoiceItemController.dropDownValue?.value);
+                                if (invoiceItemController
+                                        .dropDownValue?.value !=
+                                    null) {
+                                  _onTapSearchedItem(invoiceItemController
+                                      .dropDownValue?.value);
+                                }
                               },
                               defaultValue: invoiceItem,
                               controller: invoiceItemController,
@@ -158,6 +162,7 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
   }
 
   _onTapSearchedItem(SmartInvoiceItem value) {
+    print("ITEM ID: ${value.id}");
     setState(() {
       invoiceItem = value;
     });

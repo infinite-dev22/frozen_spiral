@@ -406,17 +406,17 @@ class _InvoicePageState extends State<InvoicePage> {
   }
 
   _buildNonSearchedBody() {
-    if ((_filteredInvoice.isNotEmpty)) {
+    if ((preloadedInvoices.isNotEmpty)) {
       return Scrollbar(
         child: ListView.builder(
           controller: _scrollController,
-          itemCount: _filteredInvoice.length,
+          itemCount: preloadedInvoices.length,
           padding: const EdgeInsets.all(8),
           itemBuilder: (context, index) => GestureDetector(
             child: InvoiceItemWidget(
               color: AppColors.white,
               padding: 10,
-              invoice: _filteredInvoice.elementAt(index),
+              invoice: preloadedInvoices.elementAt(index),
               currencies: _currencies,
               showActions: true,
               showFinancialStatus: true,
@@ -429,18 +429,18 @@ class _InvoicePageState extends State<InvoicePage> {
               builder: (context) => BlocProvider<InvoiceBloc>(
                 create: (context) => InvoiceBloc(),
                 child: InvoiceViewLayout(
-                    invoiceId: _filteredInvoice.elementAt(index).id!),
+                    invoiceId: preloadedInvoices.elementAt(index).id!),
               ),
             ),
             /*Navigator.pushNamed(
               context,
               '/invoice',
-              arguments: _filteredInvoice.elementAt(index).id,
+              arguments: preloadedInvoices.elementAt(index).id,
             ).then((_) => setState(() {}))*/
           ),
         ),
       );
-    } else if (_doneLoading && _filteredInvoice.isEmpty) {
+    } else if (_doneLoading && preloadedInvoices.isEmpty) {
       return const Center(
         child: Text(
           "No new invoices",
@@ -507,7 +507,7 @@ class _InvoicePageState extends State<InvoicePage> {
                         useSafeArea: true,
                         context: context,
                         builder: (context) => InvoiceViewLayout(
-                          invoiceId: _filteredInvoice.elementAt(index).id!,
+                          invoiceId: preloadedInvoices.elementAt(index).id!,
                         ),
                       ));
             },
@@ -565,7 +565,9 @@ class _InvoicePageState extends State<InvoicePage> {
     _buildFilteredList();
     _searchedInvoice.clear();
     _searchedInvoice.addAll(_filteredInvoice.where((smartInvoice) =>
-        smartInvoice.number!.toLowerCase().contains(value.toLowerCase()) ||
+        (smartInvoice.number ?? "")
+            .toLowerCase()
+            .contains(value.toLowerCase()) ||
         smartInvoice.caseFile!.fileName!
             .toLowerCase()
             .contains(value.toLowerCase()) ||
@@ -582,12 +584,11 @@ class _InvoicePageState extends State<InvoicePage> {
             .getName()
             .toLowerCase()
             .contains(value.toLowerCase()) ||
-        smartInvoice.amount!.toLowerCase().contains(value.toLowerCase()) ||
-        smartInvoice.employee!
-            .getName()
+        (smartInvoice.amount ?? "")
             .toLowerCase()
             .contains(value.toLowerCase()) ||
-        smartInvoice.invoiceType!.name!
+        smartInvoice.employee!
+            .getName()
             .toLowerCase()
             .contains(value.toLowerCase())));
     setState(() {});
@@ -677,7 +678,7 @@ class _InvoicePageState extends State<InvoicePage> {
     }
 
     // Return the text content of the document.
-    return document.text!;
+    return document.text ?? "";
   }
 
   @override

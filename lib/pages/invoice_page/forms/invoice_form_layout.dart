@@ -22,7 +22,6 @@ import 'package:smart_case/services/apis/smartcase_apis/file_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/services/apis/smartcase_apis/invoice_approver_api.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/util/utilities.dart';
 import 'package:smart_case/widgets/custom_accordion.dart';
 import 'package:smart_case/widgets/custom_dropdowns.dart';
 import 'package:smart_case/widgets/custom_searchable_async_bottom_sheet_contents.dart';
@@ -57,6 +56,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController dueDateController = TextEditingController();
   final TextEditingController clientAddressController = TextEditingController();
+  final TextEditingController clientController = TextEditingController();
   final TextEditingController bankDetailsController = TextEditingController();
   final TextEditingController invoiceTermsController = TextEditingController();
   final ScrollController scrollController = ScrollController();
@@ -188,6 +188,36 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                   ),
                                 ),
                                 if (file != null &&
+                                    clientController.text.isNotEmpty)
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text("Client",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            CustomTextArea(
+                                              minLines: 1,
+                                              maxLines: 1,
+                                              controller: clientController,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  ),
+                                if (file != null &&
                                     clientAddressController.text.isNotEmpty)
                                   Column(
                                     children: [
@@ -302,8 +332,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                       var invoice = SmartInvoice(
                                         invoiceTypeId: invoiceType!.id,
                                         invoiceType: invoiceType,
-                                        date: formatStringDMY(
-                                            dateController.text),
+                                        date: dateController.text,
                                         dueDate: dueDateController.text,
                                         invoiceStatus2: status,
                                         fileId: file!.id,
@@ -337,7 +366,8 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                       );
                                     } catch (error) {
                                       Fluttertoast.showToast(
-                                          msg: "Fill in all fields and try again",
+                                          msg:
+                                              "Fill in all fields and try again",
                                           toastLength: Toast.LENGTH_LONG,
                                           gravity: ToastGravity.BOTTOM,
                                           timeInSecForIosWeb: 5,
@@ -348,6 +378,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                   },
                                   child: Text("Preview Invoice"),
                                 ),
+                                const SizedBox(height: 10),
                               ],
                             ),
                           );
@@ -452,6 +483,7 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
   _onTapSearchedFile(BuildContext cntxt, SmartFile value) {
     file = value;
     clientAddressController.text = file!.address ?? "";
+    clientController.text = file!.clientName ?? "";
     cntxt
         .read<InvoiceFormBloc>()
         .add(RefreshInvoiceForm(invoiceFormItemListItemList));

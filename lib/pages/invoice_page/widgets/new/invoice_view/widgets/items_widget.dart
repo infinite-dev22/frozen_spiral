@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/theme/color.dart';
+import 'package:smart_case/widgets/text_item.dart';
 
 class ItemsWidget extends StatelessWidget {
   final SmartInvoice invoice;
@@ -37,32 +38,12 @@ class ItemsWidget extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
                       width: constraints.maxWidth * .3,
                       child: Text(
-                        "Description",
-                        style: TextStyle(
-                            color: AppColors.inActiveColor,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      width: constraints.maxWidth * .25,
-                      child: Text(
-                        "Amount(${invoice.currency!.code})",
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                            color: AppColors.inActiveColor,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      width: constraints.maxWidth * .3,
-                      child: Text(
-                        "SUBTOTAL(${invoice.currency!.code})",
-                        textAlign: TextAlign.right,
+                        "Items",
                         style: TextStyle(
                             color: AppColors.inActiveColor,
                             fontWeight: FontWeight.bold),
@@ -84,39 +65,38 @@ class ItemsWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              width: constraints.maxWidth * .3,
-                              child: SingleChildScrollView(
-                                child: Text(
-                                  invoice.invoiceItems![index].description!,
-                                  style: TextStyle(
-                                      color: AppColors.darker,
-                                      fontWeight: FontWeight.bold),
-                                  softWrap: true,
-                                ),
-                                scrollDirection: Axis.horizontal,
-                                physics: BouncingScrollPhysics(),
+                              width: constraints.maxWidth * .7,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextItem(
+                                    title: "Item Type",
+                                    data: invoice.invoiceItems![index].taxType!
+                                        .getName(),
+                                  ),
+                                  TextItem(
+                                    title: "Item Description",
+                                    data: invoice
+                                        .invoiceItems![index].description!,
+                                  ),
+                                ],
                               ),
                             ),
                             SizedBox(
-                              width: constraints.maxWidth * .25,
-                              child: Text(
-                                numberFormat.format(
-                                    invoice.invoiceItems![index].amount),
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    color: AppColors.darker,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            SizedBox(
-                              width: constraints.maxWidth * .3,
-                              child: Text(
-                                numberFormat.format(
-                                    invoice.invoiceItems![index].totalAmount),
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    color: AppColors.darker,
-                                    fontWeight: FontWeight.bold),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextItem(
+                                    title: "Sub total",
+                                    data:
+                                        "${invoice.currency!.code}-${numberFormat.format(invoice.invoiceItems![index].amount)}",
+                                  ),
+                                  TextItem(
+                                    title: "Amount",
+                                    data:
+                                        "${invoice.currency!.code}-${numberFormat.format(invoice.invoiceItems![index].totalAmount)}",
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -133,23 +113,29 @@ class ItemsWidget extends StatelessWidget {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                child: _buildItemsTableAmounts(constraints),
-              ),
-              Divider(),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                 child: _buildGrandTotalItem(constraints),
               ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                child: _buildAmountsItem("Paid Total", invoice.totalPaid ?? "0.00", constraints),
+                child: _buildAmountsItem(
+                    "Net Total", _subTotalAmount(), constraints),
               ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                child: _buildAmountsItem("Balance", invoice.balance ?? "0.00", constraints),
+                child: _buildAmountsItem(
+                    "Paid Total",
+                    "${invoice.currency!.code}-${NumberFormat("###,###,###,###,##0.00").format(invoice.totalPaid ?? 0.00)}",
+                    constraints),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                child: _buildAmountsItem(
+                    "Balance",
+                    "${invoice.currency!.code}-${NumberFormat("###,###,###,###,##0.00").format(invoice.balance ?? 0.00)}",
+                    constraints),
               ),
             ],
           ),
@@ -158,63 +144,20 @@ class ItemsWidget extends StatelessWidget {
     });
   }
 
-  Widget _buildItemsTableAmounts(BoxConstraints constraints) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SizedBox(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Net Total",
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    color: AppColors.inActiveColor,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Gross Total",
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    color: AppColors.inActiveColor,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-        ),
-        SizedBox(
-          width: constraints.maxWidth * .35,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(_subTotalAmount()),
-              const SizedBox(height: 10),
-              Text(_totalAmount()),
-              const SizedBox(height: 10),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildGrandTotalItem(BoxConstraints constraints) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(
           child: Text(
-            "GRAND TOTAL",
+            "GROSS TOTAL",
             style: TextStyle(color: AppColors.red, fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(
           width: constraints.maxWidth * .35,
           child: Text(
-            invoice.amount ?? "0.00",
+            _totalAmount(),
             textAlign: TextAlign.right,
             style:
                 TextStyle(color: AppColors.darker, fontWeight: FontWeight.bold),
@@ -257,7 +200,7 @@ class ItemsWidget extends StatelessWidget {
         totalAmount = totalAmount + invoiceFormItem.totalAmount!;
       }
     }
-    return thousandFormatter.format(totalAmount);
+    return "${invoice.currency!.code}-${thousandFormatter.format(totalAmount)}";
   }
 
   String _subTotalAmount() {
@@ -268,6 +211,6 @@ class ItemsWidget extends StatelessWidget {
         subTotalAmount = subTotalAmount + invoiceFormItem.amount!;
       }
     }
-    return thousandFormatter.format(subTotalAmount);
+    return "${invoice.currency!.code}-${thousandFormatter.format(subTotalAmount)}";
   }
 }

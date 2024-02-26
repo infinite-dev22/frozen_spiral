@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:smart_case/database/interface/invoice_repo_interface.dart';
+import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/util/smart_case_init.dart';
 
 class InvoiceRepo extends InvoiceRepoInterface {
@@ -79,7 +81,7 @@ class InvoiceRepo extends InvoiceRepoInterface {
   }
 
   @override
-  Future<dynamic> post(Object data) async {
+  Future<dynamic> post(SmartInvoice data) async {
     var client = RetryClient(http.Client());
     try {
       final headers = {
@@ -88,10 +90,12 @@ class InvoiceRepo extends InvoiceRepoInterface {
         "Authorization": 'Bearer ${currentUser.token}',
       };
 
+      log(json.encode(data.toJson()));
+
       var response = await client.post(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
             'api/accounts/invoice/create'),
-        body: json.encode(data),
+        body: json.encode(data.toJson()),
         headers: headers,
       );
 

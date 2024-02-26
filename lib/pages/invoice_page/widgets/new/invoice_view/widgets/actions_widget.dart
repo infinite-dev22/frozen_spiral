@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
-import 'package:smart_case/util/utilities.dart';
 
 class ActionsWidget extends StatelessWidget {
   final SmartInvoice invoice;
@@ -45,7 +45,7 @@ class ActionsWidget extends StatelessWidget {
               children: [
                 const SizedBox(height: 10),
                 Text(
-                  "${invoice.currency!.code}-${invoice.amount ?? "0.00"}",
+                  "${invoice.currency!.code}-${NumberFormat("###,###,###,###,##0.00").format(invoice.amount ?? 0.00)}",
                   style: TextStyle(
                     color: AppColors.darker,
                     fontWeight: FontWeight.bold,
@@ -55,7 +55,7 @@ class ActionsWidget extends StatelessWidget {
                 const SizedBox(height: 5),
                 if (invoice.date != null)
                   Text(
-                    "Due on ${formatDateTimeToString(invoice.date)}",
+                    "Due on ${invoice.date}",
                     style: TextStyle(
                       color: AppColors.inActiveColor,
                       fontWeight: FontWeight.bold,
@@ -65,109 +65,43 @@ class ActionsWidget extends StatelessWidget {
                 const SizedBox(height: 10),
               ],
             ),
-            FilledButton(
-              onPressed: () {},
-              child: Text(_checkInvoiceStatus() /*"APPROVE NOW"*/),
-            ),
+            if (!invoice.invoiceStatus2!.code
+                .toLowerCase()
+                .contains("preview".toLowerCase()))
+              Row(
+                children: [
+                  FilledButton(
+                    onPressed: _approveInvoice,
+                    child: Text("Approve"),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll(AppColors.green),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  FilledButton(
+                    onPressed: _returnInvoice,
+                    child: Text("Return"),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll(AppColors.orange),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  FilledButton(
+                    onPressed: _rejectInvoice,
+                    child: Text("Reject"),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(AppColors.red),
+                    ),
+                  ),
+                ],
+              ),
           ],
         ),
       ),
     );
   }
-
-  String _checkInvoiceStatus() {
-    if (invoice.invoiceStatus2!.name
-        .toLowerCase()
-        .contains("submitted for approval".toLowerCase())) {
-      return "Approve Now";
-    }
-    return "No Action";
-  }
-
-  // Widget _buildButtons() {
-  //   return (invoice!.canPay == true)
-  //       ? Row(
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           crossAxisAlignment: CrossAxisAlignment.center,
-  //           children: [
-  //             FilledButton(
-  //               onPressed: (drawer != null &&
-  //                       (drawer!.openingBalance! > 0 &&
-  //                           drawer!.openingBalance! >=
-  //                               double.parse(
-  //                                   amountController.text.replaceAll(",", ""))))
-  //                   ? _payoutInvoice
-  //                   : (preloadedDrawers.isEmpty)
-  //                       ? _payoutInvoice
-  //                       : null,
-  //               style: ButtonStyle(
-  //                 backgroundColor: MaterialStateProperty.resolveWith(
-  //                   (states) {
-  //                     if (drawer != null &&
-  //                         (drawer!.openingBalance! > 0 &&
-  //                             drawer!.openingBalance! >=
-  //                                 double.parse(amountController.text
-  //                                     .replaceAll(",", "")))) {
-  //                       return AppColors.green;
-  //                     } else if (preloadedDrawers.isEmpty) {
-  //                       return AppColors.green;
-  //                     } else {
-  //                       return Colors.green.shade200;
-  //                     }
-  //                   },
-  //                 ),
-  //               ),
-  //               child: Text(
-  //                 (drawer != null &&
-  //                         (drawer!.openingBalance! > 0 &&
-  //                             drawer!.openingBalance! >=
-  //                                 double.parse(amountController.text
-  //                                     .replaceAll(",", ""))))
-  //                     ? 'Pay out'
-  //                     : 'Select drawer with sufficient funds to continue',
-  //               ),
-  //             ),
-  //           ],
-  //         )
-  //       : (invoice!.canApprove != null)
-  //           ? Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               children: [
-  //                 FilledButton(
-  //                   onPressed: _approveInvoice,
-  //                   style: ButtonStyle(
-  //                     backgroundColor: MaterialStateProperty.resolveWith(
-  //                         (states) => AppColors.green),
-  //                   ),
-  //                   child: const Text(
-  //                     'Approve',
-  //                   ),
-  //                 ),
-  //                 FilledButton(
-  //                   onPressed: _returnInvoice,
-  //                   style: ButtonStyle(
-  //                     backgroundColor: MaterialStateProperty.resolveWith(
-  //                         (states) => AppColors.orange),
-  //                   ),
-  //                   child: const Text(
-  //                     'Return',
-  //                   ),
-  //                 ),
-  //                 FilledButton(
-  //                   onPressed: _rejectInvoice,
-  //                   style: ButtonStyle(
-  //                     backgroundColor: MaterialStateProperty.resolveWith(
-  //                         (states) => AppColors.red),
-  //                   ),
-  //                   child: const Text(
-  //                     'Reject',
-  //                   ),
-  //                 ),
-  //               ],
-  //             )
-  //           : Container();
-  // }
 
   _payoutInvoice() {
     _submitData("PAID", 'Pay out successful');
@@ -221,8 +155,7 @@ class ActionsWidget extends StatelessWidget {
       'api/accounts/invoices/${invoice.id}/process',
       currentUser.token,
       {
-        // "payout_amount": amountController.text.trim(),
-        // "action_comment": commentController.text.trim(),
+        "comment": '',
         "submit": value,
       },
       onSuccess: () => _onSuccess(toastText),
@@ -239,7 +172,6 @@ class ActionsWidget extends StatelessWidget {
         backgroundColor: AppColors.green,
         textColor: Colors.white,
         fontSize: 16.0);
-    // preloadedInvoices.remove(invoice);
     preloadedInvoices.removeWhere((element) => element.id == invoice.id);
   }
 
