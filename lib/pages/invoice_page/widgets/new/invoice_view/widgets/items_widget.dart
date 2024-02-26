@@ -71,13 +71,13 @@ class ItemsWidget extends StatelessWidget {
                                 children: [
                                   TextItem(
                                     title: "Item Type",
-                                    data: invoice.invoiceItems![index].taxType!
+                                    data: invoice.invoiceItems![index].item!
                                         .getName(),
                                   ),
                                   TextItem(
                                     title: "Item Description",
-                                    data: invoice
-                                        .invoiceItems![index].description!,
+                                    data: invoice.invoiceItems![index].item!
+                                        .description!,
                                   ),
                                 ],
                               ),

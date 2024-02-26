@@ -162,7 +162,6 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
   }
 
   _onTapSearchedItem(SmartInvoiceItem value) {
-    print("ITEM ID: ${value.id}");
     setState(() {
       invoiceItem = value;
     });
