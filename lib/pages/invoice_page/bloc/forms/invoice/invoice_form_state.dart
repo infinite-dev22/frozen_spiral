@@ -18,41 +18,34 @@ extension InvoiceFormStatusX on InvoiceFormStatus {
 class InvoiceFormState extends Equatable {
   final SmartInvoice? invoice;
   final List<InvoiceFormItemListItem>? items;
+  final List<SmartCurrency>? currencies;
   final InvoiceFormStatus? status;
   final int idSelected;
 
   const InvoiceFormState({
-    this.invoice,
     this.items,
+    this.currencies,
+    this.invoice,
     this.status = InvoiceFormStatus.initial,
     this.idSelected = 0,
   });
 
   @override
-  List<Object?> get props => [invoice, items, status, idSelected];
+  List<Object?> get props => [items, currencies, invoice, status, idSelected];
 
   InvoiceFormState copyWith({
-    SmartInvoice? invoice,
     List<InvoiceFormItemListItem>? items,
+    List<SmartCurrency>? currencies,
+    SmartInvoice? invoice,
     InvoiceFormStatus? status,
     int? idSelected,
   }) {
     return InvoiceFormState(
-      invoice: invoice ?? this.invoice,
       items: items ?? this.items,
+      currencies: currencies ?? this.currencies,
+      invoice: invoice ?? this.invoice,
       status: status ?? this.status,
       idSelected: idSelected ?? this.idSelected,
     );
   }
-}
-
-class InvoiceFormInitial extends InvoiceFormState {}
-
-class InvoiceFormSuccess extends InvoiceFormState {}
-
-class InvoiceFormRefresh extends InvoiceFormState {
-  const InvoiceFormRefresh(items);
-
-  @override
-  List<Object?> get props => [items];
 }

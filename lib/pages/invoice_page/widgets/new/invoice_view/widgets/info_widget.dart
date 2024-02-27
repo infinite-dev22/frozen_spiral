@@ -38,11 +38,17 @@ class InfoWidget extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextItem(
-                          title: "Invoice No.", data: invoice.number ?? "N/A"),
-                      TextItem(
-                          title: "Date",
-                          data: invoice.date == null ? "N/A" : invoice.date),
+                      if (invoice.number != null)
+                        TextItem(
+                            title: "Invoice No.", data: invoice.number ?? "N/A")
+                      else
+                        TextItem(
+                            title: "Date",
+                            data: invoice.date == null ? "N/A" : invoice.date),
+                      if (invoice.number != null)
+                        TextItem(
+                            title: "Date",
+                            data: invoice.date == null ? "N/A" : invoice.date),
                       TextItem(
                           title: "Supervisor",
                           data: invoice.approver == null
@@ -60,12 +66,15 @@ class InfoWidget extends StatelessWidget {
                         title: "Practice Area",
                         data: invoice.practiceAreasId.toString(),
                       ),
-                      InvoiceItemStatus(
-                        name: _checkInvoiceStatus(),
-                        bgColor: AppColors.primary,
-                        horizontalPadding: 10,
-                        verticalPadding: 10,
-                      ),
+                      if (!_checkInvoiceStatus()
+                          .toLowerCase()
+                          .contains("no action"))
+                        InvoiceItemStatus(
+                          name: _checkInvoiceStatus(),
+                          bgColor: AppColors.primary,
+                          horizontalPadding: 10,
+                          verticalPadding: 10,
+                        ),
                     ],
                   ),
                 ],

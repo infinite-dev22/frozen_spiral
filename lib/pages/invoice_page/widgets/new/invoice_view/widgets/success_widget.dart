@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart';
 import 'package:smart_case/data/app_config.dart';
+import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
+import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
+import 'package:smart_case/pages/invoice_page/forms/invoice_items_form.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/actions_widget.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/bank_widget.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/info_widget.dart';
@@ -36,7 +39,7 @@ class ViewSuccessLayout extends StatelessWidget {
       body: Column(
         children: [
           InvoiceViewTitle(
-            onEdit: () {},
+            onEdit: () => _buildInvoiceDialog(context),
             onPrint: () {},
             onSave: () => _submitFormData(context, invoice),
             isElevated: true,
@@ -46,7 +49,8 @@ class ViewSuccessLayout extends StatelessWidget {
             child: ListView(
               children: [
                 InfoWidget(invoice: invoice),
-                ToWidget(invoice: invoice),
+                if ((invoice.client != null && invoice.client!.address != null))
+                  ToWidget(invoice: invoice),
                 BankWidget(invoice: invoice),
                 ItemsWidget(invoice: invoice),
                 TermsWidget(invoice: invoice),
@@ -145,5 +149,17 @@ class ViewSuccessLayout extends StatelessWidget {
     );
 
     Navigator.pop(context);
+    Navigator.pop(context);
+  }
+
+  _buildInvoiceDialog(BuildContext context) {
+    Navigator.pop(context);
+    return showModalBottomSheet(
+      enableDrag: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (context) => InvoiceForm(),
+    );
   }
 }

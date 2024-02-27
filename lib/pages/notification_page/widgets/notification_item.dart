@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive/hive.dart';
@@ -43,15 +45,10 @@ class _NotificationItemState extends State<NotificationItem> {
       }),
       child: Slidable(
         // Specify a key if the Slidable is dismissible.
-        key: const ValueKey(0),
-
+        key: ValueKey("${widget.title}-${widget.title}-${Random.secure()}"),
         // The end action pane is the one at the right or the bottom side.
         endActionPane: ActionPane(
           motion: const ScrollMotion(),
-          dismissible: DismissiblePane(onDismissed: () {
-            widget.onDismissed;
-            dispose();
-          }),
           children: [
             SlidableAction(
               onPressed: (context) {

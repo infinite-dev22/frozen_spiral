@@ -94,9 +94,10 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
   _mapProcessInvoiceEventToState(
       ProcessInvoice event, Emitter<InvoiceState> emit) async {
     emit(state.copyWith(status: InvoiceStatus.viewLoading));
-    await InvoiceApi.process(event.invoice, event.invoiceId).then((invoice) {
-      emit(state.copyWith(status: InvoiceStatus.viewSuccess, invoice: invoice));
-    }).onError((error, stackTrace) {
+    await InvoiceApi.process(event.processMap, event.invoiceId)
+        .whenComplete(
+            () => emit(state.copyWith(status: InvoiceStatus.viewSuccess)))
+        .onError((error, stackTrace) {
       if (kDebugMode) {
         print(error);
         print(stackTrace);

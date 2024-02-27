@@ -417,7 +417,6 @@ class _InvoicePageState extends State<InvoicePage> {
               color: AppColors.white,
               padding: 10,
               invoice: preloadedInvoices.elementAt(index),
-              currencies: _currencies,
               showActions: true,
               showFinancialStatus: true,
             ),
@@ -497,7 +496,6 @@ class _InvoicePageState extends State<InvoicePage> {
                     color: AppColors.white,
                     padding: 10,
                     invoice: invoices.elementAt(index),
-                    currencies: _currencies,
                     showActions: true,
                     showFinancialStatus: true,
                   ),
@@ -636,7 +634,7 @@ class _InvoicePageState extends State<InvoicePage> {
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
-      builder: (context) => InvoiceForm(currencies: _currencies),
+      builder: (context) => InvoiceForm(),
     );
   }
 

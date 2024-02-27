@@ -23,6 +23,7 @@ class TextItem extends StatelessWidget {
           style: const TextStyle(
             color: AppColors.inActiveColor,
           ),
+          softWrap: true,
         ),
         Text(
           data,

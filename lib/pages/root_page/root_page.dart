@@ -166,7 +166,7 @@ class _RootPageState extends State<RootPage> {
         FloatingActionButton.extended(
           heroTag: null,
           icon: const Icon(Icons.class_outlined),
-          onPressed: _buildInvoiceDialog,
+          onPressed: _buildInvoiceForm,
           label: const Text("Invoice"),
         ),
         FloatingActionButton.extended(
@@ -319,13 +319,13 @@ class _RootPageState extends State<RootPage> {
     );
   }
 
-  _buildInvoiceDialog() {
+  _buildInvoiceForm() {
     return showModalBottomSheet(
       enableDrag: true,
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
-      builder: (context) => InvoiceForm(currencies: currencies),
+      builder: (context) => InvoiceForm(),
     );
   }
 

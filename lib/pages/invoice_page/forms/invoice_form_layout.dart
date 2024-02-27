@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/bank/bank_model.dart';
+import 'package:smart_case/database/client/client_model.dart';
 import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/employee/employee_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
@@ -13,6 +14,7 @@ import 'package:smart_case/database/invoice/invoice_type_model.dart';
 import 'package:smart_case/pages/invoice_page/bloc/forms/invoice/invoice_form_bloc.dart';
 import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_items_form.dart';
+import 'package:smart_case/pages/invoice_page/forms/loading_widget.dart';
 import 'package:smart_case/pages/invoice_page/widgets/invoice_add_items_widget.dart';
 import 'package:smart_case/pages/invoice_page/widgets/invoice_amounts_widget.dart';
 import 'package:smart_case/pages/invoice_page/widgets/invoice_terms_widget.dart';
@@ -30,12 +32,10 @@ import 'package:smart_case/widgets/form_title.dart';
 
 class InvoiceFormLayout extends StatefulWidget {
   final SmartInvoice? invoice;
-  final List<SmartCurrency> currencies;
 
   const InvoiceFormLayout({
     super.key,
     this.invoice,
-    required this.currencies,
   });
 
   @override
@@ -84,314 +84,372 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                 ? DropDownValueModel(value: bank, name: bank!.getName())
                 : null);
 
-    return BlocBuilder<InvoiceFormBloc, InvoiceFormState>(
-      builder: (cntxt, state) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 20)
-              .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Column(
-            children: [
-              FormTitle(
-                name: '${(widget.invoice == null) ? 'New' : 'Edit'} Invoice',
-                onSave: () => _submitFormData(),
-                onCancel: () => _cancelFormData(),
-                isElevated: isTitleElevated,
-                addButtonText: (widget.invoice == null) ? 'Add' : 'Update',
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (scrollNotification) {
-                      if (scrollController.position.userScrollDirection ==
-                          ScrollDirection.reverse) {
-                        setState(() {
-                          isTitleElevated = true;
-                        });
-                      } else if (scrollController
-                              .position.userScrollDirection ==
-                          ScrollDirection.forward) {
-                        if (scrollController.position.pixels ==
-                            scrollController.position.maxScrollExtent) {
-                          setState(() {
-                            isTitleElevated = false;
-                          });
-                        }
-                      }
-                      return true;
-                    },
-                    child: ListView(
-                      controller: scrollController,
-                      padding: const EdgeInsets.all(8),
-                      children: [
-                        LayoutBuilder(builder: (context, constraints) {
-                          return Form(
-                            child: Column(
-                              children: [
-                                SearchableDropDown<SmartInvoiceType>(
-                                  hintText: 'invoice type',
-                                  menuItems:
-                                      preloadedInvoiceTypes.toSet().toList(),
-                                  onChanged: (value) {
-                                    _onTapSearchedInvoiceType(
-                                        cntxt,
-                                        invoiceTypeController
-                                            .dropDownValue?.value);
-                                  },
-                                  defaultValue: invoiceType,
-                                  controller: invoiceTypeController,
-                                ),
-                                InvoiceDateTimeAccordion(
-                                  startName: 'Date',
-                                  endName: 'Due on',
-                                  startDateController: dateController,
-                                  endDateController: dueDateController,
-                                ),
-                                GestureDetector(
-                                  onTap: () =>
-                                      _showSearchFileBottomSheet(cntxt),
-                                  child: Container(
-                                    height: 50,
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.all(5),
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    alignment: Alignment.centerLeft,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.circular(10),
+    return BlocListener<InvoiceFormBloc, InvoiceFormState>(
+      listener: (context, state) {
+        if (state.status == InvoiceFormStatus.error) {
+          Navigator.pop(context);
+          _onError();
+        }
+      },
+      child: BlocBuilder<InvoiceFormBloc, InvoiceFormState>(
+        builder: (cntxt, state) {
+          if (state.status == InvoiceFormStatus.initial) {
+            cntxt.read<InvoiceFormBloc>().add(PrepareInvoiceForm());
+          }
+          if (state.status == InvoiceFormStatus.loading) {
+            return FormLoadingWidget();
+          }
+          if (state.status == InvoiceFormStatus.success) {
+            currency = cntxt
+                .read<InvoiceFormBloc>()
+                .state
+                .currencies!
+                .firstWhere((currency) => currency.code == 'UGX');
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 20)
+                  .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Column(
+                children: [
+                  FormTitle(
+                    name:
+                        '${(widget.invoice == null) ? 'New' : 'Edit'} Invoice',
+                    onSave: () => _submitFormData(),
+                    onCancel: () => _cancelFormData(),
+                    isElevated: isTitleElevated,
+                    addButtonText: (widget.invoice == null) ? 'Add' : 'Update',
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () =>
+                          FocusManager.instance.primaryFocus?.unfocus(),
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (scrollNotification) {
+                          if (scrollController.position.userScrollDirection ==
+                              ScrollDirection.reverse) {
+                            setState(() {
+                              isTitleElevated = true;
+                            });
+                          } else if (scrollController
+                                  .position.userScrollDirection ==
+                              ScrollDirection.forward) {
+                            if (scrollController.position.pixels ==
+                                scrollController.position.maxScrollExtent) {
+                              setState(() {
+                                isTitleElevated = false;
+                              });
+                            }
+                          }
+                          return true;
+                        },
+                        child: ListView(
+                          controller: scrollController,
+                          padding: const EdgeInsets.all(8),
+                          children: [
+                            LayoutBuilder(builder: (context, constraints) {
+                              return Form(
+                                child: Column(
+                                  children: [
+                                    SearchableDropDown<SmartInvoiceType>(
+                                      hintText: 'invoice type',
+                                      menuItems: preloadedInvoiceTypes
+                                          .toSet()
+                                          .toList(),
+                                      onChanged: (value) {
+                                        _onTapSearchedInvoiceType(
+                                            cntxt,
+                                            invoiceTypeController
+                                                .dropDownValue?.value);
+                                      },
+                                      defaultValue: invoiceType,
+                                      controller: invoiceTypeController,
                                     ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(6),
-                                          child: SizedBox(
-                                            width: constraints.maxWidth - 50,
-                                            child: Text(
-                                              file?.fileName ?? 'Select file',
-                                              style: const TextStyle(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  color: AppColors.darker,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w500),
+                                    InvoiceDateTimeAccordion(
+                                      startName: 'Date',
+                                      endName: 'Due on',
+                                      startDateController: dateController,
+                                      endDateController: dueDateController,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () =>
+                                          _showSearchFileBottomSheet(cntxt),
+                                      child: Container(
+                                        height: 50,
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(5),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
+                                        alignment: Alignment.centerLeft,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(6),
+                                              child: SizedBox(
+                                                width:
+                                                    constraints.maxWidth - 50,
+                                                child: Text(
+                                                  file?.fileName ??
+                                                      'Select file',
+                                                  style: const TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      color: AppColors.darker,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ),
                                             ),
+                                            const Icon(
+                                              Icons.keyboard_arrow_down_rounded,
+                                              color: AppColors.darker,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    if (file != null &&
+                                        clientController.text.isNotEmpty)
+                                      Container(
+                                        padding: EdgeInsets.all(8),
+                                        margin: EdgeInsets.only(bottom: 10),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(10),
+                                          ),
+                                          color: AppColors.white,
+                                        ),
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Client",
+                                                style: TextStyle(
+                                                    color: AppColors.darker,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                clientController.text,
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        const Icon(
-                                          Icons.keyboard_arrow_down_rounded,
-                                          color: AppColors.darker,
-                                        ),
-                                      ],
+                                      ),
+                                    if (file != null &&
+                                        clientAddressController.text.isNotEmpty)
+                                      Column(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text("Client address",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                CustomTextArea(
+                                                  minLines: 2,
+                                                  controller:
+                                                      clientAddressController,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      ),
+                                    CustomGenericDropdown<SmartCurrency>(
+                                      hintText: 'currency',
+                                      menuItems: cntxt
+                                          .read<InvoiceFormBloc>()
+                                          .state
+                                          .currencies!,
+                                      defaultValue: (cntxt
+                                              .read<InvoiceFormBloc>()
+                                              .state
+                                              .currencies!
+                                              .isNotEmpty)
+                                          ? (currency != null)
+                                              ? cntxt
+                                                  .read<InvoiceFormBloc>()
+                                                  .state
+                                                  .currencies!
+                                                  .firstWhere((cur) =>
+                                                      cur.code ==
+                                                      currency!.code)
+                                              : cntxt
+                                                  .read<InvoiceFormBloc>()
+                                                  .state
+                                                  .currencies!
+                                                  .firstWhere((currency) =>
+                                                      currency.code == 'UGX')
+                                          : null,
+                                      onChanged: (value) =>
+                                          _onTapSearchedCurrency(cntxt, value),
                                     ),
-                                  ),
-                                ),
-                                if (file != null &&
-                                    clientController.text.isNotEmpty)
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Text("Client",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            CustomTextArea(
-                                              minLines: 1,
-                                              maxLines: 1,
-                                              controller: clientController,
-                                            )
-                                          ],
-                                        ),
+                                    InvoiceAddItemsWidget(
+                                        onTap: () => _showItemsDialog(cntxt)),
+                                    InvoiceAmountsWidget(parentContext: cntxt),
+                                    SearchableDropDown<SmartBank>(
+                                      hintText: 'bank',
+                                      menuItems:
+                                          preloadedBanks.toSet().toList(),
+                                      onChanged: (value) {
+                                        _onTapSearchedBank(
+                                            cntxt,
+                                            bankController
+                                                .dropDownValue?.value);
+                                      },
+                                      defaultValue: bank,
+                                      controller: bankController,
+                                      clear: false,
+                                    ),
+                                    if (bankController.dropDownValue != null &&
+                                        bankDetailsController.text.isNotEmpty)
+                                      Column(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text("Bank details",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                CustomTextArea(
+                                                  readOnly: true,
+                                                  controller:
+                                                      bankDetailsController,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                        ],
                                       ),
-                                      const SizedBox(height: 10),
-                                    ],
-                                  ),
-                                if (file != null &&
-                                    clientAddressController.text.isNotEmpty)
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Text("Client address",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            CustomTextArea(
-                                              minLines: 2,
-                                              controller:
-                                                  clientAddressController,
-                                            )
-                                          ],
-                                        ),
+                                    if (preloadedInvoiceApprovers.isNotEmpty)
+                                      SearchableDropDown<SmartEmployee>(
+                                        hintText: 'approver',
+                                        menuItems: preloadedInvoiceApprovers
+                                            .toSet()
+                                            .toList(),
+                                        onChanged: (value) {
+                                          _onTapSearchedApprover(
+                                              cntxt,
+                                              approversController
+                                                  .dropDownValue?.value);
+                                        },
+                                        defaultValue: approver,
+                                        controller: approversController,
                                       ),
-                                      const SizedBox(height: 10),
-                                    ],
-                                  ),
-                                CustomGenericDropdown<SmartCurrency>(
-                                  hintText: 'currency',
-                                  menuItems: widget.currencies,
-                                  defaultValue: (widget.currencies.isNotEmpty)
-                                      ? (currency != null)
-                                          ? widget.currencies.firstWhere(
-                                              (cur) =>
-                                                  cur.code == currency!.code)
-                                          : widget.currencies.firstWhere(
-                                              (currency) =>
-                                                  currency.code == 'UGX')
-                                      : null,
-                                  onChanged: (value) =>
-                                      _onTapSearchedCurrency(cntxt, value),
-                                ),
-                                InvoiceAddItemsWidget(
-                                    onTap: () => _showItemsDialog(cntxt)),
-                                InvoiceAmountsWidget(parentContext: cntxt),
-                                SearchableDropDown<SmartBank>(
-                                  hintText: 'bank',
-                                  menuItems: preloadedBanks.toSet().toList(),
-                                  onChanged: (value) {
-                                    _onTapSearchedBank(cntxt,
-                                        bankController.dropDownValue?.value);
-                                  },
-                                  defaultValue: bank,
-                                  controller: bankController,
-                                  clear: false,
-                                ),
-                                if (bankController.dropDownValue != null &&
-                                    bankDetailsController.text.isNotEmpty)
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Text("Bank details",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            CustomTextArea(
-                                              readOnly: true,
-                                              controller: bankDetailsController,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                    ],
-                                  ),
-                                if (preloadedInvoiceApprovers.isNotEmpty)
-                                  SearchableDropDown<SmartEmployee>(
-                                    hintText: 'approver',
-                                    menuItems: preloadedInvoiceApprovers
-                                        .toSet()
-                                        .toList(),
-                                    onChanged: (value) {
-                                      _onTapSearchedApprover(
-                                          cntxt,
-                                          approversController
-                                              .dropDownValue?.value);
-                                    },
-                                    defaultValue: approver,
-                                    controller: approversController,
-                                  ),
-                                InvoiceTermsWidget(
-                                    controller: invoiceTermsController),
-                                const SizedBox(height: 20),
-                                FilledButton(
-                                  onPressed: () {
-                                    try {
-                                      var status = SmartInvoiceStatus(
-                                          name: "Previewing invoice",
-                                          code: "Previewing");
-                                      var invoice = SmartInvoice(
-                                        invoiceTypeId: invoiceType!.id,
-                                        invoiceType: invoiceType,
-                                        date: dateController.text,
-                                        dueDate: dueDateController.text,
-                                        invoiceStatus2: status,
-                                        fileId: file!.id,
-                                        file: file,
-                                        clientId: file!.clientId,
-                                        bank: bank,
-                                        clientAddress:
-                                            clientAddressController.text,
-                                        currencyId: currency!.id,
-                                        currency: currency,
-                                        paymentTerms:
-                                            invoiceTermsController.text,
-                                        bankId: bank!.id,
-                                        supervisorId: approver!.id,
-                                        approver: approver,
-                                        practiceAreasId: 1,
-                                        invoiceItems: invoiceFormItemList,
-                                      );
+                                    InvoiceTermsWidget(
+                                        controller: invoiceTermsController),
+                                    const SizedBox(height: 20),
+                                    FilledButton(
+                                      onPressed: () {
+                                        try {
+                                          var status = SmartInvoiceStatus(
+                                              name: "Previewing invoice",
+                                              code: "Previewing");
+                                          var clientObj = SmartClient(
+                                            name: clientController.text,
+                                            address:
+                                                clientAddressController.text,
+                                          );
+                                          var invoice = SmartInvoice(
+                                            invoiceTypeId: invoiceType!.id,
+                                            invoiceType: invoiceType,
+                                            date: dateController.text,
+                                            dueDate: dueDateController.text,
+                                            invoiceStatus2: status,
+                                            fileId: file!.id,
+                                            file: file,
+                                            clientId: file!.clientId,
+                                            bank: bank,
+                                            client: clientObj,
+                                            clientAddress:
+                                                clientAddressController.text,
+                                            currencyId: currency!.id,
+                                            currency: currency,
+                                            paymentTerms:
+                                                invoiceTermsController.text,
+                                            bankId: bank!.id,
+                                            supervisorId: approver!.id,
+                                            approver: approver,
+                                            practiceAreasId: 1,
+                                            invoiceItems: invoiceFormItemList,
+                                          );
 
-                                      showModalBottomSheet(
-                                        enableDrag: true,
-                                        isScrollControlled: true,
-                                        useSafeArea: true,
-                                        context: context,
-                                        builder: (context) =>
-                                            BlocProvider<InvoiceBloc>(
-                                          create: (context) => InvoiceBloc(),
-                                          child: InvoiceViewLayout(
-                                              invoice: invoice),
-                                        ),
-                                      );
-                                    } catch (error) {
-                                      Fluttertoast.showToast(
-                                          msg:
-                                              "Fill in all fields and try again",
-                                          toastLength: Toast.LENGTH_LONG,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 5,
-                                          backgroundColor: AppColors.red,
-                                          textColor: AppColors.white,
-                                          fontSize: 16.0);
-                                    }
-                                  },
-                                  child: Text("Preview Invoice"),
+                                          showModalBottomSheet(
+                                            enableDrag: true,
+                                            isScrollControlled: true,
+                                            useSafeArea: true,
+                                            context: context,
+                                            builder: (context) =>
+                                                BlocProvider<InvoiceBloc>(
+                                              create: (context) =>
+                                                  InvoiceBloc(),
+                                              child: InvoiceViewLayout(
+                                                  invoice: invoice),
+                                            ),
+                                          );
+                                        } catch (error) {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "Fill in all fields and try again",
+                                              toastLength: Toast.LENGTH_LONG,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 5,
+                                              backgroundColor: AppColors.red,
+                                              textColor: AppColors.white,
+                                              fontSize: 16.0);
+                                        }
+                                      },
+                                      child: Text("Preview Invoice"),
+                                    ),
+                                    const SizedBox(height: 10),
+                                  ],
                                 ),
-                                const SizedBox(height: 10),
-                              ],
-                            ),
-                          );
-                        }),
-                      ],
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        );
-      },
+            );
+          }
+          return Container();
+        },
+      ),
     );
   }
 
@@ -569,8 +627,6 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
         " 1996, 18% is payable on all fees.\n3. Accounts carry"
         " interest at 6% effective one month from the date date"
         " of receipt hereof R:6.";
-    currency =
-        widget.currencies.firstWhere((currency) => currency.code == 'UGX');
 
     _reloadBanks();
     _reloadApprovers();
@@ -589,5 +645,16 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
     dateController.dispose();
     dueDateController.dispose();
     invoiceTermsController.dispose();
+  }
+
+  _onError() async {
+    Fluttertoast.showToast(
+        msg: "An error occurred",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor: AppColors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 }

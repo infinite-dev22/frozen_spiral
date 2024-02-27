@@ -21,11 +21,9 @@ class InvoiceItemWidget extends StatefulWidget {
     required this.padding,
     this.showActions = false,
     this.showFinancialStatus = false,
-    this.currencies,
   });
 
   final SmartInvoice invoice;
-  final List<SmartCurrency>? currencies;
 
   final bool showActions;
   final Color color;
@@ -288,7 +286,7 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
       isScrollControlled: true,
       useSafeArea: true,
       context: context,
-      builder: (context) => InvoiceForm(currencies: widget.currencies!),
+      builder: (context) => InvoiceForm(),
     );
   }
 

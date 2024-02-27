@@ -33,34 +33,40 @@ class ToWidget extends StatelessWidget {
                   color: AppColors.inActiveColor, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
-            Text(
-              invoice.client == null ||
-                      (invoice.client != null &&
-                          invoice.client!.address == null)
-                  ? "N/A"
-                  : invoice.client!.address!,
-              style: TextStyle(
-                  color: AppColors.darker, fontWeight: FontWeight.bold),
-            ),
+            if ((invoice.client != null && invoice.client!.address != null))
+              Text(
+                invoice.client == null ||
+                        (invoice.client != null &&
+                            invoice.client!.address == null)
+                    ? "N/A"
+                    : invoice.client!.address!,
+                style: TextStyle(
+                    color: AppColors.darker, fontWeight: FontWeight.bold),
+              ),
             const SizedBox(height: 5),
-            Text(
-              invoice.client == null ||
-                      (invoice.client != null && invoice.client!.email == null)
-                  ? "N/A"
-                  : invoice.client!.email!,
-              style: TextStyle(
-                  color: AppColors.inActiveColor, fontWeight: FontWeight.bold),
-            ),
+            if (invoice.client != null && invoice.client!.email != null)
+              Text(
+                invoice.client == null ||
+                        (invoice.client != null &&
+                            invoice.client!.email == null)
+                    ? "N/A"
+                    : invoice.client!.email!,
+                style: TextStyle(
+                    color: AppColors.inActiveColor,
+                    fontWeight: FontWeight.bold),
+              ),
             const SizedBox(height: 5),
-            Text(
-              invoice.client == null ||
-                      (invoice.client != null &&
-                          invoice.client!.telephone == null)
-                  ? "N/A"
-                  : invoice.client!.telephone!,
-              style: TextStyle(
-                  color: AppColors.inActiveColor, fontWeight: FontWeight.bold),
-            ),
+            if (invoice.client != null && invoice.client!.telephone != null)
+              Text(
+                invoice.client == null ||
+                        (invoice.client != null &&
+                            invoice.client!.telephone == null)
+                    ? "N/A"
+                    : invoice.client!.telephone!,
+                style: TextStyle(
+                    color: AppColors.inActiveColor,
+                    fontWeight: FontWeight.bold),
+              ),
           ],
         ),
       ),

@@ -14,11 +14,13 @@ import 'package:smart_case/util/smart_case_init.dart';
 class InvoiceViewLayout extends StatelessWidget {
   final int? invoiceId;
   final SmartInvoice? invoice;
+  final BuildContext? parentContext;
 
   const InvoiceViewLayout({
     super.key,
     this.invoiceId,
     this.invoice,
+    this.parentContext,
   });
 
   @override
@@ -37,7 +39,6 @@ class InvoiceViewLayout extends StatelessWidget {
       child: BlocBuilder<InvoiceBloc, InvoiceState>(
         builder: (context, state) {
           if (invoice != null && state.status == InvoiceStatus.initial) {
-            print("Has invoice");
             context.read<InvoiceBloc>().add(SetInvoice(invoice!));
           }
           if (invoice == null &&

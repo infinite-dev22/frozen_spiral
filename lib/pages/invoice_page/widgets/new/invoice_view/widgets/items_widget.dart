@@ -63,38 +63,41 @@ class ItemsWidget extends StatelessWidget {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: constraints.maxWidth * .7,
+                              width: constraints.maxWidth * .5,
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   TextItem(
-                                    title: "Item Type",
+                                    title: "Case Payment Type",
                                     data: invoice.invoiceItems![index].item!
                                         .getName(),
                                   ),
                                   TextItem(
                                     title: "Item Description",
-                                    data: invoice.invoiceItems![index].item!
-                                        .description!,
+                                    data: invoice
+                                        .invoiceItems![index].description!,
                                   ),
                                 ],
                               ),
                             ),
                             SizedBox(
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   TextItem(
                                     title: "Sub total",
                                     data:
-                                        "${invoice.currency!.code}-${numberFormat.format(invoice.invoiceItems![index].amount)}",
+                                        "${invoice.currency!.code} ${numberFormat.format(invoice.invoiceItems![index].amount)}",
                                   ),
                                   TextItem(
                                     title: "Amount",
                                     data:
-                                        "${invoice.currency!.code}-${numberFormat.format(invoice.invoiceItems![index].totalAmount)}",
+                                        "${invoice.currency!.code} ${numberFormat.format(invoice.invoiceItems![index].totalAmount)}",
                                   ),
                                 ],
                               ),
@@ -126,7 +129,7 @@ class ItemsWidget extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                 child: _buildAmountsItem(
                     "Paid Total",
-                    "${invoice.currency!.code}-${NumberFormat("###,###,###,###,##0.00").format(invoice.totalPaid ?? 0.00)}",
+                    "${invoice.currency!.code} ${NumberFormat("###,###,###,###,##0.00").format(invoice.totalPaid ?? 0.00)}",
                     constraints),
               ),
               Padding(
@@ -134,7 +137,7 @@ class ItemsWidget extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                 child: _buildAmountsItem(
                     "Balance",
-                    "${invoice.currency!.code}-${NumberFormat("###,###,###,###,##0.00").format(invoice.balance ?? 0.00)}",
+                    "${invoice.currency!.code} ${NumberFormat("###,###,###,###,##0.00").format(invoice.balance ?? 0.00)}",
                     constraints),
               ),
             ],
@@ -200,7 +203,7 @@ class ItemsWidget extends StatelessWidget {
         totalAmount = totalAmount + invoiceFormItem.totalAmount!;
       }
     }
-    return "${invoice.currency!.code}-${thousandFormatter.format(totalAmount)}";
+    return "${invoice.currency!.code} ${thousandFormatter.format(totalAmount)}";
   }
 
   String _subTotalAmount() {
@@ -211,6 +214,6 @@ class ItemsWidget extends StatelessWidget {
         subTotalAmount = subTotalAmount + invoiceFormItem.amount!;
       }
     }
-    return "${invoice.currency!.code}-${thousandFormatter.format(subTotalAmount)}";
+    return "${invoice.currency!.code} ${thousandFormatter.format(subTotalAmount)}";
   }
 }

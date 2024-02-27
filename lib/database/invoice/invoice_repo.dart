@@ -153,7 +153,7 @@ class InvoiceRepo extends InvoiceRepoInterface {
         "Authorization": 'Bearer ${currentUser.token}',
       };
 
-      var response = await client.put(
+      var response = await client.post(
         Uri.https(currentUser.url.replaceRange(0, 8, ''),
             'api/accounts/invoices/$id/approve'),
         body: json.encode(data),

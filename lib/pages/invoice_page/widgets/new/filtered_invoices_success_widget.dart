@@ -23,7 +23,6 @@ class FilteredInvoicesWidget extends StatelessWidget {
               color: AppColors.white,
               padding: 10,
               invoice: state.invoices.elementAt(index),
-              currencies: state.currencies,
               showActions: true,
               showFinancialStatus: true,
             );

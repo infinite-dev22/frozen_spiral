@@ -41,18 +41,19 @@ class InvoiceApi {
     var response = await invoiceRepo
         .post(data)
         .then((value) => onSuccess!())
-        .onError((error, stackTrace) => {onError!(), print(error), print(stackTrace),});
+        .onError((error, stackTrace) => {
+              onError!(),
+              print(error),
+              print(stackTrace),
+            });
     return response;
   }
 
-  static process(SmartInvoice data, int id,
+  static process(Map<String, dynamic> data, int id,
       {Function()? onSuccess, Function()? onError}) async {
     InvoiceRepo invoiceRepo = InvoiceRepo();
 
-    var response = await invoiceRepo
-        .process(data.toJson(), id)
-        .then((value) => onSuccess!())
-        .onError((error, stackTrace) => onError!());
+    var response = await invoiceRepo.process(data, id);
     return response;
   }
 

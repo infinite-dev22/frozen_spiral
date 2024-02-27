@@ -37,13 +37,13 @@ class UpdateInvoice extends InvoiceEvent {
 }
 
 class ProcessInvoice extends InvoiceEvent {
-  ProcessInvoice(this.invoiceId, this.invoice);
+  ProcessInvoice(this.invoiceId, this.processMap);
 
   final int invoiceId;
-  final SmartInvoice invoice;
+  final Map<String, dynamic> processMap;
 
   @override
-  List<Object?> get props => [invoiceId, invoice];
+  List<Object?> get props => [invoiceId, processMap];
 }
 
 class SetInvoice extends InvoiceEvent {

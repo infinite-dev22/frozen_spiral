@@ -47,7 +47,7 @@ class BankWidget extends StatelessWidget {
                   color: AppColors.darker, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
-            Text(
+            if(invoice.bank != null && invoice.bank!.swiftCode != null) Text(
               invoice.bank == null || (invoice.bank != null && invoice.bank!.swiftCode == null)
                   ? "N/A"
                   : invoice.bank!.swiftCode!,

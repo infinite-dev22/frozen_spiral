@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
-import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
+import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/util/smart_case_init.dart';
 
 class ActionsWidget extends StatelessWidget {
   final SmartInvoice invoice;
@@ -14,64 +14,38 @@ class ActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildBody();
+    return _buildBody(context);
   }
 
-  Widget _buildBody() {
-    return Container(
-      padding: EdgeInsets.all(8),
-      margin: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(15),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withOpacity(.1),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: const Offset(0, 1), // changes position of shadow
-          ),
-        ],
-        color: AppColors.white,
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Text(
-                  "${invoice.currency!.code}-${NumberFormat("###,###,###,###,##0.00").format(invoice.amount ?? 0.00)}",
-                  style: TextStyle(
-                    color: AppColors.darker,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+  Widget _buildBody(BuildContext context) {
+    return (!invoice.invoiceStatus2!.code
+            .toLowerCase()
+            .contains("preview".toLowerCase()))
+        ? Container(
+            padding: EdgeInsets.all(8),
+            margin: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(15),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0, 1), // changes position of shadow
                 ),
-                const SizedBox(height: 5),
-                if (invoice.date != null)
-                  Text(
-                    "Due on ${invoice.date}",
-                    style: TextStyle(
-                      color: AppColors.inActiveColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                const SizedBox(height: 10),
               ],
+              color: AppColors.white,
             ),
-            if (!invoice.invoiceStatus2!.code
-                .toLowerCase()
-                .contains("preview".toLowerCase()))
-              Row(
+            child: SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FilledButton(
-                    onPressed: _approveInvoice,
+                    onPressed:() => _approveInvoice(context),
                     child: Text("Approve"),
                     style: ButtonStyle(
                       backgroundColor:
@@ -80,7 +54,7 @@ class ActionsWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   FilledButton(
-                    onPressed: _returnInvoice,
+                    onPressed:() => _returnInvoice(context),
                     child: Text("Return"),
                     style: ButtonStyle(
                       backgroundColor:
@@ -89,7 +63,7 @@ class ActionsWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   FilledButton(
-                    onPressed: _rejectInvoice,
+                    onPressed:() => _rejectInvoice(context),
                     child: Text("Reject"),
                     style: ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(AppColors.red),
@@ -97,67 +71,51 @@ class ActionsWidget extends StatelessWidget {
                   ),
                 ],
               ),
-          ],
-        ),
-      ),
-    );
+            ),
+          )
+        : Container();
   }
 
-  _payoutInvoice() {
-    _submitData("PAID", 'Pay out successful');
-  }
-
-  _approveInvoice() {
+  _approveInvoice(BuildContext context) {
     if (invoice.invoiceStatus2!.code == 'EDITED' ||
         invoice.invoiceStatus2!.code == "SUBMITTED") {
-      if (invoice.canApprove ?? false) {
-        _submitData("APPROVED", 'Invoice approved');
-      } else if (invoice.canApprove ?? false) {
-        if (invoice.secondApprover != null && invoice.secondApprover) {
-          _submitData("SECONDARY_APPROVED", 'Invoice approved');
-        } else {
-          _submitData("PRIMARY_APPROVED", 'Invoice primarily approved');
-        }
-      }
+      _submitData("approve", 'Invoice approved', context);
     } else if (invoice.invoiceStatus2!.code == "PRIMARY_APPROVED") {
-      _submitData("SECONDARY_APPROVED", 'Invoice approved');
+      _submitData("secondary_approve", 'Invoice approved', context);
     }
   }
 
-  _returnInvoice() {
+  _returnInvoice(BuildContext context) {
     if (invoice.invoiceStatus2!.code == 'EDITED' ||
         invoice.invoiceStatus2!.code == "SUBMITTED") {
-      if (invoice.canApprove ?? false) {
-        _submitData("RETURNED", 'Action successful');
-      } else if (invoice.canApprove ?? false) {
-        _submitData("PRIMARY_RETURNED", 'Action successful');
-      }
+      _submitData("return", 'Action successful', context);
     } else if (invoice.invoiceStatus2!.code == "PRIMARY_RETURNED") {
-      _submitData("SECONDARY_RETURNED", 'Action successful');
+      _submitData("secondary_return", 'Action successful', context);
     }
   }
 
-  _rejectInvoice() {
+  _rejectInvoice(BuildContext context) {
     if (invoice.invoiceStatus2!.code == 'EDITED' ||
         invoice.invoiceStatus2!.code == "SUBMITTED") {
-      if (invoice.canApprove ?? false) {
-        _submitData("REJECTED", 'Action successful');
-      } else if (invoice.canApprove ?? false) {
-        _submitData("PRIMARY_REJECTED", 'Action successful');
-      }
+      _submitData("reject", 'Action successful', context);
     } else if (invoice.invoiceStatus2!.code == "PRIMARY_REJECTED") {
-      _submitData("SECONDARY_REJECTED", 'Action successful');
+      _submitData("secondary_reject", 'Action successful', context);
     }
   }
 
-  _submitData(String value, String toastText) {
-    SmartCaseApi.smartPost(
-      'api/accounts/invoices/${invoice.id}/process',
-      currentUser.token,
+  _submitData(String value, String toastText, BuildContext context) {
+    context.read<InvoiceBloc>().add(ProcessInvoice(invoice.id!,
+        {
+          "comment": '',
+          "submit": value,
+        }));
+    print("Invoice Id: ${invoice.id}");
+    InvoiceApi.process(
       {
         "comment": '',
         "submit": value,
       },
+      invoice.id!,
       onSuccess: () => _onSuccess(toastText),
       onError: _onError,
     );

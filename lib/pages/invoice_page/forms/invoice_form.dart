@@ -5,9 +5,7 @@ import 'package:smart_case/pages/invoice_page/bloc/forms/invoice/invoice_form_bl
 import 'package:smart_case/pages/invoice_page/forms/invoice_form_layout.dart';
 
 class InvoiceForm extends StatelessWidget {
-  final List<SmartCurrency> currencies;
-
-  const InvoiceForm({super.key, required this.currencies});
+  const InvoiceForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +13,6 @@ class InvoiceForm extends StatelessWidget {
       BlocProvider<InvoiceFormBloc>(
         create: (context) => InvoiceFormBloc(),
       )
-    ], child: InvoiceFormLayout(currencies: currencies));
+    ], child: InvoiceFormLayout());
   }
 }

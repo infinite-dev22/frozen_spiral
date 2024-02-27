@@ -119,7 +119,7 @@ class _InvoiceItemsFormLayoutState extends State<InvoiceItemsFormLayout> {
                             SmartCaseNumberField(
                               hint: 'Amount',
                               controller: amountController,
-                              maxLength: 14,
+                              maxLength: 15,
                               onChanged: (value) {
                                 totalAmountController.text = value;
                               },

@@ -32,9 +32,9 @@ class InvoiceFormItem extends SmartModel {
 
     return InvoiceFormItem(
       id: json['id'] as int?,
-      item: json['item'] == null
+      item: json['case_payment_type'] == null
           ? null
-          : SmartInvoiceItem.fromJson(json['item'] as Map<String, dynamic>),
+          : SmartInvoiceItem.fromJson(json['case_payment_type'] as Map<String, dynamic>),
       description: json['description'] as String?,
       amount: amnt,
       taxType: json['tax'] == null

@@ -15,4 +15,6 @@ class RefreshInvoiceForm extends InvoiceFormEvent {
   List<Object?> get props => [items];
 }
 
+class PrepareInvoiceForm extends InvoiceFormEvent {}
+
 class Success extends InvoiceFormEvent {}

@@ -29,7 +29,6 @@ class UnfilteredInvoicesWidget extends StatelessWidget {
               color: AppColors.white,
               padding: 10,
               invoice: state.invoices.elementAt(index),
-              currencies: currencies,
               showActions: true,
               showFinancialStatus: true,
             );
