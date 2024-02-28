@@ -23,8 +23,12 @@ class EngagementBloc extends Bloc<EngagementEvent, EngagementState> {
       GetEngagementsEvent event, Emitter<EngagementState> emit) async {
     emit(state.copyWith(status: EngagementStatus.loading));
     await EngagementApi.fetchAll().then((engagements) {
-      emit(state.copyWith(
-          status: EngagementStatus.success, engagements: engagements));
+      if (engagements.isNotEmpty) {
+        emit(state.copyWith(
+            status: EngagementStatus.success, engagements: engagements));
+      } else if (engagements.isEmpty) {
+        emit(state.copyWith(status: EngagementStatus.noData));
+      }
     }).onError((error, stackTrace) {
       if (kDebugMode) {
         print(error);
@@ -97,7 +101,9 @@ class EngagementBloc extends Bloc<EngagementEvent, EngagementState> {
         .toList();
     if (engagements.isNotEmpty) {
       emit(state.copyWith(
-          status: EngagementStatus.success, engagements: engagements, searchString: event.search));
+          status: EngagementStatus.success,
+          engagements: engagements,
+          searchString: event.search));
     } else if (engagements.isEmpty) {
       emit(state.copyWith(
           status: EngagementStatus.notFound, searchString: event.search));

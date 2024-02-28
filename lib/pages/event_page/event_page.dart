@@ -239,8 +239,14 @@ class _DiaryPageState extends State<DiaryPage> {
           "isFirmEventRdbtn": "ALLEVENTS",
           "checkedChk": ["MEETING", "NEXTACTIVITY", "LEAVE", "HOLIDAY"],
         });
-    List eventsList = jsonDecode(responseEventsList);
-    _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
+    try {
+      List eventsList = jsonDecode(responseEventsList);
+      _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
+    } on TypeError {
+      String eventsListString = jsonEncode(responseEventsList);
+      List eventsList = jsonDecode(eventsListString);
+      _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
+    }
 
     var dataCollection = <DateTime, List<SmartEvent>>{};
     final DateTime today = DateTime.now();
