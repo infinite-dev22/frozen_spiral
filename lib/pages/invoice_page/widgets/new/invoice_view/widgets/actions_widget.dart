@@ -18,9 +18,10 @@ class ActionsWidget extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    return (!invoice.invoiceStatus2!.code
-            .toLowerCase()
-            .contains("preview".toLowerCase()))
+    return (!invoice.invoiceStatus2!.code.toLowerCase().contains("preview") ||
+            !invoice.invoiceStatus2!.code.toLowerCase().contains("approve") ||
+            !invoice.invoiceStatus2!.code.toLowerCase().contains("rejected") ||
+            invoice.invoiceStatus2 != null)
         ? Container(
             padding: EdgeInsets.all(8),
             margin: EdgeInsets.all(8),
@@ -45,7 +46,7 @@ class ActionsWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FilledButton(
-                    onPressed:() => _approveInvoice(context),
+                    onPressed: () => _approveInvoice(context),
                     child: Text("Approve"),
                     style: ButtonStyle(
                       backgroundColor:
@@ -54,7 +55,7 @@ class ActionsWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   FilledButton(
-                    onPressed:() => _returnInvoice(context),
+                    onPressed: () => _returnInvoice(context),
                     child: Text("Return"),
                     style: ButtonStyle(
                       backgroundColor:
@@ -63,7 +64,7 @@ class ActionsWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   FilledButton(
-                    onPressed:() => _rejectInvoice(context),
+                    onPressed: () => _rejectInvoice(context),
                     child: Text("Reject"),
                     style: ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(AppColors.red),
@@ -104,8 +105,7 @@ class ActionsWidget extends StatelessWidget {
   }
 
   _submitData(String value, String toastText, BuildContext context) {
-    context.read<InvoiceBloc>().add(ProcessInvoice(invoice.id!,
-        {
+    context.read<InvoiceBloc>().add(ProcessInvoice(invoice.id!, {
           "comment": '',
           "submit": value,
         }));
