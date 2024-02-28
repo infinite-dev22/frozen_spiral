@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/database/employee/employee_model.dart';
 import 'package:smart_case/database/file/file_model.dart';
+import 'package:smart_case/util/utilities.dart';
 
 class SmartEvent {
   final int? id;
@@ -21,6 +23,7 @@ class SmartEvent {
   final int? employeeId;
   final int? caseActivityStatusId;
   final int? calendarEventTypeId;
+  final int? calendarEventType;
   final int? externalTypeId;
   final String? firmEvent;
   final DateTime? notifyOnDate;
@@ -48,6 +51,7 @@ class SmartEvent {
     this.employeeId,
     this.caseActivityStatusId,
     this.calendarEventTypeId,
+    this.calendarEventType,
     this.externalTypeId,
     this.firmEvent,
     this.notifyOnDate,
@@ -81,7 +85,9 @@ class SmartEvent {
   }
 
   factory SmartEvent.fromJsonView(Map<dynamic, dynamic> doc) {
+    print(doc["calendarEvents"]['id']);
     dynamic activityStatusIdVar;
+    dynamic notifyDateTime;
     try {
       Map<String, dynamic> param = jsonDecode(doc["calendarEvents"]['params']);
       activityStatusIdVar = param['case_activity_status_id'];
@@ -96,11 +102,22 @@ class SmartEvent {
         toNotifyList.add(SmartEmployee.fromJson(value["employee"]));
       });
     } catch (e) {
-      if (toNotifyMap != null) {
-        toNotifyMap.forEach((value) {
-          toNotifyList.add(SmartEmployee.fromJson(value["employee"]));
-        });
+      if (kDebugMode) {
+        log(e.toString());
       }
+    }
+
+    try {
+      notifyDateTime = ((toNotifyMap != null && toNotifyMap.isNotEmpty) &&
+              toNotifyMap.first != null)
+          ? toNotifyMap.first['notify_on']
+          : null;
+    } on NoSuchMethodError {
+      notifyDateTime = (toNotifyMap != null &&
+              toNotifyMap["0"] != null &&
+              toNotifyMap.entries.isNotEmpty)
+          ? toNotifyMap["0"]['notify_on']
+          : null;
     }
 
     return SmartEvent(
@@ -112,9 +129,13 @@ class SmartEvent {
       startDate: DateTime.parse(doc["calendarEvents"]['start']),
       startTime: DateFormat('h:mm a').parse(DateFormat('h:mm a')
           .format(DateTime.parse(doc["calendarEvents"]['start']))),
-      endDate: DateTime.parse(doc["calendarEvents"]['end']),
-      endTime: DateFormat('h:mm a').parse(DateFormat('h:mm a')
-          .format(DateTime.parse(doc["calendarEvents"]['end']))),
+      endDate: (doc["calendarEvents"]['end'] != null)
+          ? DateTime.parse(doc["calendarEvents"]['end'])
+          : null,
+      endTime: (doc["calendarEvents"]['end'] != null)
+          ? DateFormat('h:mm a').parse(DateFormat('h:mm a')
+              .format(DateTime.parse(doc["calendarEvents"]['end'])))
+          : null,
       backgroundColor: doc["calendarEvents"]['backgroundColor'],
       borderColor: doc["calendarEvents"]['borderColor'],
       fullName:
@@ -122,11 +143,14 @@ class SmartEvent {
           " ${doc["calendarEvents"]['created_by']['employee']['middle_name'] ?? ""}"
           " ${doc["calendarEvents"]['created_by']['employee']['last_name'] ?? ""}",
       activityStatusId: activityStatusIdVar,
-      file: SmartFile.fromJson(doc['caseFile']),
-      notifyOnDate:
-          (doc['notifyOn'] != null) ? DateTime.parse(doc['notifyOn']) : null,
+      file: (doc['caseFile'] == null)
+          ? null
+          : SmartFile.fromJson(doc['caseFile']),
+      notifyOnDate: (notifyDateTime != null)
+          ? formatEventReminderDate(notifyDateTime)
+          : null,
       notifyOnTime:
-          (doc['notifyOn'] != null) ? DateTime.parse(doc['notifyOn']) : null,
+          (notifyDateTime != null) ? formatTime(notifyDateTime) : null,
       toNotify: toNotifyList,
       employeeIds: toNotifyList.map((e) => e.id).toList(),
       calendarEventTypeId: doc["calendarEvents"]["calendar_event_type_id"],
@@ -149,6 +173,7 @@ class SmartEvent {
       backgroundColor: doc['backgroundColor'],
       borderColor: doc['borderColor'],
       fullName: doc['full_name'],
+      calendarEventType: doc["calendar_event_type"],
     );
   }
 }

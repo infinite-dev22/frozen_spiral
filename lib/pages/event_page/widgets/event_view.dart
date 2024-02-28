@@ -6,7 +6,9 @@ import 'package:smart_case/database/activity/activity_model.dart';
 import 'package:smart_case/database/event/event_model.dart';
 import 'package:smart_case/pages/event_page/widgets/event_form.dart';
 import 'package:smart_case/services/apis/smartcase_api.dart';
+import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/util/utilities.dart';
 import 'package:smart_case/widgets/custom_icon_holder.dart';
 import 'package:smart_case/widgets/custom_image.dart';
 import 'package:smart_case/widgets/form_title.dart';
@@ -96,43 +98,47 @@ class _EventViewState extends State<EventView> {
                               const SizedBox(width: 20),
                               Column(
                                 children: [
-                                  Text(
-                                    'from: ${DateFormat('dd/MM/yyyy - h:mm a').format(event!.startDate!)}',
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
+                                  if (event!.startDate != null)
+                                    Text(
+                                      'from: ${DateFormat('dd/MM/yyyy - h:mm a').format(event!.startDate!)}',
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
                                   const SizedBox(height: 10),
-                                  Text(
-                                    'to:   ${DateFormat('dd/MM/yyyy - h:mm a').format(event!.endDate!)}',
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
+                                  if (event!.endDate != null)
+                                    Text(
+                                      'to:   ${DateFormat('dd/MM/yyyy - h:mm a').format(event!.endDate!)}',
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
                                 ],
                               ),
                             ],
                           ),
                           const Divider(indent: 5, endIndent: 5, height: 20),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Icon(
-                                Icons.file_copy_rounded,
-                                size: 30,
-                              ),
-                              const SizedBox(width: 20),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width - 70,
-                                height: 50,
-                                child: Marquee(
-                                  text:
-                                      "${event!.file?.fileName!} - ${event!.file?.fileNumber!} | ",
-                                  velocity: 50.0,
-                                  style: const TextStyle(fontSize: 18),
-                                  blankSpace: 0,
-                                  pauseAfterRound: const Duration(seconds: 3),
+                          if (event!.file != null)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.file_copy_rounded,
+                                  size: 30,
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Divider(indent: 5, endIndent: 5, height: 20),
+                                const SizedBox(width: 20),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width - 70,
+                                  height: 50,
+                                  child: Marquee(
+                                    text:
+                                        "${event!.file?.fileName!} - ${event!.file?.fileNumber!} | ",
+                                    velocity: 50.0,
+                                    style: const TextStyle(fontSize: 18),
+                                    blankSpace: 0,
+                                    pauseAfterRound: const Duration(seconds: 3),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          if (event!.file != null)
+                            const Divider(indent: 5, endIndent: 5, height: 20),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -163,35 +169,36 @@ class _EventViewState extends State<EventView> {
                             ],
                           ),
                           const Divider(indent: 5, endIndent: 5, height: 20),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Icon(
-                                Icons.notifications_active_rounded,
-                                size: 30,
-                              ),
-                              const SizedBox(width: 20),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Reminder',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  if ((event!.notifyOnDate != null))
+                          if (event!.notifyOnDate != null)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.notifications_active_rounded,
+                                  size: 30,
+                                ),
+                                const SizedBox(width: 20),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Reminder',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 10),
                                     Text(
-                                      DateFormat('dd/MM/yyyy - h:mm a')
-                                          .format(event!.notifyOnDate!),
+                                      formatEventReminderDateString(
+                                          event!.notifyOnDate!),
                                       style: const TextStyle(fontSize: 18),
                                     ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const Divider(indent: 5, endIndent: 5, height: 20),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          if (event!.notifyOnDate != null)
+                            const Divider(indent: 5, endIndent: 5, height: 20),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -210,10 +217,20 @@ class _EventViewState extends State<EventView> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 10),
-                                  for (var event in event!.toBeNotified ?? [])
+                                  if (event!.toNotify != null &&
+                                      event!.toNotify!.isNotEmpty)
+                                    for (var employee in event!.toNotify ?? [])
+                                      Text(
+                                        "• ${employee.getName()}",
+                                        style: const TextStyle(fontSize: 18),
+                                      )
+                                  else
                                     Text(
-                                      event,
-                                      style: const TextStyle(fontSize: 18),
+                                      "• No people/contacts to be notified",
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        color: AppColors.inActiveColor,
+                                      ),
                                     ),
                                 ],
                               ),
@@ -249,28 +266,19 @@ class _EventViewState extends State<EventView> {
     Map eventResponse = await SmartCaseApi.smartFetch(
         'api/calendar/${widget.eventId}', currentUser.token);
     event = SmartEvent.fromJsonView(eventResponse);
-    Map activityStatusResponse = await SmartCaseApi.smartFetch(
-        'api/admin/caseActivityStatus/${event!.activityStatusId!}',
-        // Cause of not loading
-        currentUser.token);
-    activityStatus = SmartActivityStatus.fromJson(
-        activityStatusResponse['caseActivityStatus']);
-    if (mounted) setState(() {});
+    if (event!.activityStatusId != null) {
+      Map activityStatusResponse = await SmartCaseApi.smartFetch(
+          'api/admin/caseActivityStatus/${event!.activityStatusId!}',
+          // Cause of not loading
+          currentUser.token);
+      activityStatus = SmartActivityStatus.fromJson(
+          activityStatusResponse['caseActivityStatus']);
+      if (mounted) setState(() {});
+    }
   }
 
   _setupData() async {
-    // get file.
-    Map eventResponse = await SmartCaseApi.smartFetch(
-        'api/calendar/$eventId', currentUser.token);
-    event = SmartEvent.fromJsonView(eventResponse);
-    // get activity status attached to the file.
-    Map activityStatusResponse = await SmartCaseApi.smartFetch(
-        'api/admin/caseActivityStatus/${event!.activityStatusId!}',
-        currentUser.token);
-
-    activityStatus = SmartActivityStatus.fromJson(
-        activityStatusResponse['caseActivityStatus']);
-    setState(() {});
+    _fetchEvent();
   }
 
   @override

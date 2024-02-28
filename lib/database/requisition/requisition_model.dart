@@ -158,10 +158,9 @@ class SmartRequisition {
   }
 
   factory SmartRequisition.fromJson(Map<String, dynamic> json) {
-    print("Date" + json['date']);
     return SmartRequisition(
       id: json['id'] as int,
-      date: formatStringDateTime(json['date']),
+      date: formatDate(json['date']),
       flowType: json["flowtypetwo"],
       amount: json['payout_amount'],
       description: json['description'],
