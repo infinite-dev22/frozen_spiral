@@ -114,29 +114,31 @@ class _EventViewState extends State<EventView> {
                             ],
                           ),
                           const Divider(indent: 5, endIndent: 5, height: 20),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Icon(
-                                Icons.file_copy_rounded,
-                                size: 30,
-                              ),
-                              const SizedBox(width: 20),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width - 70,
-                                height: 50,
-                                child: Marquee(
-                                  text:
-                                      "${event!.file?.fileName!} - ${event!.file?.fileNumber!} | ",
-                                  velocity: 50.0,
-                                  style: const TextStyle(fontSize: 18),
-                                  blankSpace: 0,
-                                  pauseAfterRound: const Duration(seconds: 3),
+                          if (event!.file != null)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.file_copy_rounded,
+                                  size: 30,
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Divider(indent: 5, endIndent: 5, height: 20),
+                                const SizedBox(width: 20),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width - 70,
+                                  height: 50,
+                                  child: Marquee(
+                                    text:
+                                        "${event!.file?.fileName!} - ${event!.file?.fileNumber!} | ",
+                                    velocity: 50.0,
+                                    style: const TextStyle(fontSize: 18),
+                                    blankSpace: 0,
+                                    pauseAfterRound: const Duration(seconds: 3),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          if (event!.file != null)
+                            const Divider(indent: 5, endIndent: 5, height: 20),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
