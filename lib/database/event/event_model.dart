@@ -23,6 +23,7 @@ class SmartEvent {
   final int? employeeId;
   final int? caseActivityStatusId;
   final int? calendarEventTypeId;
+  final int? calendarEventType;
   final int? externalTypeId;
   final String? firmEvent;
   final DateTime? notifyOnDate;
@@ -50,6 +51,7 @@ class SmartEvent {
     this.employeeId,
     this.caseActivityStatusId,
     this.calendarEventTypeId,
+    this.calendarEventType,
     this.externalTypeId,
     this.firmEvent,
     this.notifyOnDate,
@@ -106,14 +108,14 @@ class SmartEvent {
     }
 
     try {
-      notifyDateTime = ((toNotifyMap != null &&
-                  toNotifyMap.isNotEmpty &&
-                  toNotifyMap.entries.isNotEmpty) &&
+      notifyDateTime = ((toNotifyMap != null && toNotifyMap.isNotEmpty) &&
               toNotifyMap.first != null)
           ? toNotifyMap.first['notify_on']
           : null;
     } on NoSuchMethodError {
-      notifyDateTime = (toNotifyMap != null && toNotifyMap["0"] != null)
+      notifyDateTime = (toNotifyMap != null &&
+              toNotifyMap["0"] != null &&
+              toNotifyMap.entries.isNotEmpty)
           ? toNotifyMap["0"]['notify_on']
           : null;
     }
@@ -132,7 +134,8 @@ class SmartEvent {
           : null,
       endTime: (doc["calendarEvents"]['end'] != null)
           ? DateFormat('h:mm a').parse(DateFormat('h:mm a')
-          .format(DateTime.parse(doc["calendarEvents"]['end']))) : null,
+              .format(DateTime.parse(doc["calendarEvents"]['end'])))
+          : null,
       backgroundColor: doc["calendarEvents"]['backgroundColor'],
       borderColor: doc["calendarEvents"]['borderColor'],
       fullName:
@@ -140,7 +143,9 @@ class SmartEvent {
           " ${doc["calendarEvents"]['created_by']['employee']['middle_name'] ?? ""}"
           " ${doc["calendarEvents"]['created_by']['employee']['last_name'] ?? ""}",
       activityStatusId: activityStatusIdVar,
-      file: SmartFile.fromJson(doc['caseFile']),
+      file: (doc['caseFile'] == null)
+          ? null
+          : SmartFile.fromJson(doc['caseFile']),
       notifyOnDate: (notifyDateTime != null)
           ? formatEventReminderDate(notifyDateTime)
           : null,
@@ -168,6 +173,7 @@ class SmartEvent {
       backgroundColor: doc['backgroundColor'],
       borderColor: doc['borderColor'],
       fullName: doc['full_name'],
+      calendarEventType: doc["calendar_event_type"],
     );
   }
 }

@@ -181,8 +181,9 @@ class _DiaryPageState extends State<DiaryPage> {
             calendarTapDetails.appointments!.isNotEmpty) {
           if (calendarTapDetails.appointments!.length == 1) {
             // if(calendarTapDetails.appointments![0].calendarEventTypeId == 1) {  // Check for type if calendar event then show else don't
-            _buildEventView(calendarTapDetails.appointments![0]);
-            // }
+            if (calendarTapDetails.appointments![0].calendarEventType == 1) {
+              _buildEventView(calendarTapDetails.appointments![0]);
+            }
             setState(() {});
           }
         }
@@ -244,7 +245,8 @@ class _DiaryPageState extends State<DiaryPage> {
       _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
     } on TypeError {
       String eventsListString = jsonEncode(responseEventsList);
-      List eventsList = jsonDecode(eventsListString);
+      Map<String, dynamic> eventsMap = jsonDecode(eventsListString);
+      List eventsList = eventsMap.entries.map((value) => value).toList();
       _events = eventsList.map((doc) => SmartEvent.fromJson(doc)).toList();
     }
 
