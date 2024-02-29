@@ -45,13 +45,10 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: BlocProvider(
-        create: (context) => ProfilePicBloc(),
-        child: BlocBuilder<ProfilePicBloc, ProfilePicState>(
-          builder: (context, state) {
-            return _buildBody();
-          },
-        ),
+      body: BlocBuilder<ProfilePicBloc, ProfilePicState>(
+        builder: (context, state) {
+          return _buildBody();
+        },
       ),
     );
   }

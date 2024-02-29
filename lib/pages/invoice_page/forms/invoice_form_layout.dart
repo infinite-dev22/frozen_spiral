@@ -12,7 +12,6 @@ import 'package:smart_case/database/file/file_model.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/database/invoice/invoice_type_model.dart';
 import 'package:smart_case/pages/invoice_page/bloc/forms/invoice/invoice_form_bloc.dart';
-import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_items_form.dart';
 import 'package:smart_case/pages/invoice_page/forms/loading_widget.dart';
 import 'package:smart_case/pages/invoice_page/widgets/invoice_add_items_widget.dart';
@@ -412,12 +411,8 @@ class _InvoiceFormLayoutState extends State<InvoiceFormLayout> {
                                             useSafeArea: true,
                                             context: context,
                                             builder: (context) =>
-                                                BlocProvider<InvoiceBloc>(
-                                              create: (context) =>
-                                                  InvoiceBloc(),
-                                              child: InvoiceViewLayout(
-                                                  invoice: invoice),
-                                            ),
+                                                InvoiceViewLayout(
+                                                    invoice: invoice),
                                           );
                                         } catch (error) {
                                           Fluttertoast.showToast(

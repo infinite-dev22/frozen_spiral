@@ -2,23 +2,19 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/requisition/requisition_model.dart';
-import 'package:smart_case/database/requisition/requisition_repo.dart';
 import 'package:smart_case/services/apis/smartcase_apis/requisition_api.dart';
 
 part 'requisition_event.dart';
 part 'requisition_state.dart';
 
 class RequisitionBloc extends Bloc<RequisitionEvent, RequisitionState> {
-  RequisitionBloc({required this.requisitionRepo})
-      : super(const RequisitionState()) {
+  RequisitionBloc() : super(const RequisitionState()) {
     on<GetRequisitions>(_mapGetRequisitionsEventToState);
     // on<GetRequisition>(_mapGetRequisitionEventToState);
     // on<PostRequisition>(_mapPostRequisitionEventToState);
     // on<PutRequisition>(_mapPutRequisitionEventToState);
     on<SelectRequisition>(_mapSelectRequisitionEventToState);
   }
-
-  final RequisitionRepo requisitionRepo;
 
   void _mapGetRequisitionsEventToState(
       GetRequisitions event, Emitter<RequisitionState> emit) async {

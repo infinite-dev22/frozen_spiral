@@ -1,4 +1,3 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -10,25 +9,39 @@ import 'package:local_session_timeout/local_session_timeout.dart';
 import 'package:smart_case/database/local/notifications.dart';
 import 'package:smart_case/firebase_options.dart';
 import 'package:smart_case/pages/activity_page/activities_page.dart';
+import 'package:smart_case/pages/activity_page/bloc/activity_bloc.dart';
 import 'package:smart_case/pages/activity_page/widgets/view_widget.dart';
 import 'package:smart_case/pages/auth_pages/login_page/login_page.dart';
 import 'package:smart_case/pages/auth_pages/signin_page/signin_page.dart';
+import 'package:smart_case/pages/engagement_page/bloc/engagement_bloc.dart';
 import 'package:smart_case/pages/engagement_page/engagements_page.dart';
+import 'package:smart_case/pages/event_page/bloc/event_bloc.dart';
 import 'package:smart_case/pages/event_page/event_page.dart';
 import 'package:smart_case/pages/event_page/widgets/event_view.dart';
+import 'package:smart_case/pages/file_page/bloc/file_bloc.dart';
 import 'package:smart_case/pages/file_page/file_page.dart';
+import 'package:smart_case/pages/home_page/bloc/home_bloc.dart';
 import 'package:smart_case/pages/home_page/home_page.dart';
+import 'package:smart_case/pages/invoice_page/bloc/forms/invoice/invoice_form_bloc.dart';
+import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
 import 'package:smart_case/pages/invoice_page/invoice_page.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/invoice_view_page.dart';
+import 'package:smart_case/pages/locator_page/bloc/locator_bloc.dart';
 import 'package:smart_case/pages/locator_page/locator_page.dart';
+import 'package:smart_case/pages/notification_page/bloc/notification_bloc.dart';
 import 'package:smart_case/pages/notification_page/notifications_page.dart';
+import 'package:smart_case/pages/profile_page/bloc/profile_bloc.dart';
 import 'package:smart_case/pages/profile_page/profile_page.dart';
+import 'package:smart_case/pages/report_page/bloc/report_bloc.dart';
 import 'package:smart_case/pages/report_page/reports_page.dart';
 import 'package:smart_case/pages/report_page/widgets/reports/cause_list_report_page.dart';
 import 'package:smart_case/pages/report_page/widgets/reports/done_activities_report_page.dart';
+import 'package:smart_case/pages/requisition_page/bloc/requisition_bloc.dart';
 import 'package:smart_case/pages/requisition_page/requisitions_page.dart';
 import 'package:smart_case/pages/requisition_page/widgets/requisition_view_page.dart';
+import 'package:smart_case/pages/root_page/bloc/root_bloc.dart';
 import 'package:smart_case/pages/root_page/root_page.dart';
+import 'package:smart_case/pages/task_page/bloc/task_bloc.dart';
 import 'package:smart_case/pages/task_page/tasks_page.dart';
 import 'package:smart_case/services/apis/firebase_apis.dart';
 import 'package:smart_case/services/navigation/locator.dart';
@@ -61,9 +74,25 @@ Future<void> main() async {
     localStorage = await Hive.openBox<Notifications>('notifications');
 
     runApp(
-      DevicePreview(
-        enabled: false,
-        builder: (context) => const MyApp(), // Wrap your app
+      MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => ActivityBloc()),
+          BlocProvider(create: (_) => EngagementBloc()),
+          BlocProvider(create: (_) => EventBloc()),
+          BlocProvider(create: (_) => FileBloc()),
+          BlocProvider(create: (_) => HomeBloc()),
+          BlocProvider(create: (_) => InvoiceBloc()),
+          BlocProvider(create: (_) => LocatorBloc()),
+          BlocProvider(create: (_) => NotificationBloc()),
+          BlocProvider(create: (_) => ProfileBloc()),
+          BlocProvider(create: (_) => ReportBloc()),
+          BlocProvider(create: (_) => RequisitionBloc()),
+          BlocProvider(create: (_) => RootBloc()),
+          BlocProvider(create: (_) => TaskBloc()),
+          BlocProvider(create: (_) => InvoiceFormBloc()),
+          BlocProvider(create: (_) => ProfilePicBloc()),
+        ],
+        child: const MyApp(),
       ),
     );
   } catch (e) {
@@ -135,99 +164,30 @@ class MyApp extends StatelessWidget {
          ThemeMode.light for light theme,
          ThemeMode.dark for dark theme */
         routes: {
-          '/login': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const LoginPage(),
-              ),
-          '/sign_in': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const WelcomePage(),
-              ),
+          '/login': (context) => const LoginPage(),
+          '/sign_in': (context) => const WelcomePage(),
           '/': (context) => (email != null && email.isNotEmpty && email != "")
-              ? BlocProvider(
-                  create: (context) => ProfilePicBloc(),
-                  child: const WelcomePage(),
-                )
-              : BlocProvider(
-                  create: (context) => ProfilePicBloc(),
-                  child: const LoginPage(),
-                ),
-          '/root': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const RootPage(),
-              ),
-          '/home': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const HomePage(),
-              ),
-          '/files': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const FilesPage(),
-              ),
-          '/activities': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const ActivitiesPage(),
-              ),
-          '/requisitions': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const RequisitionsPage(),
-              ),
-          '/events': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const DiaryPage(),
-              ),
-          '/tasks': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const TasksPage(),
-              ),
-          '/engagements': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const EngagementsPage(),
-              ),
-          '/reports': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const ReportsPage(),
-              ),
-          '/alerts': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const AlertsPage(),
-              ),
-          '/locator': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const LocatorPage(),
-              ),
-          '/profile': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const ProfilePage(),
-              ),
-          '/requisition': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const RequisitionViewPage(),
-              ),
-          '/event': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const EventView(),
-              ),
-          '/activity': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const ViewWidget(),
-              ),
-          '/cause_list_report': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const CauseListReportPage(),
-              ),
-          '/done_activities_report': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const DoneActivitiesReportPage(),
-              ),
-          '/invoices': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const InvoicePage(),
-              ),
-          '/invoice': (context) => BlocProvider(
-                create: (context) => ProfilePicBloc(),
-                child: const InvoiceViewPage(),
-              ),
+              ? const WelcomePage()
+              : const LoginPage(),
+          '/root': (context) => const RootPage(),
+          '/home': (context) => const HomePage(),
+          '/files': (context) => FilesPage(),
+          '/activities': (context) => ActivitiesPage(),
+          '/requisitions': (context) => const RequisitionsPage(),
+          '/events': (context) => const DiaryPage(),
+          '/tasks': (context) => TasksPage(),
+          '/engagements': (context) => EngagementsPage(),
+          '/reports': (context) => ReportsPage(),
+          '/alerts': (context) => AlertsPage(),
+          '/locator': (context) => LocatorPage(),
+          '/profile': (context) => ProfilePage(),
+          '/requisition': (context) => RequisitionViewPage(),
+          '/event': (context) => EventView(),
+          '/activity': (context) => ViewWidget(),
+          '/cause_list_report': (context) => CauseListReportPage(),
+          '/done_activities_report': (context) => DoneActivitiesReportPage(),
+          '/invoices': (context) => InvoicePage(),
+          '/invoice': (context) => InvoiceViewPage(),
         },
       ),
     );
