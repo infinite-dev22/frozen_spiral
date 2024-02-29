@@ -49,7 +49,7 @@ class InvoiceApi {
     return response;
   }
 
-  static process(Map<String, dynamic> data, int id,
+  static Future process(Map<String, dynamic> data, int id,
       {Function()? onSuccess, Function()? onError}) async {
     InvoiceRepo invoiceRepo = InvoiceRepo();
 
@@ -57,7 +57,7 @@ class InvoiceApi {
     return response;
   }
 
-  static put(SmartInvoice data, int id,
+  static Future put(SmartInvoice data, int id,
       {Function()? onSuccess, Function()? onError}) async {
     InvoiceRepo invoiceRepo = InvoiceRepo();
 

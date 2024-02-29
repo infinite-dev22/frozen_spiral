@@ -9,8 +9,10 @@ import 'package:smart_case/theme/color.dart';
 
 class ActionsWidget extends StatelessWidget {
   final SmartInvoice invoice;
+  final BuildContext context;
 
-  const ActionsWidget({super.key, required this.invoice});
+  const ActionsWidget(
+      {super.key, required this.invoice, required this.context});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +20,9 @@ class ActionsWidget extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    return (!invoice.invoiceStatus2!.code.toLowerCase().contains("preview") ||
-            !invoice.invoiceStatus2!.code.toLowerCase().contains("approve") ||
-            !invoice.invoiceStatus2!.code.toLowerCase().contains("rejected") ||
+    return (!invoice.invoiceStatus2!.code.toLowerCase().contains("preview") &&
+            !invoice.invoiceStatus2!.code.toLowerCase().contains("approved") &&
+            !invoice.invoiceStatus2!.code.toLowerCase().contains("rejected") &&
             invoice.invoiceStatus2 != null)
         ? Container(
             padding: EdgeInsets.all(8),
@@ -53,15 +55,21 @@ class ActionsWidget extends StatelessWidget {
                           MaterialStatePropertyAll(AppColors.green),
                     ),
                   ),
-                  const SizedBox(width: 5),
-                  FilledButton(
-                    onPressed: () => _returnInvoice(context),
-                    child: Text("Return"),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStatePropertyAll(AppColors.orange),
+                  if (!invoice.invoiceStatus2!.code
+                      .toLowerCase()
+                      .contains("returned"))
+                    const SizedBox(width: 5),
+                  if (!invoice.invoiceStatus2!.code
+                      .toLowerCase()
+                      .contains("returned"))
+                    FilledButton(
+                      onPressed: () => _returnInvoice(context),
+                      child: Text("Return"),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStatePropertyAll(AppColors.orange),
+                      ),
                     ),
-                  ),
                   const SizedBox(width: 5),
                   FilledButton(
                     onPressed: () => _rejectInvoice(context),
@@ -79,7 +87,8 @@ class ActionsWidget extends StatelessWidget {
 
   _approveInvoice(BuildContext context) {
     if (invoice.invoiceStatus2!.code == 'EDITED' ||
-        invoice.invoiceStatus2!.code == "SUBMITTED") {
+        invoice.invoiceStatus2!.code == "SUBMITTED" ||
+        invoice.invoiceStatus2!.code == "RETURNED") {
       _submitData("approve", 'Invoice approved', context);
     } else if (invoice.invoiceStatus2!.code == "PRIMARY_APPROVED") {
       _submitData("secondary_approve", 'Invoice approved', context);
@@ -97,7 +106,8 @@ class ActionsWidget extends StatelessWidget {
 
   _rejectInvoice(BuildContext context) {
     if (invoice.invoiceStatus2!.code == 'EDITED' ||
-        invoice.invoiceStatus2!.code == "SUBMITTED") {
+        invoice.invoiceStatus2!.code == "SUBMITTED" ||
+        invoice.invoiceStatus2!.code == "RETURNED") {
       _submitData("reject", 'Action successful', context);
     } else if (invoice.invoiceStatus2!.code == "PRIMARY_REJECTED") {
       _submitData("secondary_reject", 'Action successful', context);
@@ -109,40 +119,5 @@ class ActionsWidget extends StatelessWidget {
           "comment": '',
           "submit": value,
         }));
-    print("Invoice Id: ${invoice.id}");
-    InvoiceApi.process(
-      {
-        "comment": '',
-        "submit": value,
-      },
-      invoice.id!,
-      onSuccess: () => _onSuccess(toastText),
-      onError: _onError,
-    );
-  }
-
-  _onSuccess(String text) async {
-    Fluttertoast.showToast(
-        msg: text,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 5,
-        backgroundColor: AppColors.green,
-        textColor: Colors.white,
-        fontSize: 16.0);
-    preloadedInvoices.removeWhere((element) => element.id == invoice.id);
-  }
-
-  _onError() async {
-    refreshInvoices = true;
-
-    Fluttertoast.showToast(
-        msg: "An error occurred",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 5,
-        backgroundColor: AppColors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
   }
 }

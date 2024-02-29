@@ -220,16 +220,22 @@ class InvoiceViewTitle extends StatelessWidget {
           ),
           Row(
             children: [
-              if (invoice.doneBy == currentUser.id ||
-                  invoice.invoiceStatus2!.code
-                      .toLowerCase()
-                      .contains("submitted".toLowerCase()) ||
-                  invoice.invoiceStatus2!.code
-                      .toLowerCase()
-                      .contains("returned".toLowerCase()) ||
-                  invoice.invoiceStatus2!.code
-                      .toLowerCase()
-                      .contains("edited".toLowerCase()))
+              if ((invoice.doneBy == currentUser.id ||
+                      invoice.invoiceStatus2!.code
+                          .toLowerCase()
+                          .contains("submitted".toLowerCase()) ||
+                      invoice.invoiceStatus2!.code
+                          .toLowerCase()
+                          .contains("returned".toLowerCase()) ||
+                      invoice.invoiceStatus2!.code
+                          .toLowerCase()
+                          .contains("edited".toLowerCase())) &&
+                  (!invoice.invoiceStatus2!.code
+                          .toLowerCase()
+                          .contains("approved") &&
+                      !invoice.invoiceStatus2!.code
+                          .toLowerCase()
+                          .contains("rejected")))
                 IconButton(
                   onPressed: onEdit,
                   icon: Icon(FontAwesome.pen_to_square),

@@ -33,7 +33,7 @@ class ViewSuccessLayout extends StatelessWidget {
 
     return Scaffold(
       floatingActionButton:
-          SizedBox(height: 110, child: ActionsWidget(invoice: invoice)),
+          SizedBox(height: 110, child: ActionsWidget(invoice: invoice, context: context)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       backgroundColor: AppColors.transparent,
       body: Column(

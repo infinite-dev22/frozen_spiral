@@ -15,6 +15,8 @@ enum InvoiceStatus {
   viewError,
   viewLoading,
   viewInitial,
+  invoiceApproveSuccess,
+  invoiceApproveError,
 }
 
 extension InvoiceStatusX on InvoiceStatus {

@@ -71,7 +71,7 @@ class InfoWidget extends StatelessWidget {
                           .contains("no action"))
                         InvoiceItemStatus(
                           name: _checkInvoiceStatus(),
-                          bgColor: AppColors.primary,
+                          bgColor: _getInvoiceStatusColor(),
                           horizontalPadding: 10,
                           verticalPadding: 10,
                         ),
@@ -121,5 +121,34 @@ class InfoWidget extends StatelessWidget {
       return "Approved";
     }
     return "No Action";
+  }
+
+  Color _getInvoiceStatusColor() {
+    if (invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("submitted".toLowerCase())) {
+      return AppColors.blue;
+    }
+    if (invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("edited".toLowerCase())) {
+      return AppColors.purple;
+    }
+    if (invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("rejected".toLowerCase())) {
+      return AppColors.red;
+    }
+    if (invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("returned".toLowerCase())) {
+      return AppColors.orange;
+    }
+    if (invoice.invoiceStatus2!.code
+        .toLowerCase()
+        .contains("approved".toLowerCase())) {
+      return AppColors.green;
+    }
+    return AppColors.transparent;
   }
 }

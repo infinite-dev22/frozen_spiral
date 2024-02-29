@@ -6,10 +6,7 @@ import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/invoice_view_barrel.dart';
-import 'package:smart_case/services/apis/smartcase_api.dart';
-import 'package:smart_case/services/apis/smartcase_apis/invoice_api.dart';
 import 'package:smart_case/theme/color.dart';
-import 'package:smart_case/util/smart_case_init.dart';
 
 class InvoiceViewLayout extends StatelessWidget {
   final int? invoiceId;
@@ -33,7 +30,15 @@ class InvoiceViewLayout extends StatelessWidget {
       listener: (context, state) {
         if (state.status == InvoiceStatus.viewError) {
           Navigator.pop(context);
-          _onError();
+          _onError("An error occurred whilst fetching an Invoice");
+        }
+        if (state.status == InvoiceStatus.invoiceApproveSuccess) {
+          Navigator.pop(context);
+          _onSuccess("Invoice action successful");
+          context.read<InvoiceBloc>().add(GetInvoices());
+        }
+        if (state.status == InvoiceStatus.invoiceApproveError) {
+          _onError("Invoice action failed, try again");
         }
       },
       child: BlocBuilder<InvoiceBloc, InvoiceState>(
@@ -75,37 +80,17 @@ class InvoiceViewLayout extends StatelessWidget {
     preloadedInvoices.removeWhere((element) => element.id == invoiceId);
   }
 
-  _onError() async {
+  _onError(String text) async {
     refreshInvoices = true;
 
     Fluttertoast.showToast(
-        msg: "An error occurred whilst fetching an Invoice",
+        msg: text,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 5,
         backgroundColor: AppColors.red,
         textColor: Colors.white,
         fontSize: 16.0);
-  }
-
-  _submitData(String value, String toastText) {
-    SmartCaseApi.smartPost(
-      'api/accounts/invoices/${invoiceId}/process',
-      currentUser.token,
-      {
-        // "payout_amount": amountController.text.trim(),
-        // "action_comment": commentController.text.trim(),
-        "submit": value,
-      },
-      onSuccess: () => _onSuccess(toastText),
-      onError: _onError,
-    );
-  }
-
-  fetchInvoice(int invoiceId) async {
-    return await InvoiceApi.fetch(invoiceId, onError: () {
-      _onError();
-    });
   }
 
   String removeHtmlTags(String htmlString) {
