@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_case/data/app_config.dart';
@@ -17,7 +18,6 @@ class InvoiceAmountsWidget extends StatelessWidget {
 
   Widget _buildBody() {
     return Container(
-      padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -25,32 +25,57 @@ class InvoiceAmountsWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: invoiceFormItemList.length,
-            itemBuilder: (context, index) => InvoiceFormItemListItem(
-              grandParentContext: parentContext,
-              index: index,
-              item: invoiceFormItemList[index],
+          Container(
+            height: (invoiceFormItemList.length > 2) ? 300 : null,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: invoiceFormItemList.length,
+              itemBuilder: (context, index) => InvoiceFormItemListItem(
+                grandParentContext: parentContext,
+                index: index,
+                item: invoiceFormItemList[index],
+              ),
             ),
           ),
           // Column(
           //   children: invoiceFormItemListItemList,
           // ),
-          SpacedTextItem(
-            title: 'Subtotal',
-            data: _subTotalAmount(),
-          ),
-          const SizedBox(height: 8),
-          SpacedTextItem(
-            title: 'Taxable Amount',
-            data: _totalTaxableAmount(),
-          ),
-          const SizedBox(height: 8),
-          SpacedTextItem(
-            title: 'Total Amount',
-            data: _totalAmount(),
-            fontWeight: FontWeight.bold,
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.shadowColor.withOpacity(.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0, 1), // changes position of shadow
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                SpacedTextItem(
+                  title: 'Subtotal',
+                  data: _subTotalAmount(),
+                ),
+                const SizedBox(height: 8),
+                SpacedTextItem(
+                  title: 'Taxable Amount',
+                  data: _totalTaxableAmount(),
+                ),
+                const SizedBox(height: 8),
+                SpacedTextItem(
+                  title: 'Total Amount',
+                  data: _totalAmount(),
+                  fontWeight: FontWeight.bold,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -62,8 +87,10 @@ class InvoiceAmountsWidget extends StatelessWidget {
     double totalTaxableAmount = 0.00;
     if (invoiceFormItemList.isNotEmpty) {
       for (var invoiceFormItem in invoiceFormItemList) {
-        totalTaxableAmount =
-            totalTaxableAmount + invoiceFormItem.taxableAmount!;
+        if (invoiceFormItem.taxableAmount != null) {
+          totalTaxableAmount =
+              totalTaxableAmount + invoiceFormItem.taxableAmount!;
+        }
       }
     }
     ttlTaxableAmount = thousandFormatter.format(totalTaxableAmount);

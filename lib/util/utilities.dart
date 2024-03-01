@@ -60,6 +60,22 @@ String formatEventReminderDateString(DateTime dateTimeString) {
   return formattedDate;
 }
 
+String formatDateString(DateTime dateTimeString) {
+  // Parse the date and time string into a DateTime object.
+  String dateTime = DateFormat('yyyy-MM-dd hh:mm:ss a').format(dateTimeString);
+
+  // Format the DateTime object using the desired format.
+  DateTime formattedDateString =
+      DateFormat('yyyy-MM-dd hh:mm:ss a').parse(dateTime);
+
+  // Format the DateTime object using the desired format.
+  String formattedDate =
+      DateFormat('dd/MM/yyyy').format(formattedDateString);
+
+  // Return the formatted date string.
+  return formattedDate;
+}
+
 DateTime formatTime(String dateTimeString) {
   // Parse the date and time string into a DateTime object.
   print("B4: $dateTimeString");

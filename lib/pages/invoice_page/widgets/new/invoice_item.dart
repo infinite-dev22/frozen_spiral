@@ -6,7 +6,6 @@ import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/app_config.dart';
-import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_item_status.dart';
@@ -103,7 +102,7 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
                           if (widget.invoice.invoiceStatus2 != null)
                             InvoiceItemStatus(
                                 name: _checkInvoiceStatus(),
-                                bgColor: _getInvoiceStatusColor(),
+                                color: _getInvoiceStatusColor(),
                                 horizontalPadding: 20,
                                 verticalPadding: 5),
                         ],
@@ -154,7 +153,7 @@ class _InvoiceItemWidgetState extends State<InvoiceItemWidget> {
                       if (widget.invoice.invoiceStatus2 != null)
                         InvoiceItemStatus(
                             name: _checkInvoiceStatus(),
-                            bgColor: _getInvoiceStatusColor(),
+                            color: _getInvoiceStatusColor(),
                             horizontalPadding: 20,
                             verticalPadding: 5),
                     ],

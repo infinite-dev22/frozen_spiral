@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
@@ -9,6 +10,7 @@ import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:smart_case/data/app_config.dart';
 import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
+import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_appbar.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_item.dart';
@@ -423,8 +425,11 @@ class _InvoicePageState extends State<InvoicePage> {
               isScrollControlled: true,
               useSafeArea: true,
               context: context,
-              builder: (context) => InvoiceViewLayout(
-                  invoiceId: preloadedInvoices.elementAt(index).id!),
+              builder: (context) => BlocProvider(
+                create: (context) => InvoiceBloc(),
+                child: InvoiceViewLayout(
+                    invoiceId: preloadedInvoices.elementAt(index).id!),
+              ),
             ),
           ),
         ),

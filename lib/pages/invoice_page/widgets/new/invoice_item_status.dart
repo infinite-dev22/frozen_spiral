@@ -6,12 +6,12 @@ class InvoiceItemStatus extends StatelessWidget {
   const InvoiceItemStatus(
       {super.key,
       required this.name,
-      required this.bgColor,
+      required this.color,
       required this.horizontalPadding,
       required this.verticalPadding});
 
   final String name;
-  final Color bgColor;
+  final Color color;
   final double horizontalPadding;
   final double verticalPadding;
 
@@ -27,29 +27,24 @@ class InvoiceItemStatus extends StatelessWidget {
         vertical: verticalPadding,
       ),
       decoration: BoxDecoration(
-        color: bgColor,
+        color: color.withOpacity(.2),
         borderRadius: const BorderRadius.all(
           Radius.circular(20),
         ),
       ),
       child: SearchHighlightText(
         name,
-        style: const TextStyle(
-          // fontWeight: FontWeight.bold,
-          color: Colors.white,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: color,
         ),
-        highlightStyle: const TextStyle(
+        highlightStyle: TextStyle(
           // fontSize: 14,
-          // fontWeight: FontWeight.bold,
-          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          color: color,
           backgroundColor: AppColors.searchText,
         ),
       ),
-      // child: Text(name,
-      //     style: const TextStyle(
-      //       color: Colors.white,
-      //     ),
-      //   ),
     );
   }
 }

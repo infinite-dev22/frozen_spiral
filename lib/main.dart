@@ -89,7 +89,6 @@ Future<void> main() async {
           BlocProvider(create: (_) => RequisitionBloc()),
           BlocProvider(create: (_) => RootBloc()),
           BlocProvider(create: (_) => TaskBloc()),
-          BlocProvider(create: (_) => InvoiceFormBloc()),
           BlocProvider(create: (_) => ProfilePicBloc()),
         ],
         child: const MyApp(),

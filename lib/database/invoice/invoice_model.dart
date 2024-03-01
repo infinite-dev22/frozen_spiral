@@ -113,9 +113,9 @@ class SmartInvoice {
     return SmartInvoice(
       id: json["id"],
       number: json["number"],
-      date: json["date"] == null ? null : DateTime.parse(json["date"]),
+      date: json["invoice_date"] == null ? null : DateTime.parse(json["invoice_date"]),
       dueDate:
-          json["due_date"] == null ? null : DateTime.parse(json["due_date"]),
+          json["invoice_due_date"] == null ? null : DateTime.parse(json["invoice_due_date"]),
       billTo: json["bill_to"],
       invoiceDetailsTitle: json["invoice_details_title"],
       paymentTerms: json["payment_terms"],
@@ -196,12 +196,12 @@ class SmartInvoice {
     return SmartInvoice(
       id: json['invoice']["id"],
       number: json['invoice']["number"],
-      date: json['invoice']["date"] == null
+      date: json['invoice']["invoice_date"] == null
           ? null
-          : DateTime.parse(json['invoice']["date"]),
-      dueDate: json['invoice']["due_date"] == null
+          : DateTime.parse(json['invoice']["invoice_date"]),
+      dueDate: json['invoice']["invoice_due_date"] == null
           ? null
-          : DateTime.parse(json['invoice']["due_date"]),
+          : DateTime.parse(json['invoice']["invoice_due_date"]),
       billTo: json['invoice']["bill_to"],
       invoiceDetailsTitle: json['invoice']["invoice_details_title"],
       paymentTerms: json['invoice']["payment_terms"],

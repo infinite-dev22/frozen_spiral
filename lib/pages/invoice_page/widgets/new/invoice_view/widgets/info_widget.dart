@@ -3,6 +3,7 @@ import 'package:smart_case/database/invoice/invoice_model.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_item_status.dart';
 import 'package:smart_case/theme/color.dart';
 import 'package:smart_case/util/smart_case_init.dart';
+import 'package:smart_case/util/utilities.dart';
 import 'package:smart_case/widgets/text_item.dart';
 
 class InfoWidget extends StatelessWidget {
@@ -44,11 +45,32 @@ class InfoWidget extends StatelessWidget {
                       else
                         TextItem(
                             title: "Date",
-                            data: invoice.date == null ? "N/A" : invoice.date),
+                            data: invoice.date == null
+                                ? "N/A"
+                                : formatDateString(invoice.date)),
                       if (invoice.number != null)
                         TextItem(
                             title: "Date",
-                            data: invoice.date == null ? "N/A" : invoice.date),
+                            data: invoice.date == null
+                                ? "N/A"
+                                : formatDateString(invoice.date)),
+                      TextItem(
+                          title: "Done By",
+                          data: (invoice.employee ?? currentUser).getName()),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextItem(
+                        title: "Practice Area",
+                        data: invoice.practiceAreasId.toString(),
+                      ),
+                      TextItem(
+                          title: "Due Date",
+                          data: invoice.dueDate == null
+                              ? "N/A"
+                              : formatDateString(invoice.dueDate)),
                       TextItem(
                           title: "Supervisor",
                           data: invoice.approver == null
@@ -56,37 +78,32 @@ class InfoWidget extends StatelessWidget {
                               : invoice.approver!.getName()),
                     ],
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextItem(
-                          title: "Done By",
-                          data: (invoice.employee ?? currentUser).getName()),
-                      TextItem(
-                        title: "Practice Area",
-                        data: invoice.practiceAreasId.toString(),
-                      ),
-                      if (!_checkInvoiceStatus()
-                          .toLowerCase()
-                          .contains("no action"))
-                        InvoiceItemStatus(
-                          name: _checkInvoiceStatus(),
-                          bgColor: _getInvoiceStatusColor(),
-                          horizontalPadding: 10,
-                          verticalPadding: 10,
-                        ),
-                    ],
-                  ),
                 ],
               ),
               TextItem(
                   title: "File",
                   data: invoice.file == null ? "N/A" : invoice.file!.getName()),
-              TextItem(
-                  title: "Client",
-                  data: (invoice.client == null)
-                      ? "N/A"
-                      : invoice.client!.getName()),
+              Row(
+                children: [
+                  SizedBox(
+                    width: constraints.maxWidth * .725,
+                    child: TextItem(
+                        title: "Client",
+                        data: (invoice.client == null)
+                            ? "N/A"
+                            : invoice.client!.getName()),
+                  ),
+                  if (!_checkInvoiceStatus()
+                      .toLowerCase()
+                      .contains("no action"))
+                    InvoiceItemStatus(
+                      name: _checkInvoiceStatus(),
+                      color: _getInvoiceStatusColor(),
+                      horizontalPadding: 10,
+                      verticalPadding: 10,
+                    ),
+                ],
+              ),
             ],
           ),
         ),

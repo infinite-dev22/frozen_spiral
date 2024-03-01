@@ -281,7 +281,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
                                         ? 'Returned'
                                         : widget.requisition.requisitionStatus!
                                             .name,
-                            bgColor: widget.requisition.requisitionStatus!.name
+                            color: widget.requisition.requisitionStatus!.name
                                     .toLowerCase()
                                     .contains('approved')
                                 ? AppColors.green
@@ -535,7 +535,7 @@ class _RequisitionItemState extends State<RequisitionItem> {
                         //             ? 'Primarily Approved'
                         //             : widget.requisition.requisitionStatus!
                         //                 .name,
-                        bgColor: widget.requisition.requisitionStatus!.name
+                        color: widget.requisition.requisitionStatus!.name
                                 .toLowerCase()
                                 .contains('approved')
                             ? AppColors.green

@@ -3,11 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart';
 import 'package:smart_case/data/app_config.dart';
-import 'package:smart_case/database/currency/smart_currency.dart';
 import 'package:smart_case/database/invoice/invoice_model.dart';
+import 'package:smart_case/pages/invoice_page/bloc/forms/invoice/invoice_form_bloc.dart';
 import 'package:smart_case/pages/invoice_page/bloc/invoice_bloc.dart';
 import 'package:smart_case/pages/invoice_page/forms/invoice_form.dart';
-import 'package:smart_case/pages/invoice_page/forms/invoice_items_form.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/actions_widget.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/bank_widget.dart';
 import 'package:smart_case/pages/invoice_page/widgets/new/invoice_view/widgets/info_widget.dart';
@@ -32,14 +31,15 @@ class ViewSuccessLayout extends StatelessWidget {
     SmartInvoice invoice = context.read<InvoiceBloc>().state.invoice!;
 
     return Scaffold(
-      floatingActionButton:
-          SizedBox(height: 110, child: ActionsWidget(invoice: invoice, context: context)),
+      floatingActionButton: SizedBox(
+          height: 110,
+          child: ActionsWidget(invoice: invoice, context: context)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       backgroundColor: AppColors.transparent,
       body: Column(
         children: [
           InvoiceViewTitle(
-            onEdit: () => _buildInvoiceDialog(context),
+            onEdit: () => _buildInvoiceDialog(context, invoice),
             onPrint: () {},
             onSave: () => _submitFormData(context, invoice),
             isElevated: true,
@@ -152,8 +152,8 @@ class ViewSuccessLayout extends StatelessWidget {
     Navigator.pop(context);
   }
 
-  _buildInvoiceDialog(BuildContext context) {
-    Navigator.pop(context);
+  _buildInvoiceDialog(BuildContext context, SmartInvoice invoice) {
+    context.read<InvoiceFormBloc>().add(EditInvoiceForm(invoice));
     return showModalBottomSheet(
       enableDrag: true,
       isScrollControlled: true,
